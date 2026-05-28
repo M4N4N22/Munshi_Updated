@@ -6,9 +6,9 @@ on:
       - main
 
 env:
-  DOCKER_USERNAME: ajayshakya786
+  DOCKER_USERNAME: shantanugarg2004
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-  DOCKERHUB_REPO: munshi-dada
+  DOCKERHUB_REPO: munshi_dada
   PROJECT_PATH: /home/ubuntu/munshi-dada
 
 jobs:
