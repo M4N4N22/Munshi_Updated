@@ -45,7 +45,7 @@ jobs:
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
-          username: ubuntu
+          username: munshidev
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd ${{ env.PROJECT_PATH }} && restart-docker-compose
