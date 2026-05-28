@@ -1,0 +1,44 @@
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { DbModule } from 'src/core/services/db-service/db.module';
+import { HealthCheckModule } from 'src/core/health-check/health.module';
+import { ReqResInterceptor } from 'src/core/interceptors/response-interceptor';
+import { LoggerModule } from 'src/core/services/logger/logger.module';
+import { HttpExceptionFilter } from 'src/core/filters/http-exception.filter';
+import { UserModule } from 'src/services/users/users.module';
+import { FactoryModule } from 'src/services/factories/factories.module';
+import { WhatsAppModule } from 'src/modules/whatsapp/whatsapp.module';
+import { IssueModule } from 'src/services/issues/issues.module';
+import { TasksModule } from 'src/services/tasks/tasks.module';
+import { DepartmentsModule } from 'src/services/departments/departments.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { ReportsModule } from 'src/services/reports/reports.module';
+
+@Module({
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    ScheduleModule.forRoot(),
+    DbModule,
+    LoggerModule,
+    HealthCheckModule,
+    // modules
+    //
+    WhatsAppModule,
+    UserModule,
+    FactoryModule,
+    IssueModule,
+    ReportsModule,
+    TasksModule,
+    DepartmentsModule,
+  ],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
+  ],
+})
+export class AppModule {}

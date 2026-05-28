@@ -1,0 +1,1045 @@
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { AttendanceService } from 'src/services/attendance/attendance.service';
+import { UserService } from 'src/services/users/users.service';
+import {
+  WhatsAppIncomingDto,
+  WhatsAppIncomingServiceDto,
+} from './whatsapp.dto';
+import { IssueService } from 'src/services/issues/issues.service';
+import { USER_ROLE } from 'src/services/users/users.constants';
+import { TasksService } from 'src/services/tasks/tasks.service';
+import { COMMAND_HINTS, COMMANDS } from './whatsapp.constants';
+import { FactoryService } from 'src/services/factories/factories.service';
+import axios from 'axios';
+import { Cron, CronExpression } from '@nestjs/schedule';
+import { ReportService } from 'src/services/reports/reports.service';
+import { MessagingService } from 'src/core/messaging/messaging.service';
+import { DepartmentsService } from 'src/services/departments/departments.service';
+import { getHourIST, INDIA_TIMEZONE } from 'src/core/time/india-defaults';
+import {
+  WA_DIVIDER,
+  waDepartmentAssignSent,
+  waErrorDepartmentNotFound,
+  waErrorDescriptionRequired,
+  waErrorInvalidFormat,
+  waErrorMissingDepartSlug,
+  waErrorOwnersOnlyDepartment,
+  waErrorTaskIdRequired,
+  waErrorWorkerRequired,
+  waHelpText,
+  waSection,
+  waIssueReported,
+  waIssueResolved,
+  waIssuesEmpty,
+  waTaskAssigned,
+  waTaskCompleted,
+  waTaskUpdated,
+  waTasksEmpty,
+  waTeamEmpty,
+  waUnknownCommand,
+} from './whatsapp.templates';
+
+@Injectable()
+export class WhatsAppService {
+  private readonly token = process.env.WHATSAPP_TOKEN;
+  private readonly phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID;
+  constructor(
+    private readonly tasksService: TasksService,
+    private readonly attendanceService: AttendanceService,
+    private readonly issuesService: IssueService,
+    private readonly usersService: UserService,
+    private readonly factoryService: FactoryService,
+    private readonly reportService: ReportService,
+    private readonly messagingService: MessagingService,
+    private readonly departmentsService: DepartmentsService,
+  ) {}
+
+  async sendTextMessage(to: string, message: string) {
+    await this.messagingService.sendText(to, message);
+    return { ok: true };
+  }
+  // export function formatCommandHints(commands: typeof COMMAND_HINTS) {
+  //   return commands
+  //     .map((c) => `${c.command} - ${c.hint}`)
+  //     .join('\n');
+  // }
+
+  async sendTemplate(
+    to: string,
+    templateName: string,
+    options?: {
+      languageCode?: string;
+      body?: (string | number)[];
+    },
+  ) {
+    await this.messagingService.sendTemplate(to, templateName, options);
+    return { ok: true };
+  }
+  async handleIncomingMessage(body: WhatsAppIncomingDto) {
+    console.log({ body });
+    try {
+      const msgTrim = (body.message || '').trim();
+      const slashBypass = msgTrim.match(
+        /^\/(mgrself|mgrassign|mgrtransfer|mgrreject)\b/i,
+      );
+
+      let result: any;
+      if (slashBypass) {
+        const command = `/${slashBypass[1].toLowerCase()}`;
+        result = await this.processCommand({
+          ...body,
+          message: msgTrim,
+          command,
+          id: undefined,
+          date: undefined,
+        });
+      } else {
+        const ml_url = process.env.ML_URL || `http://localhost:8000`;
+
+        const response = await axios.post(
+          `${ml_url}/classify?message=${encodeURIComponent(body.message)}`,
+        );
+
+        const ml = this.parseMlClassifyResponse(response.data);
+        console.log('ml-classify', ml);
+
+        const rawId = ml.id;
+        const id =
+          rawId != null &&
+          rawId !== '' &&
+          Number.isFinite(Number(rawId))
+            ? Number(rawId)
+            : undefined;
+
+        result = await this.processCommand({
+          ...body,
+          command: ml.intent,
+          id,
+          date: ml.date,
+          datetime: ml.datetime ?? undefined,
+          time: ml.time ?? undefined,
+          deadline: ml.deadline ?? undefined,
+          worker_slug: ml.worker_slug ?? undefined,
+          depart_slug: ml.depart_slug ?? undefined,
+          reject_reason: ml.reject_reason ?? undefined,
+        });
+      }
+
+      console.log({ result });
+
+      const message =
+        typeof result === 'string' ? result : result?.message || result;
+      await this.sendTextMessage(body.from, message);
+      return 'ok';
+    } catch (error) {
+      console.log(error);
+      const errText =
+        error?.message ||
+        'We could not process your request. Please try again or send /help.';
+      await this.sendTextMessage(body.from, errText);
+
+      console.log(error);
+
+      return 'error';
+    }
+  }
+
+  async processCommand(body: WhatsAppIncomingServiceDto) {
+    const rawMessage = body?.message?.trim();
+    const command = body.command?.startsWith('/')
+      ? body.command
+      : `/${body.command}`;
+    const id = body.id;
+    const phone = body?.from;
+
+    const user = await this.usersService.findByPhone(phone);
+
+    if (!user) {
+      throw new UnauthorizedException('User not registered');
+    }
+
+    const factoryId = user.factory_links?.factory_id;
+    const role = user.factory_links?.role;
+
+    if (!factoryId)
+      throw new NotFoundException('User not assigned to any factory');
+
+    // 🟢 Attendance
+    //
+    //
+
+    if (command === COMMANDS.REPORT) {
+      this.ensureManager(role);
+
+      return this.reportService.generateReport(factoryId, body.date);
+    }
+
+    if (command === COMMANDS.HELP) return waHelpText(user?.name || 'User');
+
+    const cmdLc = (command || '').toLowerCase();
+
+    const deptAssignEarly = await this.tryClassifiedDepartmentAssign(
+      body,
+      rawMessage,
+      user.id,
+      factoryId,
+      role,
+      cmdLc,
+    );
+    if (deptAssignEarly !== null) {
+      return deptAssignEarly;
+    }
+
+    if (cmdLc === COMMANDS.MGR_SELF) {
+      this.ensureManager(role);
+      const taskId = this.resolveManagerTaskId(body.id, rawMessage);
+      if (taskId === undefined) {
+        return waErrorTaskIdRequired([
+          'I will do task 12',
+          "I'll handle task 12 myself",
+        ]);
+      }
+      return this.tasksService.applyManagerSelf(user.id, factoryId, taskId);
+    }
+
+    if (cmdLc === COMMANDS.MGR_ASSIGN) {
+      this.ensureManager(role);
+      const taskId = this.resolveManagerTaskId(body.id, rawMessage);
+      const mention = this.resolveManagerWorkerMention(body.worker_slug, rawMessage);
+      if (taskId === undefined) {
+        return waErrorTaskIdRequired([
+          '@anil will do task 12',
+          'Assign task 12 to @anil',
+        ]);
+      }
+      if (!mention) {
+        return waErrorWorkerRequired(taskId);
+      }
+      return this.tasksService.applyManagerDelegateWorker(
+        user.id,
+        factoryId,
+        taskId,
+        mention,
+      );
+    }
+
+    if (cmdLc === COMMANDS.MGR_TRANSFER) {
+      this.ensureManager(role);
+      const taskId = this.resolveManagerTaskId(body.id, rawMessage);
+      const departSlug = this.resolveManagerDepartSlug(
+        body.depart_slug,
+        rawMessage,
+      );
+      if (taskId === undefined) {
+        return waErrorTaskIdRequired([
+          '/mgrtransfer 12 sales',
+          'transfer task 12 to it department',
+        ]);
+      }
+      if (!departSlug) {
+        return waSection(
+          'Department required',
+          `Please specify which department should receive task #${taskId}.\n\n` +
+            `*Examples:*\n` +
+            `• /mgrtransfer ${taskId} sales\n` +
+            `• "transfer task ${taskId} to it department"`,
+        );
+      }
+      return this.tasksService.applyManagerTransferDepartment(
+        user.id,
+        factoryId,
+        taskId,
+        departSlug,
+      );
+    }
+
+    if (cmdLc === COMMANDS.MGR_REJECT) {
+      this.ensureManager(role);
+      const taskId = this.resolveManagerTaskId(body.id, rawMessage);
+      const reason = this.resolveRejectReason(body.reject_reason, rawMessage);
+      if (taskId === undefined) {
+        return waErrorTaskIdRequired([
+          '/mgrreject 12 not our department',
+          'reject task 12 — wrong department',
+        ]);
+      }
+      if (!reason) {
+        return waSection(
+          'Rejection reason required',
+          `Please explain why task #${taskId} is being rejected.\n\n` +
+            `*Examples:*\n` +
+            `• /mgrreject ${taskId} not our scope\n` +
+            `• "reject task ${taskId} — belongs to sales, not IT"`,
+        );
+      }
+      return this.tasksService.applyManagerRejectTask(
+        user.id,
+        factoryId,
+        taskId,
+        reason,
+      );
+    }
+
+    if (command === COMMANDS.PRESENT || command === COMMANDS.ABSENT)
+      return this.attendanceService.markAttendance(
+        user.id,
+        factoryId,
+        command === COMMANDS.PRESENT,
+      );
+
+    if (command === COMMANDS.MEMEBERS) {
+      this.ensureManager(role);
+
+      const members = await this.factoryService.getFactoryUsers(factoryId);
+
+      if (!members.length) {
+        return waTeamEmpty();
+      }
+
+      const departments =
+        await this.departmentsService.listByFactory(factoryId);
+
+      type Row = {
+        user_id?: number;
+        user?: { name?: string };
+        role?: string;
+      };
+
+      const rows = members as unknown as Row[];
+
+      const departmentHeadIds = new Set<number>(
+        departments.map((d: any) => Number(d.manager_user_id)),
+      );
+
+      const workerLinkedToDept = new Set<number>();
+      for (const dept of departments as any[]) {
+        for (const link of dept.department_workers ?? []) {
+          workerLinkedToDept.add(Number(link.user_id));
+        }
+      }
+
+      let body = `*Team overview*\n\n`;
+
+      body += `📂 *Departments*\n`;
+      if (!departments.length) {
+        body += `_No departments configured yet._\n`;
+      } else {
+        departments.forEach((deptRaw: any, idx: number) => {
+          const headName = deptRaw.manager?.name ?? 'Not assigned';
+          const deptWorkers =
+            deptRaw.department_workers
+              ?.map((dw: any) => dw.user?.name)
+              .filter(Boolean) ?? [];
+          const workerLine =
+            deptWorkers.length > 0
+              ? deptWorkers.join(', ')
+              : '_No workers linked_';
+          body +=
+            `\n${idx + 1}. *${deptRaw.name}* (\`${deptRaw.slug}\`)\n` +
+            `   👔 Head: ${headName}\n` +
+            `   👷 Team: ${workerLine}\n`;
+        });
+      }
+
+      const workersNoDepartment = rows.filter(
+        (m) =>
+          m.role === USER_ROLE.WORKER &&
+          m.user_id != null &&
+          !workerLinkedToDept.has(m.user_id),
+      );
+
+      body += `\n👷 *Workers (no department)*\n`;
+      if (workersNoDepartment.length === 0) {
+        body += `_All workers are assigned to a department._\n`;
+      } else {
+        workersNoDepartment.forEach((m, idx) => {
+          body += `${idx + 1}. ${m.user?.name ?? 'Unknown'}\n`;
+        });
+      }
+
+      const owners = rows.filter((m) => m.role === USER_ROLE.OWNER);
+      body += `\n👑 *Owners*\n`;
+      if (owners.length === 0) {
+        body += `_None_\n`;
+      } else {
+        owners.forEach((m, idx) => {
+          body += `${idx + 1}. ${m.user?.name ?? 'Unknown'}\n`;
+        });
+      }
+
+      const managersNotDeptHead = rows.filter(
+        (m) =>
+          m.role === USER_ROLE.MANAGER &&
+          m.user_id != null &&
+          !departmentHeadIds.has(m.user_id),
+      );
+
+      body += `\n👔 *Managers (not heading a department)*\n`;
+      if (managersNotDeptHead.length === 0) {
+        body += `_Every manager is a department head, or none listed._\n`;
+      } else {
+        managersNotDeptHead.forEach((m, idx) => {
+          body += `${idx + 1}. ${m.user?.name ?? 'Unknown'}\n`;
+        });
+      }
+
+      body +=
+        `\n${WA_DIVIDER}\n` +
+        `*Who can assign work*\n` +
+        `• *Owners:* any member or department\n` +
+        `• *Department heads:* their team + unassigned workers\n` +
+        `• *Other managers:* any worker in the factory`;
+
+      return `${body}`;
+    }
+
+    // =========================
+    // 📋 TASKS COMMANDS
+    // =========================
+
+    // 📋 VIEW TASKS
+    if (command === COMMANDS.TASKS) {
+      const tasks = await this.tasksService.getTasks(user);
+
+      if (!Array.isArray(tasks) || !tasks.length) {
+        return waTasksEmpty();
+      }
+
+      const isManager = role !== USER_ROLE.WORKER;
+      return isManager
+        ? this.formatTasksByDepartment(tasks as any[])
+        : this.formatWorkerTasks(tasks as any[]);
+    }
+
+    // ✅ COMPLETE TASK
+    if (command === COMMANDS.COMPLETE) {
+      if (!id || isNaN(id)) {
+        return waErrorInvalidFormat(
+          '/complete',
+          '/complete [taskId]',
+          '/complete 12',
+        );
+      }
+
+      const result = await this.tasksService.completeTask(
+        user.id,
+        factoryId,
+        id,
+      );
+
+      return result?.message
+        ? waTaskCompleted(id, result.message)
+        : result;
+    }
+
+    // 🧑‍🤝‍🧑 ASSIGN TASK (department NL is handled earlier via depart_slug)
+    if (cmdLc === COMMANDS.ASSIGN) {
+      const deadlineInput = this.classifyDeadlineRawInput(body);
+
+      const mentionMatch = rawMessage.match(/@([^\s]+)/);
+      const mlWorkerMention = this.normalizeWorkerSlug(body.worker_slug);
+
+      if (!mentionMatch && mlWorkerMention) {
+        const description =
+          rawMessage.replace(/^\s*\/?assign\b/i, '').replace(/\s+/g, ' ').trim() ||
+          rawMessage.trim();
+        if (!description) {
+          return waErrorDescriptionRequired();
+        }
+        this.ensureManager(role);
+        const result = await this.tasksService.handleAssign(
+          user.id,
+          factoryId,
+          mlWorkerMention,
+          description,
+          { deadline: deadlineInput },
+        );
+        if (typeof result !== 'string') {
+          return result?.message || result;
+        }
+        return waTaskAssigned(description, result);
+      }
+
+      this.ensureManager(role);
+
+      const mention = mentionMatch ? mentionMatch[0] : null;
+
+      let description = rawMessage;
+      if (mention) description = description.replace(mention, ' ');
+      description = description
+        .replace(/^\s*\/?assign\b/i, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+      if (!mention || !description) {
+        return waErrorInvalidFormat(
+          '/assign',
+          '/assign @<name|id|phone> [task description]\n/assign @all [task description]',
+          '/assign @anand Fix machine\n/assign @all Clean warehouse',
+        );
+      }
+
+      const result = await this.tasksService.handleAssign(
+        user.id,
+        factoryId,
+        mention,
+        description,
+        { deadline: deadlineInput },
+      );
+
+      if (typeof result !== 'string') {
+        return result?.message || result;
+      }
+
+      return waTaskAssigned(description, result);
+    }
+
+    if (command === COMMANDS.UPDATE) {
+      this.ensureWorker(role);
+
+      const parts = rawMessage.split(' ');
+      const task_id = id;
+      const updateMessage = parts.slice(2).join(' ').trim();
+
+      if (!task_id || !updateMessage) {
+        return waErrorInvalidFormat(
+          '/update',
+          '/update [taskId] [message]',
+          '/update 12 Work completed',
+        );
+      }
+
+      const result = await this.tasksService.addUpdate(
+        user.id,
+        factoryId,
+        task_id,
+        updateMessage,
+      );
+
+      return result?.message
+        ? waTaskUpdated(task_id, updateMessage, result.message)
+        : result;
+    }
+
+    // =========================
+    // 🚨 ISSUES COMMANDS
+    // =========================
+
+    // 📋 VIEW ACTIVE ISSUES
+    if (command === COMMANDS.ISSUES) {
+      const issues = await this.issuesService.getActiveIssues(factoryId);
+
+      if (!issues || !issues.length) {
+        return waIssuesEmpty();
+      }
+
+      let text = `${WA_DIVIDER}\n*Active issues*\n${WA_DIVIDER}\n\n`;
+
+      issues.slice(0, 10).forEach((issue: any, index: number) => {
+        const date = new Date(issue.created_at).toLocaleDateString('en-IN', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric',
+        });
+        const reporter = issue.reporter?.name
+          ? `👤 ${issue.reporter.name} (#${issue.reporter.id})\n`
+          : '';
+
+        text +=
+          `${index + 1}. ${issue.message}\n` +
+          `🆔 Issue #${issue.id}\n` +
+          reporter +
+          `📅 ${date}\n\n`;
+      });
+
+      text += `${WA_DIVIDER}\n💡 Reply: "resolve issue [id]" to close an issue`;
+
+      return text;
+    }
+
+    // 🚨 CREATE ISSUE
+    if (command === COMMANDS.ISSUE) {
+      const issueMessage = rawMessage.replace(COMMANDS.ISSUE, '').trim();
+
+      if (!issueMessage) {
+        return waErrorInvalidFormat(
+          '/issue',
+          '/issue [description]',
+          '/issue Machine not working',
+        );
+      }
+
+      await this.issuesService.createIssue(user.id, factoryId, issueMessage);
+
+      return waIssueReported(issueMessage);
+    }
+
+    // ✅ RESOLVE ISSUE
+    if (command === COMMANDS.RESOLVE) {
+      this.ensureManager(role);
+
+      if (!id) {
+        return waErrorInvalidFormat(
+          '/resolve',
+          '/resolve [issueId]',
+          '/resolve 5',
+        );
+      }
+
+      const result = await this.issuesService.resolveIssue(String(id));
+
+      return result?.message
+        ? waIssueResolved(id, result.message)
+        : result;
+    }
+
+    return waUnknownCommand();
+  }
+
+  /** Normalize ML `/classify` payload (supports nested `data` and slug field aliases). */
+  private parseMlClassifyResponse(data: unknown): {
+    intent?: string;
+    id?: string | number | null;
+    worker_slug?: string | null;
+    depart_slug?: string | null;
+    reject_reason?: string | null;
+    deadline?: string | null;
+    date?: string;
+    datetime?: string | null;
+    time?: string | null;
+  } {
+    const root =
+      data != null && typeof data === 'object' && 'data' in (data as object)
+        ? (data as { data: Record<string, unknown> }).data
+        : (data as Record<string, unknown> | null | undefined);
+
+    const r = root ?? {};
+    const departSlug =
+      r.depart_slug ?? r.department_slug ?? r.department ?? null;
+
+    return {
+      intent:
+        typeof r.intent === 'string'
+          ? r.intent
+          : typeof r.command === 'string'
+            ? r.command
+            : undefined,
+      id: (r.id as string | number | null | undefined) ?? null,
+      worker_slug: (r.worker_slug as string | null | undefined) ?? null,
+      depart_slug:
+        departSlug != null && String(departSlug).trim() !== ''
+          ? String(departSlug).trim()
+          : null,
+      reject_reason:
+        (r.reject_reason as string | null | undefined) ??
+        (r.reason as string | null | undefined) ??
+        null,
+      deadline: (r.deadline as string | null | undefined) ?? null,
+      date: typeof r.date === 'string' ? r.date : undefined,
+      datetime: (r.datetime as string | null | undefined) ?? null,
+      time: (r.time as string | null | undefined) ?? null,
+    };
+  }
+
+  private extractDepartSlug(body: WhatsAppIncomingServiceDto): string | null {
+    const raw = body.depart_slug;
+    if (raw == null || String(raw).trim() === '') return null;
+    const normalized = this.departmentsService.normalizeSlug(String(raw));
+    return normalized || null;
+  }
+
+  /**
+   * ML: `/depart_assign` + `depart_slug`, or `/assign` + `depart_slug` without @mention.
+   * Assigns the task to that department's manager (owners only).
+   */
+  private async tryClassifiedDepartmentAssign(
+    body: WhatsAppIncomingServiceDto,
+    rawMessage: string | undefined,
+    assignerUserId: number,
+    factoryId: number,
+    role: string,
+    cmdLc: string,
+  ): Promise<string | null> {
+    const departSlug = this.extractDepartSlug(body);
+    const isDepartIntent = cmdLc === COMMANDS.DEPART_ASSIGN;
+    const hasMentionInText = !!rawMessage?.match(/@([^\s]+)/);
+    const mlWorker = this.normalizeWorkerSlug(body.worker_slug);
+    const isAssignWithDept =
+      cmdLc === COMMANDS.ASSIGN && !hasMentionInText && !mlWorker;
+
+    if (!isDepartIntent && !isAssignWithDept) {
+      return null;
+    }
+
+    if (role !== USER_ROLE.OWNER) {
+      return waErrorOwnersOnlyDepartment();
+    }
+
+    if (!departSlug) {
+      return waErrorMissingDepartSlug();
+    }
+
+    const descNl =
+      (rawMessage || '')
+        .replace(/^\s*\/?depart_assign\b/i, '')
+        .replace(/^\s*\/?assign\b/i, '')
+        .trim() || (rawMessage || '').trim();
+
+    if (!descNl) {
+      return waErrorDescriptionRequired();
+    }
+
+    const deptRow = await this.departmentsService.findDepartmentBySlug(
+      factoryId,
+      departSlug,
+    );
+    if (!deptRow) {
+      return waErrorDepartmentNotFound(departSlug);
+    }
+
+    await this.tasksService.assignToUser(
+      deptRow.manager_user_id,
+      assignerUserId,
+      factoryId,
+      descNl,
+      {
+        slugDepartmentId: deptRow.id,
+        deadline: this.classifyDeadlineRawInput(body),
+      },
+    );
+
+    return waDepartmentAssignSent(descNl, {
+      name: deptRow.name,
+      slug: deptRow.slug,
+    });
+  }
+
+  /** Prefer ML `id`; else parse /mgrself N or /mgrassign N from the message. */
+  private resolveManagerTaskId(
+    bodyId: number | undefined,
+    rawMessage: string | undefined,
+  ): number | undefined {
+    if (bodyId != null && Number.isFinite(Number(bodyId))) {
+      return Number(bodyId);
+    }
+    const msg = (rawMessage || '').trim();
+    const selfSlash = msg.match(/^\/mgrself\s+(\d+)\b/i);
+    if (selfSlash) return Number(selfSlash[1]);
+    const assignSlash = msg.match(/^\/mgrassign\s+(\d+)\b/i);
+    if (assignSlash) return Number(assignSlash[1]);
+    const transferSlash = msg.match(/^\/mgrtransfer\s+(\d+)\b/i);
+    if (transferSlash) return Number(transferSlash[1]);
+    const rejectSlash = msg.match(/^\/mgrreject\s+(\d+)\b/i);
+    if (rejectSlash) return Number(rejectSlash[1]);
+    return undefined;
+  }
+
+  private resolveManagerDepartSlug(
+    departSlug: string | null | undefined,
+    rawMessage: string | undefined,
+  ): string | null {
+    const fromMl = departSlug?.trim();
+    if (fromMl) {
+      return this.departmentsService.normalizeSlug(fromMl) || fromMl;
+    }
+    const msg = (rawMessage || '').trim();
+    const slash = msg.match(/^\/mgrtransfer\s+\d+\s+(\S+)/i);
+    if (slash) {
+      return this.departmentsService.normalizeSlug(slash[1]) || slash[1];
+    }
+    return null;
+  }
+
+  private resolveRejectReason(
+    mlReason: string | null | undefined,
+    rawMessage: string | undefined,
+  ): string | null {
+    if (mlReason != null && String(mlReason).trim() !== '') {
+      return String(mlReason).trim();
+    }
+    const msg = (rawMessage || '').trim();
+    const slash = msg.match(/^\/mgrreject\s+\d+\s+(.+)/is);
+    if (slash) return slash[1].trim();
+    return null;
+  }
+
+  /** ML `worker_slug` ("@1" or "1"); else slash /mgrassign id @mention. */
+  private resolveManagerWorkerMention(
+    workerSlug: string | null | undefined,
+    rawMessage: string | undefined,
+  ): string | null {
+    const fromMl = this.normalizeWorkerSlug(workerSlug);
+    if (fromMl) return fromMl;
+    const msg = (rawMessage || '').trim();
+    const m = msg.match(/^\/mgrassign\s+\d+\s+(@\S+)/i);
+    return m ? m[1] : null;
+  }
+
+  private normalizeWorkerSlug(slug?: string | null): string | null {
+    if (slug == null || String(slug).trim() === '') return null;
+    const s = String(slug).trim();
+    return s.startsWith('@') ? s : `@${s}`;
+  }
+
+  /** Priority: datetime → deadline (ML field) → date+time → date (date-only → end of IST day in TasksService). */
+  private classifyDeadlineRawInput(
+    body: WhatsAppIncomingServiceDto,
+  ): string | undefined {
+    const dt =
+      body.datetime != null && String(body.datetime).trim() !== ''
+        ? String(body.datetime).trim()
+        : '';
+    if (dt) return dt;
+    const deadlineField =
+      body.deadline != null && String(body.deadline).trim() !== ''
+        ? String(body.deadline).trim()
+        : '';
+    if (deadlineField) return deadlineField;
+    const date =
+      body.date != null && String(body.date).trim() !== ''
+        ? String(body.date).trim()
+        : '';
+    const time =
+      body.time != null && String(body.time).trim() !== ''
+        ? String(body.time).trim()
+        : '';
+    if (date && time) return `${date}T${time}`;
+    if (date) return date;
+    return undefined;
+  }
+
+  // 🧾 Task list formatters
+
+  private taskBlock(task: any, index: number): string {
+    const deadlineDate = task.deadline ? new Date(task.deadline) : null;
+    const isOverdue =
+      deadlineDate && !Number.isNaN(deadlineDate.getTime())
+        ? deadlineDate < new Date()
+        : false;
+    const deadline = deadlineDate
+      ? `${this.messagingService.formatInstantIST(deadlineDate)}${
+          isOverdue ? ' · Overdue' : ''
+        }`
+      : 'No deadline';
+
+    const assignee = task.assignee
+      ? `${task.assignee.name || 'Unknown'} (#${task.assignee.id}${
+          task.assignee.phone_number ? ` · ${task.assignee.phone_number}` : ''
+        })`
+      : 'Unassigned';
+
+    const assigner = task.assigner
+      ? `${task.assigner.name || 'Unknown'} (#${task.assigner.id})`
+      : 'Unknown';
+
+    let status = task.is_completed ? 'Completed' : 'Pending';
+    if (task.routing_status === 'REJECTED_BY_MANAGER') {
+      status = 'Rejected by manager';
+    }
+    let routing =
+      task.routing_status &&
+      task.routing_status !== 'DONE' &&
+      !task.is_completed
+        ? `\n🔁 Status: ${String(task.routing_status).replace(/_/g, ' ')}`
+        : '';
+    if (task.routing_status === 'REJECTED_BY_MANAGER' && task.rejection_reason) {
+      routing += `\n❌ Reason: ${task.rejection_reason}`;
+    }
+
+    return (
+      `*${index}.* ${task.description}\n` +
+      `🆔 Task #${task.id}\n` +
+      `👤 Assignee: ${assignee}\n` +
+      `👔 Assigned by: ${assigner}\n` +
+      `⏳ Due: ${deadline}\n` +
+      `📌 ${status}${routing}\n`
+    );
+  }
+
+  /** Worker view — flat list with assigner info. */
+  private formatWorkerTasks(tasks: any[]): string {
+    let body = '';
+    tasks.slice(0, 20).forEach((t, i) => {
+      body += this.taskBlock(t, i + 1) + '\n';
+    });
+    return (
+      `${WA_DIVIDER}\n*Your pending tasks*\n${WA_DIVIDER}\n\n` +
+      body +
+      `${WA_DIVIDER}\n💡 Reply: "complete task [id]" when done`
+    );
+  }
+
+  /** Manager / owner view — grouped by department, manager info in the header. */
+  private formatTasksByDepartment(tasks: any[]): string {
+    type Group = {
+      key: string;
+      title: string;
+      tasks: any[];
+    };
+    const groupsMap = new Map<string, Group>();
+
+    for (const task of tasks) {
+      const dept = task.department;
+      if (dept) {
+        const head = dept.manager
+          ? `${dept.manager.name || 'Unknown'} (#${dept.manager.id}${
+              dept.manager.phone_number ? ` · ${dept.manager.phone_number}` : ''
+            })`
+          : 'No manager';
+        const key = `dept:${dept.id}`;
+        const title =
+          `🏢 *${dept.name}* (\`${dept.slug}\`)\n` +
+          `👔 Department head: ${head}`;
+        if (!groupsMap.has(key)) {
+          groupsMap.set(key, { key, title, tasks: [] });
+        }
+        groupsMap.get(key)!.tasks.push(task);
+      } else {
+        // Fallback grouping when a task isn't attached to a department —
+        // group by the manager/owner who assigned it.
+        const assigner = task.assigner;
+        const key = assigner ? `assigner:${assigner.id}` : 'assigner:unknown';
+        const headline = assigner
+          ? `${assigner.name || 'Unknown'} (#${assigner.id})`
+          : 'Unknown assigner';
+        const title = `👔 *Direct assignments* — ${headline}`;
+        if (!groupsMap.has(key)) {
+          groupsMap.set(key, { key, title, tasks: [] });
+        }
+        groupsMap.get(key)!.tasks.push(task);
+      }
+    }
+
+    let total = 0;
+    let body = '';
+    for (const group of groupsMap.values()) {
+      body += `\n${group.title}\n${WA_DIVIDER}\n`;
+      group.tasks.forEach((t) => {
+        total += 1;
+        body += `\n${this.taskBlock(t, total)}`;
+      });
+    }
+
+    const groupLabel = groupsMap.size === 1 ? 'section' : 'sections';
+    return (
+      `${WA_DIVIDER}\n*Factory tasks*\n${WA_DIVIDER}\n\n` +
+      `📊 ${total} pending · ${groupsMap.size} ${groupLabel}\n` +
+      body +
+      `\n${WA_DIVIDER}\n💡 Reply: "complete task [id]" to mark done`
+    );
+  }
+
+  // 🔒 Role Guards
+
+  private ensureManager(role: string) {
+    if (role === USER_ROLE.WORKER) {
+      throw new ForbiddenException(
+        'Only managers and owners can perform this action',
+      );
+    }
+  }
+
+  private ensureWorker(role: string) {
+    if (role !== USER_ROLE.WORKER) {
+      throw new ForbiddenException('Only workers can perform this action');
+    }
+  }
+
+  // 🧠 Parsers
+
+  private parseAssignCommand(message: string) {
+    const parts = message.split(' ');
+
+    const assigned_to = parts[1];
+    const description = parts.slice(2).join(' ').trim();
+
+    if (!assigned_to || !description) {
+      throw new NotFoundException(
+        'Format: /assign @<name|id|phone> or @all [task]',
+      );
+    }
+
+    return { assigned_to, description };
+  }
+
+  private parseUpdateCommand(message: string) {
+    const parts = message.split(' ');
+
+    const task_id = Number.parseInt(parts[1]);
+    const updateMessage = parts.slice(2).join(' ').trim();
+
+    if (!task_id || !updateMessage) {
+      throw new NotFoundException('Format: /update <taskId> <message>');
+    }
+
+    return { task_id, updateMessage };
+  }
+}
+
+@Injectable()
+export class AttendanceCronService {
+  constructor(
+    private readonly factoryService: FactoryService,
+    private readonly attendanceService: AttendanceService,
+    private readonly whatsappService: WhatsAppService,
+  ) {}
+
+  // 🟢 9 AM IST initial reminder
+  @Cron('0 9 * * *', { timeZone: INDIA_TIMEZONE })
+  async sendMorningReminder() {
+    await this.sendReminder('Morning');
+  }
+
+  // 🔁 Every 2 hours retry
+  @Cron(CronExpression.EVERY_2_HOURS, { timeZone: INDIA_TIMEZONE })
+  async sendRetryReminder() {
+    const hour = getHourIST();
+
+    // ❌ Skip before 9 AM
+    if (hour < 11) return;
+
+    // ❌ Stop after 7 PM (optional)
+    if (hour > 19) return;
+
+    await this.sendReminder('Retry');
+  }
+
+  // 🔥 Core Logic
+  async sendReminder(type: 'Morning' | 'Retry') {
+    const workers: any = await this.factoryService.getAllWorkers(); // implement this
+
+    for (const worker of workers) {
+      const w = worker.toJSON();
+      const userId = w.user_id;
+      const factoryId = w.factory_id;
+      const phone = w.user.phone_number;
+
+      // ✅ Check attendance
+      const alreadyMarked = await this.attendanceService.isMarkedToday(
+        userId,
+        factoryId,
+      );
+
+      if (alreadyMarked) continue;
+
+      // 🚀 Send template
+      await this.whatsappService.sendTemplate(
+        phone,
+        'factory_attendance_reminder',
+        { body: [w.user.name || 'Worker'] },
+      );
+
+      // ⏳ small delay (avoid rate limit)
+      await this.delay(300);
+    }
+  }
+
+  private async delay(ms: number) {
+    return new Promise((res) => setTimeout(res, ms));
+  }
+}
