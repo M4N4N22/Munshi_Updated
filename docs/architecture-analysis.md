@@ -450,3 +450,8 @@ Suggested domains for Phase 1 extension:
 - [reports/future-work-report.md](./reports/future-work-report.md)
 - [../migrations/README.md](../migrations/README.md)
 
+### Prompt 3 — Vendor Master (complete)
+
+- [reports/prompt-3-vendor-management-report.md](./reports/prompt-3-vendor-management-report.md)
+- [reports/prompt-3-next-steps.md](./reports/prompt-3-next-steps.md)
+

@@ -8,6 +8,7 @@ Munshi uses **versioned SQL migrations** for TraderOS schema changes. Sequelize 
 
 ```bash
 psql "$POSTGRES_CONNECTION_STRING" -f migrations/001_traderos_foundation.sql
+psql "$POSTGRES_CONNECTION_STRING" -f migrations/002_vendors_master.sql
 ```
 
 Or with discrete connection params:
@@ -40,7 +41,8 @@ ORDER BY table_name;
 
 | File | Description |
 |------|-------------|
-| `001_traderos_foundation.sql` | TraderOS foundation tables (vendors, inventory, purchase requests, approvals) |
+| `001_traderos_foundation.sql` | Creates all seven new tables + indexes |
+| `002_vendors_master.sql` | Vendor phone_number column, required phone, unique indexes per factory |
 
 ## Notes
 

@@ -220,4 +220,25 @@ Seven new tables added via `migrations/001_traderos_foundation.sql`:
 
 ---
 
+## Prompt 3 — Vendors Table (Updated)
+
+After `migrations/002_vendors_master.sql`:
+
+| Column | Type | Constraints |
+|--------|------|-------------|
+| id | INTEGER | PK |
+| factory_id | INTEGER | NOT NULL |
+| name | VARCHAR(255) | NOT NULL, unique per factory (CI) |
+| phone_number | VARCHAR(32) | NOT NULL, unique per factory (CI) |
+| email | VARCHAR(255) | nullable |
+| address | TEXT | nullable |
+| gst_number | VARCHAR(15) | nullable |
+| notes | TEXT | nullable |
+| is_active | BOOLEAN | default true |
+| created_at, updated_at | timestamps | |
+
+**Module status:** Fully implemented REST CRUD + soft deactivate. See [prompt-3-vendor-management-report.md](./prompt-3-vendor-management-report.md).
+
+---
+
 *End of current database analysis.*

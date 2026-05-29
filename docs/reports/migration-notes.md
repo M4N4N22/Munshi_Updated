@@ -35,6 +35,7 @@ Creates **seven new tables** for TraderOS foundation modules. It does **not**:
 
 ```bash
 psql "$POSTGRES_CONNECTION_STRING" -f migrations/001_traderos_foundation.sql
+psql "$POSTGRES_CONNECTION_STRING" -f migrations/002_vendors_master.sql
 ```
 
 ### Production
@@ -112,3 +113,32 @@ Existing Munshi databases may contain legacy rows without strict referential int
 ---
 
 *See [prompt-2-foundation-schema-report.md](./prompt-2-foundation-schema-report.md) for full implementation summary.*
+
+---
+
+## Migration 002 — Vendor Master (Prompt 3)
+
+**File:** `migrations/002_vendors_master.sql`
+
+### Changes
+
+- Renames `vendors.phone` → `vendors.phone_number` (if legacy column exists)
+- Sets `phone_number NOT NULL`
+- Adds case-insensitive unique indexes:
+  - `(factory_id, LOWER(TRIM(name)))`
+  - `(factory_id, LOWER(TRIM(phone_number)))`
+- Adds `(factory_id, is_active)` index for active vendor lists
+
+### Apply after 001
+
+```bash
+psql "$POSTGRES_CONNECTION_STRING" -f migrations/002_vendors_master.sql
+```
+
+### Compatibility
+
+- Vendor REST API requires `002` before create/list operations
+- Existing Munshi operational tables unchanged
+- Legacy vendor rows with null phone receive placeholder `UNKNOWN-{id}` during migration (review in production)
+
+*See [prompt-3-vendor-management-report.md](./prompt-3-vendor-management-report.md).*

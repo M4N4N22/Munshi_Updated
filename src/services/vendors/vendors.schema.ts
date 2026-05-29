@@ -14,12 +14,14 @@ export class Vendor extends Model<
   declare id: CreationOptional<number>;
   declare factory_id: number;
   declare name: string;
-  declare phone?: string | null;
+  declare phone_number: string;
   declare email?: string | null;
   declare address?: string | null;
   declare gst_number?: string | null;
   declare notes?: string | null;
   declare is_active: CreationOptional<boolean>;
+  declare readonly created_at?: Date;
+  declare readonly updated_at?: Date;
 
   static setup(sequelize: Sequelize) {
     Vendor.init(
@@ -34,13 +36,16 @@ export class Vendor extends Model<
           allowNull: false,
         },
         name: {
-          type: DataTypes.STRING,
+          type: DataTypes.STRING(VENDOR_NAME_MAX),
           allowNull: false,
         },
-        phone: DataTypes.STRING,
-        email: DataTypes.STRING,
+        phone_number: {
+          type: DataTypes.STRING(VENDOR_PHONE_MAX),
+          allowNull: false,
+        },
+        email: DataTypes.STRING(VENDOR_EMAIL_MAX),
         address: DataTypes.TEXT,
-        gst_number: DataTypes.STRING,
+        gst_number: DataTypes.STRING(VENDOR_GST_MAX),
         notes: DataTypes.TEXT,
         is_active: {
           type: DataTypes.BOOLEAN,
@@ -52,7 +57,11 @@ export class Vendor extends Model<
         tableName: 'vendors',
         underscored: true,
         timestamps: true,
-        indexes: [{ fields: ['factory_id'] }, { fields: ['factory_id', 'name'] }],
+        indexes: [
+          { fields: ['factory_id'] },
+          { fields: ['factory_id', 'is_active'] },
+          { fields: ['factory_id', 'gst_number'] },
+        ],
       },
     );
     return Vendor;
@@ -69,3 +78,8 @@ export class Vendor extends Model<
     });
   }
 }
+
+const VENDOR_NAME_MAX = 255;
+const VENDOR_PHONE_MAX = 32;
+const VENDOR_EMAIL_MAX = 255;
+const VENDOR_GST_MAX = 15;
