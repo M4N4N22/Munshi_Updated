@@ -1,6 +1,7 @@
 /** Supported multi-step workflow types. */
 export const WORKFLOW_TYPE = {
   ONBOARD_VENDOR: 'ONBOARD_VENDOR',
+  ONBOARD_WORKER: 'ONBOARD_WORKER',
 } as const;
 
 export type WorkflowType =
@@ -20,7 +21,24 @@ export type WorkflowStatus =
 /** Canonical slash commands that start a workflow (registry keys). */
 export const WORKFLOW_START_COMMANDS = {
   ONBOARD_VENDOR: '/onboard_vendor',
+  ONBOARD_WORKER: '/onboard_worker',
 } as const;
+
+/** Cancels the active workflow session for the sender. */
+export const WORKFLOW_CANCEL_COMMAND = '/cancel';
+
+/** Default ACTIVE session TTL when env is unset (hours). */
+export const WORKFLOW_DEFAULT_TTL_HOURS = 24;
+
+/** Env key: WORKFLOW_SESSION_TTL_HOURS */
+export function getWorkflowSessionTtlMs(): number {
+  const raw = process.env.WORKFLOW_SESSION_TTL_HOURS;
+  const hours = raw != null && raw !== '' ? Number(raw) : WORKFLOW_DEFAULT_TTL_HOURS;
+  if (!Number.isFinite(hours) || hours <= 0) {
+    return WORKFLOW_DEFAULT_TTL_HOURS * 60 * 60 * 1000;
+  }
+  return hours * 60 * 60 * 1000;
+}
 
 /** Vendor onboarding step identifiers. */
 export const VENDOR_ONBOARDING_STEP = {
@@ -32,5 +50,16 @@ export const VENDOR_ONBOARDING_STEP = {
 
 export type VendorOnboardingStep =
   (typeof VENDOR_ONBOARDING_STEP)[keyof typeof VENDOR_ONBOARDING_STEP];
+
+/** Worker onboarding step identifiers. */
+export const WORKER_ONBOARDING_STEP = {
+  WORKER_NAME: 'WORKER_NAME',
+  WORKER_PHONE: 'WORKER_PHONE',
+  WORKER_DEPARTMENT: 'WORKER_DEPARTMENT',
+  WORKER_DOJ: 'WORKER_DOJ',
+} as const;
+
+export type WorkerOnboardingStep =
+  (typeof WORKER_ONBOARDING_STEP)[keyof typeof WORKER_ONBOARDING_STEP];
 
 export const WORKFLOW_SKIP_KEYWORDS = ['skip', 'none', 'na', 'n/a'];

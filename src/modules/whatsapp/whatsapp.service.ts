@@ -87,8 +87,23 @@ export class WhatsAppService {
     try {
       const msgTrim = (body.message || '').trim();
 
-      // Active multi-step workflow — bypass ML and normal commands
-      if (await this.workflowRouter.hasActiveSession(body.from)) {
+      if (this.workflowRouter.isCancelCommand(msgTrim)) {
+        const cancelResult = await this.workflowRouter.cancelWorkflow(
+          body.from,
+        );
+        await this.sendTextMessage(body.from, cancelResult);
+        return 'ok';
+      }
+
+      const sessionState = await this.workflowRouter.resolveActiveSession(
+        body.from,
+      );
+      if (sessionState.expiredJustNow) {
+        await this.sendTextMessage(
+          body.from,
+          this.workflowRouter.getExpiredSessionMessage(),
+        );
+      } else if (sessionState.session) {
         const workflowResult =
           await this.workflowRouter.handleActiveWorkflowMessage(
             body.from,
@@ -224,6 +239,14 @@ export class WhatsAppService {
 
     if (cmdLc === COMMANDS.ONBOARD_VENDOR) {
       return this.workflowRouter.startWorkflowFromCommand(phone, cmdLc);
+    }
+
+    if (cmdLc === COMMANDS.ONBOARD_WORKER) {
+      return this.workflowRouter.startWorkflowFromCommand(phone, cmdLc);
+    }
+
+    if (cmdLc === COMMANDS.CANCEL) {
+      return this.workflowRouter.cancelWorkflow(phone);
     }
 
     const deptAssignEarly = await this.tryClassifiedDepartmentAssign(

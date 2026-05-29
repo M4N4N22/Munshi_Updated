@@ -23,6 +23,18 @@ export interface IVendorOnboardingSessionData {
   address?: string | null;
 }
 
+export interface IWorkerOnboardingSessionData {
+  name?: string;
+  phone_number?: string;
+  department_id?: number;
+  doj?: string | null;
+}
+
+export interface WorkflowSessionResolveResult {
+  session: IWorkflowSessionRecord | null;
+  expiredJustNow: boolean;
+}
+
 export interface WorkflowUserContext {
   userId: number;
   factoryId: number;

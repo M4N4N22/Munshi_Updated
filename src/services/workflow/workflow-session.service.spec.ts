@@ -13,6 +13,7 @@ describe('WorkflowSessionService', () => {
     create: jest.Mock;
     findByPk: jest.Mock;
     findOne: jest.Mock;
+    findAll: jest.Mock;
   };
 
   const activeRow = {
@@ -33,6 +34,7 @@ describe('WorkflowSessionService', () => {
       create: jest.fn(),
       findByPk: jest.fn(),
       findOne: jest.fn(),
+      findAll: jest.fn(),
     };
 
     const repository = {
@@ -126,5 +128,46 @@ describe('WorkflowSessionService', () => {
     await expect(
       service.updateSession(99, { current_step: 'X' }),
     ).rejects.toThrow(NotFoundException);
+  });
+
+  it('isExpired returns true when session is older than TTL', () => {
+    const old = {
+      ...activeRow,
+      created_at: new Date(Date.now() - 25 * 60 * 60 * 1000),
+    };
+    expect(service.isExpired(old)).toBe(true);
+  });
+
+  it('resolveActiveSession expires stale session', async () => {
+    const stale = {
+      ...activeRow,
+      created_at: new Date(Date.now() - 25 * 60 * 60 * 1000),
+      update: jest.fn().mockImplementation(async (patch: any) => {
+        stale.status = patch.status;
+      }),
+    };
+    model.findOne.mockResolvedValue(stale);
+    model.findByPk.mockResolvedValue(stale);
+
+    const resolved = await service.resolveActiveSession('919999999999');
+
+    expect(resolved.expiredJustNow).toBe(true);
+    expect(resolved.session).toBeNull();
+  });
+
+  it('expireStaleActiveSessions expires all stale rows', async () => {
+    const stale = {
+      ...activeRow,
+      id: 2,
+      created_at: new Date(Date.now() - 25 * 60 * 60 * 1000),
+      update: jest.fn().mockImplementation(async (patch: any) => {
+        stale.status = patch.status;
+      }),
+    };
+    model.findAll.mockResolvedValue([stale]);
+    model.findByPk.mockResolvedValue(stale);
+
+    const count = await service.expireStaleActiveSessions();
+    expect(count).toBe(1);
   });
 });

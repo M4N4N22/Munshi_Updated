@@ -1,0 +1,123 @@
+import { BadRequestException } from '@nestjs/common';
+import { normalizeVendorPhone } from 'src/services/vendors/vendors.validation';
+import { WORKFLOW_SKIP_KEYWORDS } from './workflow.constants';
+
+const WORKER_NAME_MAX = 255;
+
+export function normalizeWorkerName(name: string): string {
+  const trimmed = name.trim().replace(/\s+/g, ' ');
+  if (!trimmed) {
+    throw new BadRequestException('Worker name is required');
+  }
+  if (trimmed.length > WORKER_NAME_MAX) {
+    throw new BadRequestException(
+      `Worker name must be at most ${WORKER_NAME_MAX} characters`,
+    );
+  }
+  return trimmed;
+}
+
+export function normalizeWorkerPhone(phone: string): string {
+  try {
+    return normalizeVendorPhone(phone);
+  } catch (error: any) {
+    const msg = error?.message ?? 'Invalid phone number';
+    if (msg.includes('Phone')) {
+      throw new BadRequestException(msg);
+    }
+    throw error;
+  }
+}
+
+export function normalizeWorkerDoj(input: string): Date | null {
+  const trimmed = input.trim();
+  if (!trimmed || WORKFLOW_SKIP_KEYWORDS.includes(trimmed.toLowerCase())) {
+    return null;
+  }
+
+  const isoMatch = trimmed.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (isoMatch) {
+    const date = new Date(`${trimmed}T00:00:00.000Z`);
+    if (Number.isNaN(date.getTime())) {
+      throw new BadRequestException(
+        'Invalid date of joining. Use YYYY-MM-DD or reply SKIP.',
+      );
+    }
+    return date;
+  }
+
+  const dmyMatch = trimmed.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+  if (dmyMatch) {
+    const [, dd, mm, yyyy] = dmyMatch;
+    const date = new Date(
+      `${yyyy}-${mm.padStart(2, '0')}-${dd.padStart(2, '0')}T00:00:00.000Z`,
+    );
+    if (Number.isNaN(date.getTime())) {
+      throw new BadRequestException(
+        'Invalid date of joining. Use YYYY-MM-DD or reply SKIP.',
+      );
+    }
+    return date;
+  }
+
+  throw new BadRequestException(
+    'Invalid date of joining. Use YYYY-MM-DD (e.g. 2026-05-29) or reply SKIP.',
+  );
+}
+
+export interface DepartmentOption {
+  id: number;
+  name: string;
+  slug: string;
+}
+
+export function resolveDepartmentSelection(
+  input: string,
+  departments: DepartmentOption[],
+): DepartmentOption {
+  const trimmed = input.trim();
+  if (!trimmed) {
+    throw new BadRequestException('Please select a department by name or ID.');
+  }
+
+  const asId = Number(trimmed);
+  if (Number.isFinite(asId) && asId > 0) {
+    const byId = departments.find((d) => d.id === asId);
+    if (byId) {
+      return byId;
+    }
+  }
+
+  const lower = trimmed.toLowerCase();
+  const bySlug = departments.find((d) => d.slug.toLowerCase() === lower);
+  if (bySlug) {
+    return bySlug;
+  }
+
+  const byName = departments.find(
+    (d) => d.name.trim().toLowerCase() === lower,
+  );
+  if (byName) {
+    return byName;
+  }
+
+  const partial = departments.filter((d) =>
+    d.name.toLowerCase().includes(lower),
+  );
+  if (partial.length === 1) {
+    return partial[0];
+  }
+
+  throw new BadRequestException(
+    `No department matches "${trimmed}". Reply with a department name or ID from the list.`,
+  );
+}
+
+export function formatDepartmentList(departments: DepartmentOption[]): string {
+  if (departments.length === 0) {
+    return 'No departments are set up for your factory yet.\n\nPlease create a department first, then run /onboard_worker again.';
+  }
+  return departments
+    .map((d) => `• *${d.id}* — ${d.name} (\`${d.slug}\`)`)
+    .join('\n');
+}

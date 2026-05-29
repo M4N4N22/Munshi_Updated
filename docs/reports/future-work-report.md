@@ -1,84 +1,71 @@
-# Future Work Report — Post Prompt 4
+# Future Work Report — Post Prompt 5
 
 **Date:** 2026-05-29  
-**Baseline:** Workflow Engine + vendor onboarding complete; inventory/procurement/approval remain skeletons
+**Baseline:** Workflow engine hardened; vendor + worker onboarding live
+
+---
+
+## Completed in Prompt 5
+
+- [x] `/cancel` workflow command
+- [x] Configurable session TTL + hourly expiry cron
+- [x] Expired session recovery messaging
+- [x] `/onboard_worker` workflow (second registry workflow)
+- [x] Worker creation via existing Factory + Department services
+- [x] Worker welcome WhatsApp message
+- [x] 67 tests passing; vendor onboarding regression verified
 
 ---
 
 ## Completed in Prompt 4
 
-- [x] Generic Workflow Session Engine (`WorkflowModule`)
-- [x] Migration `003_workflow_sessions.sql`
-- [x] Pluggable workflow registry
+- [x] Generic Workflow Session Engine
+- [x] `/onboard_vendor` workflow
 - [x] WhatsApp routing with active session interception
-- [x] `/onboard_vendor` workflow via `VendorService.createVendor()`
-- [x] 23 workflow tests; 42 total tests passing
-- [x] ML integration untouched
-- [x] Existing Munshi commands preserved
 
 ---
 
-## Completed in Prompt 3
+## Recommended Prompt 6 — Inventory Foundation
 
-- [x] Vendor CRUD fully implemented with tests (19 tests)
-- [x] Soft deactivate, search, pagination, factory isolation
-- [x] Migration `002_vendors_master.sql`
-
----
-
-## Prompt 5 — Recommended Implementation Order
-
-### Phase A: Workflow platform hardening
+### Phase A: Inventory CRUD
 
 | Task | Priority |
 |------|----------|
-| `/cancel` workflow command | P0 |
-| Session TTL + cron calling `expireSession()` | P0 |
-| Admin REST to list/cancel active sessions | P1 |
-
-### Phase B: Second workflow (engine validation)
-
-| Task | Priority |
-|------|----------|
-| Worker onboarding (`/onboard_worker`) | P0 |
-| Reuse registry pattern — no engine redesign | P0 |
-
-### Phase C: Inventory foundation
-
-| Task | Priority |
-|------|----------|
-| Apply migrations 001 + 002 + 003 if not done | P0 |
 | Inventory category + location CRUD | P0 |
 | Inventory item CRUD + SKU uniqueness | P0 |
-| `/inventory_create` workflow | P1 |
+| Transaction service (single quantity write path) | P0 |
 
-### Phase D: Procurement + approvals
+### Phase B: Third workflow
 
 | Task | Priority |
 |------|----------|
-| Purchase request CRUD | P0 |
-| Link optional `vendor_id` to vendor master | P0 |
-| Approval engine + status transitions | P1 |
-| WhatsApp notifications on approval | P2 |
+| `/inventory_create` workflow via hardened engine | P0 |
+| Validate cancel/expiry/registry with third workflow type | P0 |
 
-### Phase E: Platform hardening
+### Phase C: Procurement + approvals
+
+| Task | Priority |
+|------|----------|
+| Purchase request CRUD | P1 |
+| Approval engine + status transitions | P1 |
+
+### Phase D: Platform
 
 | Task | Priority |
 |------|----------|
 | REST auth guard on TraderOS routes | P1 |
-| FK migration for TraderOS tables | P1 |
-| Staging environment | P1 |
-| ML intent mapping for `/onboard_vendor` NL path | P1 |
+| ML intent mapping for `/onboard_worker` | P1 |
+| Admin REST for workflow session management | P2 |
+| `/onboard_manager` workflow | P2 |
 
 ---
 
 ## Deferred
 
-- Manager onboarding workflow
-- Vendor role + authentication
-- Quotation / purchase order workflows
 - Financial ledger + expense tracking
 - Account aggregator
+- DB foreign key migration
+- Vendor role + authentication
 
 ---
 
@@ -86,12 +73,11 @@
 
 | Item | Target |
 |------|--------|
-| No `/cancel` or session TTL | Prompt 5 |
-| Inventory/procurement/approval skeleton endpoints | Prompt 5+ |
-| No FK constraints on TraderOS tables | Later migration |
-| No auth on REST routes | Prompt 5 or infra |
-| `expireSession()` implemented but no cron | Prompt 5 |
+| Inventory/procurement/approval skeleton endpoints | Prompt 6 |
+| Multiple onboarding messages on worker create | Optional flag in Prompt 6+ |
+| No REST workflow admin API | Prompt 6+ |
+| Cron in-process only | Scale planning |
 
 ---
 
-*See [prompt-4-next-steps.md](./prompt-4-next-steps.md) for Prompt 5 scope.*
+*See [prompt-5-next-steps.md](./prompt-5-next-steps.md) for Prompt 6 scope.*

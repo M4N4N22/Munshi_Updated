@@ -21,6 +21,8 @@ describe('WorkflowRouterService routing', () => {
   beforeEach(() => {
     sessionService = {
       getActiveSession: jest.fn(),
+      resolveActiveSession: jest.fn(),
+      cancelSession: jest.fn(),
     } as unknown as jest.Mocked<WorkflowSessionService>;
 
     engine = {
@@ -49,14 +51,17 @@ describe('WorkflowRouterService routing', () => {
   });
 
   it('detects active workflow session', async () => {
-    sessionService.getActiveSession.mockResolvedValue({
-      id: 1,
-      factory_id: 10,
-      phone_number: '919999999999',
-      workflow_type: 'ONBOARD_VENDOR',
-      current_step: 'VENDOR_NAME',
-      session_data: {},
-      status: 'ACTIVE',
+    sessionService.resolveActiveSession.mockResolvedValue({
+      session: {
+        id: 1,
+        factory_id: 10,
+        phone_number: '919999999999',
+        workflow_type: 'ONBOARD_VENDOR',
+        current_step: 'VENDOR_NAME',
+        session_data: {},
+        status: 'ACTIVE',
+      },
+      expiredJustNow: false,
     });
 
     expect(await router.hasActiveSession('919999999999')).toBe(true);

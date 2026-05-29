@@ -8,8 +8,9 @@ import {
   WORKFLOW_STATUS,
   WorkflowStatus,
   WorkflowType,
+  getWorkflowSessionTtlMs,
 } from './workflow.constants';
-import { IWorkflowSessionRecord } from './workflow.interfaces';
+import { IWorkflowSessionRecord, WorkflowSessionResolveResult } from './workflow.interfaces';
 import { WorkflowSessionRepository } from './workflow-session.repository';
 import { WorkflowSession } from './workflow.schema';
 
@@ -63,6 +64,47 @@ export class WorkflowSessionService {
       order: [['id', 'DESC']],
     });
     return row ? this.toRecord(row) : null;
+  }
+
+  isExpired(session: IWorkflowSessionRecord): boolean {
+    const createdAt = session.created_at
+      ? new Date(session.created_at).getTime()
+      : 0;
+    if (!createdAt) {
+      return false;
+    }
+    return Date.now() - createdAt > getWorkflowSessionTtlMs();
+  }
+
+  /** Expire stale ACTIVE session for phone; returns whether one was expired. */
+  async resolveActiveSession(
+    phoneNumber: string,
+  ): Promise<WorkflowSessionResolveResult> {
+    const session = await this.getActiveSession(phoneNumber);
+    if (!session) {
+      return { session: null, expiredJustNow: false };
+    }
+    if (!this.isExpired(session)) {
+      return { session, expiredJustNow: false };
+    }
+    await this.expireSession(session.id);
+    return { session: null, expiredJustNow: true };
+  }
+
+  /** Bulk-expire ACTIVE sessions past TTL (cron / maintenance). */
+  async expireStaleActiveSessions(): Promise<number> {
+    const rows = await this.repository.model.findAll({
+      where: { status: WORKFLOW_STATUS.ACTIVE },
+    });
+    let count = 0;
+    for (const row of rows) {
+      const record = this.toRecord(row);
+      if (this.isExpired(record)) {
+        await this.expireSession(record.id);
+        count += 1;
+      }
+    }
+    return count;
   }
 
   async updateSession(

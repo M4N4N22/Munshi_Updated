@@ -469,3 +469,16 @@ Suggested domains for Phase 1 extension:
 
 **Database:** `workflow_sessions` table (migration `003_workflow_sessions.sql`).
 
+### Prompt 5 — Workflow Hardening + Worker Onboarding (complete)
+
+- [reports/prompt-5-workflow-hardening-report.md](./reports/prompt-5-workflow-hardening-report.md)
+- [reports/prompt-5-worker-onboarding-report.md](./reports/prompt-5-worker-onboarding-report.md)
+- [reports/prompt-5-routing-validation-report.md](./reports/prompt-5-routing-validation-report.md)
+- [reports/prompt-5-next-steps.md](./reports/prompt-5-next-steps.md)
+
+**Workflow hardening:** `/cancel`, configurable session TTL (default 24h), expiry on access + hourly cron, recovery messaging.
+
+**Second workflow:** `/onboard_worker` — reuses `FactoryService`, `DepartmentsService`, worker welcome message.
+
+**Registry:** `/onboard_vendor` + `/onboard_worker` — proves multi-workflow engine without redesign.
+

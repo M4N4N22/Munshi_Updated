@@ -352,6 +352,22 @@ export class MessagingService {
     );
   }
 
+  buildWorkerWelcomeText(params: { userName: string }) {
+    return (
+      `━━━━━━━━━━━━━━━━\n` +
+      `👋 *Welcome to Munshi*\n` +
+      `━━━━━━━━━━━━━━━━\n\n` +
+      `Hello *${params.userName || 'there'}*,\n\n` +
+      `You have been onboarded successfully.\n` +
+      `You can now interact with Munshi on WhatsApp.\n\n` +
+      `Try:\n` +
+      `• "present" — mark attendance\n` +
+      `• "show my tasks" — view your tasks\n` +
+      `• /help — see all commands\n\n` +
+      `━━━━━━━━━━━━━━━━`
+    );
+  }
+
   buildDeadlineMissedWorkerText(params: {
     factoryName: string;
     taskId: number;

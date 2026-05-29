@@ -17,6 +17,8 @@ export const COMMANDS = {
   HELP: '/help',
   REPORT: '/report',
   ONBOARD_VENDOR: '/onboard_vendor',
+  ONBOARD_WORKER: '/onboard_worker',
+  CANCEL: '/cancel',
 };
 
 export const COMMAND_HINTS = [
@@ -58,5 +60,13 @@ export const COMMAND_HINTS = [
   {
     command: COMMANDS.ONBOARD_VENDOR,
     hint: 'Start vendor onboarding workflow (managers/owners)',
+  },
+  {
+    command: COMMANDS.ONBOARD_WORKER,
+    hint: 'Start worker onboarding workflow (managers/owners)',
+  },
+  {
+    command: COMMANDS.CANCEL,
+    hint: 'Cancel the active multi-step workflow',
   },
 ];

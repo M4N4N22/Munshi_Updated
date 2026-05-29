@@ -3,6 +3,7 @@ import {
   IsOptional,
   IsNumberString,
   IsEnum,
+  IsDateString,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
@@ -94,4 +95,9 @@ export class UpdateFactoryUserDto {
   @IsOptional()
   @IsEnum(USER_ROLE)
   role?: USER_ROLE;
+
+  @ApiPropertyOptional({ example: '2026-05-29', description: 'Date of joining' })
+  @IsOptional()
+  @IsDateString()
+  doj?: string;
 }
