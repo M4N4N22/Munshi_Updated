@@ -1,23 +1,39 @@
 import { Attendance } from 'src/services/attendance/attendance.schema';
+import { ApprovalRequest } from 'src/services/approvals/approvals.schema';
 import {
   Department,
   DepartmentWorker,
 } from 'src/services/departments/departments.schema';
 import { Factory, FactoryUser } from 'src/services/factories/factories.schema';
+import {
+  InventoryCategory,
+  InventoryItem,
+  InventoryLocation,
+  InventoryTransaction,
+} from 'src/services/inventory/inventory.schema';
 import { Issue } from 'src/services/issues/issues.schema';
+import { PurchaseRequest } from 'src/services/purchase-requests/purchase-requests.schema';
 import { Task, TaskUpdate } from 'src/services/tasks/tasks.schema';
 import { User } from 'src/services/users/users.schema';
+import { Vendor } from 'src/services/vendors/vendors.schema';
 
 export const MONGOOSE_MODELS = {};
 
 export const SQL_MODELS = {
+  ApprovalRequest: ApprovalRequest.setup,
   Attendance: Attendance.setup,
   Department: Department.setup,
   DepartmentWorker: DepartmentWorker.setup,
   Factory: Factory.setup,
   FactoryUser: FactoryUser.setup,
+  InventoryCategory: InventoryCategory.setup,
+  InventoryItem: InventoryItem.setup,
+  InventoryLocation: InventoryLocation.setup,
+  InventoryTransaction: InventoryTransaction.setup,
   Issue: Issue.setup,
+  PurchaseRequest: PurchaseRequest.setup,
   Task: Task.setup,
   TaskUpdate: TaskUpdate.setup,
   User: User.setup,
+  Vendor: Vendor.setup,
 };

@@ -65,6 +65,41 @@ export class Factory extends Model<
       foreignKey: 'factory_id',
       as: 'departments',
     });
+
+    Factory.hasMany(models.Vendor, {
+      foreignKey: 'factory_id',
+      as: 'vendors',
+    });
+
+    Factory.hasMany(models.InventoryCategory, {
+      foreignKey: 'factory_id',
+      as: 'inventory_categories',
+    });
+
+    Factory.hasMany(models.InventoryLocation, {
+      foreignKey: 'factory_id',
+      as: 'inventory_locations',
+    });
+
+    Factory.hasMany(models.InventoryItem, {
+      foreignKey: 'factory_id',
+      as: 'inventory_items',
+    });
+
+    Factory.hasMany(models.InventoryTransaction, {
+      foreignKey: 'factory_id',
+      as: 'inventory_transactions',
+    });
+
+    Factory.hasMany(models.PurchaseRequest, {
+      foreignKey: 'factory_id',
+      as: 'purchase_requests',
+    });
+
+    Factory.hasMany(models.ApprovalRequest, {
+      foreignKey: 'factory_id',
+      as: 'approval_requests',
+    });
   }
 }
 

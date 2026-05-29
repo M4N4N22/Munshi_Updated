@@ -14,6 +14,10 @@ import { TasksModule } from 'src/services/tasks/tasks.module';
 import { DepartmentsModule } from 'src/services/departments/departments.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ReportsModule } from 'src/services/reports/reports.module';
+import { VendorModule } from 'src/services/vendors/vendors.module';
+import { InventoryModule } from 'src/services/inventory/inventory.module';
+import { PurchaseRequestModule } from 'src/services/purchase-requests/purchase-requests.module';
+import { ApprovalModule } from 'src/services/approvals/approvals.module';
 
 @Module({
   imports: [
@@ -33,6 +37,10 @@ import { ReportsModule } from 'src/services/reports/reports.module';
     ReportsModule,
     TasksModule,
     DepartmentsModule,
+    VendorModule,
+    InventoryModule,
+    PurchaseRequestModule,
+    ApprovalModule,
   ],
   providers: [
     {

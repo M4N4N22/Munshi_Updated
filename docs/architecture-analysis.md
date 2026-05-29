@@ -441,3 +441,12 @@ Suggested domains for Phase 1 extension:
 - [infra-audit.md](./infra-audit.md) — executive summary index
 - [implementation-report.md](./implementation-report.md) — phase completion log
 
+### Prompt 2 — TraderOS foundation
+
+- [reports/current-database-analysis.md](./reports/current-database-analysis.md)
+- [reports/migration-notes.md](./reports/migration-notes.md)
+- [reports/prompt-2-foundation-schema-report.md](./reports/prompt-2-foundation-schema-report.md)
+- [reports/architecture-impact-report.md](./reports/architecture-impact-report.md)
+- [reports/future-work-report.md](./reports/future-work-report.md)
+- [../migrations/README.md](../migrations/README.md)
+

@@ -65,5 +65,25 @@ export class User extends Model<
       foreignKey: 'reported_by',
       as: 'reported_issues',
     });
+
+    User.hasMany(models.PurchaseRequest, {
+      foreignKey: 'requester_id',
+      as: 'purchase_requests',
+    });
+
+    User.hasMany(models.ApprovalRequest, {
+      foreignKey: 'requester_id',
+      as: 'approval_requests_submitted',
+    });
+
+    User.hasMany(models.ApprovalRequest, {
+      foreignKey: 'approver_id',
+      as: 'approval_requests_assigned',
+    });
+
+    User.hasMany(models.InventoryTransaction, {
+      foreignKey: 'created_by',
+      as: 'inventory_transactions',
+    });
   }
 }
