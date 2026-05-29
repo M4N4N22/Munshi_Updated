@@ -20,6 +20,7 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 import { ReportService } from 'src/services/reports/reports.service';
 import { MessagingService } from 'src/core/messaging/messaging.service';
 import { DepartmentsService } from 'src/services/departments/departments.service';
+import { WorkflowRouterService } from 'src/services/workflow/workflow-engine.service';
 import { getHourIST, INDIA_TIMEZONE } from 'src/core/time/india-defaults';
 import {
   WA_DIVIDER,
@@ -57,6 +58,7 @@ export class WhatsAppService {
     private readonly reportService: ReportService,
     private readonly messagingService: MessagingService,
     private readonly departmentsService: DepartmentsService,
+    private readonly workflowRouter: WorkflowRouterService,
   ) {}
 
   async sendTextMessage(to: string, message: string) {
@@ -84,9 +86,24 @@ export class WhatsAppService {
     console.log({ body });
     try {
       const msgTrim = (body.message || '').trim();
+
+      // Active multi-step workflow — bypass ML and normal commands
+      if (await this.workflowRouter.hasActiveSession(body.from)) {
+        const workflowResult =
+          await this.workflowRouter.handleActiveWorkflowMessage(
+            body.from,
+            msgTrim,
+          );
+        await this.sendTextMessage(body.from, workflowResult);
+        return 'ok';
+      }
+
       const slashBypass = msgTrim.match(
         /^\/(mgrself|mgrassign|mgrtransfer|mgrreject)\b/i,
       );
+
+      const workflowStartCmd =
+        this.workflowRouter.matchWorkflowStartCommand(msgTrim);
 
       let result: any;
       if (slashBypass) {
@@ -98,6 +115,11 @@ export class WhatsAppService {
           id: undefined,
           date: undefined,
         });
+      } else if (workflowStartCmd) {
+        result = await this.workflowRouter.startWorkflowFromCommand(
+          body.from,
+          workflowStartCmd,
+        );
       } else {
         const ml_url = process.env.ML_URL || `http://localhost:8000`;
 
@@ -116,18 +138,35 @@ export class WhatsAppService {
             ? Number(rawId)
             : undefined;
 
-        result = await this.processCommand({
-          ...body,
-          command: ml.intent,
-          id,
-          date: ml.date,
-          datetime: ml.datetime ?? undefined,
-          time: ml.time ?? undefined,
-          deadline: ml.deadline ?? undefined,
-          worker_slug: ml.worker_slug ?? undefined,
-          depart_slug: ml.depart_slug ?? undefined,
-          reject_reason: ml.reject_reason ?? undefined,
-        });
+        const command = ml.intent?.startsWith('/')
+          ? ml.intent
+          : ml.intent
+            ? `/${ml.intent}`
+            : undefined;
+
+        const workflowFromMl =
+          command &&
+          (await this.workflowRouter.startWorkflowFromMlCommand(
+            body.from,
+            command,
+          ));
+
+        if (workflowFromMl) {
+          result = workflowFromMl;
+        } else {
+          result = await this.processCommand({
+            ...body,
+            command: ml.intent,
+            id,
+            date: ml.date,
+            datetime: ml.datetime ?? undefined,
+            time: ml.time ?? undefined,
+            deadline: ml.deadline ?? undefined,
+            worker_slug: ml.worker_slug ?? undefined,
+            depart_slug: ml.depart_slug ?? undefined,
+            reject_reason: ml.reject_reason ?? undefined,
+          });
+        }
       }
 
       console.log({ result });
@@ -182,6 +221,10 @@ export class WhatsAppService {
     if (command === COMMANDS.HELP) return waHelpText(user?.name || 'User');
 
     const cmdLc = (command || '').toLowerCase();
+
+    if (cmdLc === COMMANDS.ONBOARD_VENDOR) {
+      return this.workflowRouter.startWorkflowFromCommand(phone, cmdLc);
+    }
 
     const deptAssignEarly = await this.tryClassifiedDepartmentAssign(
       body,

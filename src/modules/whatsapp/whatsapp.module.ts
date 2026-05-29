@@ -9,6 +9,7 @@ import { FactoryModule } from 'src/services/factories/factories.module';
 import { ReportsModule } from 'src/services/reports/reports.module';
 import { MessagingModule } from 'src/core/messaging/messaging.module';
 import { DepartmentsModule } from 'src/services/departments/departments.module';
+import { WorkflowModule } from 'src/services/workflow/workflow.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { DepartmentsModule } from 'src/services/departments/departments.module';
     TasksModule,
     FactoryModule,
     ReportsModule,
+    WorkflowModule,
   ],
   providers: [WhatsAppService, AttendanceCronService],
   controllers: [WhatsAppController],

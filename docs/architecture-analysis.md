@@ -455,3 +455,17 @@ Suggested domains for Phase 1 extension:
 - [reports/prompt-3-vendor-management-report.md](./reports/prompt-3-vendor-management-report.md)
 - [reports/prompt-3-next-steps.md](./reports/prompt-3-next-steps.md)
 
+### Prompt 4 — Workflow Session Engine (complete)
+
+- [reports/prompt-4-pre-implementation-analysis.md](./reports/prompt-4-pre-implementation-analysis.md)
+- [reports/prompt-4-workflow-engine-report.md](./reports/prompt-4-workflow-engine-report.md)
+- [reports/prompt-4-vendor-onboarding-report.md](./reports/prompt-4-vendor-onboarding-report.md)
+- [reports/prompt-4-routing-analysis.md](./reports/prompt-4-routing-analysis.md)
+- [reports/prompt-4-next-steps.md](./reports/prompt-4-next-steps.md)
+
+**New module:** `src/services/workflow/` — generic session engine with pluggable handlers.
+
+**WhatsApp routing (extended):** Active workflow sessions intercept all messages before ML/commands. Workflow start commands (`/onboard_vendor`) bypass ML. All other routing unchanged.
+
+**Database:** `workflow_sessions` table (migration `003_workflow_sessions.sql`).
+

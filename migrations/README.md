@@ -9,6 +9,7 @@ Munshi uses **versioned SQL migrations** for TraderOS schema changes. Sequelize 
 ```bash
 psql "$POSTGRES_CONNECTION_STRING" -f migrations/001_traderos_foundation.sql
 psql "$POSTGRES_CONNECTION_STRING" -f migrations/002_vendors_master.sql
+psql "$POSTGRES_CONNECTION_STRING" -f migrations/003_workflow_sessions.sql
 ```
 
 Or with discrete connection params:
@@ -32,7 +33,8 @@ WHERE table_schema = 'public'
     'inventory_items',
     'inventory_transactions',
     'purchase_requests',
-    'approval_requests'
+    'approval_requests',
+    'workflow_sessions'
   )
 ORDER BY table_name;
 ```
@@ -43,6 +45,7 @@ ORDER BY table_name;
 |------|-------------|
 | `001_traderos_foundation.sql` | Creates all seven new tables + indexes |
 | `002_vendors_master.sql` | Vendor phone_number column, required phone, unique indexes per factory |
+| `003_workflow_sessions.sql` | Workflow session engine table + one-active-session-per-phone index |
 
 ## Notes
 

@@ -16,6 +16,7 @@ import { PurchaseRequest } from 'src/services/purchase-requests/purchase-request
 import { Task, TaskUpdate } from 'src/services/tasks/tasks.schema';
 import { User } from 'src/services/users/users.schema';
 import { Vendor } from 'src/services/vendors/vendors.schema';
+import { WorkflowSession } from 'src/services/workflow/workflow.schema';
 
 export const MONGOOSE_MODELS = {};
 
@@ -36,4 +37,5 @@ export const SQL_MODELS = {
   TaskUpdate: TaskUpdate.setup,
   User: User.setup,
   Vendor: Vendor.setup,
+  WorkflowSession: WorkflowSession.setup,
 };

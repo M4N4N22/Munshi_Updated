@@ -1,0 +1,52 @@
+import {
+  WorkflowStatus,
+  WorkflowType,
+  VendorOnboardingStep,
+} from './workflow.constants';
+
+export interface IWorkflowSessionRecord {
+  id: number;
+  factory_id: number;
+  phone_number: string;
+  workflow_type: WorkflowType;
+  current_step: string;
+  session_data: Record<string, unknown>;
+  status: WorkflowStatus;
+  created_at?: Date;
+  updated_at?: Date;
+}
+
+export interface IVendorOnboardingSessionData {
+  name?: string;
+  phone_number?: string;
+  gst_number?: string | null;
+  address?: string | null;
+}
+
+export interface WorkflowUserContext {
+  userId: number;
+  factoryId: number;
+  role: string;
+  phone: string;
+  userName?: string;
+}
+
+export interface WorkflowStepResult {
+  message: string;
+  completed?: boolean;
+  cancelled?: boolean;
+  nextStep?: string;
+  sessionData?: Record<string, unknown>;
+}
+
+export interface IWorkflowHandler {
+  readonly workflowType: WorkflowType;
+  readonly startCommand: string;
+  readonly firstStep: string;
+  getInitialPrompt(): string;
+  handleStep(
+    session: IWorkflowSessionRecord,
+    message: string,
+    context: WorkflowUserContext,
+  ): Promise<WorkflowStepResult>;
+}

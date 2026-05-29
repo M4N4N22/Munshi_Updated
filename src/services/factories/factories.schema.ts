@@ -100,6 +100,11 @@ export class Factory extends Model<
       foreignKey: 'factory_id',
       as: 'approval_requests',
     });
+
+    Factory.hasMany(models.WorkflowSession, {
+      foreignKey: 'factory_id',
+      as: 'workflow_sessions',
+    });
   }
 }
 

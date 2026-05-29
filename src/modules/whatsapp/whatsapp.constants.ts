@@ -16,6 +16,7 @@ export const COMMANDS = {
   MEMEBERS: '/members',
   HELP: '/help',
   REPORT: '/report',
+  ONBOARD_VENDOR: '/onboard_vendor',
 };
 
 export const COMMAND_HINTS = [
@@ -54,4 +55,8 @@ export const COMMAND_HINTS = [
   { command: COMMANDS.MEMEBERS, hint: 'View active members' },
   { command: COMMANDS.HELP, hint: 'View command hints' },
   { command: COMMANDS.REPORT, hint: '/report [date]' },
+  {
+    command: COMMANDS.ONBOARD_VENDOR,
+    hint: 'Start vendor onboarding workflow (managers/owners)',
+  },
 ];
