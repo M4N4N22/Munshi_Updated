@@ -2,6 +2,7 @@ import { WorkflowRegistry } from './workflow.registry';
 import { VendorOnboardingWorkflowHandler } from './handlers/vendor-onboarding.handler';
 import { WorkerOnboardingWorkflowHandler } from './handlers/worker-onboarding.handler';
 import { InventoryCreateWorkflowHandler } from './handlers/inventory-create.handler';
+import { SuggestionApprovalWorkflowHandler } from './handlers/suggestion-approval.handler';
 import {
   WORKFLOW_START_COMMANDS,
   WORKFLOW_TYPE,
@@ -35,14 +36,23 @@ describe('WorkflowRegistry', () => {
       handleStep: jest.fn(),
     } as unknown as InventoryCreateWorkflowHandler;
 
+    const suggestionHandler = {
+      workflowType: WORKFLOW_TYPE.SUGGESTION_APPROVAL,
+      startCommand: WORKFLOW_START_COMMANDS.SUGGESTION_APPROVAL,
+      firstStep: 'CONFIRM',
+      getInitialPrompt: () => 'prompt',
+      handleStep: jest.fn(),
+    } as unknown as SuggestionApprovalWorkflowHandler;
+
     registry = new WorkflowRegistry(
       vendorHandler,
       workerHandler,
       inventoryHandler,
+      suggestionHandler,
     );
   });
 
-  it('registers all three workflow commands', () => {
+  it('registers all workflow commands', () => {
     expect(registry.getHandlerByCommand('/onboard_vendor')?.workflowType).toBe(
       WORKFLOW_TYPE.ONBOARD_VENDOR,
     );
@@ -52,9 +62,12 @@ describe('WorkflowRegistry', () => {
     expect(registry.getHandlerByCommand('/inventory_create')?.workflowType).toBe(
       WORKFLOW_TYPE.INVENTORY_CREATE,
     );
+    expect(registry.getHandlerByCommand('/suggestion_approve')?.workflowType).toBe(
+      WORKFLOW_TYPE.SUGGESTION_APPROVAL,
+    );
   });
 
-  it('lists three start commands', () => {
-    expect(registry.listStartCommands()).toHaveLength(3);
+  it('lists four start commands', () => {
+    expect(registry.listStartCommands()).toHaveLength(4);
   });
 });

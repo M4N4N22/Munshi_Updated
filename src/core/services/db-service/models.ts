@@ -11,6 +11,12 @@ import {
   InventoryLocation,
   InventoryTransaction,
 } from 'src/services/inventory/inventory.schema';
+import {
+  Document,
+  DocumentExtraction,
+  DocumentProcessingJob,
+  DocumentSuggestion,
+} from 'src/services/documents/documents.schema';
 import { Issue } from 'src/services/issues/issues.schema';
 import { PurchaseRequest } from 'src/services/purchase-requests/purchase-requests.schema';
 import { Task, TaskUpdate } from 'src/services/tasks/tasks.schema';
@@ -25,6 +31,10 @@ export const SQL_MODELS = {
   Attendance: Attendance.setup,
   Department: Department.setup,
   DepartmentWorker: DepartmentWorker.setup,
+  Document: Document.setup,
+  DocumentExtraction: DocumentExtraction.setup,
+  DocumentProcessingJob: DocumentProcessingJob.setup,
+  DocumentSuggestion: DocumentSuggestion.setup,
   Factory: Factory.setup,
   FactoryUser: FactoryUser.setup,
   InventoryCategory: InventoryCategory.setup,

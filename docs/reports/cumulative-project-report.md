@@ -2,7 +2,7 @@
 
 **Date:** 2026-05-29  
 **Repository:** Munshi backend (NestJS 11 + PostgreSQL + WhatsApp-first)  
-**Scope:** Everything implemented from initial codebase through **Prompt 5**
+**Scope:** Everything implemented from initial codebase through **Prompt 7**
 
 ---
 
@@ -550,4 +550,48 @@ See `docs/reports/prompt-5-next-steps.md`.
 
 ---
 
-*Generated after Prompt 5 completion — reflects full codebase state as of 2026-05-29.*
+*Generated after Prompt 7 completion — reflects full codebase state as of 2026-05-29.*
+
+---
+
+## 15. Prompt 6 — Inventory Management (2026-05-29)
+
+- Full inventory CRUD (categories, locations, items)
+- `InventoryTransactionService` — sole quantity write path (Option B cache)
+- `/inventory_create` workflow (3rd registry workflow)
+- `/inventory_status` WhatsApp foundation
+- Migration `004_inventory_master.sql`
+- **80 tests** at completion
+
+See `docs/reports/prompt-6-*.md`.
+
+---
+
+## 16. Prompt 7 — Document Processing Foundation (2026-05-29)
+
+- **DocumentModule** with 4 entities + migration `005`
+- Document registry (contracts only — no parsers)
+- Extraction storage + validation contracts
+- Generic suggestion engine (no auto-execution)
+- Inventory bootstrap: `INITIAL_INVENTORY_IMPORT`
+- New item detection: `NEW_INVENTORY_ITEM`, `STOCK_IN`
+- Workflow: `SUGGESTION_APPROVAL` YES/NO via existing engine
+- LLM specification framework (dual-section reports)
+- **95 tests passing**
+
+**Architectural rule:** LLM = intent classification + document parsing only. All CRUD via backend after approval.
+
+See `docs/reports/prompt-7-*.md`.
+
+---
+
+## 17. Updated status
+
+| Area | Status |
+|------|--------|
+| Inventory | Live (REST + workflow + document bootstrap) |
+| Document processing | Foundation live (no parsers) |
+| Procurement / approvals | Schema + REST stubs |
+| Workflows | 4 types: vendor, worker, inventory create, suggestion approval |
+| Tests | 95 passing |
+| DB tables | 22 (18 + 4 document tables) |

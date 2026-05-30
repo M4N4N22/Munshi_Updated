@@ -39,6 +39,12 @@ export interface IInventoryCreateSessionData {
   reorder_threshold?: string | null;
 }
 
+export interface ISuggestionApprovalSessionData {
+  suggestion_id?: number;
+  document_id?: number;
+  summary?: string;
+}
+
 export interface WorkflowSessionResolveResult {
   session: IWorkflowSessionRecord | null;
   expiredJustNow: boolean;

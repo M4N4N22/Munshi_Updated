@@ -3,6 +3,7 @@ export const WORKFLOW_TYPE = {
   ONBOARD_VENDOR: 'ONBOARD_VENDOR',
   ONBOARD_WORKER: 'ONBOARD_WORKER',
   INVENTORY_CREATE: 'INVENTORY_CREATE',
+  SUGGESTION_APPROVAL: 'SUGGESTION_APPROVAL',
 } as const;
 
 export type WorkflowType =
@@ -24,6 +25,7 @@ export const WORKFLOW_START_COMMANDS = {
   ONBOARD_VENDOR: '/onboard_vendor',
   ONBOARD_WORKER: '/onboard_worker',
   INVENTORY_CREATE: '/inventory_create',
+  SUGGESTION_APPROVAL: '/suggestion_approve',
 } as const;
 
 /** Cancels the active workflow session for the sender. */
@@ -78,3 +80,11 @@ export type InventoryCreateStep =
   (typeof INVENTORY_CREATE_STEP)[keyof typeof INVENTORY_CREATE_STEP];
 
 export const WORKFLOW_SKIP_KEYWORDS = ['skip', 'none', 'na', 'n/a'];
+
+/** Document suggestion YES/NO approval step. */
+export const SUGGESTION_APPROVAL_STEP = {
+  CONFIRM: 'CONFIRM',
+} as const;
+
+export type SuggestionApprovalStep =
+  (typeof SUGGESTION_APPROVAL_STEP)[keyof typeof SUGGESTION_APPROVAL_STEP];

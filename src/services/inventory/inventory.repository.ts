@@ -164,6 +164,25 @@ export class InventoryRepository {
     });
   }
 
+  findItemByName(factoryId: number, name: string) {
+    return this.itemModel.findOne({
+      where: {
+        factory_id: factoryId,
+        name: { [Op.iLike]: name.trim() },
+        is_active: true,
+      },
+    });
+  }
+
+  findLocationByName(factoryId: number, name: string) {
+    return this.locationModel.findOne({
+      where: {
+        factory_id: factoryId,
+        name: { [Op.iLike]: name.trim() },
+      },
+    });
+  }
+
   createItem(data: Record<string, unknown>, transaction?: Transaction) {
     return this.itemModel.create(data as any, { transaction });
   }

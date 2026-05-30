@@ -11,6 +11,7 @@ psql "$POSTGRES_CONNECTION_STRING" -f migrations/001_traderos_foundation.sql
 psql "$POSTGRES_CONNECTION_STRING" -f migrations/002_vendors_master.sql
 psql "$POSTGRES_CONNECTION_STRING" -f migrations/003_workflow_sessions.sql
 psql "$POSTGRES_CONNECTION_STRING" -f migrations/004_inventory_master.sql
+psql "$POSTGRES_CONNECTION_STRING" -f migrations/005_document_processing.sql
 ```
 
 Or with discrete connection params:
@@ -35,7 +36,11 @@ WHERE table_schema = 'public'
     'inventory_transactions',
     'purchase_requests',
     'approval_requests',
-    'workflow_sessions'
+    'workflow_sessions',
+    'documents',
+    'document_processing_jobs',
+    'document_extractions',
+    'document_suggestions'
   )
 ORDER BY table_name;
 ```
@@ -48,6 +53,7 @@ ORDER BY table_name;
 | `002_vendors_master.sql` | Vendor phone_number column, required phone, unique indexes per factory |
 | `003_workflow_sessions.sql` | Workflow session engine table + one-active-session-per-phone index |
 | `004_inventory_master.sql` | Required category/location on items; transaction type documentation |
+| `005_document_processing.sql` | Document registry, extractions, suggestions (Prompt 7) |
 
 ## Notes
 
