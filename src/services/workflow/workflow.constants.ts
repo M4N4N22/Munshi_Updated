@@ -2,6 +2,7 @@
 export const WORKFLOW_TYPE = {
   ONBOARD_VENDOR: 'ONBOARD_VENDOR',
   ONBOARD_WORKER: 'ONBOARD_WORKER',
+  INVENTORY_CREATE: 'INVENTORY_CREATE',
 } as const;
 
 export type WorkflowType =
@@ -22,6 +23,7 @@ export type WorkflowStatus =
 export const WORKFLOW_START_COMMANDS = {
   ONBOARD_VENDOR: '/onboard_vendor',
   ONBOARD_WORKER: '/onboard_worker',
+  INVENTORY_CREATE: '/inventory_create',
 } as const;
 
 /** Cancels the active workflow session for the sender. */
@@ -61,5 +63,18 @@ export const WORKER_ONBOARDING_STEP = {
 
 export type WorkerOnboardingStep =
   (typeof WORKER_ONBOARDING_STEP)[keyof typeof WORKER_ONBOARDING_STEP];
+
+/** Inventory item creation workflow steps. */
+export const INVENTORY_CREATE_STEP = {
+  ITEM_NAME: 'ITEM_NAME',
+  ITEM_SKU: 'ITEM_SKU',
+  ITEM_CATEGORY: 'ITEM_CATEGORY',
+  ITEM_LOCATION: 'ITEM_LOCATION',
+  ITEM_UNIT: 'ITEM_UNIT',
+  ITEM_REORDER_THRESHOLD: 'ITEM_REORDER_THRESHOLD',
+} as const;
+
+export type InventoryCreateStep =
+  (typeof INVENTORY_CREATE_STEP)[keyof typeof INVENTORY_CREATE_STEP];
 
 export const WORKFLOW_SKIP_KEYWORDS = ['skip', 'none', 'na', 'n/a'];

@@ -1,10 +1,30 @@
-/** Inventory transaction direction — calculation logic deferred to Prompt 3+. */
+/** Inventory transaction types — all quantity changes use these. */
 export const INVENTORY_TRANSACTION_TYPE = {
-  IN: 'IN',
-  OUT: 'OUT',
+  STOCK_IN: 'STOCK_IN',
+  STOCK_OUT: 'STOCK_OUT',
   ADJUSTMENT: 'ADJUSTMENT',
-  TRANSFER: 'TRANSFER',
 } as const;
 
 export type InventoryTransactionType =
   (typeof INVENTORY_TRANSACTION_TYPE)[keyof typeof INVENTORY_TRANSACTION_TYPE];
+
+export const INVENTORY_FIELD_LIMITS = {
+  NAME_MAX: 255,
+  SKU_MAX: 64,
+  UNIT_MAX: 64,
+  NOTES_MAX: 2000,
+} as const;
+
+export const INVENTORY_PAGINATION = {
+  DEFAULT_PAGE: 1,
+  DEFAULT_PAGE_SIZE: 25,
+  MAX_PAGE_SIZE: 100,
+} as const;
+
+export const INVENTORY_QUANTITY_SCALE = 4;
+
+/** WhatsApp / REST query command (foundation). */
+export const INVENTORY_COMMANDS = {
+  INVENTORY_CREATE: '/inventory_create',
+  INVENTORY_STATUS: '/inventory_status',
+} as const;

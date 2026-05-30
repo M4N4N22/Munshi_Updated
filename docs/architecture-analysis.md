@@ -480,5 +480,15 @@ Suggested domains for Phase 1 extension:
 
 **Second workflow:** `/onboard_worker` — reuses `FactoryService`, `DepartmentsService`, worker welcome message.
 
-**Registry:** `/onboard_vendor` + `/onboard_worker` — proves multi-workflow engine without redesign.
+**Registry:** `/onboard_vendor` + `/onboard_worker` + `/inventory_create` — proves multi-workflow engine without redesign.
+
+### Prompt 6 — Inventory Management (complete)
+
+- [reports/prompt-6-inventory-foundation-report.md](./reports/prompt-6-inventory-foundation-report.md)
+- [reports/prompt-6-inventory-transactions-report.md](./reports/prompt-6-inventory-transactions-report.md)
+- [reports/prompt-6-inventory-workflow-report.md](./reports/prompt-6-inventory-workflow-report.md)
+- [reports/prompt-6-quantity-strategy-report.md](./reports/prompt-6-quantity-strategy-report.md)
+- [reports/prompt-6-next-steps.md](./reports/prompt-6-next-steps.md)
+
+**Inventory:** Full CRUD, transaction engine (STOCK_IN/OUT/ADJUSTMENT), Option B quantity cache, `/inventory_create` workflow, `/inventory_status` command foundation.
 

@@ -26,21 +26,38 @@ export class CreateInventoryCategoryDto {
   is_active?: boolean;
 }
 
+export class UpdateInventoryCategoryDto {
+  @ApiPropertyOptional({ example: 'Raw Materials' })
+  @IsOptional()
+  @IsString()
+  name?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @ApiPropertyOptional({ example: true })
+  @IsOptional()
+  @IsBoolean()
+  is_active?: boolean;
+}
+
 export class CreateInventoryLocationDto {
   @ApiProperty({ example: 1 })
   @IsNumber()
   factory_id: number;
 
-  @ApiProperty({ example: 'Main Warehouse' })
+  @ApiProperty({ example: 'Warehouse A' })
   @IsString()
   name: string;
 
-  @ApiPropertyOptional({ example: 'WH-01' })
+  @ApiPropertyOptional({ example: 'WH-A' })
   @IsOptional()
   @IsString()
   code?: string;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ description: 'Location description / address' })
   @IsOptional()
   @IsString()
   address?: string;
@@ -51,39 +68,54 @@ export class CreateInventoryLocationDto {
   is_active?: boolean;
 }
 
+export class UpdateInventoryLocationDto {
+  @ApiPropertyOptional({ example: 'Warehouse A' })
+  @IsOptional()
+  @IsString()
+  name?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  code?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  address?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  is_active?: boolean;
+}
+
 export class CreateInventoryItemDto {
   @ApiProperty({ example: 1 })
   @IsNumber()
   factory_id: number;
 
-  @ApiPropertyOptional({ example: 1 })
-  @IsOptional()
+  @ApiProperty({ example: 1 })
   @IsNumber()
-  category_id?: number;
+  category_id: number;
 
-  @ApiPropertyOptional({ example: 1 })
-  @IsOptional()
+  @ApiProperty({ example: 1 })
   @IsNumber()
-  location_id?: number;
+  location_id: number;
 
-  @ApiProperty({ example: 'SKU-001' })
+  @ApiProperty({ example: 'CEM001' })
   @IsString()
   sku: string;
 
-  @ApiProperty({ example: 'Hydraulic Oil 20L' })
+  @ApiProperty({ example: 'Cement' })
   @IsString()
   name: string;
 
-  @ApiProperty({ example: 'litre' })
+  @ApiProperty({ example: 'bags' })
   @IsString()
   unit: string;
 
-  @ApiPropertyOptional({ example: '0' })
-  @IsOptional()
-  @IsString()
-  current_quantity?: string;
-
-  @ApiPropertyOptional({ example: '10' })
+  @ApiPropertyOptional({ example: '50' })
   @IsOptional()
   @IsString()
   reorder_threshold?: string;
@@ -94,7 +126,39 @@ export class CreateInventoryItemDto {
   is_active?: boolean;
 }
 
-export class CreateInventoryTransactionDto {
+export class UpdateInventoryItemDto {
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  name?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  category_id?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  location_id?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  unit?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  reorder_threshold?: string | null;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  is_active?: boolean;
+}
+
+export class RecordInventoryTransactionDto {
   @ApiProperty({ example: 1 })
   @IsNumber()
   factory_id: number;
@@ -103,13 +167,14 @@ export class CreateInventoryTransactionDto {
   @IsNumber()
   inventory_item_id: number;
 
-  @ApiProperty({ example: 'IN' })
-  @IsString()
-  transaction_type: string;
-
-  @ApiProperty({ example: '5.0000' })
+  @ApiProperty({ example: '10' })
   @IsString()
   quantity: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  notes?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -120,11 +185,6 @@ export class CreateInventoryTransactionDto {
   @IsOptional()
   @IsNumber()
   reference_id?: number;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsString()
-  notes?: string;
 
   @ApiPropertyOptional({ example: 1 })
   @IsOptional()

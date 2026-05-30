@@ -18,6 +18,8 @@ export const COMMANDS = {
   REPORT: '/report',
   ONBOARD_VENDOR: '/onboard_vendor',
   ONBOARD_WORKER: '/onboard_worker',
+  INVENTORY_CREATE: '/inventory_create',
+  INVENTORY_STATUS: '/inventory_status',
   CANCEL: '/cancel',
 };
 
@@ -64,6 +66,14 @@ export const COMMAND_HINTS = [
   {
     command: COMMANDS.ONBOARD_WORKER,
     hint: 'Start worker onboarding workflow (managers/owners)',
+  },
+  {
+    command: COMMANDS.INVENTORY_CREATE,
+    hint: 'Start inventory item creation workflow (managers/owners)',
+  },
+  {
+    command: COMMANDS.INVENTORY_STATUS,
+    hint: 'Check inventory status by SKU or list low-stock items',
   },
   {
     command: COMMANDS.CANCEL,

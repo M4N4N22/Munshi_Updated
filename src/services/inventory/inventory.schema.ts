@@ -154,11 +154,11 @@ export class InventoryItem extends Model<
         },
         category_id: {
           type: DataTypes.INTEGER,
-          allowNull: true,
+          allowNull: false,
         },
         location_id: {
           type: DataTypes.INTEGER,
-          allowNull: true,
+          allowNull: false,
         },
         sku: {
           type: DataTypes.STRING,
@@ -234,6 +234,7 @@ export class InventoryTransaction extends Model<
   declare reference_id?: number | null;
   declare notes?: string | null;
   declare created_by?: number | null;
+  declare readonly created_at?: Date;
 
   static setup(sequelize: Sequelize) {
     InventoryTransaction.init(

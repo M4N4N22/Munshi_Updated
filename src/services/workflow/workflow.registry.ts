@@ -6,6 +6,7 @@ import {
 import { IWorkflowHandler } from './workflow.interfaces';
 import { VendorOnboardingWorkflowHandler } from './handlers/vendor-onboarding.handler';
 import { WorkerOnboardingWorkflowHandler } from './handlers/worker-onboarding.handler';
+import { InventoryCreateWorkflowHandler } from './handlers/inventory-create.handler';
 
 @Injectable()
 export class WorkflowRegistry {
@@ -15,9 +16,11 @@ export class WorkflowRegistry {
   constructor(
     private readonly vendorOnboardingHandler: VendorOnboardingWorkflowHandler,
     private readonly workerOnboardingHandler: WorkerOnboardingWorkflowHandler,
+    private readonly inventoryCreateHandler: InventoryCreateWorkflowHandler,
   ) {
     this.registerHandler(vendorOnboardingHandler);
     this.registerHandler(workerOnboardingHandler);
+    this.registerHandler(inventoryCreateHandler);
   }
 
   registerHandler(handler: IWorkflowHandler): void {

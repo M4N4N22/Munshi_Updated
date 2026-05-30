@@ -77,7 +77,7 @@ export class WorkflowEngineService {
     return waSection(
       'Workflow expired',
       'Your workflow session has expired.\n\n' +
-        'Please send */onboard_vendor* or */onboard_worker* to start again.\n\n' +
+        'Please send */onboard_vendor*, */onboard_worker*, or */inventory_create* to start again.\n\n' +
         'You can also send */cancel* anytime to exit an active workflow.',
     );
   }

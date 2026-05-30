@@ -21,6 +21,8 @@ import { ReportService } from 'src/services/reports/reports.service';
 import { MessagingService } from 'src/core/messaging/messaging.service';
 import { DepartmentsService } from 'src/services/departments/departments.service';
 import { WorkflowRouterService } from 'src/services/workflow/workflow-engine.service';
+import { InventoryService } from 'src/services/inventory/inventory.service';
+import { IInventoryStatusRecord } from 'src/services/inventory/inventory.interfaces';
 import { getHourIST, INDIA_TIMEZONE } from 'src/core/time/india-defaults';
 import {
   WA_DIVIDER,
@@ -59,6 +61,7 @@ export class WhatsAppService {
     private readonly messagingService: MessagingService,
     private readonly departmentsService: DepartmentsService,
     private readonly workflowRouter: WorkflowRouterService,
+    private readonly inventoryService: InventoryService,
   ) {}
 
   async sendTextMessage(to: string, message: string) {
@@ -243,6 +246,15 @@ export class WhatsAppService {
 
     if (cmdLc === COMMANDS.ONBOARD_WORKER) {
       return this.workflowRouter.startWorkflowFromCommand(phone, cmdLc);
+    }
+
+    if (cmdLc === COMMANDS.INVENTORY_CREATE) {
+      return this.workflowRouter.startWorkflowFromCommand(phone, cmdLc);
+    }
+
+    if (cmdLc === COMMANDS.INVENTORY_STATUS) {
+      this.ensureManager(role);
+      return this.handleInventoryStatus(factoryId, rawMessage);
     }
 
     if (cmdLc === COMMANDS.CANCEL) {
@@ -997,6 +1009,68 @@ export class WhatsAppService {
       `📊 ${total} pending · ${groupsMap.size} ${groupLabel}\n` +
       body +
       `\n${WA_DIVIDER}\n💡 Reply: "complete task [id]" to mark done`
+    );
+  }
+
+  // 📦 Inventory status (Prompt 6 foundation)
+
+  private async handleInventoryStatus(
+    factoryId: number,
+    rawMessage?: string,
+  ): Promise<string> {
+    const sku = this.resolveInventorySku(rawMessage);
+    if (sku) {
+      const status = await this.inventoryService.getInventoryStatusBySku(
+        factoryId,
+        sku,
+      );
+      return this.formatInventoryStatusMessage(status);
+    }
+
+    const lowStock = await this.inventoryService.listLowStockItems(factoryId);
+    if (lowStock.length === 0) {
+      return waSection(
+        'Inventory status',
+        'No low-stock items detected.\n\n' +
+          'Send */inventory_status SKU* to check a specific item (e.g. `/inventory_status CEM001`).',
+      );
+    }
+
+    const lines = lowStock
+      .slice(0, 15)
+      .map(
+        (s) =>
+          `• *${s.sku}* — ${s.name}\n  Qty: ${s.current_quantity} ${s.unit} · Threshold: ${s.reorder_threshold ?? '—'} · 📍 ${s.location_name}`,
+      )
+      .join('\n\n');
+
+    return waSection(
+      'Low stock items',
+      `${lines}\n\nSend */inventory_status SKU* for full details on one item.`,
+    );
+  }
+
+  private resolveInventorySku(rawMessage?: string): string | null {
+    if (!rawMessage) return null;
+    const trimmed = rawMessage.trim();
+    const match = trimmed.match(/^\/inventory_status\s+(\S+)/i);
+    if (match) return match[1];
+    const parts = trimmed.split(/\s+/);
+    if (parts.length >= 2 && parts[0].toLowerCase() === '/inventory_status') {
+      return parts[1];
+    }
+    return null;
+  }
+
+  private formatInventoryStatusMessage(status: IInventoryStatusRecord): string {
+    return waSection(
+      'Inventory status',
+      `*${status.name}* (\`${status.sku}\`)\n\n` +
+        `📍 Location: ${status.location_name}\n` +
+        `📂 Category: ${status.category_name}\n` +
+        `📊 Quantity: ${status.current_quantity} ${status.unit}\n` +
+        `⚠️ Reorder threshold: ${status.reorder_threshold ?? 'Not set'}\n` +
+        `🔔 Low stock: ${status.is_low_stock ? 'Yes' : 'No'}`,
     );
   }
 

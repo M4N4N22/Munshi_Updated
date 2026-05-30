@@ -30,6 +30,15 @@ export interface IWorkerOnboardingSessionData {
   doj?: string | null;
 }
 
+export interface IInventoryCreateSessionData {
+  name?: string;
+  sku?: string;
+  category_id?: number;
+  location_id?: number;
+  unit?: string;
+  reorder_threshold?: string | null;
+}
+
 export interface WorkflowSessionResolveResult {
   session: IWorkflowSessionRecord | null;
   expiredJustNow: boolean;

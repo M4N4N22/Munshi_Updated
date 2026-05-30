@@ -4,8 +4,10 @@ import { UserModule } from 'src/services/users/users.module';
 import { FactoryModule } from 'src/services/factories/factories.module';
 import { DepartmentsModule } from 'src/services/departments/departments.module';
 import { MessagingModule } from 'src/core/messaging/messaging.module';
+import { InventoryModule } from 'src/services/inventory/inventory.module';
 import { VendorOnboardingWorkflowHandler } from './handlers/vendor-onboarding.handler';
 import { WorkerOnboardingWorkflowHandler } from './handlers/worker-onboarding.handler';
+import { InventoryCreateWorkflowHandler } from './handlers/inventory-create.handler';
 import { WorkflowSessionRepository } from './workflow-session.repository';
 import { WorkflowSessionService } from './workflow-session.service';
 import { WorkflowRegistry } from './workflow.registry';
@@ -23,12 +25,14 @@ import { WorkflowExpiryCronService } from './workflow-expiry.cron';
     FactoryModule,
     DepartmentsModule,
     MessagingModule,
+    InventoryModule,
   ],
   providers: [
     WorkflowSessionRepository,
     WorkflowSessionService,
     VendorOnboardingWorkflowHandler,
     WorkerOnboardingWorkflowHandler,
+    InventoryCreateWorkflowHandler,
     WorkerOnboardingService,
     WorkflowRegistry,
     WorkflowEngineService,

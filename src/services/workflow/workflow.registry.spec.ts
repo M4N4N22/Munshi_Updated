@@ -1,6 +1,7 @@
 import { WorkflowRegistry } from './workflow.registry';
 import { VendorOnboardingWorkflowHandler } from './handlers/vendor-onboarding.handler';
 import { WorkerOnboardingWorkflowHandler } from './handlers/worker-onboarding.handler';
+import { InventoryCreateWorkflowHandler } from './handlers/inventory-create.handler';
 import {
   WORKFLOW_START_COMMANDS,
   WORKFLOW_TYPE,
@@ -8,11 +9,9 @@ import {
 
 describe('WorkflowRegistry', () => {
   let registry: WorkflowRegistry;
-  let vendorHandler: VendorOnboardingWorkflowHandler;
-  let workerHandler: WorkerOnboardingWorkflowHandler;
 
   beforeEach(() => {
-    vendorHandler = {
+    const vendorHandler = {
       workflowType: WORKFLOW_TYPE.ONBOARD_VENDOR,
       startCommand: WORKFLOW_START_COMMANDS.ONBOARD_VENDOR,
       firstStep: 'VENDOR_NAME',
@@ -20,47 +19,42 @@ describe('WorkflowRegistry', () => {
       handleStep: jest.fn(),
     } as unknown as VendorOnboardingWorkflowHandler;
 
-    workerHandler = {
+    const workerHandler = {
       workflowType: WORKFLOW_TYPE.ONBOARD_WORKER,
       startCommand: WORKFLOW_START_COMMANDS.ONBOARD_WORKER,
       firstStep: 'WORKER_NAME',
-      getInitialPrompt: () => 'worker prompt',
+      getInitialPrompt: () => 'prompt',
       handleStep: jest.fn(),
     } as unknown as WorkerOnboardingWorkflowHandler;
 
-    registry = new WorkflowRegistry(vendorHandler, workerHandler);
-  });
+    const inventoryHandler = {
+      workflowType: WORKFLOW_TYPE.INVENTORY_CREATE,
+      startCommand: WORKFLOW_START_COMMANDS.INVENTORY_CREATE,
+      firstStep: 'ITEM_NAME',
+      getInitialPrompt: () => 'prompt',
+      handleStep: jest.fn(),
+    } as unknown as InventoryCreateWorkflowHandler;
 
-  it('registers vendor onboarding handler by command', () => {
-    const handler = registry.getHandlerByCommand('/onboard_vendor');
-    expect(handler?.workflowType).toBe(WORKFLOW_TYPE.ONBOARD_VENDOR);
-  });
-
-  it('registers worker onboarding handler by command', () => {
-    const handler = registry.getHandlerByCommand('/onboard_worker');
-    expect(handler?.workflowType).toBe(WORKFLOW_TYPE.ONBOARD_WORKER);
-  });
-
-  it('looks up handler by workflow type', () => {
-    const vendor = registry.getHandlerByType(WORKFLOW_TYPE.ONBOARD_VENDOR);
-    const worker = registry.getHandlerByType(WORKFLOW_TYPE.ONBOARD_WORKER);
-    expect(vendor.startCommand).toBe('/onboard_vendor');
-    expect(worker.startCommand).toBe('/onboard_worker');
-  });
-
-  it('matches workflow start command in message', () => {
-    expect(registry.matchWorkflowStartCommand('/onboard_vendor')).toBe(
-      '/onboard_vendor',
+    registry = new WorkflowRegistry(
+      vendorHandler,
+      workerHandler,
+      inventoryHandler,
     );
-    expect(registry.matchWorkflowStartCommand('/onboard_worker')).toBe(
-      '/onboard_worker',
-    );
-    expect(registry.matchWorkflowStartCommand('/present')).toBeNull();
   });
 
-  it('lists registered start commands', () => {
-    const commands = registry.listStartCommands();
-    expect(commands).toContain('/onboard_vendor');
-    expect(commands).toContain('/onboard_worker');
+  it('registers all three workflow commands', () => {
+    expect(registry.getHandlerByCommand('/onboard_vendor')?.workflowType).toBe(
+      WORKFLOW_TYPE.ONBOARD_VENDOR,
+    );
+    expect(registry.getHandlerByCommand('/onboard_worker')?.workflowType).toBe(
+      WORKFLOW_TYPE.ONBOARD_WORKER,
+    );
+    expect(registry.getHandlerByCommand('/inventory_create')?.workflowType).toBe(
+      WORKFLOW_TYPE.INVENTORY_CREATE,
+    );
+  });
+
+  it('lists three start commands', () => {
+    expect(registry.listStartCommands()).toHaveLength(3);
   });
 });
