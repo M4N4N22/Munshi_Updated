@@ -48,6 +48,7 @@ export const INTENT_TYPES = [
   '/onboard_vendor',
   '/onboard_worker',
   '/inventory_create',
+  '/inventory_status',
   'general_chat',
 ] as const;
 

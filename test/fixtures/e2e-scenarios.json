@@ -1,0 +1,99 @@
+[
+  {
+    "id": "e2e-01",
+    "name": "Inventory CSV happy path",
+    "steps": ["upload", "parse", "validate_extraction", "generate_suggestions", "queue", "workflow", "inventory_update"],
+    "document_type": "INVENTORY_IMPORT",
+    "fixture_id": "inv-001",
+    "expected_final_status": "APPROVED"
+  },
+  {
+    "id": "e2e-02",
+    "name": "Stock register approval path",
+    "steps": ["upload", "parse", "validate_extraction", "generate_suggestions", "queue", "workflow", "inventory_update"],
+    "document_type": "STOCK_REGISTER",
+    "fixture_id": "stk-001",
+    "expected_final_status": "APPROVED"
+  },
+  {
+    "id": "e2e-03",
+    "name": "Inventory import alias headers",
+    "steps": ["upload", "parse", "validate_extraction", "generate_suggestions"],
+    "document_type": "INVENTORY_IMPORT",
+    "fixture_id": "inv-002",
+    "expected_final_status": "SUGGESTED"
+  },
+  {
+    "id": "e2e-04",
+    "name": "Inventory optional columns",
+    "steps": ["upload", "parse", "validate_extraction", "generate_suggestions"],
+    "document_type": "INVENTORY_IMPORT",
+    "fixture_id": "inv-006",
+    "expected_final_status": "SUGGESTED"
+  },
+  {
+    "id": "e2e-05",
+    "name": "Stock register missing as_of_date",
+    "steps": ["upload", "parse", "validate_extraction", "generate_suggestions"],
+    "document_type": "STOCK_REGISTER",
+    "fixture_id": "stk-005",
+    "expected_final_status": "SUGGESTED"
+  },
+  {
+    "id": "e2e-06",
+    "name": "Invalid inventory file rejected",
+    "steps": ["upload", "parse", "validate_extraction"],
+    "document_type": "INVENTORY_IMPORT",
+    "fixture_id": "inv-021",
+    "expected_failure_step": "parse",
+    "expected_final_status": "FAILED"
+  },
+  {
+    "id": "e2e-07",
+    "name": "Invalid stock file rejected",
+    "steps": ["upload", "parse", "validate_extraction"],
+    "document_type": "STOCK_REGISTER",
+    "fixture_id": "stk-021",
+    "expected_failure_step": "parse",
+    "expected_final_status": "FAILED"
+  },
+  {
+    "id": "e2e-08",
+    "name": "Multi-row inventory import",
+    "steps": ["upload", "parse", "validate_extraction", "generate_suggestions", "queue"],
+    "document_type": "INVENTORY_IMPORT",
+    "fixture_id": "inv-011",
+    "expected_final_status": "SUGGESTED"
+  },
+  {
+    "id": "e2e-09",
+    "name": "Hindi header inventory import",
+    "steps": ["upload", "parse", "validate_extraction", "generate_suggestions"],
+    "document_type": "INVENTORY_IMPORT",
+    "fixture_id": "inv-004",
+    "expected_final_status": "SUGGESTED"
+  },
+  {
+    "id": "e2e-10",
+    "name": "Vendor onboarding intent to workflow",
+    "steps": ["classify_intent", "start_workflow"],
+    "message": "naya vendor add karna hai",
+    "expected_intent": "/onboard_vendor",
+    "expected_workflow": "ONBOARD_VENDOR"
+  },
+  {
+    "id": "e2e-11",
+    "name": "Worker onboarding intent to workflow",
+    "steps": ["classify_intent", "start_workflow"],
+    "message": "register employee Rahul",
+    "expected_intent": "/onboard_worker",
+    "expected_workflow": "ONBOARD_WORKER"
+  },
+  {
+    "id": "e2e-12",
+    "name": "Inventory status intent routing",
+    "steps": ["classify_intent", "inventory_status_command"],
+    "message": "check inventory status",
+    "expected_intent": "/inventory_status"
+  }
+]

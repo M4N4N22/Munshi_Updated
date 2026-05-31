@@ -2,9 +2,9 @@
 
 **Date:** 2026-05-29  
 **Repository:** Munshi backend (NestJS 11 + PostgreSQL + WhatsApp-first)  
-**Scope:** Everything implemented from initial codebase through **Prompt 8** (document ingestion orchestration)
+**Scope:** Everything implemented from initial codebase through **Prompt 9** (AI reliability & evaluation)
 
-> **Prompt 8 addendum:** Document upload, storage abstraction, ML parser integration, contract validation, suggestion queue, and workflow auto-trigger. See `docs/reports/prompt-8-*.md`. Backend tests: **102 passing**.
+> **Prompt 9 addendum:** Workflow intent datasets (400), document fixtures (44), eval harnesses, contract drift tests, classifier improvements. Backend tests: **119 passing**.
 
 ---
 

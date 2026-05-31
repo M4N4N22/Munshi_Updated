@@ -14,6 +14,7 @@ import { DOCUMENT_TYPE } from './documents.constants';
 
 export class DocumentFactoryQueryDto {
   @ApiProperty({ example: 1 })
+  @Transform(({ value }) => Number(value))
   @IsNumber()
   factory_id: number;
 }
