@@ -18,6 +18,7 @@ export const SUGGESTION_TYPES = [
   'INVENTORY_ADJUSTMENT',
   'CREATE_VENDOR',
   'CREATE_LEDGER_ENTRY',
+  'CREATE_PURCHASE_REQUEST',
 ] as const;
 
 export const WORKFLOW_TYPES = [
@@ -25,6 +26,7 @@ export const WORKFLOW_TYPES = [
   'ONBOARD_WORKER',
   'INVENTORY_CREATE',
   'SUGGESTION_APPROVAL',
+  'PURCHASE_REQUEST_CREATE',
 ] as const;
 
 export const INTENT_TYPES = [
@@ -49,6 +51,7 @@ export const INTENT_TYPES = [
   '/onboard_worker',
   '/inventory_create',
   '/inventory_status',
+  '/purchase_request_create',
   'general_chat',
 ] as const;
 

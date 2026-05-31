@@ -4,6 +4,7 @@ export const WORKFLOW_TYPE = {
   ONBOARD_WORKER: 'ONBOARD_WORKER',
   INVENTORY_CREATE: 'INVENTORY_CREATE',
   SUGGESTION_APPROVAL: 'SUGGESTION_APPROVAL',
+  PURCHASE_REQUEST_CREATE: 'PURCHASE_REQUEST_CREATE',
 } as const;
 
 export type WorkflowType =
@@ -26,6 +27,7 @@ export const WORKFLOW_START_COMMANDS = {
   ONBOARD_WORKER: '/onboard_worker',
   INVENTORY_CREATE: '/inventory_create',
   SUGGESTION_APPROVAL: '/suggestion_approve',
+  PURCHASE_REQUEST_CREATE: '/purchase_request_create',
 } as const;
 
 /** Cancels the active workflow session for the sender. */
@@ -88,3 +90,14 @@ export const SUGGESTION_APPROVAL_STEP = {
 
 export type SuggestionApprovalStep =
   (typeof SUGGESTION_APPROVAL_STEP)[keyof typeof SUGGESTION_APPROVAL_STEP];
+
+/** Purchase request creation workflow steps (Prompt 10). */
+export const PURCHASE_REQUEST_CREATE_STEP = {
+  REQUEST_CREATION: 'REQUEST_CREATION',
+  APPROVAL: 'APPROVAL',
+  VENDOR_ASSIGNMENT: 'VENDOR_ASSIGNMENT',
+  CLOSE: 'CLOSE',
+} as const;
+
+export type PurchaseRequestCreateStep =
+  (typeof PURCHASE_REQUEST_CREATE_STEP)[keyof typeof PURCHASE_REQUEST_CREATE_STEP];

@@ -5,10 +5,12 @@ import { FactoryModule } from 'src/services/factories/factories.module';
 import { DepartmentsModule } from 'src/services/departments/departments.module';
 import { MessagingModule } from 'src/core/messaging/messaging.module';
 import { InventoryModule } from 'src/services/inventory/inventory.module';
+import { PurchaseRequestModule } from 'src/services/purchase-requests/purchase-requests.module';
 import { DocumentModule } from 'src/services/documents/documents.module';
 import { VendorOnboardingWorkflowHandler } from './handlers/vendor-onboarding.handler';
 import { WorkerOnboardingWorkflowHandler } from './handlers/worker-onboarding.handler';
 import { InventoryCreateWorkflowHandler } from './handlers/inventory-create.handler';
+import { PurchaseRequestCreateWorkflowHandler } from './handlers/purchase-request-create.handler';
 import { SuggestionApprovalWorkflowHandler } from './handlers/suggestion-approval.handler';
 import { WorkflowSessionRepository } from './workflow-session.repository';
 import { WorkflowSessionService } from './workflow-session.service';
@@ -28,6 +30,7 @@ import { WorkflowExpiryCronService } from './workflow-expiry.cron';
     DepartmentsModule,
     MessagingModule,
     InventoryModule,
+    PurchaseRequestModule,
     forwardRef(() => DocumentModule),
   ],
   providers: [
@@ -37,6 +40,7 @@ import { WorkflowExpiryCronService } from './workflow-expiry.cron';
     WorkerOnboardingWorkflowHandler,
     InventoryCreateWorkflowHandler,
     SuggestionApprovalWorkflowHandler,
+    PurchaseRequestCreateWorkflowHandler,
     WorkerOnboardingService,
     WorkflowRegistry,
     WorkflowEngineService,

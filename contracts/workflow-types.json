@@ -4,12 +4,14 @@
     "ONBOARD_VENDOR",
     "ONBOARD_WORKER",
     "INVENTORY_CREATE",
-    "SUGGESTION_APPROVAL"
+    "SUGGESTION_APPROVAL",
+    "PURCHASE_REQUEST_CREATE"
   ],
   "start_commands": {
     "ONBOARD_VENDOR": "/onboard_vendor",
     "ONBOARD_WORKER": "/onboard_worker",
     "INVENTORY_CREATE": "/inventory_create",
-    "SUGGESTION_APPROVAL": "/suggestion_approve"
+    "SUGGESTION_APPROVAL": "/suggestion_approve",
+    "PURCHASE_REQUEST_CREATE": "/purchase_request_create"
   }
 }

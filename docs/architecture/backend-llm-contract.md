@@ -461,6 +461,50 @@ Backend would suggest reconciliation entries — LLM extracts only.
 
 ---
 
+## 11. Procurement foundation contracts (Prompt 10)
+
+### Purchase request intent
+
+```json
+{
+  "intent": "/purchase_request_create",
+  "worker_slug": null,
+  "depart_slug": null,
+  "reject_reason": null
+}
+```
+
+Natural language examples: "need cement", "create purchase request", "procurement request banao", "order packaging material".
+
+### Purchase request workflow
+
+| Field | Value |
+|-------|--------|
+| `workflow_type` | `PURCHASE_REQUEST_CREATE` |
+| `start_command` | `/purchase_request_create` |
+| Steps | `REQUEST_CREATION` → `APPROVAL` → `VENDOR_ASSIGNMENT` → `CLOSE` |
+
+Backend creates `PurchaseRequest` + line items via `PurchaseRequestService`; status transitions enforced in business layer.
+
+### Low-stock suggestion contract
+
+```json
+{
+  "suggestion_key": "low-stock:{factory_id}:{inventory_item_id}",
+  "inventory_item_id": 5,
+  "item_name": "Cement",
+  "suggested_quantity": "20",
+  "unit": "bags",
+  "reason": "Low stock: Cement (2 bags, reorder at 10)"
+}
+```
+
+Accepted via `POST /purchase-requests/from-suggestion` → creates PR in `PENDING_APPROVAL`.
+
+**Not in scope (Prompt 10):** quotations, vendor invoices, goods receipt, ledger, account aggregator.
+
+---
+
 ## Contract versioning
 
 | Contract | Version | Location |

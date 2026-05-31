@@ -45,6 +45,23 @@ export interface ISuggestionApprovalSessionData {
   summary?: string;
 }
 
+export interface IPurchaseRequestCreateSessionData {
+  title?: string;
+  description?: string | null;
+  item_name?: string;
+  item_quantity?: string;
+  item_unit?: string;
+  inventory_item_id?: number | null;
+  items?: Array<{
+    item_name: string;
+    requested_quantity: string;
+    unit: string;
+    inventory_item_id?: number | null;
+  }>;
+  purchase_request_id?: number;
+  adding_more?: boolean;
+}
+
 export interface WorkflowSessionResolveResult {
   session: IWorkflowSessionRecord | null;
   expiredJustNow: boolean;

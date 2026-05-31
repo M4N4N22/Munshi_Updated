@@ -20,6 +20,7 @@ export const COMMANDS = {
   ONBOARD_WORKER: '/onboard_worker',
   INVENTORY_CREATE: '/inventory_create',
   INVENTORY_STATUS: '/inventory_status',
+  PURCHASE_REQUEST_CREATE: '/purchase_request_create',
   CANCEL: '/cancel',
 };
 
@@ -74,6 +75,10 @@ export const COMMAND_HINTS = [
   {
     command: COMMANDS.INVENTORY_STATUS,
     hint: 'Check inventory status by SKU or list low-stock items',
+  },
+  {
+    command: COMMANDS.PURCHASE_REQUEST_CREATE,
+    hint: 'Start purchase request workflow (need → approval → vendor)',
   },
   {
     command: COMMANDS.CANCEL,

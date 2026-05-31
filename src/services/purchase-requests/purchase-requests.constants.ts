@@ -1,13 +1,51 @@
-/** Purchase request lifecycle — procurement workflows deferred to Prompt 3+. */
+/** Purchase request lifecycle — Prompt 10 procurement foundation. */
 export const PURCHASE_REQUEST_STATUS = {
   DRAFT: 'DRAFT',
-  SUBMITTED: 'SUBMITTED',
+  PENDING_APPROVAL: 'PENDING_APPROVAL',
   APPROVED: 'APPROVED',
   REJECTED: 'REJECTED',
-  CANCELLED: 'CANCELLED',
-  ORDERED: 'ORDERED',
-  RECEIVED: 'RECEIVED',
+  ASSIGNED_TO_VENDOR: 'ASSIGNED_TO_VENDOR',
+  CLOSED: 'CLOSED',
 } as const;
 
 export type PurchaseRequestStatus =
   (typeof PURCHASE_REQUEST_STATUS)[keyof typeof PURCHASE_REQUEST_STATUS];
+
+export const PURCHASE_REQUEST_PRIORITY = {
+  LOW: 'LOW',
+  NORMAL: 'NORMAL',
+  HIGH: 'HIGH',
+  URGENT: 'URGENT',
+} as const;
+
+export type PurchaseRequestPriority =
+  (typeof PURCHASE_REQUEST_PRIORITY)[keyof typeof PURCHASE_REQUEST_PRIORITY];
+
+export const PURCHASE_REQUEST_AUDIT_EVENT = {
+  CREATED: 'CREATED',
+  UPDATED: 'UPDATED',
+  SUBMITTED: 'SUBMITTED',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+  VENDOR_ASSIGNED: 'VENDOR_ASSIGNED',
+  VENDOR_CHANGED: 'VENDOR_CHANGED',
+  VENDOR_REMOVED: 'VENDOR_REMOVED',
+  CLOSED: 'CLOSED',
+  SUGGESTION_GENERATED: 'SUGGESTION_GENERATED',
+  SUGGESTION_ACCEPTED: 'SUGGESTION_ACCEPTED',
+} as const;
+
+export type PurchaseRequestAuditEvent =
+  (typeof PURCHASE_REQUEST_AUDIT_EVENT)[keyof typeof PURCHASE_REQUEST_AUDIT_EVENT];
+
+export const PURCHASE_REQUEST_PAGINATION = {
+  DEFAULT_PAGE: 1,
+  DEFAULT_LIMIT: 25,
+  MAX_LIMIT: 100,
+} as const;
+
+/** Terminal statuses — no further workflow transitions via API. */
+export const PURCHASE_REQUEST_TERMINAL_STATUSES: PurchaseRequestStatus[] = [
+  PURCHASE_REQUEST_STATUS.REJECTED,
+  PURCHASE_REQUEST_STATUS.CLOSED,
+];

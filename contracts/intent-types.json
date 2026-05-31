@@ -22,6 +22,7 @@
     "/onboard_worker",
     "/inventory_create",
     "/inventory_status",
+    "/purchase_request_create",
     "general_chat"
   ],
   "departments": ["operations", "sales", "purchase", "it"]

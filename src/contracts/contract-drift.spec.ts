@@ -43,6 +43,9 @@ describe('Shared contract drift detection', () => {
     expect(WORKFLOW_START_COMMANDS.ONBOARD_VENDOR).toBe('/onboard_vendor');
     expect(WORKFLOW_START_COMMANDS.ONBOARD_WORKER).toBe('/onboard_worker');
     expect(WORKFLOW_START_COMMANDS.INVENTORY_CREATE).toBe('/inventory_create');
+    expect(WORKFLOW_START_COMMANDS.PURCHASE_REQUEST_CREATE).toBe(
+      '/purchase_request_create',
+    );
     expect(SUGGESTION_APPROVAL_COMMAND).toBe('/suggestion_approve');
   });
 
@@ -54,6 +57,7 @@ describe('Shared contract drift detection', () => {
         '/onboard_worker',
         '/inventory_create',
         '/inventory_status',
+        '/purchase_request_create',
       ]),
     );
   });
