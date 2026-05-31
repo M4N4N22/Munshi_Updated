@@ -1,0 +1,15 @@
+{
+  "version": "v1",
+  "types": [
+    "ONBOARD_VENDOR",
+    "ONBOARD_WORKER",
+    "INVENTORY_CREATE",
+    "SUGGESTION_APPROVAL"
+  ],
+  "start_commands": {
+    "ONBOARD_VENDOR": "/onboard_vendor",
+    "ONBOARD_WORKER": "/onboard_worker",
+    "INVENTORY_CREATE": "/inventory_create",
+    "SUGGESTION_APPROVAL": "/suggestion_approve"
+  }
+}

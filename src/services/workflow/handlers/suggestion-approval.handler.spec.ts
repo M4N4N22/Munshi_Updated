@@ -1,5 +1,6 @@
 import { SuggestionApprovalWorkflowHandler } from './suggestion-approval.handler';
 import { SuggestionExecutionService } from 'src/services/documents/suggestion-execution.service';
+import { SuggestionWorkflowTriggerService } from 'src/services/documents/suggestion-workflow-trigger.service';
 import {
   SUGGESTION_APPROVAL_STEP,
   WORKFLOW_TYPE,
@@ -8,6 +9,7 @@ import {
 describe('SuggestionApprovalWorkflowHandler', () => {
   let handler: SuggestionApprovalWorkflowHandler;
   let execution: jest.Mocked<SuggestionExecutionService>;
+  let workflowTrigger: jest.Mocked<SuggestionWorkflowTriggerService>;
 
   beforeEach(() => {
     execution = {
@@ -15,7 +17,11 @@ describe('SuggestionApprovalWorkflowHandler', () => {
       rejectSuggestion: jest.fn().mockResolvedValue({ id: 1 }),
     } as unknown as jest.Mocked<SuggestionExecutionService>;
 
-    handler = new SuggestionApprovalWorkflowHandler(execution);
+    workflowTrigger = {
+      onSuggestionResolved: jest.fn().mockResolvedValue({ completed: false }),
+    } as unknown as jest.Mocked<SuggestionWorkflowTriggerService>;
+
+    handler = new SuggestionApprovalWorkflowHandler(execution, workflowTrigger);
   });
 
   it('registers SUGGESTION_APPROVAL workflow type', () => {
@@ -31,7 +37,7 @@ describe('SuggestionApprovalWorkflowHandler', () => {
         phone_number: '919876543210',
         workflow_type: WORKFLOW_TYPE.SUGGESTION_APPROVAL,
         current_step: SUGGESTION_APPROVAL_STEP.CONFIRM,
-        session_data: { suggestion_id: 7, summary: 'Confirm?' },
+        session_data: { suggestion_id: 7, document_id: 3, summary: 'Confirm?' },
         status: 'ACTIVE',
       },
       'yes',
@@ -44,6 +50,11 @@ describe('SuggestionApprovalWorkflowHandler', () => {
       userId: 1,
     });
     expect(result.completed).toBe(true);
+    expect(workflowTrigger.onSuggestionResolved).toHaveBeenCalledWith(
+      3,
+      1,
+      '919876543210',
+    );
   });
 
   it('rejects suggestion on NO', async () => {

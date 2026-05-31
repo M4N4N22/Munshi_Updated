@@ -12,6 +12,7 @@ import {
   WorkflowUserContext,
 } from '../workflow.interfaces';
 import { SuggestionExecutionService } from 'src/services/documents/suggestion-execution.service';
+import { SuggestionWorkflowTriggerService } from 'src/services/documents/suggestion-workflow-trigger.service';
 import {
   SUGGESTION_CONFIRM_NO,
   SUGGESTION_CONFIRM_YES,
@@ -26,6 +27,7 @@ export class SuggestionApprovalWorkflowHandler implements IWorkflowHandler {
 
   constructor(
     private readonly suggestionExecution: SuggestionExecutionService,
+    private readonly workflowTrigger: SuggestionWorkflowTriggerService,
   ) {}
 
   getInitialPrompt(): string {
@@ -71,6 +73,8 @@ export class SuggestionApprovalWorkflowHandler implements IWorkflowHandler {
           userId: context.userId,
         });
 
+        await this.advanceQueueIfNeeded(data, context);
+
         return {
           message: waSection(
             'Suggestion approved',
@@ -98,6 +102,8 @@ export class SuggestionApprovalWorkflowHandler implements IWorkflowHandler {
         'Rejected via workflow',
       );
 
+      await this.advanceQueueIfNeeded(data, context);
+
       return {
         message: waSection(
           'Suggestion rejected',
@@ -116,5 +122,17 @@ export class SuggestionApprovalWorkflowHandler implements IWorkflowHandler {
       nextStep: session.current_step,
       sessionData: data as Record<string, unknown>,
     };
+  }
+
+  private async advanceQueueIfNeeded(
+    data: ISuggestionApprovalSessionData,
+    context: WorkflowUserContext,
+  ) {
+    if (!data.document_id) return;
+    await this.workflowTrigger.onSuggestionResolved(
+      data.document_id,
+      context.factoryId,
+      context.phone,
+    );
   }
 }

@@ -6,6 +6,8 @@ import { DocumentExtractionContractService } from './document-extraction-contrac
 import { SuggestionEngineService } from './suggestion-engine.service';
 import { SuggestionExecutionService } from './suggestion-execution.service';
 import { WorkflowSessionService } from 'src/services/workflow/workflow-session.service';
+import { LocalStorageProvider } from './storage/local-storage.provider';
+import { DocumentProcessingOrchestrator } from './document-processing.orchestrator';
 import { DOCUMENT_STATUS, DOCUMENT_TYPE } from './documents.constants';
 
 describe('DocumentService', () => {
@@ -51,6 +53,8 @@ describe('DocumentService', () => {
       suggestionEngine,
       {} as SuggestionExecutionService,
       {} as WorkflowSessionService,
+      {} as LocalStorageProvider,
+      {} as DocumentProcessingOrchestrator,
     );
   });
 

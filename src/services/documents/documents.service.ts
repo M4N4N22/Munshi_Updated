@@ -4,6 +4,8 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { LocalStorageProvider } from './storage/local-storage.provider';
+import { DocumentProcessingOrchestrator, OrchestrationResult } from './document-processing.orchestrator';
 import { WorkflowSessionService } from 'src/services/workflow/workflow-session.service';
 import {
   SUGGESTION_APPROVAL_STEP,
@@ -28,9 +30,16 @@ import {
   CreateDocumentDto,
   StartSuggestionApprovalDto,
   StoreExtractionDto,
+  UploadDocumentDto,
 } from './documents.dto';
 import { SuggestionEngineService } from './suggestion-engine.service';
 import { SuggestionExecutionService } from './suggestion-execution.service';
+
+export interface UploadedFilePayload {
+  originalname: string;
+  buffer: Buffer;
+  mimetype: string;
+}
 
 @Injectable()
 export class DocumentService {
@@ -41,7 +50,60 @@ export class DocumentService {
     private readonly suggestionEngine: SuggestionEngineService,
     private readonly suggestionExecution: SuggestionExecutionService,
     private readonly workflowSessionService: WorkflowSessionService,
+    private readonly storage: LocalStorageProvider,
+    private readonly orchestrator: DocumentProcessingOrchestrator,
   ) {}
+
+  async uploadDocument(
+    file: UploadedFilePayload,
+    dto: UploadDocumentDto,
+  ): Promise<{ document: IDocumentRecord; job_id: number; processing?: OrchestrationResult }> {
+    await this.assertFactoryExists(dto.factory_id);
+
+    const stored = await this.storage.store(
+      dto.factory_id,
+      file.originalname,
+      file.buffer,
+      file.mimetype,
+    );
+
+    const docType = dto.document_type ?? DOCUMENT_TYPE.UNKNOWN;
+    const document = await this.createDocument({
+      factory_id: dto.factory_id,
+      uploaded_by: dto.uploaded_by,
+      document_type: docType,
+      file_name: stored.fileName,
+      storage_ref: stored.storageRef,
+      mime_type: stored.mimeType,
+      metadata: {
+        size_bytes: stored.sizeBytes,
+        auto_process: dto.auto_process ?? true,
+      },
+    });
+
+    const job = await this.documentRepository.createJob({
+      document_id: document.id,
+      factory_id: dto.factory_id,
+      job_type: 'UPLOAD',
+      status: DOCUMENT_JOB_STATUS.COMPLETED,
+      started_at: new Date(),
+      completed_at: new Date(),
+    });
+
+    let processing: OrchestrationResult | undefined;
+    if (dto.auto_process !== false) {
+      processing = await this.orchestrator.processDocument(
+        document.id,
+        dto.factory_id,
+      );
+    }
+
+    return { document, job_id: job.id, processing };
+  }
+
+  async processDocument(documentId: number, factoryId: number) {
+    return this.orchestrator.processDocument(documentId, factoryId);
+  }
 
   listDocumentTypes() {
     return this.registry.listDocumentTypes();

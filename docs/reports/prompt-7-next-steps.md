@@ -3,6 +3,8 @@
 **Date:** 2026-05-29  
 **Baseline:** Document foundation + suggestion engine + inventory bootstrap (95 tests passing)
 
+> **Superseded by Prompt 8:** Automated ingestion via `POST /documents/upload`, orchestrator, and ML `/parse`. Manual REST extraction path remains for debugging. See `prompt-8-next-steps.md`.
+
 ---
 
 ## Deliverables completed

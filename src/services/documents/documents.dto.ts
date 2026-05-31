@@ -2,7 +2,9 @@ import {
   ApiProperty,
   ApiPropertyOptional,
 } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import {
+  IsBoolean,
   IsNumber,
   IsObject,
   IsOptional,
@@ -85,6 +87,37 @@ export class StartSuggestionApprovalDto {
   @ApiProperty({ example: '919876543210' })
   @IsString()
   phone_number: string;
+}
+
+export class UploadDocumentDto {
+  @ApiProperty({ example: 1 })
+  @Transform(({ value }) => Number(value))
+  @IsNumber()
+  factory_id: number;
+
+  @ApiPropertyOptional({ example: 42 })
+  @Transform(({ value }) => (value != null && value !== '' ? Number(value) : undefined))
+  @IsOptional()
+  @IsNumber()
+  uploaded_by?: number;
+
+  @ApiPropertyOptional({ example: DOCUMENT_TYPE.INVENTORY_IMPORT })
+  @IsOptional()
+  @IsString()
+  document_type?: string;
+
+  @ApiPropertyOptional({
+    example: true,
+    description: 'Run orchestrator immediately after upload (default true)',
+  })
+  @Transform(({ value }) => {
+    if (value === undefined || value === null || value === '') return true;
+    if (typeof value === 'boolean') return value;
+    return String(value).toLowerCase() === 'true';
+  })
+  @IsOptional()
+  @IsBoolean()
+  auto_process?: boolean;
 }
 
 export class RejectSuggestionDto {

@@ -1,0 +1,27 @@
+{
+  "version": "v1",
+  "intents": [
+    "/tasks",
+    "/assign",
+    "/depart_assign",
+    "/mgrassign",
+    "/mgrself",
+    "/update",
+    "/issue",
+    "/issues",
+    "/resolve",
+    "/members",
+    "/report",
+    "/help",
+    "/present",
+    "/absent",
+    "/complete",
+    "/mgrtransfer",
+    "/mgrreject",
+    "/onboard_vendor",
+    "/onboard_worker",
+    "/inventory_create",
+    "general_chat"
+  ],
+  "departments": ["operations", "sales", "purchase", "it"]
+}
