@@ -11,6 +11,7 @@ import {
 import {
   PURCHASE_REQUEST_PRIORITY,
   PURCHASE_REQUEST_STATUS,
+  PurchaseRequestPriority,
 } from './purchase-requests.constants';
 
 export class PurchaseRequestFactoryQueryDto {
@@ -85,7 +86,7 @@ export class CreatePurchaseRequestDto {
   @ApiPropertyOptional({ enum: PURCHASE_REQUEST_PRIORITY })
   @IsOptional()
   @IsEnum(PURCHASE_REQUEST_PRIORITY)
-  priority?: string;
+  priority?: PurchaseRequestPriority;
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -128,7 +129,7 @@ export class UpdatePurchaseRequestDto {
   @ApiPropertyOptional({ enum: PURCHASE_REQUEST_PRIORITY })
   @IsOptional()
   @IsEnum(PURCHASE_REQUEST_PRIORITY)
-  priority?: string;
+  priority?: PurchaseRequestPriority;
 
   @ApiPropertyOptional()
   @IsOptional()

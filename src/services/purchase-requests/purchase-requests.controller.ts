@@ -84,7 +84,7 @@ export class PurchaseRequestController {
       requested_by: dto.requested_by,
       title: dto.title,
       description: dto.description,
-      priority: dto.priority as any,
+      priority: dto.priority,
       notes: dto.notes,
       items: dto.items,
       submit: dto.submit,
