@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { DbModule } from 'src/core/services/db-service/db.module';
 import { HealthCheckModule } from 'src/core/health-check/health.module';
+import { MigrationHealthModule } from 'src/core/migrations/migration-health.module';
 import { ReqResInterceptor } from 'src/core/interceptors/response-interceptor';
 import { LoggerModule } from 'src/core/services/logger/logger.module';
 import { HttpExceptionFilter } from 'src/core/filters/http-exception.filter';
@@ -29,6 +30,7 @@ import { DocumentModule } from 'src/services/documents/documents.module';
     DbModule,
     LoggerModule,
     HealthCheckModule,
+    MigrationHealthModule,
     // modules
     //
     WhatsAppModule,

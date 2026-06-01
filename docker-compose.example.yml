@@ -1,0 +1,28 @@
+# Example local stack — copy to docker-compose.yml and adjust secrets.
+# Migrations run automatically on container start (AUTO_MIGRATE=1).
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: munshi
+      POSTGRES_PASSWORD: munshi
+      POSTGRES_DB: munshi_data
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    build: .
+    ports:
+      - '4001:4001'
+    environment:
+      PORT: 4001
+      AUTO_MIGRATE: '1'
+      POSTGRES_CONNECTION_STRING: postgresql://munshi:munshi@postgres:5432/munshi_data
+    depends_on:
+      - postgres
+
+volumes:
+  pgdata:
