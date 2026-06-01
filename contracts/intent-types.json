@@ -23,7 +23,19 @@
     "/inventory_create",
     "/inventory_status",
     "/purchase_request_create",
+    "/business_discovery",
+    "/continue_discovery",
     "general_chat"
   ],
-  "departments": ["operations", "sales", "purchase", "it"]
+  "departments": ["operations", "sales", "purchase", "it"],
+  "discovery_phrases": [
+    "tell you about my business",
+    "setup my business",
+    "register my company",
+    "continue setup",
+    "continue onboarding",
+    "update company details",
+    "import inventory",
+    "import vendors"
+  ]
 }

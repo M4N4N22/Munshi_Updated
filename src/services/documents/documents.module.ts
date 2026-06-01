@@ -1,5 +1,6 @@
 import { Module, forwardRef } from '@nestjs/common';
 import { MessagingModule } from 'src/core/messaging/messaging.module';
+import { BusinessDiscoveryModule } from 'src/services/business-discovery/business-discovery.module';
 import { InventoryModule } from 'src/services/inventory/inventory.module';
 import { UserModule } from 'src/services/users/users.module';
 import { WorkflowModule } from 'src/services/workflow/workflow.module';
@@ -25,6 +26,7 @@ import { LocalStorageProvider } from './storage/local-storage.provider';
     UserModule,
     MessagingModule,
     forwardRef(() => WorkflowModule),
+    forwardRef(() => BusinessDiscoveryModule),
   ],
   controllers: [DocumentController],
   providers: [

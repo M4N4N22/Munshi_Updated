@@ -58,6 +58,8 @@ describe('Shared contract drift detection', () => {
         '/inventory_create',
         '/inventory_status',
         '/purchase_request_create',
+        '/business_discovery',
+        '/continue_discovery',
       ]),
     );
   });

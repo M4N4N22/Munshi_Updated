@@ -11,6 +11,8 @@ import { VendorOnboardingWorkflowHandler } from './handlers/vendor-onboarding.ha
 import { WorkerOnboardingWorkflowHandler } from './handlers/worker-onboarding.handler';
 import { InventoryCreateWorkflowHandler } from './handlers/inventory-create.handler';
 import { PurchaseRequestCreateWorkflowHandler } from './handlers/purchase-request-create.handler';
+import { BusinessDiscoveryModule } from 'src/services/business-discovery/business-discovery.module';
+import { BusinessDiscoveryWorkflowHandler } from './handlers/business-discovery.handler';
 import { SuggestionApprovalWorkflowHandler } from './handlers/suggestion-approval.handler';
 import { WorkflowSessionRepository } from './workflow-session.repository';
 import { WorkflowSessionService } from './workflow-session.service';
@@ -32,6 +34,7 @@ import { WorkflowExpiryCronService } from './workflow-expiry.cron';
     InventoryModule,
     PurchaseRequestModule,
     forwardRef(() => DocumentModule),
+    BusinessDiscoveryModule,
   ],
   providers: [
     WorkflowSessionRepository,
@@ -41,6 +44,7 @@ import { WorkflowExpiryCronService } from './workflow-expiry.cron';
     InventoryCreateWorkflowHandler,
     SuggestionApprovalWorkflowHandler,
     PurchaseRequestCreateWorkflowHandler,
+    BusinessDiscoveryWorkflowHandler,
     WorkerOnboardingService,
     WorkflowRegistry,
     WorkflowEngineService,

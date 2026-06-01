@@ -3,6 +3,7 @@ import { VendorOnboardingWorkflowHandler } from './handlers/vendor-onboarding.ha
 import { WorkerOnboardingWorkflowHandler } from './handlers/worker-onboarding.handler';
 import { InventoryCreateWorkflowHandler } from './handlers/inventory-create.handler';
 import { PurchaseRequestCreateWorkflowHandler } from './handlers/purchase-request-create.handler';
+import { BusinessDiscoveryWorkflowHandler } from './handlers/business-discovery.handler';
 import { SuggestionApprovalWorkflowHandler } from './handlers/suggestion-approval.handler';
 import {
   WORKFLOW_START_COMMANDS,
@@ -53,12 +54,21 @@ describe('WorkflowRegistry', () => {
       handleStep: jest.fn(),
     } as unknown as PurchaseRequestCreateWorkflowHandler;
 
+    const businessDiscoveryHandler = {
+      workflowType: WORKFLOW_TYPE.BUSINESS_DISCOVERY,
+      startCommand: WORKFLOW_START_COMMANDS.BUSINESS_DISCOVERY,
+      firstStep: 'MENU',
+      getInitialPrompt: () => 'prompt',
+      handleStep: jest.fn(),
+    } as unknown as BusinessDiscoveryWorkflowHandler;
+
     registry = new WorkflowRegistry(
       vendorHandler,
       workerHandler,
       inventoryHandler,
       suggestionHandler,
       purchaseRequestHandler,
+      businessDiscoveryHandler,
     );
   });
 
@@ -78,9 +88,15 @@ describe('WorkflowRegistry', () => {
     expect(
       registry.getHandlerByCommand('/purchase_request_create')?.workflowType,
     ).toBe(WORKFLOW_TYPE.PURCHASE_REQUEST_CREATE);
+    expect(
+      registry.getHandlerByCommand('/business_discovery')?.workflowType,
+    ).toBe(WORKFLOW_TYPE.BUSINESS_DISCOVERY);
+    expect(
+      registry.getHandlerByCommand('/continue_discovery')?.workflowType,
+    ).toBe(WORKFLOW_TYPE.BUSINESS_DISCOVERY);
   });
 
-  it('lists five start commands', () => {
-    expect(registry.listStartCommands()).toHaveLength(5);
+  it('lists registered start commands including discovery aliases', () => {
+    expect(registry.listStartCommands()).toHaveLength(7);
   });
 });

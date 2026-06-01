@@ -3,6 +3,7 @@ import {
   WorkflowType,
   VendorOnboardingStep,
 } from './workflow.constants';
+import { DiscoveryBucket } from '../business-discovery/business-discovery.constants';
 
 export interface IWorkflowSessionRecord {
   id: number;
@@ -60,6 +61,11 @@ export interface IPurchaseRequestCreateSessionData {
   }>;
   purchase_request_id?: number;
   adding_more?: boolean;
+}
+
+export interface IBusinessDiscoverySessionData {
+  current_bucket?: DiscoveryBucket;
+  field_index?: number;
 }
 
 export interface WorkflowSessionResolveResult {

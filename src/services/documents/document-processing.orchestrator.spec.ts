@@ -6,6 +6,7 @@ import { ContractValidationService } from './contract-validation.service';
 import { SuggestionEngineService } from './suggestion-engine.service';
 import { SuggestionQueueService } from './suggestion-queue.service';
 import { SuggestionWorkflowTriggerService } from './suggestion-workflow-trigger.service';
+import { BusinessDiscoveryDocumentService } from 'src/services/business-discovery/business-discovery-document.service';
 import {
   DOCUMENT_JOB_STATUS,
   DOCUMENT_STATUS,
@@ -21,6 +22,7 @@ describe('DocumentProcessingOrchestrator', () => {
   let suggestionEngine: jest.Mocked<SuggestionEngineService>;
   let queueService: jest.Mocked<SuggestionQueueService>;
   let workflowTrigger: jest.Mocked<SuggestionWorkflowTriggerService>;
+  let discoveryDocument: jest.Mocked<BusinessDiscoveryDocumentService>;
 
   beforeEach(() => {
     repository = {
@@ -73,6 +75,10 @@ describe('DocumentProcessingOrchestrator', () => {
       startQueueForDocument: jest.fn().mockResolvedValue({ started: true }),
     } as unknown as jest.Mocked<SuggestionWorkflowTriggerService>;
 
+    discoveryDocument = {
+      contributeFromDocument: jest.fn().mockResolvedValue(undefined),
+    } as unknown as jest.Mocked<BusinessDiscoveryDocumentService>;
+
     orchestrator = new DocumentProcessingOrchestrator(
       repository,
       storage,
@@ -81,6 +87,7 @@ describe('DocumentProcessingOrchestrator', () => {
       suggestionEngine,
       queueService,
       workflowTrigger,
+      discoveryDocument,
     );
   });
 
@@ -93,6 +100,11 @@ describe('DocumentProcessingOrchestrator', () => {
     expect(suggestionEngine.generateFromExtraction).toHaveBeenCalledWith(5, 1);
     expect(queueService.initializeQueue).toHaveBeenCalledWith(1, 1, [7, 8]);
     expect(workflowTrigger.startQueueForDocument).toHaveBeenCalledWith(1, 1);
+    expect(discoveryDocument.contributeFromDocument).toHaveBeenCalledWith(
+      1,
+      DOCUMENT_TYPE.INVENTORY_IMPORT,
+      expect.any(Array),
+    );
     expect(result.workflow_started).toBe(true);
     expect(repository.updateDocument).toHaveBeenCalledWith(
       1,

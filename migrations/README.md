@@ -38,6 +38,7 @@ Returns applied count, pending count, latest migration file, and status `ok` or 
 | `004_inventory_master.sql` | Inventory category/location constraints |
 | `005_document_processing.sql` | Document registry and processing tables |
 | `006_procurement_foundation.sql` | Purchase request line items and audit trail |
+| `007_business_discovery.sql` | Business discovery profiles, readiness scores, reminder state |
 
 ## Notes
 

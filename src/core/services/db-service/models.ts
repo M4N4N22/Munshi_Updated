@@ -19,6 +19,9 @@ import {
 } from 'src/services/documents/documents.schema';
 import { Issue } from 'src/services/issues/issues.schema';
 import {
+  BusinessDiscoveryProfile,
+} from 'src/services/business-discovery/business-discovery.schema';
+import {
   PurchaseRequest,
   PurchaseRequestAudit,
   PurchaseRequestItem,
@@ -46,6 +49,7 @@ export const SQL_MODELS = {
   InventoryLocation: InventoryLocation.setup,
   InventoryTransaction: InventoryTransaction.setup,
   Issue: Issue.setup,
+  BusinessDiscoveryProfile: BusinessDiscoveryProfile.setup,
   PurchaseRequest: PurchaseRequest.setup,
   PurchaseRequestItem: PurchaseRequestItem.setup,
   PurchaseRequestAudit: PurchaseRequestAudit.setup,

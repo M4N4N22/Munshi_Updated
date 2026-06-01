@@ -68,6 +68,7 @@ describe('Document ingestion e2e scenarios (mocked ML)', () => {
         } as any,
         { initializeQueue: jest.fn() } as any,
         { startQueueForDocument: jest.fn().mockResolvedValue({ started: true }) } as any,
+        { contributeFromDocument: jest.fn().mockResolvedValue(undefined) } as any,
       );
 
       if (scenario.expected_failure_step === 'parse') {

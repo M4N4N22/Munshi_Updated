@@ -19,6 +19,7 @@ import { VendorModule } from 'src/services/vendors/vendors.module';
 import { InventoryModule } from 'src/services/inventory/inventory.module';
 import { PurchaseRequestModule } from 'src/services/purchase-requests/purchase-requests.module';
 import { ApprovalModule } from 'src/services/approvals/approvals.module';
+import { BusinessDiscoveryModule } from 'src/services/business-discovery/business-discovery.module';
 import { DocumentModule } from 'src/services/documents/documents.module';
 
 @Module({
@@ -45,6 +46,7 @@ import { DocumentModule } from 'src/services/documents/documents.module';
     PurchaseRequestModule,
     ApprovalModule,
     DocumentModule,
+    BusinessDiscoveryModule,
   ],
   providers: [
     {

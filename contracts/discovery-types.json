@@ -1,0 +1,54 @@
+{
+  "version": "v1",
+  "buckets": [
+    {
+      "id": "BUSINESS_IDENTITY",
+      "label": "Business Identity",
+      "fields": ["business_name", "address", "industry", "business_type"],
+      "future": false
+    },
+    {
+      "id": "ORGANIZATION",
+      "label": "Organization",
+      "fields": ["departments", "managers", "workers"],
+      "future": false
+    },
+    {
+      "id": "INVENTORY",
+      "label": "Inventory",
+      "fields": ["categories", "locations", "items"],
+      "future": false
+    },
+    {
+      "id": "VENDORS",
+      "label": "Vendors",
+      "fields": ["vendor_list", "vendor_categories", "vendor_contacts"],
+      "future": false
+    },
+    {
+      "id": "BOOKKEEPING",
+      "label": "Bookkeeping",
+      "fields": [],
+      "future": true
+    },
+    {
+      "id": "LEDGER",
+      "label": "Ledger",
+      "fields": [],
+      "future": true
+    },
+    {
+      "id": "BANKING",
+      "label": "Banking",
+      "fields": [],
+      "future": true
+    }
+  ],
+  "document_bucket_map": {
+    "INVENTORY_IMPORT": "INVENTORY",
+    "STOCK_REGISTER": "INVENTORY",
+    "PURCHASE_INVOICE": "VENDORS",
+    "GOODS_RECEIPT": "VENDORS"
+  },
+  "readiness_formula": "average of active bucket completion percentages"
+}

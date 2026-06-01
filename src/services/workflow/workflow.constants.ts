@@ -5,6 +5,7 @@ export const WORKFLOW_TYPE = {
   INVENTORY_CREATE: 'INVENTORY_CREATE',
   SUGGESTION_APPROVAL: 'SUGGESTION_APPROVAL',
   PURCHASE_REQUEST_CREATE: 'PURCHASE_REQUEST_CREATE',
+  BUSINESS_DISCOVERY: 'BUSINESS_DISCOVERY',
 } as const;
 
 export type WorkflowType =
@@ -28,6 +29,7 @@ export const WORKFLOW_START_COMMANDS = {
   INVENTORY_CREATE: '/inventory_create',
   SUGGESTION_APPROVAL: '/suggestion_approve',
   PURCHASE_REQUEST_CREATE: '/purchase_request_create',
+  BUSINESS_DISCOVERY: '/business_discovery',
 } as const;
 
 /** Cancels the active workflow session for the sender. */
@@ -101,3 +103,12 @@ export const PURCHASE_REQUEST_CREATE_STEP = {
 
 export type PurchaseRequestCreateStep =
   (typeof PURCHASE_REQUEST_CREATE_STEP)[keyof typeof PURCHASE_REQUEST_CREATE_STEP];
+
+/** Business discovery — progressive profiling, never blocking. */
+export const BUSINESS_DISCOVERY_STEP = {
+  MENU: 'MENU',
+  COLLECT: 'COLLECT',
+} as const;
+
+export type BusinessDiscoveryStep =
+  (typeof BUSINESS_DISCOVERY_STEP)[keyof typeof BUSINESS_DISCOVERY_STEP];

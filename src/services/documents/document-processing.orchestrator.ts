@@ -11,6 +11,7 @@ import { ContractValidationService } from './contract-validation.service';
 import { SuggestionEngineService } from './suggestion-engine.service';
 import { SuggestionQueueService } from './suggestion-queue.service';
 import { SuggestionWorkflowTriggerService } from './suggestion-workflow-trigger.service';
+import { BusinessDiscoveryDocumentService } from 'src/services/business-discovery/business-discovery-document.service';
 
 export interface OrchestrationResult {
   document_id: number;
@@ -32,6 +33,7 @@ export class DocumentProcessingOrchestrator {
     private readonly suggestionEngine: SuggestionEngineService,
     private readonly queueService: SuggestionQueueService,
     private readonly workflowTrigger: SuggestionWorkflowTriggerService,
+    private readonly discoveryDocument: BusinessDiscoveryDocumentService,
   ) {}
 
   async processDocument(
@@ -119,6 +121,12 @@ export class DocumentProcessingOrchestrator {
       const trigger = await this.workflowTrigger.startQueueForDocument(
         documentId,
         factoryId,
+      );
+
+      await this.discoveryDocument.contributeFromDocument(
+        factoryId,
+        docType ?? document.document_type,
+        suggestionResult.suggestions.map((s) => s.suggestion_type),
       );
 
       return {

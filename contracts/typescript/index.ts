@@ -27,6 +27,7 @@ export const WORKFLOW_TYPES = [
   'INVENTORY_CREATE',
   'SUGGESTION_APPROVAL',
   'PURCHASE_REQUEST_CREATE',
+  'BUSINESS_DISCOVERY',
 ] as const;
 
 export const INTENT_TYPES = [
@@ -52,6 +53,8 @@ export const INTENT_TYPES = [
   '/inventory_create',
   '/inventory_status',
   '/purchase_request_create',
+  '/business_discovery',
+  '/continue_discovery',
   'general_chat',
 ] as const;
 

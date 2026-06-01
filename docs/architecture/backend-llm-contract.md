@@ -505,6 +505,103 @@ Accepted via `POST /purchase-requests/from-suggestion` → creates PR in `PENDIN
 
 ---
 
+## 12. Business discovery contracts (Prompt 11)
+
+Progressive, non-blocking business discovery — **not** a mandatory onboarding wizard.
+
+### Business discovery intent
+
+```json
+{
+  "intent": "/business_discovery",
+  "worker_slug": null,
+  "depart_slug": null,
+  "reject_reason": null
+}
+```
+
+Resume intent:
+
+```json
+{
+  "intent": "/continue_discovery",
+  "worker_slug": null,
+  "depart_slug": null,
+  "reject_reason": null
+}
+```
+
+Natural language examples (EN / HI / Hinglish): "tell you about my business", "setup my business", "register my company", "continue setup", "import inventory list", "mera business setup karna hai".
+
+Both intents route to workflow type `BUSINESS_DISCOVERY` (`/continue_discovery` is a registry alias).
+
+### Business discovery workflow
+
+| Field | Value |
+|-------|--------|
+| `workflow_type` | `BUSINESS_DISCOVERY` |
+| `start_command` | `/business_discovery` |
+| Steps | `MENU` → `COLLECT` (per bucket field) |
+
+Session state only — persisted in `workflow_sessions`; no in-memory sessions. Owner can pause (`pause` / API) and resume days or months later.
+
+### Discovery bucket contract
+
+Shared file: `contracts/discovery-types.json`
+
+| Bucket | Examples |
+|--------|----------|
+| `BUSINESS_IDENTITY` | name, address, industry, business type |
+| `ORGANIZATION` | departments, managers, workers |
+| `INVENTORY` | categories, locations, items |
+| `VENDORS` | vendor list, categories, contacts |
+| `BOOKKEEPING`, `LEDGER`, `BANKING` | reserved (future) |
+
+Documents contribute via existing parsers — no duplicate ML extraction:
+
+| Document type | Bucket |
+|---------------|--------|
+| `INVENTORY_IMPORT`, `STOCK_REGISTER` | `INVENTORY` |
+| `PURCHASE_INVOICE`, `GOODS_RECEIPT` | `VENDORS` |
+
+### Readiness score contract
+
+```json
+{
+  "factory_id": 3,
+  "readiness": {
+    "identity": 100,
+    "organization": 50,
+    "inventory": 20,
+    "vendors": 0,
+    "overall": 43,
+    "status": "ACTIVE"
+  },
+  "buckets": [
+    { "bucket": "BUSINESS_IDENTITY", "label": "Business Identity", "completion": 100 }
+  ],
+  "resumable": true
+}
+```
+
+Exposed via `GET /business-discovery/progress` (factory-scoped).
+
+### Reminder contract
+
+Scheduled lookup (hourly cron), not per-session timers:
+
+| Stage | Timing | Action |
+|-------|--------|--------|
+| First | 24h after last activity | Send reminder, schedule final |
+| Final | 7d after first | Send final reminder |
+| Paused | After final | `status=PAUSED`, no more reminders; workflow remains resumable |
+
+Manual ops: `POST /business-discovery/reminder?factory_id=`.
+
+**Not in scope (Prompt 11):** mandatory onboarding wizard, owner/workspace provisioning, quotations, invoices, GRN, ledger, account aggregator.
+
+---
+
 ## Contract versioning
 
 | Contract | Version | Location |
