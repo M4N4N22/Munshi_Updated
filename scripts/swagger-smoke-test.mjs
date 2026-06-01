@@ -1,6 +1,19 @@
 const base = process.env.API_BASE ?? 'http://localhost:4001';
 const F = Number(process.env.FACTORY_ID ?? 3);
 
+async function factoryMemberUserId() {
+  try {
+    const res = await fetch(`${base}/factories/${F}/users`);
+    if (!res.ok) return 18;
+    const rows = await res.json();
+    return rows[0]?.user_id ?? 18;
+  } catch {
+    return 18;
+  }
+}
+
+const requestedBy = await factoryMemberUserId();
+
 const tests = [
   ['GET', '/health'],
   ['GET', '/factories'],
@@ -23,8 +36,17 @@ const tests = [
   ['GET', `/approvals?factory_id=${F}`],
   ['GET', '/users?factory_id=1&search=a&page=1&page_size=10'],
   ['GET', '/attendance?factory_id=1&date=2026-05-31&user_id=1'],
-  ['POST', '/purchase-requests', { factory_id: F, requester_id: 1, title: 'Smoke PR' }],
-  ['POST', '/approvals', { factory_id: F, entity_type: 'PURCHASE_REQUEST', entity_id: 1, requester_id: 1 }],
+  [
+    'POST',
+    '/purchase-requests',
+    {
+      factory_id: F,
+      requested_by: requestedBy,
+      title: 'Smoke PR',
+      items: [{ item_name: 'Smoke test item', requested_quantity: '1', unit: 'pcs' }],
+    },
+  ],
+  ['POST', '/approvals', { factory_id: F, entity_type: 'PURCHASE_REQUEST', entity_id: 1, requester_id: requestedBy }],
 ];
 
 const rows = [];
@@ -63,6 +85,7 @@ const latencies = rows.filter((r) => typeof r.ms === 'number').map((r) => r.ms);
 const summary = {
   base,
   factory_id: F,
+  requested_by: requestedBy,
   total: rows.length,
   passed,
   failed: rows.length - passed,

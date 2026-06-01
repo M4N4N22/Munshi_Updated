@@ -83,12 +83,14 @@ export class PurchaseRequestRepository {
     id: number,
     factoryId: number,
     includeItems = true,
+    transaction?: Transaction,
   ): Promise<PurchaseRequest | null> {
     return this.model.findOne({
       where: { id, factory_id: factoryId },
       include: includeItems
         ? [{ model: this.itemModel, as: 'items' }]
         : undefined,
+      transaction,
     });
   }
 

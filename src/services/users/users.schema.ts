@@ -67,7 +67,7 @@ export class User extends Model<
     });
 
     User.hasMany(models.PurchaseRequest, {
-      foreignKey: 'requester_id',
+      foreignKey: 'requested_by',
       as: 'purchase_requests',
     });
 

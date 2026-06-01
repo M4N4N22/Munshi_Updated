@@ -118,6 +118,8 @@ export class PurchaseRequestService {
       const full = await this.purchaseRequestRepository.findById(
         row.id,
         input.factory_id,
+        true,
+        transaction,
       );
       return this.toRecord(full!);
     });
@@ -169,6 +171,8 @@ export class PurchaseRequestService {
       const full = await this.purchaseRequestRepository.findById(
         id,
         input.factory_id,
+        true,
+        transaction,
       );
       return this.toRecord(full!);
     });
@@ -205,7 +209,12 @@ export class PurchaseRequestService {
         { remarks: remarks ?? null },
         transaction,
       );
-      const full = await this.purchaseRequestRepository.findById(id, factoryId);
+      const full = await this.purchaseRequestRepository.findById(
+        id,
+        factoryId,
+        true,
+        transaction,
+      );
       return this.toRecord(full!);
     });
   }
@@ -237,7 +246,12 @@ export class PurchaseRequestService {
         { remarks: remarks ?? null },
         transaction,
       );
-      const full = await this.purchaseRequestRepository.findById(id, factoryId);
+      const full = await this.purchaseRequestRepository.findById(
+        id,
+        factoryId,
+        true,
+        transaction,
+      );
       return this.toRecord(full!);
     });
   }
@@ -285,7 +299,12 @@ export class PurchaseRequestService {
         },
         transaction,
       );
-      const full = await this.purchaseRequestRepository.findById(id, factoryId);
+      const full = await this.purchaseRequestRepository.findById(
+        id,
+        factoryId,
+        true,
+        transaction,
+      );
       return this.toRecord(full!);
     });
   }
@@ -318,7 +337,12 @@ export class PurchaseRequestService {
         { previous_vendor_id: row.assigned_vendor_id },
         transaction,
       );
-      const full = await this.purchaseRequestRepository.findById(id, factoryId);
+      const full = await this.purchaseRequestRepository.findById(
+        id,
+        factoryId,
+        true,
+        transaction,
+      );
       return this.toRecord(full!);
     });
   }
@@ -352,7 +376,12 @@ export class PurchaseRequestService {
         {},
         transaction,
       );
-      const full = await this.purchaseRequestRepository.findById(id, factoryId);
+      const full = await this.purchaseRequestRepository.findById(
+        id,
+        factoryId,
+        true,
+        transaction,
+      );
       return this.toRecord(full!);
     });
   }

@@ -1,0 +1,533 @@
+{
+  "summary": {
+    "base": "http://localhost:4001",
+    "factory_id": 3,
+    "endpoints_tested": 45,
+    "passed": 32,
+    "failed": 13,
+    "pass_rate_pct": 71.1,
+    "swagger_total_documented": 91,
+    "latency_ms": {
+      "min": 2,
+      "max": 794,
+      "avg": 63,
+      "p50": 48,
+      "p95": 97
+    },
+    "by_tag": {
+      "Health": {
+        "pass": 1,
+        "fail": 0
+      },
+      "Factory": {
+        "pass": 3,
+        "fail": 0
+      },
+      "vendors": {
+        "pass": 3,
+        "fail": 1
+      },
+      "inventory": {
+        "pass": 5,
+        "fail": 6
+      },
+      "documents": {
+        "pass": 2,
+        "fail": 2
+      },
+      "Departments": {
+        "pass": 1,
+        "fail": 2
+      },
+      "Issue": {
+        "pass": 2,
+        "fail": 0
+      },
+      "Tasks": {
+        "pass": 3,
+        "fail": 0
+      },
+      "User": {
+        "pass": 2,
+        "fail": 1
+      },
+      "Attendance": {
+        "pass": 2,
+        "fail": 0
+      },
+      "Reports": {
+        "pass": 1,
+        "fail": 0
+      },
+      "PurchaseRequest": {
+        "pass": 3,
+        "fail": 0
+      },
+      "Approval": {
+        "pass": 3,
+        "fail": 0
+      },
+      "WhatsApp": {
+        "pass": 1,
+        "fail": 1
+      }
+    },
+    "prerequisites": [
+      "Apply migrations 002???005 on POSTGRES DB",
+      "Use factory_id=3 for Munshi Dada factory",
+      "ML_URL + OLLI for webhook/test and document upload"
+    ]
+  },
+  "rows": [
+    {
+      "tag": "Health",
+      "method": "GET",
+      "path": "/health",
+      "status": 200,
+      "ms": 48,
+      "ok": true,
+      "note": "{\"status\":\"ok\",\"info\":{\"Postgres\":{\"status\":\"up\"}},\"error\":{},\"details\":{\"Postgres\":{\"status\":\"up\"}}}",
+      "blocker": ""
+    },
+    {
+      "tag": "Factory",
+      "method": "GET",
+      "path": "/factories",
+      "status": 200,
+      "ms": 52,
+      "ok": true,
+      "note": "[{\"id\":3,\"name\":\"Munshi Dada\",\"address\":\"abc\",\"createdAt\":\"2026-05-15T19:58:43.628Z\",\"updatedAt\":\"2026-05-15T19:58:43.62",
+      "blocker": ""
+    },
+    {
+      "tag": "Factory",
+      "method": "GET",
+      "path": "/factories/3",
+      "status": 200,
+      "ms": 48,
+      "ok": true,
+      "note": "{\"id\":3,\"name\":\"Munshi Dada\",\"address\":\"abc\",\"createdAt\":\"2026-05-15T19:58:43.628Z\",\"updatedAt\":\"2026-05-15T19:58:43.628",
+      "blocker": ""
+    },
+    {
+      "tag": "Factory",
+      "method": "GET",
+      "path": "/factories/3/users",
+      "status": 200,
+      "ms": 50,
+      "ok": true,
+      "note": "[{\"id\":19,\"user_id\":18,\"factory_id\":3,\"role\":\"OWNER\",\"doj\":null,\"createdAt\":\"2026-05-15T19:59:31.414Z\",\"updatedAt\":\"2026",
+      "blocker": ""
+    },
+    {
+      "tag": "vendors",
+      "method": "GET",
+      "path": "/vendors?factory_id=3",
+      "status": 200,
+      "ms": 97,
+      "ok": true,
+      "note": "{\"data\":[{\"id\":1,\"factory_id\":3,\"name\":\"Runtime Test Vendor\",\"phone_number\":\"919876543210\",\"email\":null,\"address\":null,\"",
+      "blocker": ""
+    },
+    {
+      "tag": "vendors",
+      "method": "GET",
+      "path": "/vendors/search?factory_id=3&q=steel",
+      "status": 200,
+      "ms": 95,
+      "ok": true,
+      "note": "{\"data\":[],\"total\":0,\"page\":1,\"limit\":25}",
+      "blocker": ""
+    },
+    {
+      "tag": "vendors",
+      "method": "GET",
+      "path": "/vendors/1?factory_id=3",
+      "status": 200,
+      "ms": 50,
+      "ok": true,
+      "note": "{\"id\":1,\"factory_id\":3,\"name\":\"Runtime Test Vendor\",\"phone_number\":\"919876543210\",\"email\":null,\"address\":null,\"gst_numbe",
+      "blocker": ""
+    },
+    {
+      "tag": "inventory",
+      "method": "GET",
+      "path": "/inventory/categories?factory_id=3",
+      "status": 200,
+      "ms": 46,
+      "ok": true,
+      "note": "[{\"id\":1,\"factory_id\":3,\"name\":\"Audit Cat\",\"description\":\"test\",\"is_active\":true},{\"id\":2,\"factory_id\":3,\"name\":\"Runtime",
+      "blocker": ""
+    },
+    {
+      "tag": "inventory",
+      "method": "GET",
+      "path": "/inventory/locations?factory_id=3",
+      "status": 200,
+      "ms": 47,
+      "ok": true,
+      "note": "[{\"id\":1,\"factory_id\":3,\"name\":\"Audit Loc\",\"code\":null,\"address\":null,\"is_active\":true},{\"id\":2,\"factory_id\":3,\"name\":\"M",
+      "blocker": ""
+    },
+    {
+      "tag": "inventory",
+      "method": "GET",
+      "path": "/inventory/items?factory_id=3",
+      "status": 200,
+      "ms": 46,
+      "ok": true,
+      "note": "{\"data\":[],\"meta\":{\"total\":0,\"page\":1,\"page_size\":25}}",
+      "blocker": ""
+    },
+    {
+      "tag": "inventory",
+      "method": "GET",
+      "path": "/inventory/items/low-stock?factory_id=3",
+      "status": 200,
+      "ms": 48,
+      "ok": true,
+      "note": "[]",
+      "blocker": ""
+    },
+    {
+      "tag": "inventory",
+      "method": "GET",
+      "path": "/inventory/transactions?factory_id=3",
+      "status": 200,
+      "ms": 49,
+      "ok": true,
+      "note": "[]",
+      "blocker": ""
+    },
+    {
+      "tag": "inventory",
+      "method": "GET",
+      "path": "/inventory/items/1?factory_id=3",
+      "status": 404,
+      "ms": 45,
+      "ok": false,
+      "note": "Inventory item #1 not found in factory #3",
+      "blocker": "see note"
+    },
+    {
+      "tag": "inventory",
+      "method": "GET",
+      "path": "/inventory/items/1/quantity?factory_id=3",
+      "status": 404,
+      "ms": 44,
+      "ok": false,
+      "note": "Inventory item #1 not found in factory #3",
+      "blocker": "see note"
+    },
+    {
+      "tag": "inventory",
+      "method": "GET",
+      "path": "/inventory/items/1/status?factory_id=3",
+      "status": 404,
+      "ms": 45,
+      "ok": false,
+      "note": "Inventory item #1 not found in factory #3",
+      "blocker": "see note"
+    },
+    {
+      "tag": "inventory",
+      "method": "GET",
+      "path": "/inventory/items/by-sku?factory_id=3&sku=TEST-SKU",
+      "status": 404,
+      "ms": 45,
+      "ok": false,
+      "note": "No inventory item with SKU \"TEST-SKU\" in factory #3",
+      "blocker": "see note"
+    },
+    {
+      "tag": "documents",
+      "method": "GET",
+      "path": "/documents/registry/types",
+      "status": 200,
+      "ms": 2,
+      "ok": true,
+      "note": "[{\"documentType\":\"PURCHASE_INVOICE\",\"description\":\"Vendor purchase invoice with line items\",\"expectedFields\":[\"vendor_na",
+      "blocker": ""
+    },
+    {
+      "tag": "documents",
+      "method": "GET",
+      "path": "/documents?factory_id=3",
+      "status": 200,
+      "ms": 91,
+      "ok": true,
+      "note": "[]",
+      "blocker": ""
+    },
+    {
+      "tag": "documents",
+      "method": "GET",
+      "path": "/documents/1?factory_id=3",
+      "status": 404,
+      "ms": 50,
+      "ok": false,
+      "note": "Document #1 not found",
+      "blocker": "see note"
+    },
+    {
+      "tag": "documents",
+      "method": "GET",
+      "path": "/documents/1/suggestions?factory_id=3",
+      "status": 404,
+      "ms": 51,
+      "ok": false,
+      "note": "Document #1 not found",
+      "blocker": "see note"
+    },
+    {
+      "tag": "Departments",
+      "method": "GET",
+      "path": "/departments?factory_id=3",
+      "status": 200,
+      "ms": 48,
+      "ok": true,
+      "note": "[{\"id\":4,\"factory_id\":3,\"name\":\"IT\",\"slug\":\"it\",\"manager_user_id\":21,\"createdAt\":\"2026-05-16T16:10:55.877Z\",\"updatedAt\":",
+      "blocker": ""
+    },
+    {
+      "tag": "Departments",
+      "method": "GET",
+      "path": "/departments/eligible-assignees?factory_id=3",
+      "status": 400,
+      "ms": 12,
+      "ok": false,
+      "note": "Validation failed (numeric string is expected)",
+      "blocker": "see note"
+    },
+    {
+      "tag": "Departments",
+      "method": "GET",
+      "path": "/departments/4?factory_id=3",
+      "status": 404,
+      "ms": 2,
+      "ok": false,
+      "note": "Cannot GET /departments/4?factory_id=3",
+      "blocker": "see note"
+    },
+    {
+      "tag": "Issue",
+      "method": "GET",
+      "path": "/issues?factory_id=3",
+      "status": 200,
+      "ms": 50,
+      "ok": true,
+      "note": "[{\"id\":5,\"factory_id\":3,\"reported_by\":21,\"message\":\"Laptop's charger is not working\",\"is_resolved\":true,\"createdAt\":\"202",
+      "blocker": ""
+    },
+    {
+      "tag": "Issue",
+      "method": "GET",
+      "path": "/issues/5?factory_id=3",
+      "status": 200,
+      "ms": 49,
+      "ok": true,
+      "note": "{\"id\":5,\"factory_id\":3,\"reported_by\":21,\"message\":\"Laptop's charger is not working\",\"is_resolved\":true,\"createdAt\":\"2026",
+      "blocker": ""
+    },
+    {
+      "tag": "Tasks",
+      "method": "GET",
+      "path": "/tasks?factory_id=3&assigned_to=18",
+      "status": 200,
+      "ms": 48,
+      "ok": true,
+      "note": "[{\"id\":43,\"factory_id\":3,\"assigned_to\":18,\"assigned_by\":25,\"description\":\"Divyansh please get some ice ??????\",\"deadline\":nu",
+      "blocker": ""
+    },
+    {
+      "tag": "Tasks",
+      "method": "GET",
+      "path": "/tasks/43?factory_id=3",
+      "status": 200,
+      "ms": 51,
+      "ok": true,
+      "note": "{\"id\":43,\"factory_id\":3,\"assigned_to\":18,\"assigned_by\":25,\"description\":\"Divyansh please get some ice ??????\",\"deadline\":nul",
+      "blocker": ""
+    },
+    {
+      "tag": "Tasks",
+      "method": "GET",
+      "path": "/tasks/43/updates?factory_id=3",
+      "status": 200,
+      "ms": 49,
+      "ok": true,
+      "note": "[]",
+      "blocker": ""
+    },
+    {
+      "tag": "User",
+      "method": "GET",
+      "path": "/users?factory_id=3&search=a&page=1&page_size=10",
+      "status": 200,
+      "ms": 52,
+      "ok": true,
+      "note": "{\"data\":[{\"id\":26,\"phone_number\":\"919566171444\",\"name\":\"prateek\",\"profile_picture\":null,\"createdAt\":\"2026-05-16T16:12:16",
+      "blocker": ""
+    },
+    {
+      "tag": "User",
+      "method": "GET",
+      "path": "/users/18",
+      "status": 200,
+      "ms": 49,
+      "ok": true,
+      "note": "{\"id\":18,\"phone_number\":\"918604856137\",\"name\":\"Divyansh\",\"profile_picture\":null,\"createdAt\":\"2026-05-15T19:59:31.375Z\",\"",
+      "blocker": ""
+    },
+    {
+      "tag": "User",
+      "method": "GET",
+      "path": "/users/by-phone?phone_number=918604856137",
+      "status": 500,
+      "ms": 2,
+      "ok": false,
+      "note": "WHERE parameter \"phone_number\" has invalid \"undefined\" value",
+      "blocker": "see note"
+    },
+    {
+      "tag": "Attendance",
+      "method": "GET",
+      "path": "/attendance?factory_id=3&date=2026-05-15&user_id=18",
+      "status": 200,
+      "ms": 48,
+      "ok": true,
+      "note": "[]",
+      "blocker": ""
+    },
+    {
+      "tag": "Attendance",
+      "method": "GET",
+      "path": "/attendance/1?factory_id=3",
+      "status": 200,
+      "ms": 48,
+      "ok": true,
+      "note": "{\"id\":1,\"user_id\":26,\"factory_id\":3,\"date\":\"2026-05-16\",\"is_present\":true,\"createdAt\":\"2026-05-16T16:17:18.582Z\",\"update",
+      "blocker": ""
+    },
+    {
+      "tag": "Reports",
+      "method": "GET",
+      "path": "/reports?factory_id=3",
+      "status": 200,
+      "ms": 267,
+      "ok": true,
+      "note": "{\"date\":\"2026-05-31\",\"factory_id\":3,\"attendance\":{\"total\":2,\"present\":1,\"absent\":1},\"tasks\":{\"total\":29,\"completed\":13,\"",
+      "blocker": ""
+    },
+    {
+      "tag": "PurchaseRequest",
+      "method": "GET",
+      "path": "/purchase-requests?factory_id=3",
+      "status": 200,
+      "ms": 2,
+      "ok": true,
+      "note": "{\"message\":\"Not Implemented Yet\"}",
+      "blocker": ""
+    },
+    {
+      "tag": "PurchaseRequest",
+      "method": "GET",
+      "path": "/purchase-requests/1?factory_id=3",
+      "status": 200,
+      "ms": 2,
+      "ok": true,
+      "note": "{\"message\":\"Not Implemented Yet\"}",
+      "blocker": ""
+    },
+    {
+      "tag": "Approval",
+      "method": "GET",
+      "path": "/approvals?factory_id=3",
+      "status": 200,
+      "ms": 2,
+      "ok": true,
+      "note": "{\"message\":\"Not Implemented Yet\"}",
+      "blocker": ""
+    },
+    {
+      "tag": "Approval",
+      "method": "GET",
+      "path": "/approvals/1?factory_id=3",
+      "status": 200,
+      "ms": 3,
+      "ok": true,
+      "note": "{\"message\":\"Not Implemented Yet\"}",
+      "blocker": ""
+    },
+    {
+      "tag": "WhatsApp",
+      "method": "GET",
+      "path": "/webhook",
+      "status": 200,
+      "ms": 2,
+      "ok": true,
+      "note": "Verification failed",
+      "blocker": ""
+    },
+    {
+      "tag": "WhatsApp",
+      "method": "POST",
+      "path": "/webhook/test",
+      "status": 400,
+      "ms": 794,
+      "ok": false,
+      "note": "Authentication Error",
+      "blocker": "ML/Olli dependency"
+    },
+    {
+      "tag": "PurchaseRequest",
+      "method": "POST",
+      "path": "/purchase-requests",
+      "status": 201,
+      "ms": 3,
+      "ok": true,
+      "note": "{\"message\":\"Not Implemented Yet\"}",
+      "blocker": ""
+    },
+    {
+      "tag": "Approval",
+      "method": "POST",
+      "path": "/approvals",
+      "status": 201,
+      "ms": 2,
+      "ok": true,
+      "note": "{\"message\":\"Not Implemented Yet\"}",
+      "blocker": ""
+    },
+    {
+      "tag": "vendors",
+      "method": "POST",
+      "path": "/vendors",
+      "status": 400,
+      "ms": 3,
+      "ok": false,
+      "note": "phone_number must be shorter than or equal to 32 characters,phone_number must be longer than or equal to 10 characters,V",
+      "blocker": "see note"
+    },
+    {
+      "tag": "inventory",
+      "method": "POST",
+      "path": "/inventory/categories",
+      "status": 409,
+      "ms": 90,
+      "ok": false,
+      "note": "Category \"Audit Cat\" already exists in this factory",
+      "blocker": "see note"
+    },
+    {
+      "tag": "inventory",
+      "method": "POST",
+      "path": "/inventory/locations",
+      "status": 409,
+      "ms": 90,
+      "ok": false,
+      "note": "Location \"Audit Loc\" already exists in this factory",
+      "blocker": "see note"
+    }
+  ]
+}

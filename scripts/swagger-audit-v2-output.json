@@ -1,0 +1,202 @@
+{
+  "summary": {
+    "base": "http://localhost:4001",
+    "factory_id": 3,
+    "total": 23,
+    "passed": 23,
+    "failed": 0,
+    "pass_rate": 1,
+    "latency_ms": {
+      "min": 2,
+      "max": 412,
+      "avg": 78,
+      "p95": 272
+    }
+  },
+  "rows": [
+    {
+      "method": "GET",
+      "path": "/health",
+      "status": 200,
+      "ms": 412,
+      "ok": true,
+      "note": "{\"status\":\"ok\",\"info\":{\"Postgres\":{\"status\":\"up\"}},\"error\":{"
+    },
+    {
+      "method": "GET",
+      "path": "/factories",
+      "status": 200,
+      "ms": 53,
+      "ok": true,
+      "note": "[{\"id\":3,\"name\":\"Munshi Dada\",\"address\":\"abc\",\"createdAt\":\"2"
+    },
+    {
+      "method": "GET",
+      "path": "/factories/3",
+      "status": 200,
+      "ms": 52,
+      "ok": true,
+      "note": "{\"id\":3,\"name\":\"Munshi Dada\",\"address\":\"abc\",\"createdAt\":\"20"
+    },
+    {
+      "method": "GET",
+      "path": "/factories/3/users",
+      "status": 200,
+      "ms": 48,
+      "ok": true,
+      "note": "[{\"id\":19,\"user_id\":18,\"factory_id\":3,\"role\":\"OWNER\",\"doj\":n"
+    },
+    {
+      "method": "GET",
+      "path": "/vendors?factory_id=3",
+      "status": 200,
+      "ms": 159,
+      "ok": true,
+      "note": "{\"data\":[{\"id\":1,\"factory_id\":3,\"name\":\"Runtime Test Vendor\""
+    },
+    {
+      "method": "GET",
+      "path": "/vendors/search?factory_id=3&q=test",
+      "status": 200,
+      "ms": 146,
+      "ok": true,
+      "note": "{\"data\":[{\"id\":1,\"factory_id\":3,\"name\":\"Runtime Test Vendor\""
+    },
+    {
+      "method": "GET",
+      "path": "/inventory/categories?factory_id=3",
+      "status": 200,
+      "ms": 49,
+      "ok": true,
+      "note": "[{\"id\":1,\"factory_id\":3,\"name\":\"Audit Cat\",\"description\":\"te"
+    },
+    {
+      "method": "GET",
+      "path": "/inventory/locations?factory_id=3",
+      "status": 200,
+      "ms": 46,
+      "ok": true,
+      "note": "[{\"id\":1,\"factory_id\":3,\"name\":\"Audit Loc\",\"code\":null,\"addr"
+    },
+    {
+      "method": "GET",
+      "path": "/inventory/items?factory_id=3",
+      "status": 200,
+      "ms": 56,
+      "ok": true,
+      "note": "{\"data\":[],\"meta\":{\"total\":0,\"page\":1,\"page_size\":25}}"
+    },
+    {
+      "method": "GET",
+      "path": "/inventory/items/low-stock?factory_id=3",
+      "status": 200,
+      "ms": 51,
+      "ok": true,
+      "note": "[]"
+    },
+    {
+      "method": "GET",
+      "path": "/inventory/transactions?factory_id=3",
+      "status": 200,
+      "ms": 66,
+      "ok": true,
+      "note": "[]"
+    },
+    {
+      "method": "GET",
+      "path": "/documents/registry/types",
+      "status": 200,
+      "ms": 2,
+      "ok": true,
+      "note": "[{\"documentType\":\"PURCHASE_INVOICE\",\"description\":\"Vendor pu"
+    },
+    {
+      "method": "GET",
+      "path": "/documents?factory_id=3",
+      "status": 200,
+      "ms": 111,
+      "ok": true,
+      "note": "[]"
+    },
+    {
+      "method": "GET",
+      "path": "/departments?factory_id=3",
+      "status": 200,
+      "ms": 55,
+      "ok": true,
+      "note": "[{\"id\":4,\"factory_id\":3,\"name\":\"IT\",\"slug\":\"it\",\"manager_use"
+    },
+    {
+      "method": "GET",
+      "path": "/issues?factory_id=3&is_resolved=false",
+      "status": 200,
+      "ms": 47,
+      "ok": true,
+      "note": "[]"
+    },
+    {
+      "method": "GET",
+      "path": "/tasks?factory_id=3&assigned_to=1&is_completed=false",
+      "status": 200,
+      "ms": 51,
+      "ok": true,
+      "note": "[]"
+    },
+    {
+      "method": "GET",
+      "path": "/reports?factory_id=3",
+      "status": 200,
+      "ms": 272,
+      "ok": true,
+      "note": "{\"date\":\"2026-05-31\",\"factory_id\":3,\"attendance\":{\"total\":2,"
+    },
+    {
+      "method": "GET",
+      "path": "/purchase-requests?factory_id=3",
+      "status": 200,
+      "ms": 2,
+      "ok": true,
+      "note": "{\"message\":\"Not Implemented Yet\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/approvals?factory_id=3",
+      "status": 200,
+      "ms": 2,
+      "ok": true,
+      "note": "{\"message\":\"Not Implemented Yet\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/users?factory_id=1&search=a&page=1&page_size=10",
+      "status": 200,
+      "ms": 48,
+      "ok": true,
+      "note": "{\"data\":[{\"id\":12,\"phone_number\":\"918126479083\",\"name\":\"Char"
+    },
+    {
+      "method": "GET",
+      "path": "/attendance?factory_id=1&date=2026-05-31&user_id=1",
+      "status": 200,
+      "ms": 50,
+      "ok": true,
+      "note": "[]"
+    },
+    {
+      "method": "POST",
+      "path": "/purchase-requests",
+      "status": 201,
+      "ms": 7,
+      "ok": true,
+      "note": "{\"message\":\"Not Implemented Yet\"}"
+    },
+    {
+      "method": "POST",
+      "path": "/approvals",
+      "status": 201,
+      "ms": 3,
+      "ok": true,
+      "note": "{\"message\":\"Not Implemented Yet\"}"
+    }
+  ]
+}

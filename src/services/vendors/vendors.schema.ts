@@ -73,7 +73,7 @@ export class Vendor extends Model<
       as: 'factory',
     });
     Vendor.hasMany(models.PurchaseRequest, {
-      foreignKey: 'vendor_id',
+      foreignKey: 'assigned_vendor_id',
       as: 'purchase_requests',
     });
   }

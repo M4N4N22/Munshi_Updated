@@ -131,7 +131,12 @@ const tests = [
   [
     'POST',
     '/purchase-requests',
-    { factory_id: F, requester_id: userId, title: 'Audit smoke PR' },
+    {
+      factory_id: F,
+      requested_by: userId,
+      title: 'Audit smoke PR',
+      items: [{ item_name: 'Audit item', requested_quantity: '1', unit: 'pcs' }],
+    },
     'PurchaseRequest',
   ],
   [
