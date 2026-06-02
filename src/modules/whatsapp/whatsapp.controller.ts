@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Res } from '@nestjs/common';
+import type { Response } from 'express';
 import { WhatsAppService } from './whatsapp.service';
 import { WhatsAppIncomingDto } from './whatsapp.dto';
 
@@ -50,7 +51,18 @@ export class WhatsAppController {
   }
 
   @Post('test')
-  async handleMessage(@Body() body: WhatsAppIncomingDto) {
+  async handleMessage(
+    @Body() body: WhatsAppIncomingDto,
+    @Query('dry') dry?: string,
+    @Res({ passthrough: true }) res?: Response,
+  ) {
+    if (dry === '1') {
+      const result = await this.whatsappService.handleIncomingMessage(body, {
+        dryRun: true,
+      });
+      res?.status(200);
+      return result;
+    }
     return this.whatsappService.handleIncomingMessage(body);
   }
 }

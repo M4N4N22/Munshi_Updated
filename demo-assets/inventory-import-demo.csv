@@ -1,0 +1,6 @@
+name,sku,quantity,unit,location,category
+Steel Sheets,DEMO-STEEL-001,120,sheets,Main Warehouse,Raw Materials
+Aluminium Rods,DEMO-ALU-002,80,rods,Main Warehouse,Raw Materials
+Copper Wire,DEMO-CU-003,200,kg,Main Warehouse,Raw Materials
+Packaging Cartons,DEMO-PKG-004,500,pcs,Main Warehouse,Finished Goods
+Safety Gloves,DEMO-SFT-005,150,pairs,Main Warehouse,Consumables

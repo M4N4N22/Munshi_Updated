@@ -1,0 +1,550 @@
+{
+  "validated_at": "2026-06-02T14:54:57.978Z",
+  "phones": {
+    "Owner": "917452897444",
+    "Manager": "919456157007",
+    "Worker": "919876543211"
+  },
+  "factory_id": 3,
+  "environment": {
+    "backend_running": true,
+    "ml_running": true,
+    "backend": {
+      "status": "ok",
+      "info": {
+        "Postgres": {
+          "status": "up"
+        }
+      },
+      "error": {},
+      "details": {
+        "Postgres": {
+          "status": "up"
+        }
+      }
+    },
+    "ml": {
+      "status": "ok"
+    },
+    "migrations": {
+      "status": "ok",
+      "up_to_date": true,
+      "total_files": 8,
+      "applied_count": 8,
+      "pending_count": 0,
+      "latest_file": "008_business_discovery_expansion.sql",
+      "latest_applied": "008_business_discovery_expansion.sql",
+      "pending": [],
+      "applied": [
+        "001_traderos_foundation.sql",
+        "002_vendors_master.sql",
+        "003_workflow_sessions.sql",
+        "004_inventory_master.sql",
+        "005_document_processing.sql",
+        "006_procurement_foundation.sql",
+        "007_business_discovery.sql",
+        "008_business_discovery_expansion.sql"
+      ]
+    },
+    "pending_migrations": 0
+  },
+  "users": {
+    "results": [
+      {
+        "label": "Owner",
+        "phone": "917452897444",
+        "role": "OWNER",
+        "exists": true,
+        "user_id": 21,
+        "name": "Shantanu Garg",
+        "actual_role": "OWNER",
+        "role_ok": true,
+        "departments": [
+          {
+            "id": 10,
+            "name": "Inventory"
+          }
+        ],
+        "pass": true
+      },
+      {
+        "label": "Manager",
+        "phone": "919456157007",
+        "role": "MANAGER",
+        "exists": true,
+        "user_id": 34,
+        "name": "Rahul Verma",
+        "actual_role": "MANAGER",
+        "role_ok": true,
+        "departments": [
+          {
+            "id": 6,
+            "name": "Operations"
+          }
+        ],
+        "pass": true
+      }
+    ],
+    "pass": true
+  },
+  "dataset": {
+    "checks": {
+      "departments": [
+        {
+          "id": 10,
+          "name": "Inventory",
+          "slug": "inventory"
+        },
+        {
+          "id": 6,
+          "name": "Operations",
+          "slug": "operations"
+        },
+        {
+          "id": 5,
+          "name": "Sales",
+          "slug": "sales"
+        }
+      ],
+      "demo_vendor": [
+        {
+          "id": 12,
+          "name": "Gupta Metals"
+        }
+      ],
+      "steel_item": [
+        {
+          "id": 15,
+          "name": "Steel Sheets",
+          "sku": "DEMO-STEEL-001",
+          "current_quantity": "120.0000"
+        }
+      ],
+      "demo_worker": [
+        {
+          "id": 35,
+          "name": "Rahul Kumar"
+        }
+      ],
+      "categories": [
+        {
+          "id": 1,
+          "name": "Audit Cat"
+        },
+        {
+          "id": 2,
+          "name": "Runtime Cat"
+        },
+        {
+          "id": 3,
+          "name": "Raw Materials"
+        }
+      ],
+      "locations": [
+        {
+          "id": 1,
+          "name": "Audit Loc"
+        },
+        {
+          "id": 2,
+          "name": "Main Store"
+        },
+        {
+          "id": 3,
+          "name": "Main Warehouse"
+        }
+      ]
+    },
+    "pass": true
+  },
+  "natural_language": {
+    "results": [
+      {
+        "id": "attendance_present",
+        "phone": "919456157007",
+        "phrase": "Aaj main present hoon",
+        "expectedIntent": "/present",
+        "workflow": null,
+        "dbCheck": "attendance",
+        "predicted_intent": "/present",
+        "confidence": null,
+        "classification_ok": true,
+        "webhook_status": 201,
+        "webhook_ok": true,
+        "session": null,
+        "db_mutation": {
+          "ok": true,
+          "detail": {
+            "is_present": true
+          }
+        },
+        "pass": true,
+        "safety": "SAFE"
+      },
+      {
+        "id": "task_assign",
+        "phone": "917452897444",
+        "phrase": "Rahul Kumar ko store check ka kaam do",
+        "expectedIntent": "/assign",
+        "workflow": null,
+        "dbCheck": "tasks",
+        "predicted_intent": "/assign",
+        "confidence": null,
+        "classification_ok": true,
+        "webhook_status": 201,
+        "webhook_ok": true,
+        "session": null,
+        "db_mutation": {
+          "ok": true,
+          "detail": {
+            "before": 61,
+            "after": 62
+          }
+        },
+        "pass": true,
+        "safety": "SAFE"
+      },
+      {
+        "id": "inventory_status",
+        "phone": "917452897444",
+        "phrase": "Steel sheets ka stock kitna bacha hai",
+        "expectedIntent": "/inventory_status",
+        "workflow": null,
+        "dbCheck": "inventory_read",
+        "predicted_intent": "/inventory_status",
+        "confidence": null,
+        "classification_ok": true,
+        "webhook_status": 201,
+        "webhook_ok": true,
+        "session": null,
+        "db_mutation": {
+          "ok": true,
+          "detail": "read path — webhook ok suffices"
+        },
+        "pass": true,
+        "safety": "SAFE"
+      },
+      {
+        "id": "vendor_onboard",
+        "phone": "917452897444",
+        "phrase": "Naya vendor Gupta Metals add karo",
+        "expectedIntent": "/onboard_vendor",
+        "workflow": "ONBOARD_VENDOR",
+        "dbCheck": "workflow_start",
+        "predicted_intent": "/onboard_vendor",
+        "confidence": null,
+        "classification_ok": true,
+        "webhook_status": 201,
+        "webhook_ok": true,
+        "session": {
+          "id": 87,
+          "workflow_type": "ONBOARD_VENDOR",
+          "status": "ACTIVE",
+          "current_step": "VENDOR_NAME"
+        },
+        "db_mutation": {
+          "ok": true,
+          "detail": {
+            "id": 87,
+            "workflow_type": "ONBOARD_VENDOR",
+            "status": "ACTIVE",
+            "current_step": "VENDOR_NAME"
+          }
+        },
+        "pass": true,
+        "safety": "SAFE"
+      },
+      {
+        "id": "purchase_request",
+        "phone": "917452897444",
+        "phrase": "purchase request bana do",
+        "expectedIntent": "/purchase_request_create",
+        "workflow": "PURCHASE_REQUEST_CREATE",
+        "dbCheck": "workflow_start",
+        "predicted_intent": "/purchase_request_create",
+        "confidence": null,
+        "classification_ok": true,
+        "webhook_status": 201,
+        "webhook_ok": true,
+        "session": {
+          "id": 88,
+          "workflow_type": "PURCHASE_REQUEST_CREATE",
+          "status": "ACTIVE",
+          "current_step": "REQUEST_CREATION"
+        },
+        "db_mutation": {
+          "ok": true,
+          "detail": {
+            "id": 88,
+            "workflow_type": "PURCHASE_REQUEST_CREATE",
+            "status": "ACTIVE",
+            "current_step": "REQUEST_CREATION"
+          }
+        },
+        "pass": true,
+        "safety": "SAFE"
+      },
+      {
+        "id": "report",
+        "phone": "917452897444",
+        "phrase": "Mujhe aaj ka report dikhao",
+        "expectedIntent": "/report",
+        "workflow": null,
+        "dbCheck": "report",
+        "predicted_intent": "/report",
+        "confidence": null,
+        "classification_ok": true,
+        "webhook_status": 201,
+        "webhook_ok": true,
+        "session": null,
+        "db_mutation": {
+          "ok": true,
+          "detail": "report text returned via webhook"
+        },
+        "pass": true,
+        "safety": "SAFE"
+      },
+      {
+        "id": "tasks_list",
+        "phone": "919876543211",
+        "phrase": "mere tasks dikhao",
+        "expectedIntent": "/tasks",
+        "workflow": null,
+        "dbCheck": "tasks_read",
+        "predicted_intent": "/tasks",
+        "confidence": null,
+        "classification_ok": true,
+        "webhook_status": 201,
+        "webhook_ok": true,
+        "session": null,
+        "db_mutation": {
+          "ok": true,
+          "detail": "tasks_read"
+        },
+        "pass": true,
+        "safety": "SAFE"
+      },
+      {
+        "id": "task_update",
+        "phone": "919876543211",
+        "phrase": "task update kaam shuru ho gaya",
+        "expectedIntent": "/update",
+        "workflow": null,
+        "dbCheck": "task_updates",
+        "predicted_intent": "/update",
+        "confidence": null,
+        "classification_ok": true,
+        "webhook_status": 201,
+        "webhook_ok": true,
+        "session": null,
+        "db_mutation": {
+          "ok": true,
+          "detail": "task_updates"
+        },
+        "pass": true,
+        "safety": "SAFE"
+      },
+      {
+        "id": "task_complete",
+        "phone": "919876543211",
+        "phrase": "kaam complete ho gaya",
+        "expectedIntent": "/complete",
+        "workflow": null,
+        "dbCheck": "task_complete",
+        "predicted_intent": "/complete",
+        "confidence": null,
+        "classification_ok": true,
+        "webhook_status": 201,
+        "webhook_ok": true,
+        "session": null,
+        "db_mutation": {
+          "ok": true,
+          "detail": "task_complete"
+        },
+        "pass": true,
+        "safety": "SAFE"
+      },
+      {
+        "id": "mgr_delegate",
+        "phone": "919456157007",
+        "phrase": "Rahul ko loading ka kaam do",
+        "expectedIntent": "/mgrassign",
+        "workflow": null,
+        "dbCheck": "manager_ops",
+        "predicted_intent": "/assign",
+        "confidence": null,
+        "classification_ok": false,
+        "webhook_status": 201,
+        "webhook_ok": true,
+        "session": null,
+        "db_mutation": {
+          "ok": true,
+          "detail": "manager_ops"
+        },
+        "pass": false,
+        "safety": "RISKY"
+      },
+      {
+        "id": "mgr_self",
+        "phone": "919456157007",
+        "phrase": "main khud yeh kaam karunga",
+        "expectedIntent": "/mgrself",
+        "workflow": null,
+        "dbCheck": "manager_ops",
+        "predicted_intent": "general_chat",
+        "confidence": null,
+        "classification_ok": false,
+        "webhook_status": 201,
+        "webhook_ok": false,
+        "session": null,
+        "db_mutation": {
+          "ok": false,
+          "detail": "manager_ops"
+        },
+        "pass": false,
+        "safety": "RISKY"
+      },
+      {
+        "id": "business_discovery",
+        "phone": "917452897444",
+        "phrase": "mera business setup karna hai",
+        "expectedIntent": "/business_discovery",
+        "workflow": "BUSINESS_DISCOVERY",
+        "dbCheck": "workflow_start",
+        "predicted_intent": "/business_discovery",
+        "confidence": null,
+        "classification_ok": true,
+        "webhook_status": 201,
+        "webhook_ok": true,
+        "session": {
+          "id": 89,
+          "workflow_type": "BUSINESS_DISCOVERY",
+          "status": "ACTIVE",
+          "current_step": "MENU"
+        },
+        "db_mutation": {
+          "ok": true,
+          "detail": {
+            "id": 89,
+            "workflow_type": "BUSINESS_DISCOVERY",
+            "status": "ACTIVE",
+            "current_step": "MENU"
+          }
+        },
+        "pass": true,
+        "safety": "SAFE"
+      }
+    ],
+    "pass_count": 10,
+    "total": 12,
+    "safe_count": 10
+  },
+  "dry_run": {
+    "manager_delegation": {
+      "ownerMsg": "Rahul Verma ko dispatch planning ka task do",
+      "delegatePhrase": "task 83 Rahul Kumar ko do",
+      "taskId": 83,
+      "predicted_intent": "/mgrassign",
+      "classification_ok": true,
+      "webhook_ok": true,
+      "routing_status": "DELEGATED_TO_WORKER",
+      "pass": true
+    },
+    "purchase_request_flow": {
+      "title": "Demo PR 1780412076699",
+      "trace": [
+        {
+          "input": "purchase request bana do",
+          "expected_step": "REQUEST_CREATION",
+          "webhook_ok": true,
+          "current_step": "REQUEST_CREATION",
+          "session_status": "ACTIVE"
+        },
+        {
+          "input": "Demo PR 1780412076699",
+          "expected_step": "ITEM_NAME",
+          "webhook_ok": true,
+          "current_step": "REQUEST_CREATION",
+          "session_status": "ACTIVE"
+        },
+        {
+          "input": "Steel Sheets",
+          "expected_step": "ITEM_QTY",
+          "webhook_ok": true,
+          "current_step": "REQUEST_CREATION",
+          "session_status": "ACTIVE"
+        },
+        {
+          "input": "25",
+          "expected_step": "ADD_MORE",
+          "webhook_ok": true,
+          "current_step": "REQUEST_CREATION",
+          "session_status": "ACTIVE"
+        },
+        {
+          "input": "NO",
+          "expected_step": "APPROVAL",
+          "webhook_ok": true,
+          "current_step": "APPROVAL",
+          "session_status": "ACTIVE"
+        },
+        {
+          "input": "YES",
+          "expected_step": "VENDOR_ASSIGNMENT",
+          "webhook_ok": true,
+          "current_step": "VENDOR_ASSIGNMENT",
+          "session_status": "ACTIVE"
+        },
+        {
+          "input": "Gupta Metals",
+          "expected_step": "CLOSE",
+          "webhook_ok": true,
+          "current_step": "CLOSE",
+          "session_status": "ACTIVE"
+        },
+        {
+          "input": "YES",
+          "expected_step": "COMPLETE",
+          "webhook_ok": true,
+          "current_step": null,
+          "session_status": null
+        }
+      ],
+      "purchase_request": {
+        "id": 16,
+        "title": "Demo PR 1780412076699",
+        "status": "CLOSED",
+        "assigned_vendor_id": 12
+      },
+      "session_status": "COMPLETED",
+      "pass": true
+    }
+  },
+  "document_demo": {
+    "pass": true,
+    "status": 201,
+    "document_id": 2,
+    "processing": {
+      "document_id": 2,
+      "extraction_id": 2,
+      "suggestion_ids": [
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "workflow_started": true,
+      "warnings": null
+    }
+  },
+  "summary": {
+    "env_pass": true,
+    "users_pass": true,
+    "dataset_pass": true,
+    "nl_pass": false,
+    "dry_run_pass": true,
+    "document_pass": true,
+    "overall_pass": true
+  }
+}

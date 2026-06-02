@@ -28,7 +28,7 @@ import {
 } from './tasks.dto';
 import { waSection } from 'src/modules/whatsapp/whatsapp.templates';
 import { MessagingService } from 'src/core/messaging/messaging.service';
-import { Op } from 'sequelize';
+import { Op, literal } from 'sequelize';
 import { TASK_ROUTING_STATUS } from './tasks.routing.constants';
 import { DepartmentsService } from '../departments/departments.service';
 import { DepartmentWorker } from '../departments/departments.schema';
@@ -327,7 +327,15 @@ export class TasksService {
       );
     }
 
-    return 'The assignee has been notified on WhatsApp.';
+    const assignee = await this.userModel.findByPk(assigneeUserId, {
+      attributes: ['name'],
+    });
+    const assigneeName = assignee?.name || `User #${assigneeUserId}`;
+
+    if (routing_status === TASK_ROUTING_STATUS.AWAITING_MANAGER_ACTION) {
+      return `Task #${task.id} routed to *${assigneeName}* (department manager). They have been notified on WhatsApp.`;
+    }
+    return `Task #${task.id} assigned to *${assigneeName}*. They have been notified on WhatsApp.`;
   }
 
   // 👥 Assign to ALL
@@ -634,17 +642,46 @@ export class TasksService {
       return tasks;
     }
 
-    // 👔 MANAGER / OWNER → pending tasks (owners also see manager-rejected)
-    const managerWhere: Record<string, unknown> = {
-      factory_id: factoryId,
-      is_completed: false,
-    };
-    if (role !== USER_ROLE.OWNER) {
-      Object.assign(managerWhere, excludeRejected);
+    // 👔 MANAGER → own routed tasks + department + tasks they assigned
+    if (role === USER_ROLE.MANAGER) {
+      const managerDept = await this.departmentsService.getDepartmentForManager(
+        userId,
+        factoryId,
+      );
+      const scopeOr: Record<string, unknown>[] = [
+        { assigned_to: userId },
+        { assigned_by: userId },
+      ];
+      if (managerDept?.id) {
+        scopeOr.push({ department_id: managerDept.id });
+      }
+
+      const tasks = await this.taskModel.findAll({
+        where: {
+          factory_id: factoryId,
+          is_completed: false,
+          [Op.and]: [{ [Op.or]: scopeOr }, excludeRejected],
+        },
+        include: baseInclude,
+        order: [
+          [literal(`CASE WHEN assigned_to = ${userId} THEN 0 ELSE 1 END`), 'ASC'],
+          ['created_at', 'DESC'],
+        ],
+        limit: 50,
+      });
+
+      if (!tasks.length) {
+        return { message: 'No pending tasks yet' };
+      }
+      return tasks;
     }
 
+    // 👑 OWNER → all pending factory tasks
     const tasks = await this.taskModel.findAll({
-      where: managerWhere,
+      where: {
+        factory_id: factoryId,
+        is_completed: false,
+      },
       include: baseInclude,
       order: [
         ['department_id', 'ASC'],

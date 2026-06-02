@@ -1,0 +1,148 @@
+# Demo Mode Test Results
+
+Automated run: 2026-06-02T15:31:32.794Z
+
+```json
+{
+  "validated_at": "2026-06-02T15:31:32.794Z",
+  "demo_mode_enabled": true,
+  "results": [
+    {
+      "id": "attendance",
+      "phone": "919456157007",
+      "msg": "Aaj main present hoon",
+      "http_status": 201,
+      "webhook": "ok",
+      "pass": true,
+      "unknown_command": false
+    },
+    {
+      "id": "task_assign",
+      "phone": "917452897444",
+      "msg": "Rahul Kumar ko store check ka kaam do",
+      "http_status": 201,
+      "webhook": "ok",
+      "pass": true,
+      "unknown_command": false
+    },
+    {
+      "id": "inventory",
+      "phone": "917452897444",
+      "msg": "Steel sheets ka stock kitna bacha hai",
+      "http_status": 201,
+      "webhook": "ok",
+      "pass": true,
+      "unknown_command": false
+    },
+    {
+      "id": "report",
+      "phone": "917452897444",
+      "msg": "Mujhe aaj ka report dikhao",
+      "http_status": 201,
+      "webhook": "ok",
+      "pass": true,
+      "unknown_command": false
+    },
+    {
+      "id": "discovery",
+      "phone": "917452897444",
+      "msg": "Mera business setup karna hai",
+      "http_status": 201,
+      "webhook": "ok",
+      "pass": true,
+      "unknown_command": false
+    },
+    {
+      "id": "document",
+      "phone": "917452897444",
+      "msg": "Munshi inventory list upload karni hai",
+      "http_status": 201,
+      "webhook": "ok",
+      "pass": true,
+      "unknown_command": false
+    },
+    {
+      "id": "pr_1",
+      "phone": "917452897444",
+      "msg": "purchase request bana do",
+      "http_status": 201,
+      "webhook": "ok",
+      "pass": true,
+      "unknown_command": false
+    },
+    {
+      "id": "pr_2",
+      "phone": "917452897444",
+      "msg": "Steel sheets ka order",
+      "http_status": 201,
+      "webhook": "ok",
+      "pass": true,
+      "unknown_command": false
+    },
+    {
+      "id": "pr_3",
+      "phone": "917452897444",
+      "msg": "Steel Sheets",
+      "http_status": 201,
+      "webhook": "ok",
+      "pass": true,
+      "unknown_command": false
+    },
+    {
+      "id": "pr_4",
+      "phone": "917452897444",
+      "msg": "25",
+      "http_status": 201,
+      "webhook": "ok",
+      "pass": true,
+      "unknown_command": false
+    },
+    {
+      "id": "pr_5",
+      "phone": "917452897444",
+      "msg": "NO",
+      "http_status": 201,
+      "webhook": "ok",
+      "pass": true,
+      "unknown_command": false
+    },
+    {
+      "id": "pr_6",
+      "phone": "917452897444",
+      "msg": "YES",
+      "http_status": 201,
+      "webhook": "ok",
+      "pass": true,
+      "unknown_command": false
+    },
+    {
+      "id": "pr_7",
+      "phone": "917452897444",
+      "msg": "Gupta Metals",
+      "http_status": 201,
+      "webhook": "ok",
+      "pass": true,
+      "unknown_command": false
+    },
+    {
+      "id": "pr_8",
+      "phone": "917452897444",
+      "msg": "YES",
+      "http_status": 201,
+      "webhook": "ok",
+      "pass": true,
+      "unknown_command": false
+    },
+    {
+      "id": "inventory_no_interference",
+      "phone": "917452897444",
+      "msg": "Steel sheets ka stock kitna bacha hai (after PR start)",
+      "pass": true,
+      "interference_test": true
+    }
+  ],
+  "pass_count": 15,
+  "total": 15,
+  "overall_pass": true
+}
+```

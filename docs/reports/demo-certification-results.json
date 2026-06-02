@@ -1,0 +1,1176 @@
+{
+  "validated_at": "2026-06-02T15:19:24.263Z",
+  "method": "POST /webhook/test → same handleIncomingMessage as WhatsApp; outbound via Olli (real WhatsApp path)",
+  "environment": {
+    "backend": {
+      "running": true,
+      "raw": {
+        "status": "ok",
+        "info": {
+          "Postgres": {
+            "status": "up"
+          }
+        },
+        "error": {},
+        "details": {
+          "Postgres": {
+            "status": "up"
+          }
+        }
+      }
+    },
+    "ml": {
+      "running": true,
+      "raw": {
+        "status": "ok"
+      }
+    },
+    "database": {
+      "connected": true
+    },
+    "migrations": {
+      "pending": 0,
+      "applied": [
+        "001_traderos_foundation.sql",
+        "002_vendors_master.sql",
+        "003_workflow_sessions.sql",
+        "004_inventory_master.sql",
+        "005_document_processing.sql",
+        "006_procurement_foundation.sql",
+        "007_business_discovery.sql",
+        "008_business_discovery_expansion.sql"
+      ],
+      "up_to_date": true
+    },
+    "factory_id": 3,
+    "demo_users": [
+      {
+        "phone_number": "917452897444",
+        "name": "Shantanu Garg",
+        "role": "OWNER"
+      },
+      {
+        "phone_number": "919456157007",
+        "name": "Rahul Verma",
+        "role": "MANAGER"
+      }
+    ],
+    "whatsapp": {
+      "olli_url": "(from .env.local)",
+      "note": "Outbound send via Olli; probe separately"
+    },
+    "timestamp": "2026-06-02T15:16:33.498Z"
+  },
+  "olli_probe": {
+    "status": 200,
+    "ok": true,
+    "data": {
+      "success": true,
+      "message_id": 184863,
+      "whatsapp_message_id": "wamid.HBgMOTE3NDUyODk3NDQ0FQIAERgSRjY4ODk5MzU1QzY3NTU1NjA4AA==",
+      "status": "sent",
+      "cost": {
+        "amount": 0,
+        "currency": "USD",
+        "is_free": false,
+        "category": "service"
+      }
+    }
+  },
+  "command_certification": [
+    {
+      "command": "Attendance",
+      "role": "Manager",
+      "phone": "919456157007",
+      "phrase": "Aaj main present hoon",
+      "expected_intent": "/present",
+      "predicted_intent": "/present",
+      "ml_payload": {
+        "intent": "/present",
+        "id": null,
+        "worker_slug": null,
+        "depart_slug": null,
+        "deadline": "2026-06-02",
+        "reject_reason": null,
+        "message": null
+      },
+      "handler": "AttendanceService.markAttendance",
+      "workflow": null,
+      "session_after": null,
+      "webhook": {
+        "http_status": 201,
+        "body": "ok",
+        "ok": true,
+        "error": false,
+        "ms": 952
+      },
+      "db_before": null,
+      "db_after": null,
+      "pass": true,
+      "fail_reason": null
+    },
+    {
+      "command": "Attendance",
+      "role": "Manager",
+      "phone": "919456157007",
+      "phrase": "Main aaj present hoon",
+      "expected_intent": "/present",
+      "predicted_intent": "/present",
+      "ml_payload": {
+        "intent": "/present",
+        "id": null,
+        "worker_slug": null,
+        "depart_slug": null,
+        "deadline": "2026-06-02",
+        "reject_reason": null,
+        "message": null
+      },
+      "handler": "AttendanceService.markAttendance",
+      "workflow": null,
+      "session_after": null,
+      "webhook": {
+        "http_status": 201,
+        "body": "ok",
+        "ok": true,
+        "error": false,
+        "ms": 882
+      },
+      "db_before": null,
+      "db_after": null,
+      "pass": true,
+      "fail_reason": null
+    },
+    {
+      "command": "Attendance",
+      "role": "Manager",
+      "phone": "919456157007",
+      "phrase": "aaj present hoon",
+      "expected_intent": "/present",
+      "predicted_intent": "/present",
+      "ml_payload": {
+        "intent": "/present",
+        "id": null,
+        "worker_slug": null,
+        "depart_slug": null,
+        "deadline": "2026-06-02",
+        "reject_reason": null,
+        "message": null
+      },
+      "handler": "AttendanceService.markAttendance",
+      "workflow": null,
+      "session_after": null,
+      "webhook": {
+        "http_status": 201,
+        "body": "ok",
+        "ok": true,
+        "error": false,
+        "ms": 834
+      },
+      "db_before": null,
+      "db_after": null,
+      "pass": true,
+      "fail_reason": null
+    },
+    {
+      "command": "Task Assignment",
+      "role": "Owner",
+      "phone": "917452897444",
+      "phrase": "Rahul Kumar ko store check ka kaam do",
+      "expected_intent": "/assign",
+      "predicted_intent": "/assign",
+      "ml_payload": {
+        "intent": "/assign",
+        "id": null,
+        "worker_slug": "kumar",
+        "depart_slug": null,
+        "deadline": null,
+        "reject_reason": null,
+        "message": null
+      },
+      "handler": "TasksService.handleAssign / createTaskFromAssign",
+      "workflow": null,
+      "session_after": null,
+      "webhook": {
+        "http_status": 201,
+        "body": "ok",
+        "ok": true,
+        "error": false,
+        "ms": 1432
+      },
+      "db_before": null,
+      "db_after": null,
+      "pass": true,
+      "fail_reason": null
+    },
+    {
+      "command": "Task Assignment",
+      "role": "Owner",
+      "phone": "917452897444",
+      "phrase": "task Rahul ko do store check ka",
+      "expected_intent": "/assign",
+      "predicted_intent": "/assign",
+      "ml_payload": {
+        "intent": "/assign",
+        "id": null,
+        "worker_slug": "rahul",
+        "depart_slug": null,
+        "deadline": null,
+        "reject_reason": null,
+        "message": null
+      },
+      "handler": "TasksService.handleAssign / createTaskFromAssign",
+      "workflow": null,
+      "session_after": null,
+      "webhook": {
+        "http_status": 201,
+        "body": "ok",
+        "ok": true,
+        "error": false,
+        "ms": 1083
+      },
+      "db_before": null,
+      "db_after": null,
+      "pass": true,
+      "fail_reason": null
+    },
+    {
+      "command": "Task Assignment",
+      "role": "Owner",
+      "phone": "917452897444",
+      "phrase": "Rahul ko inventory check karne ka task de do",
+      "expected_intent": "/assign",
+      "predicted_intent": "/inventory_status",
+      "ml_payload": {
+        "intent": "/inventory_status",
+        "id": null,
+        "worker_slug": null,
+        "depart_slug": null,
+        "deadline": null,
+        "reject_reason": null,
+        "message": null
+      },
+      "handler": "InventoryService.handleInventoryStatus",
+      "workflow": null,
+      "session_after": null,
+      "webhook": {
+        "http_status": 201,
+        "body": "ok",
+        "ok": true,
+        "error": false,
+        "ms": 1260
+      },
+      "db_before": null,
+      "db_after": null,
+      "pass": false,
+      "fail_reason": "intent mismatch: got /inventory_status"
+    },
+    {
+      "command": "Task List",
+      "role": "Worker",
+      "phone": "919876543211",
+      "phrase": "mere tasks dikhao",
+      "expected_intent": "/tasks",
+      "predicted_intent": "/tasks",
+      "ml_payload": {
+        "intent": "/tasks",
+        "id": null,
+        "worker_slug": null,
+        "depart_slug": null,
+        "deadline": null,
+        "reject_reason": null,
+        "message": null
+      },
+      "handler": "TasksService.getTasks",
+      "workflow": null,
+      "session_after": null,
+      "webhook": {
+        "http_status": 201,
+        "body": "ok",
+        "ok": true,
+        "error": false,
+        "ms": 896
+      },
+      "db_before": null,
+      "db_after": null,
+      "pass": true,
+      "fail_reason": null
+    },
+    {
+      "command": "Manager Task List",
+      "role": "Manager",
+      "phone": "919456157007",
+      "phrase": "mere tasks dikhao",
+      "expected_intent": "/tasks",
+      "predicted_intent": "/tasks",
+      "ml_payload": {
+        "intent": "/tasks",
+        "id": null,
+        "worker_slug": null,
+        "depart_slug": null,
+        "deadline": null,
+        "reject_reason": null,
+        "message": null
+      },
+      "handler": "TasksService.getTasks",
+      "workflow": null,
+      "session_after": null,
+      "webhook": {
+        "http_status": 201,
+        "body": "error",
+        "ok": false,
+        "error": true,
+        "ms": 1857
+      },
+      "db_before": null,
+      "db_after": null,
+      "pass": false,
+      "fail_reason": "webhook returned error (likely Olli send failure after handler)"
+    },
+    {
+      "command": "Inventory Query",
+      "role": "Owner",
+      "phone": "917452897444",
+      "phrase": "Steel sheets ka stock kitna bacha hai",
+      "expected_intent": "/inventory_status",
+      "predicted_intent": "/inventory_status",
+      "ml_payload": {
+        "intent": "/inventory_status",
+        "id": null,
+        "worker_slug": null,
+        "depart_slug": null,
+        "deadline": null,
+        "reject_reason": null,
+        "message": null
+      },
+      "handler": "InventoryService.handleInventoryStatus",
+      "workflow": null,
+      "session_after": null,
+      "webhook": {
+        "http_status": 201,
+        "body": "ok",
+        "ok": true,
+        "error": false,
+        "ms": 1060
+      },
+      "db_before": null,
+      "db_after": null,
+      "pass": true,
+      "fail_reason": null
+    },
+    {
+      "command": "Reports",
+      "role": "Owner",
+      "phone": "917452897444",
+      "phrase": "Mujhe aaj ka report dikhao",
+      "expected_intent": "/report",
+      "predicted_intent": "/report",
+      "ml_payload": {
+        "intent": "/report",
+        "id": null,
+        "worker_slug": null,
+        "depart_slug": null,
+        "deadline": "2026-06-02",
+        "reject_reason": null,
+        "message": null
+      },
+      "handler": "ReportService.generateReport",
+      "workflow": null,
+      "session_after": null,
+      "webhook": {
+        "http_status": 201,
+        "body": "ok",
+        "ok": true,
+        "error": false,
+        "ms": 1335
+      },
+      "db_before": null,
+      "db_after": null,
+      "pass": true,
+      "fail_reason": null
+    },
+    {
+      "command": "Business Discovery",
+      "role": "Owner",
+      "phone": "917452897444",
+      "phrase": "mera business setup karna hai",
+      "expected_intent": "/business_discovery",
+      "predicted_intent": "/business_discovery",
+      "ml_payload": {
+        "intent": "/business_discovery",
+        "id": null,
+        "worker_slug": null,
+        "depart_slug": null,
+        "deadline": null,
+        "reject_reason": null,
+        "message": null
+      },
+      "handler": "WorkflowRouter → BUSINESS_DISCOVERY",
+      "workflow": "BUSINESS_DISCOVERY",
+      "session_after": {
+        "id": 92,
+        "type": "BUSINESS_DISCOVERY",
+        "step": "MENU",
+        "status": "ACTIVE"
+      },
+      "webhook": {
+        "http_status": 201,
+        "body": "ok",
+        "ok": true,
+        "error": false,
+        "ms": 1228
+      },
+      "db_before": null,
+      "db_after": null,
+      "pass": true,
+      "fail_reason": null
+    },
+    {
+      "command": "Purchase Request",
+      "role": "Owner",
+      "phone": "917452897444",
+      "phrase": "purchase request bana do",
+      "expected_intent": "/purchase_request_create",
+      "predicted_intent": "/purchase_request_create",
+      "ml_payload": {
+        "intent": "/purchase_request_create",
+        "id": null,
+        "worker_slug": null,
+        "depart_slug": null,
+        "deadline": null,
+        "reject_reason": null,
+        "message": null
+      },
+      "handler": "WorkflowRouter → PURCHASE_REQUEST_CREATE",
+      "workflow": "PURCHASE_REQUEST_CREATE",
+      "session_after": {
+        "id": 93,
+        "type": "PURCHASE_REQUEST_CREATE",
+        "step": "REQUEST_CREATION",
+        "status": "ACTIVE"
+      },
+      "webhook": {
+        "http_status": 201,
+        "body": "ok",
+        "ok": true,
+        "error": false,
+        "ms": 1116
+      },
+      "db_before": null,
+      "db_after": null,
+      "pass": true,
+      "fail_reason": null
+    }
+  ],
+  "nl_audit": [
+    {
+      "command": "Attendance",
+      "phrases_tested": [
+        {
+          "command": "Attendance",
+          "role": "Manager",
+          "phone": "919456157007",
+          "phrase": "Aaj main present hoon",
+          "expected_intent": "/present",
+          "predicted_intent": "/present",
+          "ml_payload": {
+            "intent": "/present",
+            "id": null,
+            "worker_slug": null,
+            "depart_slug": null,
+            "deadline": "2026-06-02",
+            "reject_reason": null,
+            "message": null
+          },
+          "handler": "AttendanceService.markAttendance",
+          "workflow": null,
+          "session_after": null,
+          "webhook": {
+            "http_status": 201,
+            "body": "ok",
+            "ok": true,
+            "error": false,
+            "ms": 872
+          },
+          "db_before": null,
+          "db_after": null,
+          "pass": true,
+          "fail_reason": null
+        },
+        {
+          "command": "Attendance",
+          "role": "Manager",
+          "phone": "919456157007",
+          "phrase": "Main aaj present hoon",
+          "expected_intent": "/present",
+          "predicted_intent": "/present",
+          "ml_payload": {
+            "intent": "/present",
+            "id": null,
+            "worker_slug": null,
+            "depart_slug": null,
+            "deadline": "2026-06-02",
+            "reject_reason": null,
+            "message": null
+          },
+          "handler": "AttendanceService.markAttendance",
+          "workflow": null,
+          "session_after": null,
+          "webhook": {
+            "http_status": 201,
+            "body": "ok",
+            "ok": true,
+            "error": false,
+            "ms": 1020
+          },
+          "db_before": null,
+          "db_after": null,
+          "pass": true,
+          "fail_reason": null
+        }
+      ],
+      "recommended_demo_phrase": "Aaj main present hoon",
+      "pass": true
+    },
+    {
+      "command": "Task Assignment",
+      "phrases_tested": [
+        {
+          "command": "Task Assignment",
+          "role": "Owner",
+          "phone": "917452897444",
+          "phrase": "Rahul Kumar ko store check ka kaam do",
+          "expected_intent": "/assign",
+          "predicted_intent": "/assign",
+          "ml_payload": {
+            "intent": "/assign",
+            "id": null,
+            "worker_slug": "kumar",
+            "depart_slug": null,
+            "deadline": null,
+            "reject_reason": null,
+            "message": null
+          },
+          "handler": "TasksService.handleAssign / createTaskFromAssign",
+          "workflow": null,
+          "session_after": null,
+          "webhook": {
+            "http_status": 201,
+            "body": "ok",
+            "ok": true,
+            "error": false,
+            "ms": 1498
+          },
+          "db_before": null,
+          "db_after": null,
+          "pass": true,
+          "fail_reason": null
+        },
+        {
+          "command": "Task Assignment",
+          "role": "Owner",
+          "phone": "917452897444",
+          "phrase": "Rahul ko inventory check karne ka task de do",
+          "expected_intent": "/assign",
+          "predicted_intent": "/inventory_status",
+          "ml_payload": {
+            "intent": "/inventory_status",
+            "id": null,
+            "worker_slug": null,
+            "depart_slug": null,
+            "deadline": null,
+            "reject_reason": null,
+            "message": null
+          },
+          "handler": "InventoryService.handleInventoryStatus",
+          "workflow": null,
+          "session_after": null,
+          "webhook": {
+            "http_status": 201,
+            "body": "ok",
+            "ok": true,
+            "error": false,
+            "ms": 1105
+          },
+          "db_before": null,
+          "db_after": null,
+          "pass": false,
+          "fail_reason": "intent mismatch: got /inventory_status"
+        }
+      ],
+      "recommended_demo_phrase": "Rahul Kumar ko store check ka kaam do",
+      "pass": true
+    },
+    {
+      "command": "Task Update",
+      "phrases_tested": [
+        {
+          "command": "Task Update",
+          "role": "Worker",
+          "phone": "919876543211",
+          "phrase": "task update kaam shuru ho gaya",
+          "expected_intent": "/update",
+          "predicted_intent": "/update",
+          "ml_payload": {
+            "intent": "/update",
+            "id": null,
+            "worker_slug": null,
+            "depart_slug": null,
+            "deadline": null,
+            "reject_reason": null,
+            "message": null
+          },
+          "handler": "TasksService.addUpdate",
+          "workflow": null,
+          "session_after": null,
+          "webhook": {
+            "http_status": 201,
+            "body": "ok",
+            "ok": true,
+            "error": false,
+            "ms": 859
+          },
+          "db_before": null,
+          "db_after": null,
+          "pass": true,
+          "fail_reason": null
+        },
+        {
+          "command": "Task Update",
+          "role": "Worker",
+          "phone": "919876543211",
+          "phrase": "task update inventory check shuru ho gaya",
+          "expected_intent": "/update",
+          "predicted_intent": "/inventory_status",
+          "ml_payload": {
+            "intent": "/inventory_status",
+            "id": null,
+            "worker_slug": null,
+            "depart_slug": null,
+            "deadline": null,
+            "reject_reason": null,
+            "message": null
+          },
+          "handler": "InventoryService.handleInventoryStatus",
+          "workflow": null,
+          "session_after": null,
+          "webhook": {
+            "http_status": 201,
+            "body": "ok",
+            "ok": true,
+            "error": false,
+            "ms": 764
+          },
+          "db_before": null,
+          "db_after": null,
+          "pass": false,
+          "fail_reason": "intent mismatch: got /inventory_status"
+        }
+      ],
+      "recommended_demo_phrase": "task update kaam shuru ho gaya",
+      "pass": true
+    },
+    {
+      "command": "Task Complete",
+      "phrases_tested": [
+        {
+          "command": "Task Complete",
+          "role": "Worker",
+          "phone": "919876543211",
+          "phrase": "kaam complete ho gaya",
+          "expected_intent": "/complete",
+          "predicted_intent": "/complete",
+          "ml_payload": {
+            "intent": "/complete",
+            "id": null,
+            "worker_slug": null,
+            "depart_slug": null,
+            "deadline": null,
+            "reject_reason": null,
+            "message": null
+          },
+          "handler": "TasksService.completeTask",
+          "workflow": null,
+          "session_after": null,
+          "webhook": {
+            "http_status": 201,
+            "body": "ok",
+            "ok": true,
+            "error": false,
+            "ms": 997
+          },
+          "db_before": null,
+          "db_after": null,
+          "pass": true,
+          "fail_reason": null
+        },
+        {
+          "command": "Task Complete",
+          "role": "Worker",
+          "phone": "919876543211",
+          "phrase": "task complete ho gaya",
+          "expected_intent": "/complete",
+          "predicted_intent": "/complete",
+          "ml_payload": {
+            "intent": "/complete",
+            "id": null,
+            "worker_slug": null,
+            "depart_slug": null,
+            "deadline": null,
+            "reject_reason": null,
+            "message": null
+          },
+          "handler": "TasksService.completeTask",
+          "workflow": null,
+          "session_after": null,
+          "webhook": {
+            "http_status": 201,
+            "body": "ok",
+            "ok": true,
+            "error": false,
+            "ms": 834
+          },
+          "db_before": null,
+          "db_after": null,
+          "pass": true,
+          "fail_reason": null
+        }
+      ],
+      "recommended_demo_phrase": "kaam complete ho gaya",
+      "pass": true
+    },
+    {
+      "command": "Manager Delegation",
+      "phrases_tested": [
+        {
+          "command": "Manager Delegation",
+          "role": "Manager",
+          "phone": "919456157007",
+          "phrase": "Rahul Kumar ko loading ka kaam do",
+          "expected_intent": "/assign",
+          "predicted_intent": "/assign",
+          "ml_payload": {
+            "intent": "/assign",
+            "id": null,
+            "worker_slug": "kumar",
+            "depart_slug": null,
+            "deadline": null,
+            "reject_reason": null,
+            "message": null
+          },
+          "handler": "TasksService.handleAssign / createTaskFromAssign",
+          "workflow": null,
+          "session_after": null,
+          "webhook": {
+            "http_status": 201,
+            "body": "ok",
+            "ok": true,
+            "error": false,
+            "ms": 1412
+          },
+          "db_before": null,
+          "db_after": null,
+          "pass": true,
+          "fail_reason": null
+        },
+        {
+          "command": "Manager Delegation",
+          "role": "Manager",
+          "phone": "919456157007",
+          "phrase": "Rahul ko loading ka kaam do",
+          "expected_intent": "/assign",
+          "predicted_intent": "/assign",
+          "ml_payload": {
+            "intent": "/assign",
+            "id": null,
+            "worker_slug": "rahul",
+            "depart_slug": null,
+            "deadline": null,
+            "reject_reason": null,
+            "message": null
+          },
+          "handler": "TasksService.handleAssign / createTaskFromAssign",
+          "workflow": null,
+          "session_after": null,
+          "webhook": {
+            "http_status": 201,
+            "body": "ok",
+            "ok": true,
+            "error": false,
+            "ms": 768
+          },
+          "db_before": null,
+          "db_after": null,
+          "pass": true,
+          "fail_reason": null
+        }
+      ],
+      "recommended_demo_phrase": "Rahul Kumar ko loading ka kaam do",
+      "pass": true
+    }
+  ],
+  "session_audit": [
+    {
+      "scenario": "Task workflow blocks inventory query",
+      "setup": "purchase request bana do",
+      "setup_workflow": "PURCHASE_REQUEST_CREATE",
+      "setup_session": {
+        "id": 94,
+        "step": "REQUEST_CREATION"
+      },
+      "interrupt": "Steel sheets ka stock kitna bacha hai",
+      "interrupt_intent": "/inventory_status",
+      "still_in_workflow": "PURCHASE_REQUEST_CREATE",
+      "still_active": true,
+      "pass": true,
+      "interference": "YES — active workflow consumed message",
+      "root_cause": "Active PURCHASE_REQUEST_CREATE session at step REQUEST_CREATION intercepts message before ML routing"
+    },
+    {
+      "scenario": "PR workflow blocks report",
+      "setup": "purchase request bana do",
+      "setup_workflow": "PURCHASE_REQUEST_CREATE",
+      "setup_session": {
+        "id": 95,
+        "step": "REQUEST_CREATION"
+      },
+      "interrupt": "Mujhe aaj ka report dikhao",
+      "interrupt_intent": "/report",
+      "still_in_workflow": "PURCHASE_REQUEST_CREATE",
+      "still_active": true,
+      "pass": true,
+      "interference": "YES — active workflow consumed message",
+      "root_cause": "Active PURCHASE_REQUEST_CREATE session at step REQUEST_CREATION intercepts message before ML routing"
+    },
+    {
+      "scenario": "Discovery blocks task list",
+      "setup": "mera business setup karna hai",
+      "setup_workflow": "BUSINESS_DISCOVERY",
+      "setup_session": {
+        "id": 96,
+        "step": "MENU"
+      },
+      "interrupt": "mere tasks dikhao",
+      "interrupt_intent": "/tasks",
+      "still_in_workflow": "BUSINESS_DISCOVERY",
+      "still_active": true,
+      "pass": true,
+      "interference": "YES — active workflow consumed message",
+      "root_cause": "Active BUSINESS_DISCOVERY session at step MENU intercepts message before ML routing"
+    },
+    {
+      "scenario": "After cancel — inventory works",
+      "setup": "purchase request bana do",
+      "setup_workflow": "PURCHASE_REQUEST_CREATE",
+      "setup_session": {
+        "id": 97,
+        "step": "REQUEST_CREATION"
+      },
+      "interrupt": null,
+      "interrupt_intent": "general_chat",
+      "still_in_workflow": "PURCHASE_REQUEST_CREATE",
+      "still_active": true,
+      "pass": false,
+      "interference": "YES — active workflow consumed message",
+      "root_cause": "Active PURCHASE_REQUEST_CREATE session at step REQUEST_CREATION intercepts message before ML routing"
+    },
+    {
+      "scenario": "After /cancel — inventory query works",
+      "interrupt": "Steel sheets ka stock kitna bacha hai",
+      "pass": true,
+      "interference": "NO"
+    }
+  ],
+  "errors_investigation": [
+    {
+      "incoming_message": "task complete inventory check ho gaya",
+      "user": "919876543211",
+      "intent": "/inventory_status",
+      "router": "processCommand → ensureManager (inventory_status path)",
+      "workflow": null,
+      "handler": "InventoryService.handleInventoryStatus",
+      "exception": "ForbiddenException: Only managers and owners can perform this action",
+      "http_status": 201,
+      "webhook_body": "ok",
+      "root_cause": "ML classifies \"inventory\" keyword as /inventory_status; workers cannot run inventory_status",
+      "production_impact": "Worker task complete fails silently with permission error message",
+      "confidence": "HIGH"
+    },
+    {
+      "incoming_message": "main khud yeh kaam karunga",
+      "user": "919456157007",
+      "intent": "general_chat",
+      "router": "processCommand(/general_chat)",
+      "workflow": null,
+      "handler": "waUnknownCommand expected; may get undefined if chat path broken",
+      "exception": "AxiosError 500 from Olli when outbound message invalid (observed in logs)",
+      "webhook_body": "error",
+      "root_cause": "ML returns general_chat → no structured handler; intermittent Olli 500 on send",
+      "production_impact": "Manager self-assign NL fails",
+      "confidence": "HIGH"
+    },
+    {
+      "incoming_message": "Rahul ko loading ka kaam do",
+      "user": "919456157007",
+      "intent": "/assign",
+      "router": "/assign → TasksService.handleAssign",
+      "handler": "TasksService.handleAssign",
+      "exception": "Multiple people found (@rahul matches Rahul Verma + Rahul Kumar)",
+      "webhook_body": "ok",
+      "root_cause": "Ambiguous worker slug \"rahul\" — two users match",
+      "production_impact": "Assign/delegate fails until full name or @id used",
+      "confidence": "HIGH"
+    },
+    {
+      "incoming_message": "task 88 Rahul Kumar ko do (repeat on delegated task)",
+      "user": "919456157007",
+      "intent": "/mgrassign",
+      "router": "TasksService.applyManagerDelegateWorker",
+      "handler": "TasksService.assertTaskEligibleForManagerRouting",
+      "exception": "BadRequestException: Task already assigned to a worker",
+      "root_cause": "Re-delegating after DELEGATED_TO_WORKER state",
+      "production_impact": "400-class error if manager repeats delegate on same task",
+      "confidence": "HIGH"
+    }
+  ],
+  "demo_script_run": {
+    "steps": [
+      {
+        "section": "1 Attendance",
+        "role": "Manager",
+        "message": "Aaj main present hoon",
+        "predicted_intent": "/present",
+        "webhook_ok": true,
+        "http_status": 201,
+        "active_session": null,
+        "session_step": null,
+        "pass": true,
+        "db": {
+          "is_present": true
+        }
+      },
+      {
+        "section": "2 Task Assign",
+        "role": "Owner",
+        "message": "Rahul Kumar ko store check ka kaam do",
+        "predicted_intent": "/assign",
+        "webhook_ok": true,
+        "http_status": 201,
+        "active_session": null,
+        "session_step": null,
+        "pass": true,
+        "tasks": 69
+      },
+      {
+        "section": "3a Owner route",
+        "role": "Owner",
+        "message": "Rahul Verma ko dispatch planning ka task do",
+        "predicted_intent": "/assign",
+        "webhook_ok": true,
+        "http_status": 201,
+        "active_session": null,
+        "session_step": null
+      },
+      {
+        "section": "3b Manager list",
+        "role": "Manager",
+        "message": "mere tasks dikhao",
+        "predicted_intent": "/tasks",
+        "webhook_ok": false,
+        "http_status": 201,
+        "active_session": null,
+        "session_step": null
+      },
+      {
+        "section": "3c Manager delegate",
+        "role": "Manager",
+        "message": "task 90 Rahul Kumar ko do",
+        "predicted_intent": "/mgrassign",
+        "webhook_ok": true,
+        "http_status": 201,
+        "active_session": null,
+        "session_step": null,
+        "pass": true,
+        "routing": {
+          "routing_status": "DELEGATED_TO_WORKER",
+          "assigned_to": 35
+        },
+        "precondition": "Fresh AWAITING_MANAGER_ACTION task #90"
+      },
+      {
+        "section": "4 Inventory",
+        "role": "Owner",
+        "message": "Steel sheets ka stock kitna bacha hai",
+        "predicted_intent": "/inventory_status",
+        "webhook_ok": true,
+        "http_status": 201,
+        "active_session": null,
+        "session_step": null,
+        "pass": true
+      },
+      {
+        "section": "6-7 Purchase Request",
+        "role": "Owner",
+        "message": "purchase request bana do",
+        "predicted_intent": "/purchase_request_create",
+        "webhook_ok": true,
+        "http_status": 201,
+        "active_session": "PURCHASE_REQUEST_CREATE",
+        "session_step": "REQUEST_CREATION"
+      },
+      {
+        "section": "6-7 Purchase Request",
+        "role": "Owner",
+        "message": "Cert PR 1780413530635",
+        "predicted_intent": "general_chat",
+        "webhook_ok": true,
+        "http_status": 201,
+        "active_session": "PURCHASE_REQUEST_CREATE",
+        "session_step": "REQUEST_CREATION"
+      },
+      {
+        "section": "6-7 Purchase Request",
+        "role": "Owner",
+        "message": "Steel Sheets",
+        "predicted_intent": "general_chat",
+        "webhook_ok": true,
+        "http_status": 201,
+        "active_session": "PURCHASE_REQUEST_CREATE",
+        "session_step": "REQUEST_CREATION"
+      },
+      {
+        "section": "6-7 Purchase Request",
+        "role": "Owner",
+        "message": "25",
+        "predicted_intent": "general_chat",
+        "webhook_ok": true,
+        "http_status": 201,
+        "active_session": "PURCHASE_REQUEST_CREATE",
+        "session_step": "REQUEST_CREATION"
+      },
+      {
+        "section": "6-7 Purchase Request",
+        "role": "Owner",
+        "message": "NO",
+        "predicted_intent": "general_chat",
+        "webhook_ok": true,
+        "http_status": 201,
+        "active_session": "PURCHASE_REQUEST_CREATE",
+        "session_step": "APPROVAL"
+      },
+      {
+        "section": "6-7 Purchase Request",
+        "role": "Owner",
+        "message": "YES",
+        "predicted_intent": "general_chat",
+        "webhook_ok": true,
+        "http_status": 201,
+        "active_session": "PURCHASE_REQUEST_CREATE",
+        "session_step": "VENDOR_ASSIGNMENT"
+      },
+      {
+        "section": "6-7 Purchase Request",
+        "role": "Owner",
+        "message": "Gupta Metals",
+        "predicted_intent": "general_chat",
+        "webhook_ok": true,
+        "http_status": 201,
+        "active_session": "PURCHASE_REQUEST_CREATE",
+        "session_step": "CLOSE"
+      },
+      {
+        "section": "6-7 Purchase Request",
+        "role": "Owner",
+        "message": "YES",
+        "predicted_intent": "general_chat",
+        "webhook_ok": true,
+        "http_status": 201,
+        "active_session": null,
+        "session_step": null
+      },
+      {
+        "section": "7 Vendor close",
+        "pass": true,
+        "purchase_request": {
+          "id": 17,
+          "status": "CLOSED",
+          "assigned_vendor_id": 12
+        }
+      },
+      {
+        "section": "8 Report",
+        "role": "Owner",
+        "message": "Mujhe aaj ka report dikhao",
+        "predicted_intent": "/report",
+        "webhook_ok": true,
+        "http_status": 201,
+        "active_session": null,
+        "session_step": null,
+        "pass": true
+      },
+      {
+        "section": "Worker Update",
+        "role": "Worker",
+        "message": "task update 91 kaam shuru ho gaya",
+        "predicted_intent": "/update",
+        "webhook_ok": true,
+        "http_status": 201,
+        "active_session": null,
+        "session_step": null,
+        "pass": true
+      },
+      {
+        "section": "Worker Complete",
+        "role": "Worker",
+        "message": "task 91 complete ho gaya",
+        "predicted_intent": "/complete",
+        "webhook_ok": true,
+        "http_status": 201,
+        "active_session": null,
+        "session_step": null,
+        "pass": true
+      },
+      {
+        "section": "10 Discovery",
+        "role": "Owner",
+        "message": "mera business setup karna hai",
+        "predicted_intent": "/business_discovery",
+        "webhook_ok": true,
+        "http_status": 201,
+        "active_session": "BUSINESS_DISCOVERY",
+        "session_step": "MENU",
+        "pass": true
+      }
+    ],
+    "pass_count": 18,
+    "total": 19,
+    "all_pass": false
+  },
+  "document_upload": {
+    "pass": true,
+    "status": 201,
+    "document_id": 3
+  },
+  "certified_phrases": {
+    "attendance": "Aaj main present hoon",
+    "task_assign": "Rahul Kumar ko store check ka kaam do",
+    "task_list_worker": "mere tasks dikhao",
+    "task_list_manager": "mere tasks dikhao",
+    "task_update": "task update [TASK_ID] kaam shuru ho gaya",
+    "task_complete": "task [TASK_ID] complete ho gaya",
+    "manager_route": "Rahul Verma ko dispatch planning ka task do",
+    "manager_delegate": "task [TASK_ID] Rahul Kumar ko do",
+    "inventory": "Steel sheets ka stock kitna bacha hai",
+    "purchase_request": "purchase request bana do",
+    "vendor_assign": "Gupta Metals",
+    "pr_close": "YES",
+    "report": "Mujhe aaj ka report dikhao",
+    "discovery": "mera business setup karna hai"
+  },
+  "summary": {
+    "commands_tested": 12,
+    "commands_passed": 10,
+    "demo_script_pass": false,
+    "session_interference_confirmed": true,
+    "go_no_go": "NO-GO"
+  }
+}

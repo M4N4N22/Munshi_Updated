@@ -382,6 +382,27 @@ export class InventoryService {
       .map((item) => this.buildStatusRecord(item));
   }
 
+  /** Match a single inventory SKU when the user message contains the item name. */
+  async findSkuByNameHint(
+    factoryId: number,
+    normalizedMessage: string,
+  ): Promise<string | null> {
+    const { data } = await this.listItems(factoryId, {
+      activeOnly: true,
+      page_size: INVENTORY_PAGINATION.MAX_PAGE_SIZE,
+    });
+    const matches = data.filter((item) => {
+      const name = (item.name || '').toLowerCase().trim();
+      return name.length >= 3 && normalizedMessage.includes(name);
+    });
+    if (matches.length === 1) return matches[0].sku;
+    if (matches.length > 1) {
+      matches.sort((a, b) => b.name.length - a.name.length);
+      return matches[0].sku;
+    }
+    return null;
+  }
+
   async listTransactions(
     factoryId: number,
     itemId?: number,

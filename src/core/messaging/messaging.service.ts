@@ -164,8 +164,9 @@ export class MessagingService {
       );
     }
 
+    const shown = workers.slice(0, 6);
     let block = `\n👷 *Workers you can assign*\n`;
-    workers.forEach((w, i) => {
+    shown.forEach((w, i) => {
       const dept = w.departmentName
         ? `Dept: *${w.departmentName}*`
         : `Dept: _Not assigned_`;
@@ -175,6 +176,9 @@ export class MessagingService {
         `   @${w.id} or @${phone}\n` +
         `   ${dept}\n`;
     });
+    if (workers.length > shown.length) {
+      block += `\n_+ ${workers.length - shown.length} more — use @id from team list_\n`;
+    }
     return `${block}\n`;
   }
 
@@ -193,28 +197,15 @@ export class MessagingService {
 
     return (
       `━━━━━━━━━━━━━━━━\n` +
-      `📋 *New task from owner*\n` +
+      `📋 *New task from owner — Task #${params.taskId}*\n` +
       `━━━━━━━━━━━━━━━━\n\n` +
       `🏭 *Factory:* ${params.factoryName}\n` +
-      `🆔 *Task #${params.taskId}*\n` +
       `📝 ${params.description}${dueLine}\n` +
-      `Please reply in your own words (natural language).\n\n` +
-      `*Option 1 — You will handle it*\n` +
-      `Examples:\n` +
-      `• "I will do task ${params.taskId}"\n` +
-      `• "I'll complete task ${params.taskId} myself"\n\n` +
-      `*Option 2 — Assign to a worker*\n` +
-      `Examples:\n` +
-      `• "@anil will do task ${params.taskId}"\n` +
-      `• "Assign task ${params.taskId} to @anil"\n\n` +
-      `*Option 3 — Wrong department?*\n` +
-      `Transfer to another department:\n` +
-      `• "/mgrtransfer ${params.taskId} sales"\n` +
-      `• "transfer task ${params.taskId} to it department"\n\n` +
-      `*Option 4 — Not sure which department?*\n` +
-      `Reject with a reason (owner will be notified):\n` +
-      `• "/mgrreject ${params.taskId} not our scope"\n` +
-      `• "reject task ${params.taskId} — wrong department"\n` +
+      `*What would you like to do?*\n\n` +
+      `• "I will do task ${params.taskId}" — you handle it\n` +
+      `• "task ${params.taskId} @name ko do" — delegate to a worker\n` +
+      `• "/mgrtransfer ${params.taskId} sales" — wrong department\n` +
+      `• "/mgrreject ${params.taskId} not our scope" — reject with reason\n` +
       workerBlock +
       `━━━━━━━━━━━━━━━━`
     );

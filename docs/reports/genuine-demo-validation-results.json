@@ -1,0 +1,213 @@
+{
+  "validated_at": "2026-06-02T17:35:40.864Z",
+  "demo_mode": {
+    "enabled": false,
+    "phrase_count": 13
+  },
+  "environment": {
+    "backend_ok": true,
+    "ml_ok": true,
+    "demo_mode_enabled": false
+  },
+  "message_length_audit": [
+    {
+      "step": "1_attendance",
+      "phone": "919456157007",
+      "phrase": "Aaj main present hoon",
+      "length": 110,
+      "olli_risk": false,
+      "wa_over_limit": false,
+      "preview": "━━━━━━━━━━━━━━━\n*Attendance updated*\n━━━━━━━━━━━━━━━\n\nYour attendance for today has been updated to *Present*."
+    },
+    {
+      "step": "2_assign_worker",
+      "phone": "917452897444",
+      "length": 151,
+      "olli_risk": false,
+      "wa_over_limit": false,
+      "preview": "━━━━━━━━━━━━━━━\n*Task assigned*\n━━━━━━━━━━━━━━━\n\n*Task:* store check ka kaam\n\nTask #107 assigned to *Rahul Kumar*. They "
+    },
+    {
+      "step": "3_assign_manager",
+      "phone": "917452897444",
+      "phrase": "Rahul Verma ko dispatch planning ka task do",
+      "length": 176,
+      "olli_risk": false,
+      "wa_over_limit": false,
+      "preview": "━━━━━━━━━━━━━━━\n*Task assigned*\n━━━━━━━━━━━━━━━\n\n*Task:* dispatch planning ka task\n\nTask #108 routed to *Rahul Verma* (d"
+    },
+    {
+      "step": "4_manager_tasks",
+      "phone": "919456157007",
+      "phrase": "mere tasks dikaho",
+      "length": 627,
+      "olli_risk": false,
+      "wa_over_limit": false,
+      "preview": "━━━━━━━━━━━━━━━\n*Your pending tasks*\n━━━━━━━━━━━━━━━\n\n*1.* dispatch planning ka task — #108\n_→ Needs your action — deleg"
+    },
+    {
+      "step": "5_delegate",
+      "phone": "919456157007",
+      "phrase": "task 108 Rahul Kumar ko do",
+      "length": 129,
+      "olli_risk": false,
+      "wa_over_limit": false,
+      "preview": "━━━━━━━━━━━━━━━\n*Task delegated*\n━━━━━━━━━━━━━━━\n\n*Task #108*\n*Assignee:* Rahul Kumar (#35)\n\nThey have been notified on "
+    },
+    {
+      "step": "6_inventory",
+      "phone": "917452897444",
+      "phrase": "Steel sheets ka stock kitna bacha hai",
+      "length": 217,
+      "olli_risk": false,
+      "wa_over_limit": false,
+      "preview": "━━━━━━━━━━━━━━━\n*Inventory status*\n━━━━━━━━━━━━━━━\n\n*Steel Sheets* (`DEMO-STEEL-001`)\n\n📍 Location: Main Warehouse\n📂 Ca"
+    },
+    {
+      "step": "7_report",
+      "phone": "917452897444",
+      "phrase": "Mujhe aaj ka report dikhao",
+      "length": 240,
+      "olli_risk": false,
+      "wa_over_limit": false,
+      "preview": "━━━━━━━━━━━━━━━\n*Factory report*\n━━━━━━━━━━━━━━━\n\n📅 *Date:* 2026-06-02\n\n👷 *Attendance*\n• Total workers: 9\n• Present: 2"
+    },
+    {
+      "step": "8_pr_start",
+      "phone": "917452897444",
+      "phrase": "purchase request bana do",
+      "length": 137,
+      "olli_risk": false,
+      "wa_over_limit": false,
+      "preview": "━━━━━━━━━━━━━━━\n*Purchase request*\n━━━━━━━━━━━━━━━\n\nWhat do you need to purchase?\n\nReply with a short *title* (e.g. Rest"
+    },
+    {
+      "step": "outbound_manager_routing_prompt_estimate",
+      "length": 879,
+      "olli_risk": false,
+      "wa_over_limit": false,
+      "note": "Fire-and-forget WhatsApp to manager on owner→manager assign"
+    }
+  ],
+  "ml_checks": [
+    {
+      "phrase": "Aaj main present hoon",
+      "expected": "/present",
+      "got": "/present",
+      "worker_slug": null,
+      "depart_slug": null,
+      "pass": true
+    },
+    {
+      "phrase": "Rahul Kumar ko store check ka kaam do",
+      "expected": "/assign",
+      "got": "/assign",
+      "worker_slug": "kumar",
+      "depart_slug": null,
+      "pass": true
+    },
+    {
+      "phrase": "Rahul Verma ko dispatch planning ka task do",
+      "expected": "/assign",
+      "got": "/assign",
+      "worker_slug": "verma",
+      "depart_slug": null,
+      "pass": true
+    },
+    {
+      "phrase": "Steel sheets ka stock kitna bacha hai",
+      "expected": "/inventory_status",
+      "got": "/inventory_status",
+      "worker_slug": null,
+      "depart_slug": null,
+      "pass": true
+    },
+    {
+      "phrase": "purchase request bana do",
+      "expected": "/purchase_request_create",
+      "got": "/purchase_request_create",
+      "worker_slug": null,
+      "depart_slug": null,
+      "pass": true
+    },
+    {
+      "phrase": "Mujhe aaj ka report dikhao",
+      "expected": "/report",
+      "got": "/report",
+      "worker_slug": null,
+      "depart_slug": null,
+      "pass": true
+    },
+    {
+      "phrase": "mere tasks dikaho",
+      "expected": "/tasks",
+      "got": "/tasks",
+      "worker_slug": null,
+      "depart_slug": null,
+      "pass": true
+    }
+  ],
+  "flow_checks": [
+    {
+      "name": "1_manager_attendance",
+      "pass": true,
+      "intent": "/present",
+      "replyLength": 110
+    },
+    {
+      "name": "2_owner_assign_worker",
+      "pass": true,
+      "task_id": 107,
+      "description": "store check ka kaam",
+      "routing_status": "DIRECT",
+      "reply": "━━━━━━━━━━━━━━━\n*Task assigned*\n━━━━━━━━━━━━━━━\n\n*Task:* store check ka kaam\n\nTask #107 assigned to *Rahul Kumar*. They have been notified on WhatsApp."
+    },
+    {
+      "name": "3_owner_assign_manager",
+      "pass": true,
+      "task_id": 108,
+      "assigned_to": 34,
+      "routing_status": "AWAITING_MANAGER_ACTION",
+      "replyIncludesTaskId": true,
+      "reply": "━━━━━━━━━━━━━━━\n*Task assigned*\n━━━━━━━━━━━━━━━\n\n*Task:* dispatch planning ka task\n\nTask #108 routed to *Rahul Verma* (department manager). They have been notified on WhatsApp."
+    },
+    {
+      "name": "4_manager_task_list",
+      "pass": true,
+      "showsRouteTask": true,
+      "notFactoryWide": true,
+      "replyLength": 627
+    },
+    {
+      "name": "5_manager_delegate",
+      "pass": true,
+      "task_id": 108,
+      "assigned_to": 35,
+      "routing_status": "DELEGATED_TO_WORKER"
+    },
+    {
+      "name": "6_inventory",
+      "pass": true,
+      "replyLength": 217
+    },
+    {
+      "name": "7_report",
+      "pass": true,
+      "replyLength": 240
+    },
+    {
+      "name": "8_pr_workflow_start",
+      "pass": true,
+      "session": {
+        "workflow_type": "PURCHASE_REQUEST_CREATE",
+        "status": "ACTIVE"
+      }
+    }
+  ],
+  "summary": {
+    "pass": 15,
+    "fail": 0,
+    "warn": 0
+  },
+  "verdict": "GO"
+}

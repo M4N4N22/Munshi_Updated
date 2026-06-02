@@ -24,6 +24,7 @@ import { DepartmentsService } from 'src/services/departments/departments.service
 import { WorkflowRouterService } from 'src/services/workflow/workflow-engine.service';
 import { InventoryService } from 'src/services/inventory/inventory.service';
 import { IInventoryStatusRecord } from 'src/services/inventory/inventory.interfaces';
+import { DemoModeService } from 'src/services/demo-mode/demo-mode.service';
 import { getHourIST, INDIA_TIMEZONE } from 'src/core/time/india-defaults';
 import {
   WA_DIVIDER,
@@ -63,6 +64,7 @@ export class WhatsAppService {
     private readonly departmentsService: DepartmentsService,
     private readonly workflowRouter: WorkflowRouterService,
     private readonly inventoryService: InventoryService,
+    private readonly demoModeService: DemoModeService,
   ) {}
 
   async sendTextMessage(to: string, message: string) {
@@ -86,8 +88,27 @@ export class WhatsAppService {
     await this.messagingService.sendTemplate(to, templateName, options);
     return { ok: true };
   }
-  async handleIncomingMessage(body: WhatsAppIncomingDto) {
-    console.log({ body });
+  async handleIncomingMessage(
+    body: WhatsAppIncomingDto,
+    options?: { dryRun?: boolean },
+  ) {
+    console.log({ body, dryRun: options?.dryRun ?? false });
+    const finish = async (result: unknown) => {
+      const message =
+        typeof result === 'string'
+          ? result
+          : (result as { message?: string })?.message || String(result ?? '');
+      if (options?.dryRun) {
+        return {
+          status: 'ok',
+          reply: message,
+          replyLength: message.length,
+        };
+      }
+      await this.sendTextMessage(body.from, message);
+      return 'ok';
+    };
+
     try {
       const msgTrim = (body.message || '').trim();
 
@@ -95,26 +116,29 @@ export class WhatsAppService {
         const cancelResult = await this.workflowRouter.cancelWorkflow(
           body.from,
         );
-        await this.sendTextMessage(body.from, cancelResult);
-        return 'ok';
+        return finish(cancelResult);
+      }
+
+      const demoResult = await this.demoModeService.tryHandle(
+        body.from,
+        msgTrim,
+      );
+      if (demoResult?.handled) {
+        return finish(demoResult.response);
       }
 
       const sessionState = await this.workflowRouter.resolveActiveSession(
         body.from,
       );
       if (sessionState.expiredJustNow) {
-        await this.sendTextMessage(
-          body.from,
-          this.workflowRouter.getExpiredSessionMessage(),
-        );
+        return finish(this.workflowRouter.getExpiredSessionMessage());
       } else if (sessionState.session) {
         const workflowResult =
           await this.workflowRouter.handleActiveWorkflowMessage(
             body.from,
             msgTrim,
           );
-        await this.sendTextMessage(body.from, workflowResult);
-        return 'ok';
+        return finish(workflowResult);
       }
 
       const slashBypass = msgTrim.match(
@@ -185,11 +209,7 @@ export class WhatsAppService {
       }
 
       console.log({ result });
-
-      const message =
-        typeof result === 'string' ? result : result?.message || result;
-      await this.sendTextMessage(body.from, message);
-      return 'ok';
+      return finish(result);
     } catch (error) {
       console.log(error);
 
@@ -204,6 +224,14 @@ export class WhatsAppService {
               : (payload as { message?: string }).message ||
                 error.message ||
                 'We could not process your request. Please try again or send /help.';
+        if (options?.dryRun) {
+          return {
+            status: status >= 500 ? 'error' : 'ok',
+            reply: errText,
+            replyLength: errText.length,
+            error: true,
+          };
+        }
         try {
           await this.sendTextMessage(body.from, errText);
         } catch (sendErr) {
@@ -215,6 +243,14 @@ export class WhatsAppService {
       const errText =
         error?.message ||
         'We could not process your request. Please try again or send /help.';
+      if (options?.dryRun) {
+        return {
+          status: 'error',
+          reply: errText,
+          replyLength: errText.length,
+          error: true,
+        };
+      }
       try {
         await this.sendTextMessage(body.from, errText);
       } catch (sendErr) {
@@ -495,10 +531,15 @@ export class WhatsAppService {
         return waTasksEmpty();
       }
 
-      const isManager = role !== USER_ROLE.WORKER;
-      return isManager
-        ? this.formatTasksByDepartment(tasks as any[])
-        : this.formatWorkerTasks(tasks as any[]);
+      const isOwner = role === USER_ROLE.OWNER;
+      const isManager = role === USER_ROLE.MANAGER;
+      if (isOwner) {
+        return this.formatTasksByDepartment(tasks as any[]);
+      }
+      if (isManager) {
+        return this.formatManagerTasks(tasks as any[]);
+      }
+      return this.formatWorkerTasks(tasks as any[]);
     }
 
     // ✅ COMPLETE TASK
@@ -532,16 +573,20 @@ export class WhatsAppService {
       if (!mentionMatch && mlWorkerMention) {
         const workerToken = mlWorkerMention.replace(/^@/, '');
         const description =
+          this.extractAssignTaskDescription(rawMessage) ||
           this.stripAssigneeFromDescription(rawMessage, workerToken) ||
           rawMessage.trim();
         if (!description) {
           return waErrorDescriptionRequired();
         }
         this.ensureManager(role);
+        const mention =
+          this.resolveAssignMentionForNl(rawMessage, mlWorkerMention) ||
+          mlWorkerMention;
         const result = await this.tasksService.handleAssign(
           user.id,
           factoryId,
-          mlWorkerMention,
+          mention,
           description,
           { deadline: deadlineInput },
         );
@@ -812,6 +857,66 @@ export class WhatsAppService {
     return trimmed.startsWith('/') ? trimmed.toLowerCase() : `/${trimmed.toLowerCase()}`;
   }
 
+  /**
+   * Parse Hindi assign phrases: "{name} ko {work} do" → "{work}".
+   * Handles multi-word names and partial ML worker_slug (e.g. "kumar" only).
+   */
+  private extractAssignTaskDescription(
+    rawMessage: string | undefined,
+  ): string | null {
+    let msg = (rawMessage || '').trim();
+    if (!msg) return null;
+
+    msg = msg.replace(/^\s*\/?assign\b/i, '').replace(/\s+/g, ' ').trim();
+
+    const koDo = msg.match(/^(.+?)\s+ko\s+(.+?)\s+do\s*$/i);
+    if (koDo?.[2]) {
+      const work = koDo[2].replace(/\s+/g, ' ').trim();
+      if (work) return work;
+    }
+
+    const koKaamDo = msg.match(/^(.+?)\s+ko\s+(.+?)\s+kaam\s+do\s*$/i);
+    if (koKaamDo?.[2]) {
+      const work = koKaamDo[2].replace(/\s+/g, ' ').trim();
+      if (work) return work ? `${work} kaam` : 'kaam';
+    }
+
+    return null;
+  }
+
+  /** Full assignee name from NL "{name} ko …" — avoids ambiguous ML slugs like "rahul". */
+  private extractAssigneeFromMessage(
+    rawMessage: string | undefined,
+  ): string | null {
+    let msg = (rawMessage || '').trim();
+    if (!msg) return null;
+
+    msg = msg.replace(/^\s*\/?assign\b/i, '').replace(/\s+/g, ' ').trim();
+
+    const koDo = msg.match(/^(.+?)\s+ko\s+(.+?)\s+do\s*$/i);
+    if (koDo?.[1]) return koDo[1].trim();
+
+    const koKaamDo = msg.match(/^(.+?)\s+ko\s+(.+?)\s+kaam\s+do\s*$/i);
+    if (koKaamDo?.[1]) return koKaamDo[1].trim();
+
+    const koPrefix = msg.match(/^(.+?)\s+ko\s+/i);
+    if (koPrefix?.[1]) return koPrefix[1].trim();
+
+    return null;
+  }
+
+  /** Prefer full NL assignee name; fall back to ML worker_slug. */
+  private resolveAssignMentionForNl(
+    rawMessage: string | undefined,
+    mlWorkerMention: string | null,
+  ): string | null {
+    const fromMessage = this.extractAssigneeFromMessage(rawMessage);
+    if (fromMessage) {
+      return fromMessage.startsWith('@') ? fromMessage : `@${fromMessage}`;
+    }
+    return mlWorkerMention;
+  }
+
   /** Remove Hindi/English assignee prefix from NL assign descriptions. */
   private stripAssigneeFromDescription(
     rawMessage: string | undefined,
@@ -820,6 +925,15 @@ export class WhatsAppService {
     let desc = (rawMessage || '').trim();
     const token = workerToken.replace(/^@/, '').trim();
     if (token) {
+      const tokenParts = token.split(/\s+/).filter(Boolean);
+      if (tokenParts.length > 1) {
+        const multiWordPattern = tokenParts
+          .map((part) => this.escapeRegExp(part))
+          .join('\\s+');
+        desc = desc
+          .replace(new RegExp(`^${multiWordPattern}\\s+ko\\s+`, 'i'), '')
+          .replace(new RegExp(`\\b${multiWordPattern}\\s+ko\\s+`, 'i'), '');
+      }
       desc = desc
         .replace(new RegExp(`^${this.escapeRegExp(token)}\\s+ko\\s+`, 'i'), '')
         .replace(new RegExp(`\\b${this.escapeRegExp(token)}\\s+ko\\s+`, 'i'), '');
@@ -1016,11 +1130,33 @@ export class WhatsAppService {
     );
   }
 
-  /** Worker view — flat list with assigner info. */
+  /** Task list line — description and ID only (keeps WhatsApp replies short). */
+  private compactTaskBlock(task: any, index: number): string {
+    const name = (task.description || 'Task').trim();
+    return `*${index}.* ${name} — #${task.id}\n`;
+  }
+
+  /** Manager view — compact list of tasks routed to them or in their department. */
+  private formatManagerTasks(tasks: any[]): string {
+    let body = '';
+    tasks.slice(0, 20).forEach((t, i) => {
+      body += this.compactTaskBlock(t, i + 1);
+      if (t.routing_status === 'AWAITING_MANAGER_ACTION') {
+        body += `_→ Needs your action — delegate with: task ${t.id} @worker ko do_\n`;
+      }
+    });
+    return (
+      `${WA_DIVIDER}\n*Your pending tasks*\n${WA_DIVIDER}\n\n` +
+      body +
+      `${WA_DIVIDER}\n💡 Reply: "task [id] @name ko do" to delegate to a worker`
+    );
+  }
+
+  /** Worker view — flat list. */
   private formatWorkerTasks(tasks: any[]): string {
     let body = '';
     tasks.slice(0, 20).forEach((t, i) => {
-      body += this.taskBlock(t, i + 1) + '\n';
+      body += this.compactTaskBlock(t, i + 1);
     });
     return (
       `${WA_DIVIDER}\n*Your pending tasks*\n${WA_DIVIDER}\n\n` +
@@ -1038,7 +1174,7 @@ export class WhatsAppService {
     };
     const groupsMap = new Map<string, Group>();
 
-    for (const task of tasks) {
+    for (const task of tasks.slice(0, 20)) {
       const dept = task.department;
       if (dept) {
         const head = dept.manager
@@ -1076,7 +1212,7 @@ export class WhatsAppService {
       body += `\n${group.title}\n${WA_DIVIDER}\n`;
       group.tasks.forEach((t) => {
         total += 1;
-        body += `\n${this.taskBlock(t, total)}`;
+        body += `\n${this.compactTaskBlock(t, total)}`;
       });
     }
 
@@ -1095,7 +1231,7 @@ export class WhatsAppService {
     factoryId: number,
     rawMessage?: string,
   ): Promise<string> {
-    const sku = this.resolveInventorySku(rawMessage);
+    const sku = await this.resolveInventorySku(factoryId, rawMessage);
     if (sku) {
       const status = await this.inventoryService.getInventoryStatusBySku(
         factoryId,
@@ -1114,20 +1250,29 @@ export class WhatsAppService {
     }
 
     const lines = lowStock
-      .slice(0, 15)
+      .slice(0, 8)
       .map(
         (s) =>
           `• *${s.sku}* — ${s.name}\n  Qty: ${s.current_quantity} ${s.unit} · Threshold: ${s.reorder_threshold ?? '—'} · 📍 ${s.location_name}`,
       )
       .join('\n\n');
 
+    const more =
+      lowStock.length > 8
+        ? `\n\n_+ ${lowStock.length - 8} more low-stock items — use /inventory_status SKU for details._`
+        : '';
+
     return waSection(
       'Low stock items',
-      `${lines}\n\nSend */inventory_status SKU* for full details on one item.`,
+      `${lines}${more}\n\nSend */inventory_status SKU* for full details on one item.`,
     );
   }
 
-  private resolveInventorySku(rawMessage?: string): string | null {
+  /** Slash SKU, NL product name in message, or inventory name hint lookup. */
+  private async resolveInventorySku(
+    factoryId: number,
+    rawMessage?: string,
+  ): Promise<string | null> {
     if (!rawMessage) return null;
     const trimmed = rawMessage.trim();
     const match = trimmed.match(/^\/inventory_status\s+(\S+)/i);
@@ -1136,7 +1281,13 @@ export class WhatsAppService {
     if (parts.length >= 2 && parts[0].toLowerCase() === '/inventory_status') {
       return parts[1];
     }
-    return null;
+
+    const norm = trimmed.toLowerCase().replace(/\s+/g, ' ');
+    if (norm.includes('steel sheets') || norm.includes('steel sheet')) {
+      return 'DEMO-STEEL-001';
+    }
+
+    return this.inventoryService.findSkuByNameHint(factoryId, norm);
   }
 
   private formatInventoryStatusMessage(status: IInventoryStatusRecord): string {

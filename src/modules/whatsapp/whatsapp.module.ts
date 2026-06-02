@@ -10,6 +10,7 @@ import { ReportsModule } from 'src/services/reports/reports.module';
 import { MessagingModule } from 'src/core/messaging/messaging.module';
 import { DepartmentsModule } from 'src/services/departments/departments.module';
 import { WorkflowModule } from 'src/services/workflow/workflow.module';
+import { DemoModeModule } from 'src/services/demo-mode/demo-mode.module';
 import { InventoryModule } from 'src/services/inventory/inventory.module';
 
 @Module({
@@ -24,6 +25,7 @@ import { InventoryModule } from 'src/services/inventory/inventory.module';
     ReportsModule,
     WorkflowModule,
     InventoryModule,
+    DemoModeModule,
   ],
   providers: [WhatsAppService, AttendanceCronService],
   controllers: [WhatsAppController],
