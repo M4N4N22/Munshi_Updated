@@ -49,6 +49,9 @@ lerna-debug.log*
 # Local document uploads
 /storage
 
+# Internal reports and sprint docs (kept locally, not in repo)
+/docs
+
 # Runtime data
 pids
 *.pid

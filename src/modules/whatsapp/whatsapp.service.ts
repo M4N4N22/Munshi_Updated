@@ -24,7 +24,6 @@ import { DepartmentsService } from 'src/services/departments/departments.service
 import { WorkflowRouterService } from 'src/services/workflow/workflow-engine.service';
 import { InventoryService } from 'src/services/inventory/inventory.service';
 import { IInventoryStatusRecord } from 'src/services/inventory/inventory.interfaces';
-import { DemoModeService } from 'src/services/demo-mode/demo-mode.service';
 import { getHourIST, INDIA_TIMEZONE } from 'src/core/time/india-defaults';
 import {
   WA_DIVIDER,
@@ -64,7 +63,6 @@ export class WhatsAppService {
     private readonly departmentsService: DepartmentsService,
     private readonly workflowRouter: WorkflowRouterService,
     private readonly inventoryService: InventoryService,
-    private readonly demoModeService: DemoModeService,
   ) {}
 
   async sendTextMessage(to: string, message: string) {
@@ -88,23 +86,13 @@ export class WhatsAppService {
     await this.messagingService.sendTemplate(to, templateName, options);
     return { ok: true };
   }
-  async handleIncomingMessage(
-    body: WhatsAppIncomingDto,
-    options?: { dryRun?: boolean },
-  ) {
-    console.log({ body, dryRun: options?.dryRun ?? false });
+  async handleIncomingMessage(body: WhatsAppIncomingDto) {
+    console.log({ body });
     const finish = async (result: unknown) => {
       const message =
         typeof result === 'string'
           ? result
           : (result as { message?: string })?.message || String(result ?? '');
-      if (options?.dryRun) {
-        return {
-          status: 'ok',
-          reply: message,
-          replyLength: message.length,
-        };
-      }
       await this.sendTextMessage(body.from, message);
       return 'ok';
     };
@@ -117,14 +105,6 @@ export class WhatsAppService {
           body.from,
         );
         return finish(cancelResult);
-      }
-
-      const demoResult = await this.demoModeService.tryHandle(
-        body.from,
-        msgTrim,
-      );
-      if (demoResult?.handled) {
-        return finish(demoResult.response);
       }
 
       const sessionState = await this.workflowRouter.resolveActiveSession(
@@ -224,14 +204,6 @@ export class WhatsAppService {
               : (payload as { message?: string }).message ||
                 error.message ||
                 'We could not process your request. Please try again or send /help.';
-        if (options?.dryRun) {
-          return {
-            status: status >= 500 ? 'error' : 'ok',
-            reply: errText,
-            replyLength: errText.length,
-            error: true,
-          };
-        }
         try {
           await this.sendTextMessage(body.from, errText);
         } catch (sendErr) {
@@ -243,14 +215,6 @@ export class WhatsAppService {
       const errText =
         error?.message ||
         'We could not process your request. Please try again or send /help.';
-      if (options?.dryRun) {
-        return {
-          status: 'error',
-          reply: errText,
-          replyLength: errText.length,
-          error: true,
-        };
-      }
       try {
         await this.sendTextMessage(body.from, errText);
       } catch (sendErr) {
@@ -1283,10 +1247,6 @@ export class WhatsAppService {
     }
 
     const norm = trimmed.toLowerCase().replace(/\s+/g, ' ');
-    if (norm.includes('steel sheets') || norm.includes('steel sheet')) {
-      return 'DEMO-STEEL-001';
-    }
-
     return this.inventoryService.findSkuByNameHint(factoryId, norm);
   }
 
