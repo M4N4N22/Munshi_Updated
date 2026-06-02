@@ -1,5 +1,6 @@
 import {
   ForbiddenException,
+  HttpException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -156,25 +157,21 @@ export class WhatsAppService {
             ? Number(rawId)
             : undefined;
 
-        const command = ml.intent?.startsWith('/')
-          ? ml.intent
-          : ml.intent
-            ? `/${ml.intent}`
-            : undefined;
+        const command = this.normalizeIntentCommand(ml.intent);
 
-        const workflowFromMl =
+        const workflowStarted =
           command &&
-          (await this.workflowRouter.startWorkflowFromMlCommand(
+          (await this.workflowRouter.startWorkflowIfRegistered(
             body.from,
             command,
           ));
 
-        if (workflowFromMl) {
-          result = workflowFromMl;
+        if (workflowStarted !== null) {
+          result = workflowStarted;
         } else {
           result = await this.processCommand({
             ...body,
-            command: ml.intent,
+            command: command ?? ml.intent,
             id,
             date: ml.date,
             datetime: ml.datetime ?? undefined,
@@ -195,12 +192,34 @@ export class WhatsAppService {
       return 'ok';
     } catch (error) {
       console.log(error);
+
+      if (error instanceof HttpException) {
+        const status = error.getStatus();
+        const payload = error.getResponse();
+        const errText =
+          typeof payload === 'string'
+            ? payload
+            : Array.isArray((payload as { message?: unknown }).message)
+              ? (payload as { message: string[] }).message.join('\n')
+              : (payload as { message?: string }).message ||
+                error.message ||
+                'We could not process your request. Please try again or send /help.';
+        try {
+          await this.sendTextMessage(body.from, errText);
+        } catch (sendErr) {
+          console.log(sendErr);
+        }
+        return status >= 500 ? 'error' : 'ok';
+      }
+
       const errText =
         error?.message ||
         'We could not process your request. Please try again or send /help.';
-      await this.sendTextMessage(body.from, errText);
-
-      console.log(error);
+      try {
+        await this.sendTextMessage(body.from, errText);
+      } catch (sendErr) {
+        console.log(sendErr);
+      }
 
       return 'error';
     }
@@ -239,18 +258,6 @@ export class WhatsAppService {
     if (command === COMMANDS.HELP) return waHelpText(user?.name || 'User');
 
     const cmdLc = (command || '').toLowerCase();
-
-    if (cmdLc === COMMANDS.ONBOARD_VENDOR) {
-      return this.workflowRouter.startWorkflowFromCommand(phone, cmdLc);
-    }
-
-    if (cmdLc === COMMANDS.ONBOARD_WORKER) {
-      return this.workflowRouter.startWorkflowFromCommand(phone, cmdLc);
-    }
-
-    if (cmdLc === COMMANDS.INVENTORY_CREATE) {
-      return this.workflowRouter.startWorkflowFromCommand(phone, cmdLc);
-    }
 
     if (cmdLc === COMMANDS.INVENTORY_STATUS) {
       this.ensureManager(role);
@@ -523,8 +530,9 @@ export class WhatsAppService {
       const mlWorkerMention = this.normalizeWorkerSlug(body.worker_slug);
 
       if (!mentionMatch && mlWorkerMention) {
+        const workerToken = mlWorkerMention.replace(/^@/, '');
         const description =
-          rawMessage.replace(/^\s*\/?assign\b/i, '').replace(/\s+/g, ' ').trim() ||
+          this.stripAssigneeFromDescription(rawMessage, workerToken) ||
           rawMessage.trim();
         if (!description) {
           return waErrorDescriptionRequired();
@@ -580,15 +588,14 @@ export class WhatsAppService {
     if (command === COMMANDS.UPDATE) {
       this.ensureWorker(role);
 
-      const parts = rawMessage.split(' ');
-      const task_id = id;
-      const updateMessage = parts.slice(2).join(' ').trim();
+      const task_id = this.resolveUpdateTaskId(body.id, rawMessage);
+      const updateMessage = this.resolveUpdateMessage(rawMessage, task_id);
 
       if (!task_id || !updateMessage) {
         return waErrorInvalidFormat(
           '/update',
           '/update [taskId] [message]',
-          '/update 12 Work completed',
+          '/update 12 Work in progress\nprogress update task 12',
         );
       }
 
@@ -795,6 +802,76 @@ export class WhatsAppService {
       name: deptRow.name,
       slug: deptRow.slug,
     });
+  }
+
+  /** Normalize ML intent to lowercase slash command; general_chat → undefined. */
+  private normalizeIntentCommand(intent?: string | null): string | undefined {
+    if (intent == null || typeof intent !== 'string') return undefined;
+    const trimmed = intent.trim();
+    if (!trimmed || trimmed === 'general_chat') return undefined;
+    return trimmed.startsWith('/') ? trimmed.toLowerCase() : `/${trimmed.toLowerCase()}`;
+  }
+
+  /** Remove Hindi/English assignee prefix from NL assign descriptions. */
+  private stripAssigneeFromDescription(
+    rawMessage: string | undefined,
+    workerToken: string,
+  ): string {
+    let desc = (rawMessage || '').trim();
+    const token = workerToken.replace(/^@/, '').trim();
+    if (token) {
+      desc = desc
+        .replace(new RegExp(`^${this.escapeRegExp(token)}\\s+ko\\s+`, 'i'), '')
+        .replace(new RegExp(`\\b${this.escapeRegExp(token)}\\s+ko\\s+`, 'i'), '');
+    }
+    return desc.replace(/^\s*\/?assign\b/i, '').replace(/\s+/g, ' ').trim();
+  }
+
+  private escapeRegExp(value: string): string {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  /** ML `id` or parse task id from NL/slash update phrases. */
+  private resolveUpdateTaskId(
+    bodyId: number | undefined,
+    rawMessage: string | undefined,
+  ): number | undefined {
+    if (bodyId != null && Number.isFinite(Number(bodyId))) {
+      return Number(bodyId);
+    }
+    const msg = (rawMessage || '').trim();
+    const patterns = [
+      /^\/update\s+(\d+)\b/i,
+      /(?:progress\s+)?update\s+task\s+#?(\d+)/i,
+      /task\s+#?(\d+)\s+(?:progress\s+)?update/i,
+      /task\s+#?(\d+)\s+par\s+kaam/i,
+      /(\d+)\s*percent\s+(?:complete|done)/i,
+      /task\s+#?(\d+)\s+\d+\s*percent/i,
+    ];
+    for (const pattern of patterns) {
+      const m = msg.match(pattern);
+      if (m?.[1]) return Number(m[1]);
+    }
+    return undefined;
+  }
+
+  /** Extract human update text after removing task-id tokens from NL/slash messages. */
+  private resolveUpdateMessage(
+    rawMessage: string | undefined,
+    taskId: number | undefined,
+  ): string {
+    let msg = (rawMessage || '').trim();
+    msg = msg.replace(/^\/update\s+\d+\s*/i, '').trim();
+    if (taskId != null) {
+      msg = msg
+        .replace(new RegExp(`task\\s+#?${taskId}\\b`, 'ig'), '')
+        .replace(/(?:progress\s+)?update\s+task\s+#?\d+/gi, '')
+        .replace(/^\s*progress\s+update\s*/i, '')
+        .trim();
+    }
+    msg = msg.replace(/\s+/g, ' ').trim();
+    if (msg) return msg;
+    return taskId != null ? `Progress update on task ${taskId}` : '';
   }
 
   /** Prefer ML `id`; else parse /mgrself N or /mgrassign N from the message. */

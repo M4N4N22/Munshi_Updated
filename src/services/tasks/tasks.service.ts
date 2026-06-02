@@ -37,7 +37,8 @@ import { parseIndiaDefaultDeadline } from 'src/core/time/india-defaults';
 type ResolvedMention =
   | { kind: 'all' }
   | { kind: 'user'; user: { id: number; name?: string; phone_number: string } }
-  | { kind: 'ambiguous'; message: string };
+  | { kind: 'ambiguous'; message: string }
+  | { kind: 'not_found'; message: string };
 
 @Injectable()
 export class TasksService {
@@ -152,6 +153,10 @@ export class TasksService {
       return { message: resolved.message, needsDisambiguation: true };
     }
 
+    if (resolved.kind === 'not_found') {
+      return resolved.message;
+    }
+
     return this.assignToUser(
       resolved.user.id,
       user_id,
@@ -225,9 +230,14 @@ export class TasksService {
     });
 
     if (matches.length === 0) {
-      throw new NotFoundException(
-        `No user found matching "@${token}" in your factory`,
-      );
+      return {
+        kind: 'not_found',
+        message: waSection(
+          'Person not found',
+          `No team member matches *@${token}* in your factory.\n\n` +
+            `Use */members* to see your team, then assign with @name, @id, or @phone.`,
+        ),
+      };
     }
 
     if (matches.length === 1) {
@@ -463,7 +473,11 @@ export class TasksService {
       throw new BadRequestException('Pick one worker, not @all');
     }
     if (resolved.kind === 'ambiguous') {
-      throw new BadRequestException(resolved.message);
+      return resolved.message;
+    }
+
+    if (resolved.kind === 'not_found') {
+      return resolved.message;
     }
 
     const workerId = resolved.user.id;

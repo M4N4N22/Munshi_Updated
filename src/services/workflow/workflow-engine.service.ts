@@ -167,15 +167,31 @@ export class WorkflowRouterService {
     return this.engine.startWorkflow(handler, context);
   }
 
+  /** True when command maps to a registered multi-step workflow (same registry as slash commands). */
+  isRegisteredWorkflowCommand(command: string): boolean {
+    return !!this.registry.getHandlerByCommand(command);
+  }
+
+  /**
+   * Start a workflow from a normalized slash intent (ML or slash).
+   * Returns null when the intent is not a workflow-start command.
+   */
+  async startWorkflowIfRegistered(
+    phone: string,
+    command: string,
+  ): Promise<string | null> {
+    if (!this.isRegisteredWorkflowCommand(command)) {
+      return null;
+    }
+    return this.startWorkflowFromCommand(phone, command);
+  }
+
+  /** @deprecated Use startWorkflowIfRegistered — kept for callers during transition */
   async startWorkflowFromMlCommand(
     phone: string,
     command: string,
   ): Promise<string | null> {
-    const handler = this.registry.getHandlerByCommand(command);
-    if (!handler) {
-      return null;
-    }
-    return this.startWorkflowFromCommand(phone, command);
+    return this.startWorkflowIfRegistered(phone, command);
   }
 
   private async resolveUserContext(

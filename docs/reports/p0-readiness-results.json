@@ -1,0 +1,190 @@
+{
+  "validated_at": "2026-06-02T08:47:25.600Z",
+  "environment": {
+    "backend": {
+      "status": "ok",
+      "info": {
+        "Postgres": {
+          "status": "up"
+        }
+      },
+      "error": {},
+      "details": {
+        "Postgres": {
+          "status": "up"
+        }
+      }
+    },
+    "ml": {
+      "status": "ok"
+    },
+    "migrations": {
+      "status": "ok",
+      "up_to_date": true,
+      "total_files": 7,
+      "applied_count": 7,
+      "pending_count": 0,
+      "latest_file": "007_business_discovery.sql",
+      "latest_applied": "007_business_discovery.sql",
+      "pending": [],
+      "applied": [
+        "001_traderos_foundation.sql",
+        "002_vendors_master.sql",
+        "003_workflow_sessions.sql",
+        "004_inventory_master.sql",
+        "005_document_processing.sql",
+        "006_procurement_foundation.sql",
+        "007_business_discovery.sql"
+      ]
+    }
+  },
+  "workflow_starts": [
+    {
+      "intent": "/business_discovery",
+      "phrase": "mera business setup karna hai",
+      "predicted": "/business_discovery",
+      "classification_ok": true,
+      "webhook": "ok",
+      "session_active": true,
+      "session_id": 20,
+      "pass": true
+    },
+    {
+      "intent": "/continue_discovery",
+      "phrase": "setup phir se shuru",
+      "predicted": "/continue_discovery",
+      "classification_ok": true,
+      "webhook": "ok",
+      "session_active": true,
+      "session_id": 21,
+      "pass": true
+    },
+    {
+      "intent": "/onboard_vendor",
+      "phrase": "naya vendor add karo",
+      "predicted": "/onboard_vendor",
+      "classification_ok": true,
+      "webhook": "ok",
+      "session_active": true,
+      "session_id": 22,
+      "pass": true
+    },
+    {
+      "intent": "/onboard_worker",
+      "phrase": "naya worker add karo",
+      "predicted": "/onboard_worker",
+      "classification_ok": true,
+      "webhook": "ok",
+      "session_active": true,
+      "session_id": 23,
+      "pass": true
+    },
+    {
+      "intent": "/inventory_create",
+      "phrase": "SKU register karo",
+      "predicted": "/inventory_create",
+      "classification_ok": true,
+      "webhook": "ok",
+      "session_active": true,
+      "session_id": 24,
+      "pass": true
+    },
+    {
+      "intent": "/purchase_request_create",
+      "phrase": "purchase request bana do",
+      "predicted": "/purchase_request_create",
+      "classification_ok": true,
+      "webhook": "ok",
+      "session_active": true,
+      "session_id": 25,
+      "pass": true
+    }
+  ],
+  "workflow_completions": {
+    "business_discovery": {
+      "workflow": "BUSINESS_DISCOVERY",
+      "ok": true,
+      "session_id": 26,
+      "session_status": "COMPLETED",
+      "profile_status": "PAUSED",
+      "pass": true
+    },
+    "vendor_onboarding": {
+      "workflow": "ONBOARD_VENDOR",
+      "ok": true,
+      "session_id": 27,
+      "session_status": "COMPLETED",
+      "entity_id": 2,
+      "pass": true
+    },
+    "worker_onboarding": {
+      "workflow": "ONBOARD_WORKER",
+      "ok": true,
+      "session_id": 28,
+      "session_status": "COMPLETED",
+      "entity_id": 28,
+      "pass": true
+    },
+    "inventory_create": {
+      "workflow": "INVENTORY_CREATE",
+      "ok": true,
+      "session_id": 29,
+      "session_status": "COMPLETED",
+      "entity_id": 1,
+      "pass": true
+    },
+    "purchase_request": {
+      "workflow": "PURCHASE_REQUEST_CREATE",
+      "ok": true,
+      "session_id": 30,
+      "session_status": "COMPLETED",
+      "entity_id": 9,
+      "pass": true
+    }
+  },
+  "manager_operations": {
+    "taskId": 54,
+    "results": [
+      {
+        "op": "/assign",
+        "phrase": "prateek ko loading ka kaam do",
+        "webhook": "ok",
+        "pass": true,
+        "tasks_before": 34,
+        "tasks_after": 35
+      },
+      {
+        "op": "/mgrassign",
+        "phrase": "task 54 prateek ko do",
+        "webhook": "ok",
+        "pass": true,
+        "tasks_before": 36,
+        "tasks_after": 36
+      },
+      {
+        "op": "/mgrtransfer",
+        "phrase": "task 54 sales ko transfer karo",
+        "webhook": "ok",
+        "pass": true,
+        "tasks_before": 37,
+        "tasks_after": 37
+      },
+      {
+        "op": "/mgrself",
+        "phrase": "task 54 main khud karunga",
+        "webhook": "ok",
+        "pass": true,
+        "tasks_before": 38,
+        "tasks_after": 38
+      }
+    ],
+    "pass": true
+  },
+  "summary": {
+    "workflow_start_pass": 6,
+    "workflow_start_total": 6,
+    "workflow_completion_pass": 5,
+    "workflow_completion_total": 5,
+    "manager_ops_pass": true
+  }
+}
