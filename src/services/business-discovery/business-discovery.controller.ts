@@ -26,6 +26,12 @@ export class BusinessDiscoveryController {
     return this.discoveryService.listBuckets();
   }
 
+  @Get('readiness')
+  @ApiOperation({ summary: 'Readiness score and bucket completion (Prompt 13)' })
+  getReadiness(@Query() query: BusinessDiscoveryFactoryQueryDto) {
+    return this.discoveryService.getReadiness(query.factory_id);
+  }
+
   @Post('pause')
   @ApiOperation({ summary: 'Pause discovery reminders (workflow remains resumable)' })
   pause(@Query() query: BusinessDiscoveryFactoryQueryDto) {

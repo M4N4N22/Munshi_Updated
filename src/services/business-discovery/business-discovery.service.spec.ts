@@ -17,6 +17,8 @@ describe('BusinessDiscoveryService reminders', () => {
       status: BUSINESS_DISCOVERY_STATUS.ACTIVE,
       identity_completion: 0,
       organization_completion: 0,
+      manager_completion: 0,
+      workforce_completion: 0,
       inventory_completion: 0,
       vendor_completion: 0,
       overall_completion: 0,
@@ -66,5 +68,21 @@ describe('BusinessDiscoveryService reminders', () => {
     const result = await service.processReminder(3);
     expect(result.sent).toBe(true);
     expect(profile.reminder_stage).toBe(DISCOVERY_REMINDER_STAGE.FIRST_SENT);
+  });
+
+  it('stores source_type on recordBucketField', async () => {
+    await service.recordBucketField(3, 'BUSINESS_IDENTITY', 'industry', 'Packaging');
+    expect(profile.bucket_data['BUSINESS_IDENTITY.industry']).toBe('Packaging');
+    expect(profile.bucket_data['BUSINESS_IDENTITY.industry__source']).toBe('CHAT');
+  });
+
+  it('sanitizeProfileData removes operational pollution', async () => {
+    profile.bucket_data = {
+      'BUSINESS_IDENTITY.business_name': 'Acme',
+      'BUSINESS_IDENTITY.address': 'inventory status batao',
+    };
+    const row = await service.sanitizeProfileData(3);
+    expect(row.bucket_data['BUSINESS_IDENTITY.business_name']).toBe('Acme');
+    expect(row.bucket_data['BUSINESS_IDENTITY.address']).toBeUndefined();
   });
 });

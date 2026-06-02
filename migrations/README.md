@@ -39,6 +39,7 @@ Returns applied count, pending count, latest migration file, and status `ok` or 
 | `005_document_processing.sql` | Document registry and processing tables |
 | `006_procurement_foundation.sql` | Purchase request line items and audit trail |
 | `007_business_discovery.sql` | Business discovery profiles, readiness scores, reminder state |
+| `008_business_discovery_expansion.sql` | Manager/workforce completion columns (Prompt 13) |
 
 ## Notes
 

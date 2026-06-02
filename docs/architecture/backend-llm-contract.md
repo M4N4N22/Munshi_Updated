@@ -561,8 +561,8 @@ Documents contribute via existing parsers — no duplicate ML extraction:
 
 | Document type | Bucket |
 |---------------|--------|
-| `INVENTORY_IMPORT`, `STOCK_REGISTER` | `INVENTORY` |
-| `PURCHASE_INVOICE`, `GOODS_RECEIPT` | `VENDORS` |
+| `INVENTORY_IMPORT`, `STOCK_REGISTER` | `INVENTORY_DISCOVERY` (alias `INVENTORY`) |
+| `PURCHASE_INVOICE`, `GOODS_RECEIPT` | `VENDOR_DISCOVERY` (alias `VENDORS`) |
 
 ### Readiness score contract
 
@@ -599,6 +599,127 @@ Scheduled lookup (hourly cron), not per-session timers:
 Manual ops: `POST /business-discovery/reminder?factory_id=`.
 
 **Not in scope (Prompt 11):** mandatory onboarding wizard, owner/workspace provisioning, quotations, invoices, GRN, ledger, account aggregator.
+
+---
+
+## 13. Progressive onboarding expansion (Prompt 13)
+
+Extends §12 into Munshi's **complete progressive onboarding system** — still non-blocking, still workflow-session persisted, still owner/manager WhatsApp entry.
+
+Shared contract: `contracts/discovery-types.json` **v2** (six active buckets).
+
+### Active discovery buckets
+
+| Bucket | Purpose | Repeatable |
+|--------|---------|------------|
+| `BUSINESS_IDENTITY` | name, address, industry, business_type | No |
+| `ORGANIZATION_STRUCTURE` | departments, locations, hierarchy, ownership | No |
+| `MANAGER_DISCOVERY` | manager name, phone, department, reporting_role | Yes (`entry_N.*`) |
+| `WORKFORCE_DISCOVERY` | worker name, phone, department, role | Yes (`entry_N.*`) |
+| `INVENTORY_DISCOVERY` | categories, locations, items, units, types | No |
+| `VENDOR_DISCOVERY` | vendor name, phone, category, location, relationship | No |
+
+Legacy aliases (`ORGANIZATION`, `INVENTORY`, `VENDORS`) remain readable in `bucket_data`.
+
+### Organization discovery contract
+
+NL examples: "organization structure batana hai", "departments share karni hain", "reporting structure".
+
+Backend stores under `ORGANIZATION_STRUCTURE.*`; department module consumes via `BusinessDiscoveryIntegrationService.getDiscoveredDepartments()`.
+
+### Manager / workforce discovery contracts
+
+NL examples: "manager add karna hai", "team setup", "naya worker jod do" (when in discovery workflow context).
+
+Repeatable entities use session fields `entity_index`, `field_index`, `awaiting_more`. Resume continues at exact entity (e.g. Workforce #4 = `entity_index: 3`).
+
+Manager data integrates with existing `/assign`, `/mgrassign` via discovered names — **no duplicate user schema**.
+
+### Inventory / vendor discovery contracts
+
+Same intents as Prompt 11 (`/inventory_create`, `/onboard_vendor`) remain **operational workflows**; discovery buckets capture **profile hints** only.
+
+Document-assisted architecture (no parsing this sprint):
+
+```json
+{
+  "field": "MANAGER_DISCOVERY.entry_0.name",
+  "value": "Ravi",
+  "source_type": "CHAT"
+}
+```
+
+`source_type` values: `CHAT` | `DOCUMENT`. Stored as `{field}__source` in `bucket_data`.
+
+### Completion score contract (dynamic)
+
+```json
+{
+  "readiness": {
+    "identity": 100,
+    "organization_structure": 75,
+    "managers": 40,
+    "workforce": 20,
+    "inventory": 10,
+    "vendors": 0,
+    "overall": 41,
+    "organization": 75
+  }
+}
+```
+
+`overall` = **average of six active bucket percentages** (not hardcoded weights).
+
+APIs (factory-scoped):
+
+| Method | Route |
+|--------|-------|
+| GET | `/business-discovery` |
+| GET | `/business-discovery/progress` |
+| GET | `/business-discovery/buckets` |
+| GET | `/business-discovery/readiness` |
+| POST | `/business-discovery/pause` |
+| POST | `/business-discovery/resume` |
+| POST | `/business-discovery/reminder` |
+
+### Resume contract
+
+| Intent | Routes to |
+|--------|-----------|
+| `/business_discovery` | New or resumed `BUSINESS_DISCOVERY` session |
+| `/continue_discovery` | Same handler (registry alias) |
+
+Session state in `workflow_sessions.session_data`:
+
+```json
+{
+  "current_bucket": "WORKFORCE_DISCOVERY",
+  "field_index": 1,
+  "entity_index": 3,
+  "awaiting_more": false
+}
+```
+
+Pause: user sends `pause` or `POST /business-discovery/pause`. Profile `status=PAUSED`; session `COMPLETED`. Resume restores from persisted indices.
+
+### Data hygiene contract (LLM ↔ backend)
+
+**LLM responsibility:** classify intents only (`/business_discovery`, `/continue_discovery`, operational intents).
+
+**Backend responsibility:** reject operational phrases during discovery `COLLECT` step; sanitize polluted `bucket_data` on read/write.
+
+Operational phrases (examples blocked from bucket writes): `inventory status batao`, `purchase request bana do`, `/assign`, task commands.
+
+### LLM requirements (Prompt 13)
+
+No new ML models required. Existing classify endpoint must continue routing:
+
+- Setup phrases → `/business_discovery` or `/continue_discovery`
+- Daily ops → operational intents (must **not** start discovery COLLECT)
+
+Training data: add Hinglish org/manager/workforce discovery phrases to golden set; do **not** train ML to write `bucket_data`.
+
+**Not in scope (Prompt 13):** OCR, document parsing, ledger, bookkeeping, Tally, quotations, GRN, auto procurement.
 
 ---
 

@@ -5,8 +5,15 @@ import {
   DISCOVERY_BUCKET,
   DISCOVERY_REMINDER_HOURS,
   DISCOVERY_REMINDER_STAGE,
-  DiscoveryBucket,
+  ActiveDiscoveryBucket,
+  normalizeDiscoveryBucket,
 } from './business-discovery.constants';
+import {
+  DISCOVERY_SOURCE_TYPE,
+  DiscoverySourceType,
+  entityStorageKey,
+} from './business-discovery.fields';
+import { sanitizeBucketData } from './business-discovery.hygiene';
 import {
   IBusinessDiscoveryProfileRecord,
   IBusinessReadinessScore,
@@ -63,10 +70,25 @@ export class BusinessDiscoveryService {
     };
   }
 
+  async getReadiness(factoryId: number): Promise<{
+    factory_id: number;
+    readiness: IBusinessReadinessScore;
+    buckets: ReturnType<typeof buildBucketProgress>;
+  }> {
+    const progress = await this.getProgress(factoryId);
+    return {
+      factory_id: factoryId,
+      readiness: progress.readiness,
+      buckets: progress.buckets,
+    };
+  }
+
   listBuckets() {
     return buildBucketProgress({
       identity: 0,
-      organization: 0,
+      organization_structure: 0,
+      managers: 0,
+      workforce: 0,
       inventory: 0,
       vendors: 0,
       overall: 0,
@@ -91,7 +113,6 @@ export class BusinessDiscoveryService {
     return this.toRecord(profile);
   }
 
-  /** Manual reminder trigger (ops) or cron batch entry. */
   async processReminder(factoryId: number): Promise<{
     sent: boolean;
     stage: number;
@@ -150,30 +171,60 @@ export class BusinessDiscoveryService {
 
   async recordBucketField(
     factoryId: number,
-    bucket: DiscoveryBucket,
+    bucket: ActiveDiscoveryBucket | string,
     field: string,
     value: unknown,
+    options?: {
+      sourceType?: DiscoverySourceType;
+      entityIndex?: number;
+    },
   ): Promise<IBusinessDiscoveryProfileRecord> {
+    const normalized = normalizeDiscoveryBucket(String(bucket));
+    if (!normalized) {
+      throw new Error(`Unknown discovery bucket: ${bucket}`);
+    }
+
     const profile = await this.getOrCreateProfile(factoryId);
-    profile.bucket_data = mergeBucketDataField(
-      (profile.bucket_data ?? {}) as Record<string, unknown>,
-      `${bucket}.${field}`,
+    const sourceType = options?.sourceType ?? DISCOVERY_SOURCE_TYPE.CHAT;
+    const entityIndex = options?.entityIndex ?? 0;
+
+    const storageKey =
+      options?.entityIndex != null
+        ? entityStorageKey(normalized, entityIndex, field)
+        : `${normalized}.${field}`;
+
+    const merged = mergeBucketDataField(
+      sanitizeBucketData((profile.bucket_data ?? {}) as Record<string, unknown>),
+      storageKey,
       value ?? true,
+      sourceType,
     );
-    await this.applyIdentityToFactory(factoryId, bucket, field, value);
+    profile.bucket_data = sanitizeBucketData(merged);
+    await this.applyIdentityToFactory(factoryId, normalized, field, value);
     await this.touchActivity(profile, true);
     await this.refreshScores(profile);
     return this.toRecord(profile);
   }
 
+  async recordDocumentBucketField(
+    factoryId: number,
+    bucket: ActiveDiscoveryBucket,
+    field: string,
+    value: unknown,
+  ): Promise<IBusinessDiscoveryProfileRecord> {
+    return this.recordBucketField(factoryId, bucket, field, value, {
+      sourceType: DISCOVERY_SOURCE_TYPE.DOCUMENT,
+    });
+  }
+
   async bumpBucketCompletion(
     factoryId: number,
-    bucket: DiscoveryBucket,
+    bucket: ActiveDiscoveryBucket,
     increment: number,
   ): Promise<void> {
     const profile = await this.getOrCreateProfile(factoryId);
     const key = `${bucket}_document_boost`;
-    const data = (profile.bucket_data ?? {}) as Record<string, unknown>;
+    const data = sanitizeBucketData((profile.bucket_data ?? {}) as Record<string, unknown>);
     const current = Number(data[key] ?? 0);
     data[key] = Math.min(100, current + increment);
     profile.bucket_data = data;
@@ -200,9 +251,21 @@ export class BusinessDiscoveryService {
     return count;
   }
 
+  /** Remove operational pollution from profile bucket_data (production-safe, factory-scoped). */
+  async sanitizeProfileData(
+    factoryId: number,
+  ): Promise<IBusinessDiscoveryProfileRecord> {
+    const profile = await this.getOrCreateProfile(factoryId);
+    profile.bucket_data = sanitizeBucketData(
+      (profile.bucket_data ?? {}) as Record<string, unknown>,
+    );
+    await this.refreshScores(profile);
+    return this.toRecord(profile);
+  }
+
   private async applyIdentityToFactory(
     factoryId: number,
-    bucket: DiscoveryBucket,
+    bucket: ActiveDiscoveryBucket,
     field: string,
     value: unknown,
   ): Promise<void> {
@@ -245,7 +308,7 @@ export class BusinessDiscoveryService {
       where: { factory_id: factoryId, is_active: true },
     });
 
-    const data = (profile.bucket_data ?? {}) as Record<string, unknown>;
+    const data = sanitizeBucketData((profile.bucket_data ?? {}) as Record<string, unknown>);
 
     return {
       factoryName: factory?.name ?? null,
@@ -267,7 +330,9 @@ export class BusinessDiscoveryService {
     const signals = await this.gatherSignals(profile.factory_id, profile);
     const scores = computeBucketScores(signals);
     profile.identity_completion = scores.identity;
-    profile.organization_completion = scores.organization;
+    profile.organization_completion = scores.organization_structure;
+    profile.manager_completion = scores.managers;
+    profile.workforce_completion = scores.workforce;
     profile.inventory_completion = scores.inventory;
     profile.vendor_completion = scores.vendors;
     profile.overall_completion = scores.overall;
@@ -305,11 +370,14 @@ export class BusinessDiscoveryService {
   ): IBusinessReadinessScore {
     return {
       identity: profile.identity_completion ?? 0,
-      organization: profile.organization_completion ?? 0,
+      organization_structure: profile.organization_completion ?? 0,
+      managers: profile.manager_completion ?? 0,
+      workforce: profile.workforce_completion ?? 0,
       inventory: profile.inventory_completion ?? 0,
       vendors: profile.vendor_completion ?? 0,
       overall: profile.overall_completion ?? 0,
       status: profile.status as any,
+      organization: profile.organization_completion ?? 0,
     };
   }
 
@@ -320,10 +388,12 @@ export class BusinessDiscoveryService {
       status: row.status as any,
       identity_completion: row.identity_completion ?? 0,
       organization_completion: row.organization_completion ?? 0,
+      manager_completion: row.manager_completion ?? 0,
+      workforce_completion: row.workforce_completion ?? 0,
       inventory_completion: row.inventory_completion ?? 0,
       vendor_completion: row.vendor_completion ?? 0,
       overall_completion: row.overall_completion ?? 0,
-      bucket_data: (row.bucket_data ?? {}) as Record<string, unknown>,
+      bucket_data: sanitizeBucketData((row.bucket_data ?? {}) as Record<string, unknown>),
       reminder_stage: row.reminder_stage ?? 0,
       last_activity_at: row.last_activity_at ?? null,
       next_reminder_at: row.next_reminder_at ?? null,

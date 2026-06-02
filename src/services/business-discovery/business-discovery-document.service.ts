@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import {
   DOCUMENT_DISCOVERY_BUCKET_MAP,
-  DISCOVERY_BUCKET,
+  FUTURE_DISCOVERY_BUCKETS,
   SUGGESTION_DISCOVERY_BUCKET_MAP,
 } from './business-discovery.constants';
 import { BusinessDiscoveryService } from './business-discovery.service';
@@ -23,7 +23,7 @@ export class BusinessDiscoveryDocumentService {
     const bucket =
       DOCUMENT_DISCOVERY_BUCKET_MAP[documentType] ??
       this.bucketFromSuggestions(suggestionTypes);
-    if (!bucket || bucket === ('BOOKKEEPING' as any) || bucket === ('BANKING' as any)) {
+    if (!bucket || (FUTURE_DISCOVERY_BUCKETS as readonly string[]).includes(bucket)) {
       this.logger.debug(`Document ${documentType} has no active discovery bucket yet`);
       return;
     }

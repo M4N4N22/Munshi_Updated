@@ -24,7 +24,7 @@ describe('BusinessDiscoveryDocumentService', () => {
 
     expect(discoveryService.bumpBucketCompletion).toHaveBeenCalledWith(
       3,
-      DISCOVERY_BUCKET.INVENTORY,
+      DISCOVERY_BUCKET.INVENTORY_DISCOVERY,
       expect.any(Number),
     );
     expect(discoveryService.markCompletedIfReady).toHaveBeenCalledWith(3);

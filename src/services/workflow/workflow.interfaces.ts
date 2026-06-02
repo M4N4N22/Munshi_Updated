@@ -64,8 +64,12 @@ export interface IPurchaseRequestCreateSessionData {
 }
 
 export interface IBusinessDiscoverySessionData {
-  current_bucket?: DiscoveryBucket;
+  current_bucket?: string;
   field_index?: number;
+  /** For MANAGER_DISCOVERY / WORKFORCE_DISCOVERY — tracks worker #4 as index 3 */
+  entity_index?: number;
+  /** After completing one manager/worker entity, awaiting yes/skip */
+  awaiting_more?: boolean;
 }
 
 export interface WorkflowSessionResolveResult {

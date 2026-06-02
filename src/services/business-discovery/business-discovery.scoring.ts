@@ -1,10 +1,15 @@
 import {
+  ACTIVE_DISCOVERY_BUCKET_ORDER,
+  ActiveDiscoveryBucket,
   DISCOVERY_BUCKET,
-  DISCOVERY_BUCKET_ORDER,
   DISCOVERY_BUCKET_LABELS,
-  DiscoveryBucket,
 } from './business-discovery.constants';
+import {
+  bucketFieldKeys,
+  DISCOVERY_SOURCE_TYPE,
+} from './business-discovery.fields';
 import { IBucketProgress, IBusinessReadinessScore } from './business-discovery.interfaces';
+import { sanitizeBucketData } from './business-discovery.hygiene';
 
 export interface IScoringSignals {
   factoryName?: string | null;
@@ -21,117 +26,208 @@ export interface IScoringSignals {
   bucketData?: Record<string, unknown>;
 }
 
-const IDENTITY_FIELDS = ['business_name', 'address', 'industry', 'business_type'];
-const ORG_FIELDS = ['departments', 'managers', 'workers'];
-const INVENTORY_FIELDS = ['categories', 'locations', 'items'];
-const VENDOR_FIELDS = ['vendor_list', 'vendor_categories', 'vendor_contacts'];
-
 function pct(completed: number, total: number): number {
   if (total <= 0) return 0;
   return Math.min(100, Math.round((completed / total) * 100));
 }
 
-function fieldScore(
-  bucketData: Record<string, unknown> | undefined,
-  keys: string[],
-  signals: number[],
+function hasBucketField(
+  data: Record<string, unknown>,
+  bucket: ActiveDiscoveryBucket,
+  fieldKey: string,
+): boolean {
+  const flat = `${bucket}.${fieldKey}`;
+  if (data[flat] === true || data[flat] === 'done') return true;
+  if (typeof data[flat] === 'string' && data[flat].length > 0) return true;
+  return Object.keys(data).some(
+    (k) =>
+      k.startsWith(`${bucket}.entry_`) &&
+      k.endsWith(`.${fieldKey}`) &&
+      data[k] != null &&
+      data[k] !== '',
+  );
+}
+
+function countRepeatableEntities(
+  data: Record<string, unknown>,
+  bucket: ActiveDiscoveryBucket,
+  fieldKeys: string[],
+): number {
+  let count = 0;
+  for (let i = 0; i < 20; i++) {
+    const filled = fieldKeys.filter((k) => {
+      const v = data[`${bucket}.entry_${i}.${k}`];
+      return v === true || v === 'done' || (typeof v === 'string' && v.length > 0);
+    });
+    if (filled.length > 0) count++;
+    else if (i > 0) break;
+  }
+  return count;
+}
+
+function legacyHasField(
+  data: Record<string, unknown>,
+  legacyBucket: string,
+  fieldKey: string,
+): boolean {
+  const key = `${legacyBucket}.${fieldKey}`;
+  const val = data[key];
+  return val === true || val === 'done' || (typeof val === 'string' && val.length > 0);
+}
+
+function scoreBucket(
+  data: Record<string, unknown>,
+  bucket: ActiveDiscoveryBucket,
+  fieldKeys: string[],
+  signalChecks: boolean[],
 ): number {
   let completed = 0;
-  keys.forEach((key, i) => {
-    const manual = bucketData?.[key];
-    const signalOk = (signals[i] ?? 0) > 0;
-    if (manual === true || manual === 'done' || signalOk) completed++;
+  fieldKeys.forEach((key, i) => {
+    if (hasBucketField(data, bucket, key) || signalChecks[i]) completed++;
   });
-  return pct(completed, keys.length);
+  return pct(completed, fieldKeys.length);
+}
+
+function scoreRepeatableBucket(
+  data: Record<string, unknown>,
+  bucket: ActiveDiscoveryBucket,
+  fieldKeys: string[],
+  minEntitiesFromSignals: number,
+): number {
+  const entityCount = Math.max(
+    countRepeatableEntities(data, bucket, fieldKeys),
+    minEntitiesFromSignals,
+  );
+  const target = 3;
+  return pct(Math.min(entityCount, target), target);
 }
 
 export function computeBucketScores(signals: IScoringSignals): IBusinessReadinessScore {
-  const data = signals.bucketData ?? {};
+  const raw = signals.bucketData ?? {};
+  const data = sanitizeBucketData(raw);
 
+  const identityKeys = bucketFieldKeys(DISCOVERY_BUCKET.BUSINESS_IDENTITY);
   const identity = Math.max(
-    fieldScore(data, IDENTITY_FIELDS, [
-      signals.factoryName ? 1 : 0,
-      signals.factoryAddress ? 1 : 0,
-      signals.industry ? 1 : 0,
-      signals.businessType ? 1 : 0,
+    scoreBucket(data, DISCOVERY_BUCKET.BUSINESS_IDENTITY, identityKeys, [
+      !!signals.factoryName,
+      !!signals.factoryAddress,
+      !!signals.industry,
+      !!signals.businessType,
     ]),
-    pct(
-      (signals.factoryName ? 1 : 0) + (signals.factoryAddress ? 1 : 0),
-      2,
-    ),
+    pct((signals.factoryName ? 1 : 0) + (signals.factoryAddress ? 1 : 0), 2),
   );
 
-  const organization = Math.max(
-    fieldScore(data, ORG_FIELDS, [
-      signals.departmentCount ?? 0,
-      signals.managerCount ?? 0,
-      signals.workerCount ?? 0,
+  const orgKeys = bucketFieldKeys(DISCOVERY_BUCKET.ORGANIZATION_STRUCTURE);
+  const organization_structure = Math.max(
+    scoreBucket(data, DISCOVERY_BUCKET.ORGANIZATION_STRUCTURE, orgKeys, [
+      (signals.departmentCount ?? 0) > 0,
+      false,
+      false,
+      false,
+      false,
     ]),
     pct(
       Math.min(signals.departmentCount ?? 0, 1) +
-        Math.min(signals.workerCount ?? 0, 1),
+        (legacyHasField(data, DISCOVERY_BUCKET.ORGANIZATION, 'departments') ? 1 : 0),
       2,
     ),
   );
 
+  const managers = Math.max(
+    scoreRepeatableBucket(
+      data,
+      DISCOVERY_BUCKET.MANAGER_DISCOVERY,
+      bucketFieldKeys(DISCOVERY_BUCKET.MANAGER_DISCOVERY),
+      Math.min(signals.managerCount ?? 0, 3),
+    ),
+    legacyHasField(data, DISCOVERY_BUCKET.ORGANIZATION, 'managers') ? 33 : 0,
+  );
+
+  const workforce = Math.max(
+    scoreRepeatableBucket(
+      data,
+      DISCOVERY_BUCKET.WORKFORCE_DISCOVERY,
+      bucketFieldKeys(DISCOVERY_BUCKET.WORKFORCE_DISCOVERY),
+      Math.min(signals.workerCount ?? 0, 3),
+    ),
+    legacyHasField(data, DISCOVERY_BUCKET.ORGANIZATION, 'workers') ? 33 : 0,
+  );
+
+  const inventoryKeys = bucketFieldKeys(DISCOVERY_BUCKET.INVENTORY_DISCOVERY);
   const inventory = Math.max(
-    fieldScore(data, INVENTORY_FIELDS, [
-      signals.categoryCount ?? 0,
-      signals.locationCount ?? 0,
-      signals.itemCount ?? 0,
+    scoreBucket(data, DISCOVERY_BUCKET.INVENTORY_DISCOVERY, inventoryKeys, [
+      (signals.categoryCount ?? 0) > 0,
+      (signals.locationCount ?? 0) > 0,
+      (signals.itemCount ?? 0) > 0,
+      false,
+      false,
     ]),
     pct(
       ((signals.categoryCount ?? 0) > 0 ? 1 : 0) +
         ((signals.itemCount ?? 0) > 0 ? 1 : 0),
       2,
     ),
-  );
-
-  const vendors = Math.max(
-    fieldScore(data, VENDOR_FIELDS, [
-      signals.vendorCount ?? 0,
-      signals.vendorCount ?? 0,
-      signals.vendorCount ?? 0,
+    scoreBucket(data, DISCOVERY_BUCKET.INVENTORY_DISCOVERY, inventoryKeys.slice(0, 3), [
+      legacyHasField(data, DISCOVERY_BUCKET.INVENTORY, 'categories'),
+      legacyHasField(data, DISCOVERY_BUCKET.INVENTORY, 'locations'),
+      legacyHasField(data, DISCOVERY_BUCKET.INVENTORY, 'items'),
     ]),
-    signals.vendorCount && signals.vendorCount > 0 ? 100 : 0,
   );
 
+  const vendorKeys = bucketFieldKeys(DISCOVERY_BUCKET.VENDOR_DISCOVERY);
+  const vendors = Math.max(
+    scoreBucket(data, DISCOVERY_BUCKET.VENDOR_DISCOVERY, vendorKeys, [
+      (signals.vendorCount ?? 0) > 0,
+      (signals.vendorCount ?? 0) > 0,
+      false,
+      false,
+      false,
+    ]),
+    (signals.vendorCount ?? 0) > 0 ? 100 : 0,
+    scoreBucket(data, DISCOVERY_BUCKET.VENDOR_DISCOVERY, ['vendor_name'], [
+      legacyHasField(data, DISCOVERY_BUCKET.VENDORS, 'vendor_list'),
+    ]),
+  );
+
+  const parts = [identity, organization_structure, managers, workforce, inventory, vendors];
   const overall = Math.round(
-    (identity + organization + inventory + vendors) / 4,
+    parts.reduce((a, b) => a + b, 0) / ACTIVE_DISCOVERY_BUCKET_ORDER.length,
   );
 
   return {
     identity,
-    organization,
+    organization_structure,
+    managers,
+    workforce,
     inventory,
     vendors,
     overall,
     status: 'ACTIVE' as const,
+    organization: organization_structure,
   };
 }
 
 export function buildBucketProgress(
   scores: IBusinessReadinessScore,
 ): IBucketProgress[] {
-  const map: Record<DiscoveryBucket, number> = {
+  const map: Record<ActiveDiscoveryBucket, number> = {
     [DISCOVERY_BUCKET.BUSINESS_IDENTITY]: scores.identity,
-    [DISCOVERY_BUCKET.ORGANIZATION]: scores.organization,
-    [DISCOVERY_BUCKET.INVENTORY]: scores.inventory,
-    [DISCOVERY_BUCKET.VENDORS]: scores.vendors,
+    [DISCOVERY_BUCKET.ORGANIZATION_STRUCTURE]: scores.organization_structure,
+    [DISCOVERY_BUCKET.MANAGER_DISCOVERY]: scores.managers,
+    [DISCOVERY_BUCKET.WORKFORCE_DISCOVERY]: scores.workforce,
+    [DISCOVERY_BUCKET.INVENTORY_DISCOVERY]: scores.inventory,
+    [DISCOVERY_BUCKET.VENDOR_DISCOVERY]: scores.vendors,
   };
 
-  const fields: Record<DiscoveryBucket, string[]> = {
-    [DISCOVERY_BUCKET.BUSINESS_IDENTITY]: IDENTITY_FIELDS,
-    [DISCOVERY_BUCKET.ORGANIZATION]: ORG_FIELDS,
-    [DISCOVERY_BUCKET.INVENTORY]: INVENTORY_FIELDS,
-    [DISCOVERY_BUCKET.VENDORS]: VENDOR_FIELDS,
-  };
-
-  return DISCOVERY_BUCKET_ORDER.map((bucket) => ({
+  return ACTIVE_DISCOVERY_BUCKET_ORDER.map((bucket) => ({
     bucket,
     label: DISCOVERY_BUCKET_LABELS[bucket],
     completion: map[bucket],
-    fields: fields[bucket],
+    fields: bucketFieldKeys(bucket),
+    source_types_supported: [
+      DISCOVERY_SOURCE_TYPE.CHAT,
+      DISCOVERY_SOURCE_TYPE.DOCUMENT,
+    ],
   }));
 }
 
@@ -139,6 +235,11 @@ export function mergeBucketDataField(
   existing: Record<string, unknown>,
   field: string,
   value: unknown,
+  sourceType?: string,
 ): Record<string, unknown> {
-  return { ...existing, [field]: value };
+  const next = { ...existing, [field]: value };
+  if (sourceType) {
+    next[`${field}__source`] = sourceType;
+  }
+  return next;
 }

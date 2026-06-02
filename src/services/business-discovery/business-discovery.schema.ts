@@ -17,6 +17,8 @@ export class BusinessDiscoveryProfile extends Model<
   declare status: CreationOptional<string>;
   declare identity_completion: CreationOptional<number>;
   declare organization_completion: CreationOptional<number>;
+  declare manager_completion: CreationOptional<number>;
+  declare workforce_completion: CreationOptional<number>;
   declare inventory_completion: CreationOptional<number>;
   declare vendor_completion: CreationOptional<number>;
   declare overall_completion: CreationOptional<number>;
@@ -51,6 +53,16 @@ export class BusinessDiscoveryProfile extends Model<
           defaultValue: 0,
         },
         organization_completion: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
+          defaultValue: 0,
+        },
+        manager_completion: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
+          defaultValue: 0,
+        },
+        workforce_completion: {
           type: DataTypes.INTEGER,
           allowNull: false,
           defaultValue: 0,

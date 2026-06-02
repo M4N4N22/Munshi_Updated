@@ -1,54 +1,93 @@
 {
-  "version": "v1",
+  "version": "v2",
   "buckets": [
     {
       "id": "BUSINESS_IDENTITY",
       "label": "Business Identity",
       "fields": ["business_name", "address", "industry", "business_type"],
+      "source_types": ["CHAT", "DOCUMENT"],
       "future": false
     },
     {
-      "id": "ORGANIZATION",
-      "label": "Organization",
-      "fields": ["departments", "managers", "workers"],
+      "id": "ORGANIZATION_STRUCTURE",
+      "label": "Organization Structure",
+      "fields": [
+        "departments",
+        "locations",
+        "reporting_structure",
+        "department_hierarchy",
+        "department_ownership"
+      ],
+      "source_types": ["CHAT", "DOCUMENT"],
+      "future": false,
+      "legacy_aliases": ["ORGANIZATION"]
+    },
+    {
+      "id": "MANAGER_DISCOVERY",
+      "label": "Managers",
+      "fields": ["name", "phone", "department", "reporting_role"],
+      "source_types": ["CHAT", "DOCUMENT"],
+      "repeatable": true,
       "future": false
     },
     {
-      "id": "INVENTORY",
+      "id": "WORKFORCE_DISCOVERY",
+      "label": "Workforce",
+      "fields": ["name", "phone", "department", "role"],
+      "source_types": ["CHAT", "DOCUMENT"],
+      "repeatable": true,
+      "future": false
+    },
+    {
+      "id": "INVENTORY_DISCOVERY",
       "label": "Inventory",
-      "fields": ["categories", "locations", "items"],
-      "future": false
+      "fields": ["categories", "locations", "items", "units", "item_types"],
+      "source_types": ["CHAT", "DOCUMENT"],
+      "future": false,
+      "legacy_aliases": ["INVENTORY"]
     },
     {
-      "id": "VENDORS",
+      "id": "VENDOR_DISCOVERY",
       "label": "Vendors",
-      "fields": ["vendor_list", "vendor_categories", "vendor_contacts"],
-      "future": false
+      "fields": [
+        "vendor_name",
+        "vendor_phone",
+        "vendor_category",
+        "vendor_location",
+        "vendor_relationship"
+      ],
+      "source_types": ["CHAT", "DOCUMENT"],
+      "future": false,
+      "legacy_aliases": ["VENDORS"]
     },
     {
       "id": "BOOKKEEPING",
       "label": "Bookkeeping",
       "fields": [],
+      "source_types": ["DOCUMENT"],
       "future": true
     },
     {
       "id": "LEDGER",
       "label": "Ledger",
       "fields": [],
+      "source_types": ["DOCUMENT"],
       "future": true
     },
     {
       "id": "BANKING",
       "label": "Banking",
       "fields": [],
+      "source_types": ["DOCUMENT"],
       "future": true
     }
   ],
   "document_bucket_map": {
-    "INVENTORY_IMPORT": "INVENTORY",
-    "STOCK_REGISTER": "INVENTORY",
-    "PURCHASE_INVOICE": "VENDORS",
-    "GOODS_RECEIPT": "VENDORS"
+    "INVENTORY_IMPORT": "INVENTORY_DISCOVERY",
+    "STOCK_REGISTER": "INVENTORY_DISCOVERY",
+    "PURCHASE_INVOICE": "VENDOR_DISCOVERY",
+    "GOODS_RECEIPT": "VENDOR_DISCOVERY"
   },
-  "readiness_formula": "average of active bucket completion percentages"
+  "readiness_formula": "average of six active bucket completion percentages (dynamic, not hardcoded)",
+  "source_type_values": ["CHAT", "DOCUMENT"]
 }
