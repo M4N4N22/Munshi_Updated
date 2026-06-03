@@ -1,0 +1,21 @@
+{
+  "version": "v1",
+  "types": [
+    "ONBOARD_VENDOR",
+    "ONBOARD_WORKER",
+    "INVENTORY_CREATE",
+    "SUGGESTION_APPROVAL",
+    "PURCHASE_REQUEST_CREATE",
+    "BUSINESS_DISCOVERY",
+    "ASSIGN_CLARIFY"
+  ],
+  "start_commands": {
+    "ONBOARD_VENDOR": "/onboard_vendor",
+    "ONBOARD_WORKER": "/onboard_worker",
+    "INVENTORY_CREATE": "/inventory_create",
+    "SUGGESTION_APPROVAL": "/suggestion_approve",
+    "PURCHASE_REQUEST_CREATE": "/purchase_request_create",
+    "BUSINESS_DISCOVERY": "/business_discovery",
+    "ASSIGN_CLARIFY": "/assign_clarify"
+  }
+}

@@ -1,0 +1,502 @@
+[
+  {
+    "message": "check inventory status",
+    "expected_intent": "/inventory_status",
+    "language": "english"
+  },
+  {
+    "message": "show stock levels",
+    "expected_intent": "/inventory_status",
+    "language": "english"
+  },
+  {
+    "message": "inventory status CEM001",
+    "expected_intent": "/inventory_status",
+    "language": "english"
+  },
+  {
+    "message": "what is stock for cement",
+    "expected_intent": "/inventory_status",
+    "language": "english"
+  },
+  {
+    "message": "low stock items",
+    "expected_intent": "/inventory_status",
+    "language": "english"
+  },
+  {
+    "message": "check SKU status",
+    "expected_intent": "/inventory_status",
+    "language": "english"
+  },
+  {
+    "message": "show inventory levels",
+    "expected_intent": "/inventory_status",
+    "language": "english"
+  },
+  {
+    "message": "stock status please",
+    "expected_intent": "/inventory_status",
+    "language": "english"
+  },
+  {
+    "message": "how much cement in stock",
+    "expected_intent": "/inventory_status",
+    "language": "english"
+  },
+  {
+    "message": "inventory check",
+    "expected_intent": "/inventory_status",
+    "language": "english"
+  },
+  {
+    "message": "view stock register status",
+    "expected_intent": "/inventory_status",
+    "language": "english"
+  },
+  {
+    "message": "check item availability",
+    "expected_intent": "/inventory_status",
+    "language": "english"
+  },
+  {
+    "message": "show low stock alert",
+    "expected_intent": "/inventory_status",
+    "language": "english"
+  },
+  {
+    "message": "inventory status for Steel",
+    "expected_intent": "/inventory_status",
+    "language": "english"
+  },
+  {
+    "message": "stock level check",
+    "expected_intent": "/inventory_status",
+    "language": "english"
+  },
+  {
+    "message": "check warehouse stock",
+    "expected_intent": "/inventory_status",
+    "language": "english"
+  },
+  {
+    "message": "show current inventory",
+    "expected_intent": "/inventory_status",
+    "language": "english"
+  },
+  {
+    "message": "item stock status",
+    "expected_intent": "/inventory_status",
+    "language": "english"
+  },
+  {
+    "message": "inventory lookup CEM001",
+    "expected_intent": "/inventory_status",
+    "language": "english"
+  },
+  {
+    "message": "check stock quantity",
+    "expected_intent": "/inventory_status",
+    "language": "english"
+  },
+  {
+    "message": "show inventory summary",
+    "expected_intent": "/inventory_status",
+    "language": "english"
+  },
+  {
+    "message": "stock availability check",
+    "expected_intent": "/inventory_status",
+    "language": "english"
+  },
+  {
+    "message": "inventory status report",
+    "expected_intent": "/inventory_status",
+    "language": "english"
+  },
+  {
+    "message": "check product stock",
+    "expected_intent": "/inventory_status",
+    "language": "english"
+  },
+  {
+    "message": "how many bags in stock",
+    "expected_intent": "/inventory_status",
+    "language": "english"
+  },
+  {
+    "message": "inventory levels please",
+    "expected_intent": "/inventory_status",
+    "language": "english"
+  },
+  {
+    "message": "stock check for SKU",
+    "expected_intent": "/inventory_status",
+    "language": "english"
+  },
+  {
+    "message": "view item inventory",
+    "expected_intent": "/inventory_status",
+    "language": "english"
+  },
+  {
+    "message": "check stock status now",
+    "expected_intent": "/inventory_status",
+    "language": "english"
+  },
+  {
+    "message": "show stock for all items",
+    "expected_intent": "/inventory_status",
+    "language": "english"
+  },
+  {
+    "message": "inventory status check",
+    "expected_intent": "/inventory_status",
+    "language": "english"
+  },
+  {
+    "message": "current stock levels",
+    "expected_intent": "/inventory_status",
+    "language": "english"
+  },
+  {
+    "message": "check inventory for Sand",
+    "expected_intent": "/inventory_status",
+    "language": "english"
+  },
+  {
+    "message": "stock status lookup",
+    "expected_intent": "/inventory_status",
+    "language": "english"
+  },
+  {
+    "message": "inventory status dikhao",
+    "expected_intent": "/inventory_status",
+    "language": "hindi"
+  },
+  {
+    "message": "stock level check karo",
+    "expected_intent": "/inventory_status",
+    "language": "hindi"
+  },
+  {
+    "message": "inventory kitna hai",
+    "expected_intent": "/inventory_status",
+    "language": "hindi"
+  },
+  {
+    "message": "stock status batao",
+    "expected_intent": "/inventory_status",
+    "language": "hindi"
+  },
+  {
+    "message": "kam stock wale items",
+    "expected_intent": "/inventory_status",
+    "language": "hindi"
+  },
+  {
+    "message": "inventory dekhna hai",
+    "expected_intent": "/inventory_status",
+    "language": "hindi"
+  },
+  {
+    "message": "stock kitna bacha hai",
+    "expected_intent": "/inventory_status",
+    "language": "hindi"
+  },
+  {
+    "message": "maal ka status",
+    "expected_intent": "/inventory_status",
+    "language": "hindi"
+  },
+  {
+    "message": "inventory check karo",
+    "expected_intent": "/inventory_status",
+    "language": "hindi"
+  },
+  {
+    "message": "stock level dikhao",
+    "expected_intent": "/inventory_status",
+    "language": "hindi"
+  },
+  {
+    "message": "warehouse stock dekho",
+    "expected_intent": "/inventory_status",
+    "language": "hindi"
+  },
+  {
+    "message": "item ka stock batao",
+    "expected_intent": "/inventory_status",
+    "language": "hindi"
+  },
+  {
+    "message": "inventory status chahiye",
+    "expected_intent": "/inventory_status",
+    "language": "hindi"
+  },
+  {
+    "message": "stock availability dikhao",
+    "expected_intent": "/inventory_status",
+    "language": "hindi"
+  },
+  {
+    "message": "kitna cement pada hai",
+    "expected_intent": "/inventory_status",
+    "language": "hindi"
+  },
+  {
+    "message": "inventory summary dikhao",
+    "expected_intent": "/inventory_status",
+    "language": "hindi"
+  },
+  {
+    "message": "stock register status",
+    "expected_intent": "/inventory_status",
+    "language": "hindi"
+  },
+  {
+    "message": "maal kitna hai store mein",
+    "expected_intent": "/inventory_status",
+    "language": "hindi"
+  },
+  {
+    "message": "inventory level check",
+    "expected_intent": "/inventory_status",
+    "language": "hindi"
+  },
+  {
+    "message": "stock dekh lo",
+    "expected_intent": "/inventory_status",
+    "language": "hindi"
+  },
+  {
+    "message": "kam pada hua stock",
+    "expected_intent": "/inventory_status",
+    "language": "hindi"
+  },
+  {
+    "message": "inventory status abhi",
+    "expected_intent": "/inventory_status",
+    "language": "hindi"
+  },
+  {
+    "message": "stock quantity batao",
+    "expected_intent": "/inventory_status",
+    "language": "hindi"
+  },
+  {
+    "message": "item stock dikhao",
+    "expected_intent": "/inventory_status",
+    "language": "hindi"
+  },
+  {
+    "message": "inventory check kar do",
+    "expected_intent": "/inventory_status",
+    "language": "hindi"
+  },
+  {
+    "message": "stock status jaldi",
+    "expected_intent": "/inventory_status",
+    "language": "hindi"
+  },
+  {
+    "message": "warehouse inventory dekho",
+    "expected_intent": "/inventory_status",
+    "language": "hindi"
+  },
+  {
+    "message": "kitna stock bacha",
+    "expected_intent": "/inventory_status",
+    "language": "hindi"
+  },
+  {
+    "message": "inventory report chahiye",
+    "expected_intent": "/inventory_status",
+    "language": "hindi"
+  },
+  {
+    "message": "stock level bata do",
+    "expected_intent": "/inventory_status",
+    "language": "hindi"
+  },
+  {
+    "message": "maal status check",
+    "expected_intent": "/inventory_status",
+    "language": "hindi"
+  },
+  {
+    "message": "inventory dekh kar batao",
+    "expected_intent": "/inventory_status",
+    "language": "hindi"
+  },
+  {
+    "message": "stock kitna available",
+    "expected_intent": "/inventory_status",
+    "language": "hindi"
+  },
+  {
+    "message": "inventory status nikalo",
+    "expected_intent": "/inventory_status",
+    "language": "hindi"
+  },
+  {
+    "message": "store stock check karo",
+    "expected_intent": "/inventory_status",
+    "language": "hindi"
+  },
+  {
+    "message": "inventory status check karo",
+    "expected_intent": "/inventory_status",
+    "language": "hinglish"
+  },
+  {
+    "message": "stock level dikhao please",
+    "expected_intent": "/inventory_status",
+    "language": "hinglish"
+  },
+  {
+    "message": "inventory status CEM001",
+    "expected_intent": "/inventory_status",
+    "language": "hinglish"
+  },
+  {
+    "message": "kitna stock hai cement ka",
+    "expected_intent": "/inventory_status",
+    "language": "hinglish"
+  },
+  {
+    "message": "low stock items dikhao",
+    "expected_intent": "/inventory_status",
+    "language": "hinglish"
+  },
+  {
+    "message": "check inventory please",
+    "expected_intent": "/inventory_status",
+    "language": "hinglish"
+  },
+  {
+    "message": "stock status batao yaar",
+    "expected_intent": "/inventory_status",
+    "language": "hinglish"
+  },
+  {
+    "message": "inventory levels check karo",
+    "expected_intent": "/inventory_status",
+    "language": "hinglish"
+  },
+  {
+    "message": "SKU status dekho",
+    "expected_intent": "/inventory_status",
+    "language": "hinglish"
+  },
+  {
+    "message": "warehouse stock kitna hai",
+    "expected_intent": "/inventory_status",
+    "language": "hinglish"
+  },
+  {
+    "message": "inventory summary chahiye",
+    "expected_intent": "/inventory_status",
+    "language": "hinglish"
+  },
+  {
+    "message": "stock check karo jaldi",
+    "expected_intent": "/inventory_status",
+    "language": "hinglish"
+  },
+  {
+    "message": "item availability dekho",
+    "expected_intent": "/inventory_status",
+    "language": "hinglish"
+  },
+  {
+    "message": "inventory status for Steel Rod",
+    "expected_intent": "/inventory_status",
+    "language": "hinglish"
+  },
+  {
+    "message": "show stock levels please",
+    "expected_intent": "/inventory_status",
+    "language": "hinglish"
+  },
+  {
+    "message": "kitna maal pada hai",
+    "expected_intent": "/inventory_status",
+    "language": "hinglish"
+  },
+  {
+    "message": "inventory lookup karo",
+    "expected_intent": "/inventory_status",
+    "language": "hinglish"
+  },
+  {
+    "message": "stock register status check",
+    "expected_intent": "/inventory_status",
+    "language": "hinglish"
+  },
+  {
+    "message": "current inventory dikhao",
+    "expected_intent": "/inventory_status",
+    "language": "hinglish"
+  },
+  {
+    "message": "inventory status abhi batao",
+    "expected_intent": "/inventory_status",
+    "language": "hinglish"
+  },
+  {
+    "message": "check stock CEM001",
+    "expected_intent": "/inventory_status",
+    "language": "hinglish"
+  },
+  {
+    "message": "low stock alert dikhao",
+    "expected_intent": "/inventory_status",
+    "language": "hinglish"
+  },
+  {
+    "message": "inventory kitna bacha hai",
+    "expected_intent": "/inventory_status",
+    "language": "hinglish"
+  },
+  {
+    "message": "stock quantity check please",
+    "expected_intent": "/inventory_status",
+    "language": "hinglish"
+  },
+  {
+    "message": "inventory status report chahiye",
+    "expected_intent": "/inventory_status",
+    "language": "hinglish"
+  },
+  {
+    "message": "stock level for cement",
+    "expected_intent": "/inventory_status",
+    "language": "hinglish"
+  },
+  {
+    "message": "inventory check kar do na",
+    "expected_intent": "/inventory_status",
+    "language": "hinglish"
+  },
+  {
+    "message": "show inventory status",
+    "expected_intent": "/inventory_status",
+    "language": "hinglish"
+  },
+  {
+    "message": "stock availability check karo",
+    "expected_intent": "/inventory_status",
+    "language": "hinglish"
+  },
+  {
+    "message": "inventory dekh ke batao",
+    "expected_intent": "/inventory_status",
+    "language": "hinglish"
+  },
+  {
+    "message": "item stock level",
+    "expected_intent": "/inventory_status",
+    "language": "hinglish"
+  }
+]

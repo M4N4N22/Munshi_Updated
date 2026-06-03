@@ -1,0 +1,13 @@
+{
+  "version": "v1",
+  "types": [
+    "INITIAL_INVENTORY_IMPORT",
+    "NEW_INVENTORY_ITEM",
+    "STOCK_IN",
+    "STOCK_OUT",
+    "INVENTORY_ADJUSTMENT",
+    "CREATE_VENDOR",
+    "CREATE_LEDGER_ENTRY",
+    "CREATE_PURCHASE_REQUEST"
+  ]
+}

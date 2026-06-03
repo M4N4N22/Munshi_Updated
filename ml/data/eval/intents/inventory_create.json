@@ -1,0 +1,502 @@
+[
+  {
+    "message": "create inventory item",
+    "expected_intent": "/inventory_create",
+    "language": "english"
+  },
+  {
+    "message": "add new stock item",
+    "expected_intent": "/inventory_create",
+    "language": "english"
+  },
+  {
+    "message": "register inventory product",
+    "expected_intent": "/inventory_create",
+    "language": "english"
+  },
+  {
+    "message": "create new SKU",
+    "expected_intent": "/inventory_create",
+    "language": "english"
+  },
+  {
+    "message": "add item to inventory",
+    "expected_intent": "/inventory_create",
+    "language": "english"
+  },
+  {
+    "message": "new inventory item",
+    "expected_intent": "/inventory_create",
+    "language": "english"
+  },
+  {
+    "message": "create stock item Cement",
+    "expected_intent": "/inventory_create",
+    "language": "english"
+  },
+  {
+    "message": "add inventory entry",
+    "expected_intent": "/inventory_create",
+    "language": "english"
+  },
+  {
+    "message": "register new product",
+    "expected_intent": "/inventory_create",
+    "language": "english"
+  },
+  {
+    "message": "create item in inventory",
+    "expected_intent": "/inventory_create",
+    "language": "english"
+  },
+  {
+    "message": "add stock item",
+    "expected_intent": "/inventory_create",
+    "language": "english"
+  },
+  {
+    "message": "new item creation inventory",
+    "expected_intent": "/inventory_create",
+    "language": "english"
+  },
+  {
+    "message": "create inventory record",
+    "expected_intent": "/inventory_create",
+    "language": "english"
+  },
+  {
+    "message": "add product to stock",
+    "expected_intent": "/inventory_create",
+    "language": "english"
+  },
+  {
+    "message": "inventory item setup",
+    "expected_intent": "/inventory_create",
+    "language": "english"
+  },
+  {
+    "message": "create new inventory entry",
+    "expected_intent": "/inventory_create",
+    "language": "english"
+  },
+  {
+    "message": "add item Cement bags",
+    "expected_intent": "/inventory_create",
+    "language": "english"
+  },
+  {
+    "message": "register stock item",
+    "expected_intent": "/inventory_create",
+    "language": "english"
+  },
+  {
+    "message": "new inventory product",
+    "expected_intent": "/inventory_create",
+    "language": "english"
+  },
+  {
+    "message": "create stock entry",
+    "expected_intent": "/inventory_create",
+    "language": "english"
+  },
+  {
+    "message": "add inventory SKU",
+    "expected_intent": "/inventory_create",
+    "language": "english"
+  },
+  {
+    "message": "inventory create please",
+    "expected_intent": "/inventory_create",
+    "language": "english"
+  },
+  {
+    "message": "create item Steel Rod",
+    "expected_intent": "/inventory_create",
+    "language": "english"
+  },
+  {
+    "message": "add new inventory item",
+    "expected_intent": "/inventory_create",
+    "language": "english"
+  },
+  {
+    "message": "stock item creation",
+    "expected_intent": "/inventory_create",
+    "language": "english"
+  },
+  {
+    "message": "register inventory item",
+    "expected_intent": "/inventory_create",
+    "language": "english"
+  },
+  {
+    "message": "create product in stock",
+    "expected_intent": "/inventory_create",
+    "language": "english"
+  },
+  {
+    "message": "add inventory material",
+    "expected_intent": "/inventory_create",
+    "language": "english"
+  },
+  {
+    "message": "new stock item add",
+    "expected_intent": "/inventory_create",
+    "language": "english"
+  },
+  {
+    "message": "inventory item register",
+    "expected_intent": "/inventory_create",
+    "language": "english"
+  },
+  {
+    "message": "create inventory SKU CEM001",
+    "expected_intent": "/inventory_create",
+    "language": "english"
+  },
+  {
+    "message": "add warehouse item",
+    "expected_intent": "/inventory_create",
+    "language": "english"
+  },
+  {
+    "message": "new inventory entry",
+    "expected_intent": "/inventory_create",
+    "language": "english"
+  },
+  {
+    "message": "create stock product",
+    "expected_intent": "/inventory_create",
+    "language": "english"
+  },
+  {
+    "message": "inventory item banao",
+    "expected_intent": "/inventory_create",
+    "language": "hindi"
+  },
+  {
+    "message": "naya stock item add karo",
+    "expected_intent": "/inventory_create",
+    "language": "hindi"
+  },
+  {
+    "message": "inventory mein item jodo",
+    "expected_intent": "/inventory_create",
+    "language": "hindi"
+  },
+  {
+    "message": "stock item create karo",
+    "expected_intent": "/inventory_create",
+    "language": "hindi"
+  },
+  {
+    "message": "naya inventory product",
+    "expected_intent": "/inventory_create",
+    "language": "hindi"
+  },
+  {
+    "message": "item inventory mein darj karo",
+    "expected_intent": "/inventory_create",
+    "language": "hindi"
+  },
+  {
+    "message": "stock entry banao",
+    "expected_intent": "/inventory_create",
+    "language": "hindi"
+  },
+  {
+    "message": "inventory item add karo",
+    "expected_intent": "/inventory_create",
+    "language": "hindi"
+  },
+  {
+    "message": "naya maal inventory mein",
+    "expected_intent": "/inventory_create",
+    "language": "hindi"
+  },
+  {
+    "message": "item create karna hai",
+    "expected_intent": "/inventory_create",
+    "language": "hindi"
+  },
+  {
+    "message": "inventory register karo",
+    "expected_intent": "/inventory_create",
+    "language": "hindi"
+  },
+  {
+    "message": "stock item jod do",
+    "expected_intent": "/inventory_create",
+    "language": "hindi"
+  },
+  {
+    "message": "naya product inventory mein",
+    "expected_intent": "/inventory_create",
+    "language": "hindi"
+  },
+  {
+    "message": "inventory item darj karo",
+    "expected_intent": "/inventory_create",
+    "language": "hindi"
+  },
+  {
+    "message": "stock mein naya item",
+    "expected_intent": "/inventory_create",
+    "language": "hindi"
+  },
+  {
+    "message": "item add karna hai inventory",
+    "expected_intent": "/inventory_create",
+    "language": "hindi"
+  },
+  {
+    "message": "inventory entry create karo",
+    "expected_intent": "/inventory_create",
+    "language": "hindi"
+  },
+  {
+    "message": "naya SKU banao",
+    "expected_intent": "/inventory_create",
+    "language": "hindi"
+  },
+  {
+    "message": "stock item register karo",
+    "expected_intent": "/inventory_create",
+    "language": "hindi"
+  },
+  {
+    "message": "inventory mein product add",
+    "expected_intent": "/inventory_create",
+    "language": "hindi"
+  },
+  {
+    "message": "item bana do inventory",
+    "expected_intent": "/inventory_create",
+    "language": "hindi"
+  },
+  {
+    "message": "naya inventory record",
+    "expected_intent": "/inventory_create",
+    "language": "hindi"
+  },
+  {
+    "message": "stock create karo",
+    "expected_intent": "/inventory_create",
+    "language": "hindi"
+  },
+  {
+    "message": "inventory item setup karo",
+    "expected_intent": "/inventory_create",
+    "language": "hindi"
+  },
+  {
+    "message": "product inventory mein jodo",
+    "expected_intent": "/inventory_create",
+    "language": "hindi"
+  },
+  {
+    "message": "naya item stock mein",
+    "expected_intent": "/inventory_create",
+    "language": "hindi"
+  },
+  {
+    "message": "inventory add karo",
+    "expected_intent": "/inventory_create",
+    "language": "hindi"
+  },
+  {
+    "message": "item entry inventory",
+    "expected_intent": "/inventory_create",
+    "language": "hindi"
+  },
+  {
+    "message": "stock product banao",
+    "expected_intent": "/inventory_create",
+    "language": "hindi"
+  },
+  {
+    "message": "inventory create karo",
+    "expected_intent": "/inventory_create",
+    "language": "hindi"
+  },
+  {
+    "message": "naya item darj karo",
+    "expected_intent": "/inventory_create",
+    "language": "hindi"
+  },
+  {
+    "message": "inventory mein naya maal",
+    "expected_intent": "/inventory_create",
+    "language": "hindi"
+  },
+  {
+    "message": "stock item add karna hai",
+    "expected_intent": "/inventory_create",
+    "language": "hindi"
+  },
+  {
+    "message": "item inventory create",
+    "expected_intent": "/inventory_create",
+    "language": "hindi"
+  },
+  {
+    "message": "inventory product banao",
+    "expected_intent": "/inventory_create",
+    "language": "hindi"
+  },
+  {
+    "message": "inventory item create karna hai",
+    "expected_intent": "/inventory_create",
+    "language": "hinglish"
+  },
+  {
+    "message": "add new stock item please",
+    "expected_intent": "/inventory_create",
+    "language": "hinglish"
+  },
+  {
+    "message": "inventory create karo",
+    "expected_intent": "/inventory_create",
+    "language": "hinglish"
+  },
+  {
+    "message": "naya item inventory mein add karo",
+    "expected_intent": "/inventory_create",
+    "language": "hinglish"
+  },
+  {
+    "message": "create inventory item Cement",
+    "expected_intent": "/inventory_create",
+    "language": "hinglish"
+  },
+  {
+    "message": "stock item add karo",
+    "expected_intent": "/inventory_create",
+    "language": "hinglish"
+  },
+  {
+    "message": "new inventory entry please",
+    "expected_intent": "/inventory_create",
+    "language": "hinglish"
+  },
+  {
+    "message": "inventory mein item add karo",
+    "expected_intent": "/inventory_create",
+    "language": "hinglish"
+  },
+  {
+    "message": "create new SKU please",
+    "expected_intent": "/inventory_create",
+    "language": "hinglish"
+  },
+  {
+    "message": "add inventory item now",
+    "expected_intent": "/inventory_create",
+    "language": "hinglish"
+  },
+  {
+    "message": "inventory item banao yaar",
+    "expected_intent": "/inventory_create",
+    "language": "hinglish"
+  },
+  {
+    "message": "stock create karna hai",
+    "expected_intent": "/inventory_create",
+    "language": "hinglish"
+  },
+  {
+    "message": "register inventory product",
+    "expected_intent": "/inventory_create",
+    "language": "hinglish"
+  },
+  {
+    "message": "naya stock item add",
+    "expected_intent": "/inventory_create",
+    "language": "hinglish"
+  },
+  {
+    "message": "inventory entry create karo",
+    "expected_intent": "/inventory_create",
+    "language": "hinglish"
+  },
+  {
+    "message": "add item to inventory please",
+    "expected_intent": "/inventory_create",
+    "language": "hinglish"
+  },
+  {
+    "message": "create stock item jaldi",
+    "expected_intent": "/inventory_create",
+    "language": "hinglish"
+  },
+  {
+    "message": "inventory product add karo",
+    "expected_intent": "/inventory_create",
+    "language": "hinglish"
+  },
+  {
+    "message": "new item inventory create",
+    "expected_intent": "/inventory_create",
+    "language": "hinglish"
+  },
+  {
+    "message": "stock register karo",
+    "expected_intent": "/inventory_create",
+    "language": "hinglish"
+  },
+  {
+    "message": "inventory item setup please",
+    "expected_intent": "/inventory_create",
+    "language": "hinglish"
+  },
+  {
+    "message": "add warehouse stock item",
+    "expected_intent": "/inventory_create",
+    "language": "hinglish"
+  },
+  {
+    "message": "create inventory record now",
+    "expected_intent": "/inventory_create",
+    "language": "hinglish"
+  },
+  {
+    "message": "naya inventory item add",
+    "expected_intent": "/inventory_create",
+    "language": "hinglish"
+  },
+  {
+    "message": "stock item create please",
+    "expected_intent": "/inventory_create",
+    "language": "hinglish"
+  },
+  {
+    "message": "inventory add karo item",
+    "expected_intent": "/inventory_create",
+    "language": "hinglish"
+  },
+  {
+    "message": "create product in inventory",
+    "expected_intent": "/inventory_create",
+    "language": "hinglish"
+  },
+  {
+    "message": "new SKU inventory mein",
+    "expected_intent": "/inventory_create",
+    "language": "hinglish"
+  },
+  {
+    "message": "inventory create please manager",
+    "expected_intent": "/inventory_create",
+    "language": "hinglish"
+  },
+  {
+    "message": "add stock entry",
+    "expected_intent": "/inventory_create",
+    "language": "hinglish"
+  },
+  {
+    "message": "item create inventory workflow",
+    "expected_intent": "/inventory_create",
+    "language": "hinglish"
+  }
+]

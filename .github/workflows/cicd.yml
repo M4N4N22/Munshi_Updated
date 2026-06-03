@@ -11,6 +11,10 @@ env:
   DOCKERHUB_REPO: munshi_dada
   PROJECT_PATH: /home/ubuntu/munshi-dada
 
+defaults:
+  run:
+    working-directory: backend
+
 jobs:
   migration-validation:
     name: Validate SQL Migrations
@@ -55,6 +59,9 @@ jobs:
     name: Build & Push Multi-Arch Docker Image
     runs-on: ubuntu-latest
     needs: migration-validation
+    defaults:
+      run:
+        working-directory: .
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -71,7 +78,8 @@ jobs:
       - name: Build and Push Multi-Arch Image
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ./backend
+          file: ./backend/Dockerfile
           push: true
           tags: ${{ env.DOCKER_USERNAME }}/${{ env.DOCKERHUB_REPO }}:latest
           platforms: linux/amd64,linux/arm64

@@ -1,0 +1,502 @@
+[
+  {
+    "message": "add a supplier",
+    "expected_intent": "/onboard_vendor",
+    "language": "english"
+  },
+  {
+    "message": "register a new vendor",
+    "expected_intent": "/onboard_vendor",
+    "language": "english"
+  },
+  {
+    "message": "create supplier",
+    "expected_intent": "/onboard_vendor",
+    "language": "english"
+  },
+  {
+    "message": "onboard vendor ABC Traders",
+    "expected_intent": "/onboard_vendor",
+    "language": "english"
+  },
+  {
+    "message": "add new vendor",
+    "expected_intent": "/onboard_vendor",
+    "language": "english"
+  },
+  {
+    "message": "register supplier Shree Cement",
+    "expected_intent": "/onboard_vendor",
+    "language": "english"
+  },
+  {
+    "message": "I want to add a vendor",
+    "expected_intent": "/onboard_vendor",
+    "language": "english"
+  },
+  {
+    "message": "please register a supplier",
+    "expected_intent": "/onboard_vendor",
+    "language": "english"
+  },
+  {
+    "message": "set up a new vendor",
+    "expected_intent": "/onboard_vendor",
+    "language": "english"
+  },
+  {
+    "message": "create a vendor profile",
+    "expected_intent": "/onboard_vendor",
+    "language": "english"
+  },
+  {
+    "message": "add vendor details",
+    "expected_intent": "/onboard_vendor",
+    "language": "english"
+  },
+  {
+    "message": "register vendor for procurement",
+    "expected_intent": "/onboard_vendor",
+    "language": "english"
+  },
+  {
+    "message": "new supplier registration",
+    "expected_intent": "/onboard_vendor",
+    "language": "english"
+  },
+  {
+    "message": "add supplier to system",
+    "expected_intent": "/onboard_vendor",
+    "language": "english"
+  },
+  {
+    "message": "vendor onboarding please",
+    "expected_intent": "/onboard_vendor",
+    "language": "english"
+  },
+  {
+    "message": "start vendor registration",
+    "expected_intent": "/onboard_vendor",
+    "language": "english"
+  },
+  {
+    "message": "add a new supplier account",
+    "expected_intent": "/onboard_vendor",
+    "language": "english"
+  },
+  {
+    "message": "register ABC suppliers",
+    "expected_intent": "/onboard_vendor",
+    "language": "english"
+  },
+  {
+    "message": "create vendor entry",
+    "expected_intent": "/onboard_vendor",
+    "language": "english"
+  },
+  {
+    "message": "onboard a supplier",
+    "expected_intent": "/onboard_vendor",
+    "language": "english"
+  },
+  {
+    "message": "add supplier name and phone",
+    "expected_intent": "/onboard_vendor",
+    "language": "english"
+  },
+  {
+    "message": "register new vendor now",
+    "expected_intent": "/onboard_vendor",
+    "language": "english"
+  },
+  {
+    "message": "need to add vendor",
+    "expected_intent": "/onboard_vendor",
+    "language": "english"
+  },
+  {
+    "message": "vendor add karna in english please add vendor",
+    "expected_intent": "/onboard_vendor",
+    "language": "english"
+  },
+  {
+    "message": "register the vendor",
+    "expected_intent": "/onboard_vendor",
+    "language": "english"
+  },
+  {
+    "message": "add vendor ABC",
+    "expected_intent": "/onboard_vendor",
+    "language": "english"
+  },
+  {
+    "message": "supplier onboarding",
+    "expected_intent": "/onboard_vendor",
+    "language": "english"
+  },
+  {
+    "message": "new vendor setup",
+    "expected_intent": "/onboard_vendor",
+    "language": "english"
+  },
+  {
+    "message": "add purchase vendor",
+    "expected_intent": "/onboard_vendor",
+    "language": "english"
+  },
+  {
+    "message": "register goods supplier",
+    "expected_intent": "/onboard_vendor",
+    "language": "english"
+  },
+  {
+    "message": "create new supplier record",
+    "expected_intent": "/onboard_vendor",
+    "language": "english"
+  },
+  {
+    "message": "add vendor for factory",
+    "expected_intent": "/onboard_vendor",
+    "language": "english"
+  },
+  {
+    "message": "onboard new supplier",
+    "expected_intent": "/onboard_vendor",
+    "language": "english"
+  },
+  {
+    "message": "vendor registration start",
+    "expected_intent": "/onboard_vendor",
+    "language": "english"
+  },
+  {
+    "message": "add a vendor please",
+    "expected_intent": "/onboard_vendor",
+    "language": "english"
+  },
+  {
+    "message": "naya vendor add karna hai",
+    "expected_intent": "/onboard_vendor",
+    "language": "hindi"
+  },
+  {
+    "message": "supplier register karo",
+    "expected_intent": "/onboard_vendor",
+    "language": "hindi"
+  },
+  {
+    "message": "vendor jodna hai",
+    "expected_intent": "/onboard_vendor",
+    "language": "hindi"
+  },
+  {
+    "message": "nayi supplier entry karo",
+    "expected_intent": "/onboard_vendor",
+    "language": "hindi"
+  },
+  {
+    "message": "vendor onboard karna hai",
+    "expected_intent": "/onboard_vendor",
+    "language": "hindi"
+  },
+  {
+    "message": "supplier add karo",
+    "expected_intent": "/onboard_vendor",
+    "language": "hindi"
+  },
+  {
+    "message": "naya supplier darj karo",
+    "expected_intent": "/onboard_vendor",
+    "language": "hindi"
+  },
+  {
+    "message": "vendor registration chalu karo",
+    "expected_intent": "/onboard_vendor",
+    "language": "hindi"
+  },
+  {
+    "message": "supplier ka record banao",
+    "expected_intent": "/onboard_vendor",
+    "language": "hindi"
+  },
+  {
+    "message": "vendor add kar do",
+    "expected_intent": "/onboard_vendor",
+    "language": "hindi"
+  },
+  {
+    "message": "naye vendor ki entry",
+    "expected_intent": "/onboard_vendor",
+    "language": "hindi"
+  },
+  {
+    "message": "supplier onboarding shuru karo",
+    "expected_intent": "/onboard_vendor",
+    "language": "hindi"
+  },
+  {
+    "message": "vendor darj karna hai",
+    "expected_intent": "/onboard_vendor",
+    "language": "hindi"
+  },
+  {
+    "message": "naya vendor system mein daalo",
+    "expected_intent": "/onboard_vendor",
+    "language": "hindi"
+  },
+  {
+    "message": "supplier register kar do",
+    "expected_intent": "/onboard_vendor",
+    "language": "hindi"
+  },
+  {
+    "message": "vendor create karna hai",
+    "expected_intent": "/onboard_vendor",
+    "language": "hindi"
+  },
+  {
+    "message": "nayi supplier jodni hai",
+    "expected_intent": "/onboard_vendor",
+    "language": "hindi"
+  },
+  {
+    "message": "vendor setup karo",
+    "expected_intent": "/onboard_vendor",
+    "language": "hindi"
+  },
+  {
+    "message": "supplier add karna hai",
+    "expected_intent": "/onboard_vendor",
+    "language": "hindi"
+  },
+  {
+    "message": "vendor register karo abhi",
+    "expected_intent": "/onboard_vendor",
+    "language": "hindi"
+  },
+  {
+    "message": "naya supplier onboard karo",
+    "expected_intent": "/onboard_vendor",
+    "language": "hindi"
+  },
+  {
+    "message": "vendor ki details add karo",
+    "expected_intent": "/onboard_vendor",
+    "language": "hindi"
+  },
+  {
+    "message": "supplier entry create karo",
+    "expected_intent": "/onboard_vendor",
+    "language": "hindi"
+  },
+  {
+    "message": "vendor add karna padega",
+    "expected_intent": "/onboard_vendor",
+    "language": "hindi"
+  },
+  {
+    "message": "naye supplier ko register karo",
+    "expected_intent": "/onboard_vendor",
+    "language": "hindi"
+  },
+  {
+    "message": "vendor onboarding chalu karo",
+    "expected_intent": "/onboard_vendor",
+    "language": "hindi"
+  },
+  {
+    "message": "supplier darj karo",
+    "expected_intent": "/onboard_vendor",
+    "language": "hindi"
+  },
+  {
+    "message": "naya vendor banana hai",
+    "expected_intent": "/onboard_vendor",
+    "language": "hindi"
+  },
+  {
+    "message": "vendor jod do please",
+    "expected_intent": "/onboard_vendor",
+    "language": "hindi"
+  },
+  {
+    "message": "supplier record banao",
+    "expected_intent": "/onboard_vendor",
+    "language": "hindi"
+  },
+  {
+    "message": "vendor registration karo",
+    "expected_intent": "/onboard_vendor",
+    "language": "hindi"
+  },
+  {
+    "message": "nayi supplier add karni hai",
+    "expected_intent": "/onboard_vendor",
+    "language": "hindi"
+  },
+  {
+    "message": "vendor create karo",
+    "expected_intent": "/onboard_vendor",
+    "language": "hindi"
+  },
+  {
+    "message": "supplier onboarding karo",
+    "expected_intent": "/onboard_vendor",
+    "language": "hindi"
+  },
+  {
+    "message": "naya vendor add karna hai",
+    "expected_intent": "/onboard_vendor",
+    "language": "hinglish"
+  },
+  {
+    "message": "register new vendor please",
+    "expected_intent": "/onboard_vendor",
+    "language": "hinglish"
+  },
+  {
+    "message": "supplier add karna hai",
+    "expected_intent": "/onboard_vendor",
+    "language": "hinglish"
+  },
+  {
+    "message": "vendor onboard karo",
+    "expected_intent": "/onboard_vendor",
+    "language": "hinglish"
+  },
+  {
+    "message": "add supplier ABC Traders",
+    "expected_intent": "/onboard_vendor",
+    "language": "hinglish"
+  },
+  {
+    "message": "new vendor register karo",
+    "expected_intent": "/onboard_vendor",
+    "language": "hinglish"
+  },
+  {
+    "message": "vendor add karo factory ke liye",
+    "expected_intent": "/onboard_vendor",
+    "language": "hinglish"
+  },
+  {
+    "message": "supplier onboarding start karo",
+    "expected_intent": "/onboard_vendor",
+    "language": "hinglish"
+  },
+  {
+    "message": "please vendor register karo",
+    "expected_intent": "/onboard_vendor",
+    "language": "hinglish"
+  },
+  {
+    "message": "add naya supplier",
+    "expected_intent": "/onboard_vendor",
+    "language": "hinglish"
+  },
+  {
+    "message": "vendor create karna hai bro",
+    "expected_intent": "/onboard_vendor",
+    "language": "hinglish"
+  },
+  {
+    "message": "supplier entry add karo",
+    "expected_intent": "/onboard_vendor",
+    "language": "hinglish"
+  },
+  {
+    "message": "onboard vendor please",
+    "expected_intent": "/onboard_vendor",
+    "language": "hinglish"
+  },
+  {
+    "message": "register supplier jaldi",
+    "expected_intent": "/onboard_vendor",
+    "language": "hinglish"
+  },
+  {
+    "message": "vendor add kar do yaar",
+    "expected_intent": "/onboard_vendor",
+    "language": "hinglish"
+  },
+  {
+    "message": "new supplier add karna",
+    "expected_intent": "/onboard_vendor",
+    "language": "hinglish"
+  },
+  {
+    "message": "vendor registration karo na",
+    "expected_intent": "/onboard_vendor",
+    "language": "hinglish"
+  },
+  {
+    "message": "supplier setup karo",
+    "expected_intent": "/onboard_vendor",
+    "language": "hinglish"
+  },
+  {
+    "message": "add vendor for purchase",
+    "expected_intent": "/onboard_vendor",
+    "language": "hinglish"
+  },
+  {
+    "message": "vendor onboard karna hai abhi",
+    "expected_intent": "/onboard_vendor",
+    "language": "hinglish"
+  },
+  {
+    "message": "register naya vendor",
+    "expected_intent": "/onboard_vendor",
+    "language": "hinglish"
+  },
+  {
+    "message": "supplier add karo system mein",
+    "expected_intent": "/onboard_vendor",
+    "language": "hinglish"
+  },
+  {
+    "message": "vendor entry create karo",
+    "expected_intent": "/onboard_vendor",
+    "language": "hinglish"
+  },
+  {
+    "message": "add new vendor account",
+    "expected_intent": "/onboard_vendor",
+    "language": "hinglish"
+  },
+  {
+    "message": "supplier register karna hai",
+    "expected_intent": "/onboard_vendor",
+    "language": "hinglish"
+  },
+  {
+    "message": "vendor add please manager",
+    "expected_intent": "/onboard_vendor",
+    "language": "hinglish"
+  },
+  {
+    "message": "onboard supplier now",
+    "expected_intent": "/onboard_vendor",
+    "language": "hinglish"
+  },
+  {
+    "message": "naya supplier register",
+    "expected_intent": "/onboard_vendor",
+    "language": "hinglish"
+  },
+  {
+    "message": "vendor add karo please",
+    "expected_intent": "/onboard_vendor",
+    "language": "hinglish"
+  },
+  {
+    "message": "create vendor record",
+    "expected_intent": "/onboard_vendor",
+    "language": "hinglish"
+  },
+  {
+    "message": "register vendor details",
+    "expected_intent": "/onboard_vendor",
+    "language": "hinglish"
+  }
+]
