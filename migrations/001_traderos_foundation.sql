@@ -124,8 +124,39 @@ CREATE TABLE IF NOT EXISTS purchase_requests (
 CREATE INDEX IF NOT EXISTS idx_purchase_requests_factory_id ON purchase_requests (factory_id);
 CREATE INDEX IF NOT EXISTS idx_purchase_requests_factory_status
   ON purchase_requests (factory_id, status);
-CREATE INDEX IF NOT EXISTS idx_purchase_requests_requester_id ON purchase_requests (requester_id);
-CREATE INDEX IF NOT EXISTS idx_purchase_requests_vendor_id ON purchase_requests (vendor_id);
+
+-- Indexes depend on column names (006 may have renamed requester_id / vendor_id on re-run).
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_schema = 'public' AND table_name = 'purchase_requests' AND column_name = 'requester_id'
+  ) THEN
+    CREATE INDEX IF NOT EXISTS idx_purchase_requests_requester_id
+      ON purchase_requests (requester_id);
+  END IF;
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_schema = 'public' AND table_name = 'purchase_requests' AND column_name = 'requested_by'
+  ) THEN
+    CREATE INDEX IF NOT EXISTS idx_purchase_requests_requested_by
+      ON purchase_requests (requested_by);
+  END IF;
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_schema = 'public' AND table_name = 'purchase_requests' AND column_name = 'vendor_id'
+  ) THEN
+    CREATE INDEX IF NOT EXISTS idx_purchase_requests_vendor_id
+      ON purchase_requests (vendor_id);
+  END IF;
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_schema = 'public' AND table_name = 'purchase_requests' AND column_name = 'assigned_vendor_id'
+  ) THEN
+    CREATE INDEX IF NOT EXISTS idx_purchase_requests_assigned_vendor_id
+      ON purchase_requests (assigned_vendor_id);
+  END IF;
+END $$;
 
 -- ---------------------------------------------------------------------------
 -- approval_requests (polymorphic approval foundation)

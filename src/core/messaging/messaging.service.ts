@@ -4,6 +4,7 @@ import { USER_ROLE } from 'src/services/users/users.constants';
 import { Op } from 'sequelize';
 import axios from 'axios';
 import { INDIA_TIMEZONE } from 'src/core/time/india-defaults';
+import type { WaReplyButton } from './outbound-message.types';
 
 export type MessagingWorkerLine = {
   id: number;
@@ -38,6 +39,93 @@ export class MessagingService {
     } catch (error: any) {
       this.logger.warn(
         `WhatsApp send failed for ${to}: ${error?.response?.data ?? error?.message}`,
+      );
+      throw error;
+    }
+  }
+
+  /** WhatsApp interactive reply buttons (max 3). */
+  async sendInteractiveButtons(
+    to: string,
+    body: string,
+    buttons: WaReplyButton[],
+  ): Promise<void> {
+    if (!buttons.length) {
+      await this.sendText(to, body);
+      return;
+    }
+    const url = `${process.env.OLLI_URL}/external/waba/send`;
+    try {
+      await axios.post(
+        url,
+        {
+          to,
+          type: 'interactive',
+          interactive: {
+            type: 'button',
+            body: { text: body.slice(0, 1024) },
+            action: {
+              buttons: buttons.slice(0, 3).map((b) => ({
+                type: 'reply',
+                reply: {
+                  id: b.id.slice(0, 256),
+                  title: b.title.slice(0, 20),
+                },
+              })),
+            },
+          },
+        },
+        {
+          headers: {
+            'X-API-Key': process.env.OLLI_KEY!,
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+    } catch (error: any) {
+      this.logger.warn(
+        `WhatsApp interactive buttons failed for ${to}: ${error?.response?.data ?? error?.message}`,
+      );
+      throw error;
+    }
+  }
+
+  /** WhatsApp interactive CTA URL button (opens link in browser). */
+  async sendInteractiveCtaUrl(
+    to: string,
+    body: string,
+    displayText: string,
+    targetUrl: string,
+  ): Promise<void> {
+    const apiUrl = `${process.env.OLLI_URL}/external/waba/send`;
+    try {
+      await axios.post(
+        apiUrl,
+        {
+          to,
+          type: 'interactive',
+          interactive: {
+            type: 'cta_url',
+            body: { text: body.slice(0, 1024) },
+            action: {
+              name: 'cta_url',
+              parameters: {
+                display_text: displayText.slice(0, 20),
+                url: targetUrl,
+              },
+            },
+          },
+        },
+        {
+          headers: {
+            'X-API-Key': process.env.OLLI_KEY!,
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+    } catch (error: any) {
+      this.logger.warn(
+        `WhatsApp CTA URL failed for ${to}: ${error?.response?.data ?? error?.message}`,
       );
       throw error;
     }

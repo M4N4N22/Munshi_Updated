@@ -1,3 +1,4 @@
+import type { WaOutboundMessage } from 'src/core/messaging/outbound-message.types';
 import {
   WorkflowStatus,
   WorkflowType,
@@ -46,6 +47,27 @@ export interface ISuggestionApprovalSessionData {
   summary?: string;
 }
 
+export interface IAssignClarifyAssigneeOption {
+  index: number;
+  userId: number;
+  name: string;
+  mention: string;
+  role: string;
+}
+
+export interface IAssignClarifySessionData {
+  description?: string;
+  deadline?: string | null;
+  assignable_options?: IAssignClarifyAssigneeOption[];
+}
+
+export interface IAssignClarifyPromptResult {
+  message: string;
+  assignable_options: IAssignClarifyAssigneeOption[];
+  /** When set (e.g. empty team), send buttons instead of plain text only. */
+  outbound?: WaOutboundMessage;
+}
+
 export interface IPurchaseRequestCreateSessionData {
   title?: string;
   description?: string | null;
@@ -91,6 +113,7 @@ export interface WorkflowStepResult {
   cancelled?: boolean;
   nextStep?: string;
   sessionData?: Record<string, unknown>;
+  outbound?: WaOutboundMessage;
 }
 
 export interface IWorkflowHandler {

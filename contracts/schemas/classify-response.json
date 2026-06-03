@@ -10,7 +10,8 @@
     "depart_slug": { "type": ["string", "null"], "enum": ["operations", "sales", "purchase", "it", null] },
     "deadline": { "type": ["string", "null"] },
     "reject_reason": { "type": ["string", "null"] },
-    "message": { "type": ["string", "null"] }
+    "message": { "type": ["string", "null"] },
+    "task_description": { "type": ["string", "null"] }
   },
   "additionalProperties": false
 }

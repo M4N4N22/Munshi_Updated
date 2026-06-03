@@ -20,6 +20,21 @@ import axios from 'axios';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { ReportService } from 'src/services/reports/reports.service';
 import { MessagingService } from 'src/core/messaging/messaging.service';
+import {
+  normalizeOutbound,
+  textOutbound,
+  type WaOutboundMessage,
+} from 'src/core/messaging/outbound-message.types';
+import {
+  buildTeamSetupLinkReply,
+  getOnboardWorkerGoogleFormUrl,
+  getTeamDashboardUrl,
+} from 'src/core/messaging/team-setup-outbound';
+import {
+  resolveTeamSetupActionId,
+  WA_INTERACTIVE_ID,
+} from 'src/core/messaging/whatsapp-interactive.constants';
+import { WORKFLOW_START_COMMANDS } from 'src/services/workflow/workflow.constants';
 import { DepartmentsService } from 'src/services/departments/departments.service';
 import { WorkflowRouterService } from 'src/services/workflow/workflow-engine.service';
 import { InventoryService } from 'src/services/inventory/inventory.service';
@@ -69,6 +84,135 @@ export class WhatsAppService {
     await this.messagingService.sendText(to, message);
     return { ok: true };
   }
+
+  async sendOutbound(to: string, outbound: WaOutboundMessage) {
+    switch (outbound.type) {
+      case 'text':
+        await this.messagingService.sendText(to, outbound.body);
+        break;
+      case 'interactive_buttons':
+        await this.messagingService.sendInteractiveButtons(
+          to,
+          outbound.body,
+          outbound.buttons,
+        );
+        break;
+      case 'interactive_cta_url':
+        try {
+          await this.messagingService.sendInteractiveCtaUrl(
+            to,
+            outbound.body,
+            outbound.displayText,
+            outbound.url,
+          );
+        } catch {
+          await this.messagingService.sendText(
+            to,
+            buildTeamSetupLinkReply(
+              outbound.displayText,
+              outbound.body,
+              outbound.url,
+            ),
+          );
+        }
+        break;
+    }
+    return { ok: true };
+  }
+
+  private resolveOutboundFromHandlerResult(result: unknown): WaOutboundMessage {
+    if (result && typeof result === 'object' && 'type' in result) {
+      const candidate = result as WaOutboundMessage;
+      if (
+        candidate.type === 'text' ||
+        candidate.type === 'interactive_buttons' ||
+        candidate.type === 'interactive_cta_url'
+      ) {
+        return candidate;
+      }
+    }
+    if (typeof result === 'string') {
+      return textOutbound(result);
+    }
+    if (result && typeof result === 'object' && 'message' in result) {
+      const msg = (result as { message?: unknown }).message;
+      if (typeof msg === 'string') {
+        return textOutbound(msg);
+      }
+    }
+    return textOutbound('');
+  }
+
+  private async handleTeamSetupInteractive(
+    phone: string,
+    actionId: string,
+  ): Promise<void> {
+    switch (actionId) {
+      case WA_INTERACTIVE_ID.TEAM_GOOGLE_FORM: {
+        const formUrl = getOnboardWorkerGoogleFormUrl();
+        if (formUrl) {
+          await this.sendTextMessage(
+            phone,
+            buildTeamSetupLinkReply(
+              'Google Form',
+              'Naye team members add karne ke liye ye link kholo. Submit ke baad wapas yahan task bhej sakte hain.',
+              formUrl,
+            ),
+          );
+        } else {
+          await this.sendTextMessage(
+            phone,
+            waSection(
+              'Google Form',
+              'Google Form link abhi configure nahi hai.\n\n*WhatsApp par add* button se worker add karein, ya admin se form link maangein.',
+            ),
+          );
+        }
+        return;
+      }
+      case WA_INTERACTIVE_ID.TEAM_DASHBOARD: {
+        const dashboardUrl = getTeamDashboardUrl();
+        if (dashboardUrl) {
+          await this.sendTextMessage(
+            phone,
+            buildTeamSetupLinkReply(
+              'Dashboard',
+              'Team manage karne ke liye dashboard kholo. (Kuch features jald aa rahe hain.)',
+              dashboardUrl,
+            ),
+          );
+        } else {
+          await this.sendTextMessage(
+            phone,
+            waSection(
+              'Dashboard',
+              'Dashboard link abhi configure nahi hai.\n\n*WhatsApp par add* se abhi worker add kar sakte hain.',
+            ),
+          );
+        }
+        return;
+      }
+      case WA_INTERACTIVE_ID.TEAM_ONBOARD_WA: {
+        const sessionState =
+          await this.workflowRouter.resolveActiveSession(phone);
+        if (sessionState.session) {
+          await this.workflowRouter.cancelWorkflow(phone);
+        }
+        const workflowMessage =
+          await this.workflowRouter.startWorkflowFromCommand(
+            phone,
+            WORKFLOW_START_COMMANDS.ONBOARD_WORKER,
+          );
+        await this.sendOutbound(
+          phone,
+          normalizeOutbound(workflowMessage),
+        );
+        return;
+      }
+      default:
+        return;
+    }
+  }
   // export function formatCommandHints(commands: typeof COMMAND_HINTS) {
   //   return commands
   //     .map((c) => `${c.command} - ${c.hint}`)
@@ -89,16 +233,32 @@ export class WhatsAppService {
   async handleIncomingMessage(body: WhatsAppIncomingDto) {
     console.log({ body });
     const finish = async (result: unknown) => {
-      const message =
-        typeof result === 'string'
-          ? result
-          : (result as { message?: string })?.message || String(result ?? '');
-      await this.sendTextMessage(body.from, message);
+      await this.sendOutbound(
+        body.from,
+        this.resolveOutboundFromHandlerResult(result),
+      );
       return 'ok';
     };
 
     try {
       const msgTrim = (body.message || '').trim();
+
+      const teamActionId = resolveTeamSetupActionId(msgTrim);
+      if (teamActionId) {
+        try {
+          await this.handleTeamSetupInteractive(body.from, teamActionId);
+        } catch (error) {
+          console.log(error);
+          await this.sendTextMessage(
+            body.from,
+            waSection(
+              'Could not complete',
+              'Abhi ye action complete nahi ho paya. Neeche diye link se try karein ya *WhatsApp par add* button dabayein.',
+            ),
+          );
+        }
+        return 'ok';
+      }
 
       if (this.workflowRouter.isCancelCommand(msgTrim)) {
         const cancelResult = await this.workflowRouter.cancelWorkflow(
@@ -153,6 +313,15 @@ export class WhatsAppService {
         const ml = this.parseMlClassifyResponse(response.data);
         console.log('ml-classify', ml);
 
+        const intentLc = (ml.intent || '').toLowerCase();
+        if (intentLc === 'general_chat') {
+          const chatMsg =
+            ml.message?.trim() ||
+            'Main tasks/attendance mein help kar sakta hoon. /help type karo.';
+          await this.sendTextMessage(body.from, chatMsg);
+          return 'ok';
+        }
+
         const rawId = ml.id;
         const id =
           rawId != null &&
@@ -168,6 +337,11 @@ export class WhatsAppService {
           (await this.workflowRouter.startWorkflowIfRegistered(
             body.from,
             command,
+            {
+              taskDescription:
+                ml.task_description?.trim() || msgTrim,
+              deadline: ml.deadline ?? undefined,
+            },
           ));
 
         if (workflowStarted !== null) {
@@ -190,7 +364,7 @@ export class WhatsAppService {
 
       console.log({ result });
       return finish(result);
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
 
       if (error instanceof HttpException) {
@@ -213,8 +387,9 @@ export class WhatsAppService {
       }
 
       const errText =
+        error?.response?.data?.message ||
         error?.message ||
-        'We could not process your request. Please try again or send /help.';
+        'Kuch gadbad ho gayi. Dubara try karein ya */help* bhejein.';
       try {
         await this.sendTextMessage(body.from, errText);
       } catch (sendErr) {
@@ -572,6 +747,13 @@ export class WhatsAppService {
         .trim();
 
       if (!mention || !description) {
+        if (description && !mention && this.canAssignTasks(role)) {
+          return this.workflowRouter.startAssignClarifyWorkflow(
+            phone,
+            description,
+            deadlineInput ?? null,
+          );
+        }
         return waErrorInvalidFormat(
           '/assign',
           '/assign @<name|id|phone> [task description]\n/assign @all [task description]',
@@ -706,6 +888,8 @@ export class WhatsAppService {
     date?: string;
     datetime?: string | null;
     time?: string | null;
+    message?: string | null;
+    task_description?: string | null;
   } {
     const root =
       data != null && typeof data === 'object' && 'data' in (data as object)
@@ -737,6 +921,12 @@ export class WhatsAppService {
       date: typeof r.date === 'string' ? r.date : undefined,
       datetime: (r.datetime as string | null | undefined) ?? null,
       time: (r.time as string | null | undefined) ?? null,
+      message:
+        typeof r.message === 'string' ? r.message : undefined,
+      task_description:
+        typeof r.task_description === 'string'
+          ? r.task_description
+          : undefined,
     };
   }
 
@@ -1263,6 +1453,10 @@ export class WhatsAppService {
   }
 
   // 🔒 Role Guards
+
+  private canAssignTasks(role: string): boolean {
+    return role === USER_ROLE.OWNER || role === USER_ROLE.MANAGER;
+  }
 
   private ensureManager(role: string) {
     if (role === USER_ROLE.WORKER) {

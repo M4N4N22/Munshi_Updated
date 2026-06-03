@@ -21,11 +21,14 @@ import { PurchaseRequestModule } from 'src/services/purchase-requests/purchase-r
 import { ApprovalModule } from 'src/services/approvals/approvals.module';
 import { BusinessDiscoveryModule } from 'src/services/business-discovery/business-discovery.module';
 import { DocumentModule } from 'src/services/documents/documents.module';
+import { OnboardingModule } from 'src/modules/onboarding/onboarding.module';
+import { DomainEventsModule } from 'src/services/domain-events/domain-events.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: '.env',
     }),
     ScheduleModule.forRoot(),
     DbModule,
@@ -47,11 +50,17 @@ import { DocumentModule } from 'src/services/documents/documents.module';
     ApprovalModule,
     DocumentModule,
     BusinessDiscoveryModule,
+    OnboardingModule,
+    DomainEventsModule,
   ],
   providers: [
     {
       provide: APP_FILTER,
       useClass: HttpExceptionFilter,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ReqResInterceptor,
     },
   ],
 })

@@ -10,6 +10,7 @@ import { InventoryCreateWorkflowHandler } from './handlers/inventory-create.hand
 import { PurchaseRequestCreateWorkflowHandler } from './handlers/purchase-request-create.handler';
 import { BusinessDiscoveryWorkflowHandler } from './handlers/business-discovery.handler';
 import { SuggestionApprovalWorkflowHandler } from './handlers/suggestion-approval.handler';
+import { AssignClarifyWorkflowHandler } from './handlers/assign-clarify.handler';
 
 @Injectable()
 export class WorkflowRegistry {
@@ -23,6 +24,7 @@ export class WorkflowRegistry {
     private readonly suggestionApprovalHandler: SuggestionApprovalWorkflowHandler,
     private readonly purchaseRequestCreateHandler: PurchaseRequestCreateWorkflowHandler,
     private readonly businessDiscoveryHandler: BusinessDiscoveryWorkflowHandler,
+    private readonly assignClarifyHandler: AssignClarifyWorkflowHandler,
   ) {
     this.registerHandler(vendorOnboardingHandler);
     this.registerHandler(workerOnboardingHandler);
@@ -31,6 +33,7 @@ export class WorkflowRegistry {
     this.registerHandler(purchaseRequestCreateHandler);
     this.registerHandler(businessDiscoveryHandler);
     this.byCommand.set('/continue_discovery', businessDiscoveryHandler);
+    this.registerHandler(assignClarifyHandler);
   }
 
   registerHandler(handler: IWorkflowHandler): void {

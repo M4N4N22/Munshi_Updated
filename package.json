@@ -8,7 +8,7 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
+    "start": "env-cmd -f .env nest start",
     "dev": "env-cmd -f .env.local nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node scripts/docker-entrypoint.mjs",
@@ -19,7 +19,9 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "db:migrate": "node scripts/apply-migrations.mjs",
+    "db:migrate:baseline": "node scripts/apply-migrations.mjs --baseline"
   },
   "dependencies": {
     "@nestjs/axios": "^4.0.0",

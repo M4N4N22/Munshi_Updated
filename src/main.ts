@@ -1,4 +1,9 @@
+import { config as loadEnv } from 'dotenv';
+import { resolve } from 'path';
 import { NestFactory } from '@nestjs/core';
+
+/** `.env` wins over a stale POSTGRES_CONNECTION_STRING in the shell. */
+loadEnv({ path: resolve(process.cwd(), '.env'), override: true });
 import { AppModule } from './app/api/app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { Logger, ValidationPipe } from '@nestjs/common';

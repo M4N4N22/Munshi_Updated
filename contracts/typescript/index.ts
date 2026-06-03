@@ -28,6 +28,7 @@ export const WORKFLOW_TYPES = [
   'SUGGESTION_APPROVAL',
   'PURCHASE_REQUEST_CREATE',
   'BUSINESS_DISCOVERY',
+  'ASSIGN_CLARIFY',
 ] as const;
 
 export const INTENT_TYPES = [
@@ -55,6 +56,7 @@ export const INTENT_TYPES = [
   '/purchase_request_create',
   '/business_discovery',
   '/continue_discovery',
+  '/assign_clarify',
   'general_chat',
 ] as const;
 
@@ -77,6 +79,7 @@ export interface ClassifyResponseContract {
   deadline?: string | null;
   reject_reason?: string | null;
   message?: string | null;
+  task_description?: string | null;
 }
 
 export interface ExtractionItemContract {

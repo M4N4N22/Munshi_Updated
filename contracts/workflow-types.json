@@ -6,7 +6,8 @@
     "INVENTORY_CREATE",
     "SUGGESTION_APPROVAL",
     "PURCHASE_REQUEST_CREATE",
-    "BUSINESS_DISCOVERY"
+    "BUSINESS_DISCOVERY",
+    "ASSIGN_CLARIFY"
   ],
   "start_commands": {
     "ONBOARD_VENDOR": "/onboard_vendor",
@@ -14,6 +15,7 @@
     "INVENTORY_CREATE": "/inventory_create",
     "SUGGESTION_APPROVAL": "/suggestion_approve",
     "PURCHASE_REQUEST_CREATE": "/purchase_request_create",
-    "BUSINESS_DISCOVERY": "/business_discovery"
+    "BUSINESS_DISCOVERY": "/business_discovery",
+    "ASSIGN_CLARIFY": "/assign_clarify"
   }
 }

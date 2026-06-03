@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { WhatsAppService } from './whatsapp.service';
 import { WhatsAppIncomingDto } from './whatsapp.dto';
+import { parseWhatsAppInbound } from './whatsapp-inbound.parser';
 
 @Controller('webhook')
 export class WhatsAppController {
@@ -25,27 +26,14 @@ export class WhatsAppController {
   async receiveMessage(@Body() body: any) {
     console.log({ controller_body: body });
 
-    const data = body?.data;
-
-    if (!data) {
-      return 'No message data';
-    }
-
-    if (data.type !== 'text') {
-      return 'Unsupported message type';
-    }
-
-    const from = data.from;
-
-    const text = data.text;
-
-    if (!from || !text) {
-      return 'Invalid message payload';
+    const inbound = parseWhatsAppInbound(body);
+    if (!inbound) {
+      return 'ok';
     }
 
     return await this.whatsappService.handleIncomingMessage({
-      from,
-      message: text,
+      from: inbound.from,
+      message: inbound.message,
     });
   }
 

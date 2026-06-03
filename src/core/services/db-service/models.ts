@@ -30,10 +30,34 @@ import { Task, TaskUpdate } from 'src/services/tasks/tasks.schema';
 import { User } from 'src/services/users/users.schema';
 import { Vendor } from 'src/services/vendors/vendors.schema';
 import { WorkflowSession } from 'src/services/workflow/workflow.schema';
+import {
+  BankAccount,
+  BankConsent,
+  BankTransaction,
+  JournalEntry,
+  JournalLine,
+  LedgerAccount,
+  MatchSuggestion,
+} from 'src/services/finance/finance.schema';
+import { DomainEvent } from 'src/services/domain-events/domain-events.schema';
+import {
+  OnboardingOtpChallenge,
+  OnboardingPhoneVerification,
+} from 'src/modules/onboarding/onboarding-otp.schema';
 
 export const MONGOOSE_MODELS = {};
 
 export const SQL_MODELS = {
+  OnboardingOtpChallenge: OnboardingOtpChallenge.setup,
+  OnboardingPhoneVerification: OnboardingPhoneVerification.setup,
+  BankConsent: BankConsent.setup,
+  BankAccount: BankAccount.setup,
+  BankTransaction: BankTransaction.setup,
+  LedgerAccount: LedgerAccount.setup,
+  JournalEntry: JournalEntry.setup,
+  JournalLine: JournalLine.setup,
+  MatchSuggestion: MatchSuggestion.setup,
+  DomainEvent: DomainEvent.setup,
   ApprovalRequest: ApprovalRequest.setup,
   Attendance: Attendance.setup,
   Department: Department.setup,

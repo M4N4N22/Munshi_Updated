@@ -6,6 +6,7 @@ export const WORKFLOW_TYPE = {
   SUGGESTION_APPROVAL: 'SUGGESTION_APPROVAL',
   PURCHASE_REQUEST_CREATE: 'PURCHASE_REQUEST_CREATE',
   BUSINESS_DISCOVERY: 'BUSINESS_DISCOVERY',
+  ASSIGN_CLARIFY: 'ASSIGN_CLARIFY',
 } as const;
 
 export type WorkflowType =
@@ -30,6 +31,7 @@ export const WORKFLOW_START_COMMANDS = {
   SUGGESTION_APPROVAL: '/suggestion_approve',
   PURCHASE_REQUEST_CREATE: '/purchase_request_create',
   BUSINESS_DISCOVERY: '/business_discovery',
+  ASSIGN_CLARIFY: '/assign_clarify',
 } as const;
 
 /** Cancels the active workflow session for the sender. */
@@ -112,3 +114,11 @@ export const BUSINESS_DISCOVERY_STEP = {
 
 export type BusinessDiscoveryStep =
   (typeof BUSINESS_DISCOVERY_STEP)[keyof typeof BUSINESS_DISCOVERY_STEP];
+
+/** Collect assignee for a task described in natural language. */
+export const ASSIGN_CLARIFY_STEP = {
+  ASSIGNEE: 'ASSIGNEE',
+} as const;
+
+export type AssignClarifyStep =
+  (typeof ASSIGN_CLARIFY_STEP)[keyof typeof ASSIGN_CLARIFY_STEP];

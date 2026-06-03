@@ -25,6 +25,7 @@
     "/purchase_request_create",
     "/business_discovery",
     "/continue_discovery",
+    "/assign_clarify",
     "general_chat"
   ],
   "departments": ["operations", "sales", "purchase", "it"],

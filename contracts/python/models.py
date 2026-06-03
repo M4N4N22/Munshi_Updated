@@ -11,6 +11,7 @@ class ClassifyResponse(BaseModel):
     deadline: Optional[str] = None
     reject_reason: Optional[str] = None
     message: Optional[str] = None
+    task_description: Optional[str] = None
 
 
 class ExtractionItem(BaseModel):
