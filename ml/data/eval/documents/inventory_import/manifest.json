@@ -1,0 +1,336 @@
+[
+  {
+    "id": "inv-001",
+    "file_name": "standard_en.csv",
+    "mime_type": "text/csv",
+    "document_type": "INVENTORY_IMPORT",
+    "storage_path": "fixtures/standard_en.csv",
+    "tags": [
+      "english",
+      "standard"
+    ],
+    "should_fail": false,
+    "expected": {
+      "item_count": 2,
+      "first_name": "Cement",
+      "first_qty": 500
+    }
+  },
+  {
+    "id": "inv-002",
+    "file_name": "item_name_alias.csv",
+    "mime_type": "text/csv",
+    "document_type": "INVENTORY_IMPORT",
+    "storage_path": "fixtures/item_name_alias.csv",
+    "tags": [
+      "alias"
+    ],
+    "should_fail": false,
+    "expected": {
+      "item_count": 1,
+      "first_name": "Sand"
+    }
+  },
+  {
+    "id": "inv-003",
+    "file_name": "product_column.csv",
+    "mime_type": "text/csv",
+    "document_type": "INVENTORY_IMPORT",
+    "storage_path": "fixtures/product_column.csv",
+    "tags": [
+      "alias"
+    ],
+    "should_fail": false,
+    "expected": {
+      "item_count": 1,
+      "first_name": "Paint",
+      "first_qty": 40
+    }
+  },
+  {
+    "id": "inv-004",
+    "file_name": "material_hindi.csv",
+    "mime_type": "text/csv",
+    "document_type": "INVENTORY_IMPORT",
+    "storage_path": "fixtures/material_hindi.csv",
+    "tags": [
+      "hindi_headers"
+    ],
+    "should_fail": false,
+    "expected": {
+      "item_count": 1,
+      "first_name": "Cement"
+    }
+  },
+  {
+    "id": "inv-005",
+    "file_name": "mixed_headers.csv",
+    "mime_type": "text/csv",
+    "document_type": "INVENTORY_IMPORT",
+    "storage_path": "fixtures/mixed_headers.csv",
+    "tags": [
+      "mixed"
+    ],
+    "should_fail": false,
+    "expected": {
+      "item_count": 1,
+      "first_name": "Rod",
+      "first_sku": "ROD-1"
+    }
+  },
+  {
+    "id": "inv-006",
+    "file_name": "category_location.csv",
+    "mime_type": "text/csv",
+    "document_type": "INVENTORY_IMPORT",
+    "storage_path": "fixtures/category_location.csv",
+    "tags": [
+      "optional_columns"
+    ],
+    "should_fail": false,
+    "expected": {
+      "item_count": 1,
+      "first_name": "Cement"
+    }
+  },
+  {
+    "id": "inv-007",
+    "file_name": "sku_only.csv",
+    "mime_type": "text/csv",
+    "document_type": "INVENTORY_IMPORT",
+    "storage_path": "fixtures/sku_only.csv",
+    "tags": [
+      "optional"
+    ],
+    "should_fail": false,
+    "expected": {
+      "item_count": 1,
+      "first_name": "Wire",
+      "first_sku": "WR-99"
+    }
+  },
+  {
+    "id": "inv-008",
+    "file_name": "no_quantity.csv",
+    "mime_type": "text/csv",
+    "document_type": "INVENTORY_IMPORT",
+    "storage_path": "fixtures/no_quantity.csv",
+    "tags": [
+      "missing_optional"
+    ],
+    "should_fail": false,
+    "expected": {
+      "item_count": 2,
+      "first_name": "Bricks"
+    }
+  },
+  {
+    "id": "inv-009",
+    "file_name": "zero_qty.csv",
+    "mime_type": "text/csv",
+    "document_type": "INVENTORY_IMPORT",
+    "storage_path": "fixtures/zero_qty.csv",
+    "tags": [
+      "edge"
+    ],
+    "should_fail": false,
+    "expected": {
+      "item_count": 1,
+      "first_qty": 0
+    }
+  },
+  {
+    "id": "inv-010",
+    "file_name": "decimal_qty.csv",
+    "mime_type": "text/csv",
+    "document_type": "INVENTORY_IMPORT",
+    "storage_path": "fixtures/decimal_qty.csv",
+    "tags": [
+      "edge"
+    ],
+    "should_fail": false,
+    "expected": {
+      "item_count": 1,
+      "first_qty": 12.5
+    }
+  },
+  {
+    "id": "inv-011",
+    "file_name": "many_rows.csv",
+    "mime_type": "text/csv",
+    "document_type": "INVENTORY_IMPORT",
+    "storage_path": "fixtures/many_rows.csv",
+    "tags": [
+      "volume"
+    ],
+    "should_fail": false,
+    "expected": {
+      "item_count": 10
+    }
+  },
+  {
+    "id": "inv-012",
+    "file_name": "tab_separated.csv",
+    "mime_type": "text/csv",
+    "document_type": "INVENTORY_IMPORT",
+    "storage_path": "fixtures/tab_separated.csv",
+    "tags": [
+      "structured_text"
+    ],
+    "should_fail": false,
+    "expected": {
+      "item_count": 1,
+      "first_name": "Glue"
+    }
+  },
+  {
+    "id": "inv-013",
+    "file_name": "hinglish_headers.csv",
+    "mime_type": "text/csv",
+    "document_type": "INVENTORY_IMPORT",
+    "storage_path": "fixtures/hinglish_headers.csv",
+    "tags": [
+      "hinglish"
+    ],
+    "should_fail": false,
+    "expected": {
+      "item_count": 1,
+      "first_name": "Cement"
+    }
+  },
+  {
+    "id": "inv-014",
+    "file_name": "closing_balance.csv",
+    "mime_type": "text/csv",
+    "document_type": "INVENTORY_IMPORT",
+    "storage_path": "fixtures/closing_balance.csv",
+    "tags": [
+      "alias"
+    ],
+    "should_fail": false,
+    "expected": {
+      "item_count": 1,
+      "first_name": "Pipe",
+      "first_qty": 33
+    }
+  },
+  {
+    "id": "inv-015",
+    "file_name": "code_alias.csv",
+    "mime_type": "text/csv",
+    "document_type": "INVENTORY_IMPORT",
+    "storage_path": "fixtures/code_alias.csv",
+    "tags": [
+      "alias"
+    ],
+    "should_fail": false,
+    "expected": {
+      "item_count": 1,
+      "first_name": "Cement"
+    }
+  },
+  {
+    "id": "inv-016",
+    "file_name": "warehouse_alias.csv",
+    "mime_type": "text/csv",
+    "document_type": "INVENTORY_IMPORT",
+    "storage_path": "fixtures/warehouse_alias.csv",
+    "tags": [
+      "alias"
+    ],
+    "should_fail": false,
+    "expected": {
+      "item_count": 1,
+      "first_name": "Sand"
+    }
+  },
+  {
+    "id": "inv-017",
+    "file_name": "duplicate_names.csv",
+    "mime_type": "text/csv",
+    "document_type": "INVENTORY_IMPORT",
+    "storage_path": "fixtures/duplicate_names.csv",
+    "tags": [
+      "edge"
+    ],
+    "should_fail": false,
+    "expected": {
+      "item_count": 2,
+      "first_name": "Cement"
+    }
+  },
+  {
+    "id": "inv-018",
+    "file_name": "special_chars.csv",
+    "mime_type": "text/csv",
+    "document_type": "INVENTORY_IMPORT",
+    "storage_path": "fixtures/special_chars.csv",
+    "tags": [
+      "edge"
+    ],
+    "should_fail": false,
+    "expected": {
+      "item_count": 1,
+      "first_name": "Pipe 2\""
+    }
+  },
+  {
+    "id": "inv-019",
+    "file_name": "spaces.csv",
+    "mime_type": "text/csv",
+    "document_type": "INVENTORY_IMPORT",
+    "storage_path": "fixtures/spaces.csv",
+    "tags": [
+      "edge"
+    ],
+    "should_fail": false,
+    "expected": {
+      "item_count": 1,
+      "first_name": "Cement",
+      "first_qty": 5
+    }
+  },
+  {
+    "id": "inv-020",
+    "file_name": "single_row.csv",
+    "mime_type": "text/csv",
+    "document_type": "INVENTORY_IMPORT",
+    "storage_path": "fixtures/single_row.csv",
+    "tags": [
+      "minimal"
+    ],
+    "should_fail": false,
+    "expected": {
+      "item_count": 1,
+      "first_name": "Nails"
+    }
+  },
+  {
+    "id": "inv-021",
+    "file_name": "empty_file.csv",
+    "mime_type": "text/csv",
+    "document_type": "INVENTORY_IMPORT",
+    "storage_path": "fixtures/empty_file.csv",
+    "tags": [
+      "invalid"
+    ],
+    "should_fail": true,
+    "expected": {
+      "item_count": 0
+    }
+  },
+  {
+    "id": "inv-022",
+    "file_name": "no_name_column.csv",
+    "mime_type": "text/csv",
+    "document_type": "INVENTORY_IMPORT",
+    "storage_path": "fixtures/no_name_column.csv",
+    "tags": [
+      "invalid"
+    ],
+    "should_fail": true,
+    "expected": {
+      "item_count": 0
+    }
+  }
+]

@@ -1,0 +1,12 @@
+{
+  "version": "v1",
+  "types": [
+    "PURCHASE_INVOICE",
+    "GOODS_RECEIPT",
+    "STOCK_REGISTER",
+    "INVENTORY_IMPORT",
+    "LEDGER_EXPORT",
+    "BANK_STATEMENT",
+    "UNKNOWN"
+  ]
+}

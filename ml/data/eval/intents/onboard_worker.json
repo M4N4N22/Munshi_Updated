@@ -1,0 +1,502 @@
+[
+  {
+    "message": "add a new worker",
+    "expected_intent": "/onboard_worker",
+    "language": "english"
+  },
+  {
+    "message": "register employee",
+    "expected_intent": "/onboard_worker",
+    "language": "english"
+  },
+  {
+    "message": "onboard worker Rahul",
+    "expected_intent": "/onboard_worker",
+    "language": "english"
+  },
+  {
+    "message": "create new staff member",
+    "expected_intent": "/onboard_worker",
+    "language": "english"
+  },
+  {
+    "message": "add employee to factory",
+    "expected_intent": "/onboard_worker",
+    "language": "english"
+  },
+  {
+    "message": "register a worker",
+    "expected_intent": "/onboard_worker",
+    "language": "english"
+  },
+  {
+    "message": "new worker onboarding",
+    "expected_intent": "/onboard_worker",
+    "language": "english"
+  },
+  {
+    "message": "add team member",
+    "expected_intent": "/onboard_worker",
+    "language": "english"
+  },
+  {
+    "message": "register new employee",
+    "expected_intent": "/onboard_worker",
+    "language": "english"
+  },
+  {
+    "message": "onboard staff member",
+    "expected_intent": "/onboard_worker",
+    "language": "english"
+  },
+  {
+    "message": "add worker to department",
+    "expected_intent": "/onboard_worker",
+    "language": "english"
+  },
+  {
+    "message": "employee registration",
+    "expected_intent": "/onboard_worker",
+    "language": "english"
+  },
+  {
+    "message": "create worker profile",
+    "expected_intent": "/onboard_worker",
+    "language": "english"
+  },
+  {
+    "message": "add new employee",
+    "expected_intent": "/onboard_worker",
+    "language": "english"
+  },
+  {
+    "message": "register factory worker",
+    "expected_intent": "/onboard_worker",
+    "language": "english"
+  },
+  {
+    "message": "onboard new hire",
+    "expected_intent": "/onboard_worker",
+    "language": "english"
+  },
+  {
+    "message": "add staff to production",
+    "expected_intent": "/onboard_worker",
+    "language": "english"
+  },
+  {
+    "message": "worker registration start",
+    "expected_intent": "/onboard_worker",
+    "language": "english"
+  },
+  {
+    "message": "register team member",
+    "expected_intent": "/onboard_worker",
+    "language": "english"
+  },
+  {
+    "message": "add employee Rahul",
+    "expected_intent": "/onboard_worker",
+    "language": "english"
+  },
+  {
+    "message": "new employee setup",
+    "expected_intent": "/onboard_worker",
+    "language": "english"
+  },
+  {
+    "message": "onboard a worker please",
+    "expected_intent": "/onboard_worker",
+    "language": "english"
+  },
+  {
+    "message": "add worker details",
+    "expected_intent": "/onboard_worker",
+    "language": "english"
+  },
+  {
+    "message": "register new staff",
+    "expected_intent": "/onboard_worker",
+    "language": "english"
+  },
+  {
+    "message": "create employee entry",
+    "expected_intent": "/onboard_worker",
+    "language": "english"
+  },
+  {
+    "message": "add factory worker",
+    "expected_intent": "/onboard_worker",
+    "language": "english"
+  },
+  {
+    "message": "worker onboarding please",
+    "expected_intent": "/onboard_worker",
+    "language": "english"
+  },
+  {
+    "message": "register employee now",
+    "expected_intent": "/onboard_worker",
+    "language": "english"
+  },
+  {
+    "message": "add new team member",
+    "expected_intent": "/onboard_worker",
+    "language": "english"
+  },
+  {
+    "message": "onboard employee",
+    "expected_intent": "/onboard_worker",
+    "language": "english"
+  },
+  {
+    "message": "new worker add",
+    "expected_intent": "/onboard_worker",
+    "language": "english"
+  },
+  {
+    "message": "register worker phone",
+    "expected_intent": "/onboard_worker",
+    "language": "english"
+  },
+  {
+    "message": "add employee to system",
+    "expected_intent": "/onboard_worker",
+    "language": "english"
+  },
+  {
+    "message": "worker create please",
+    "expected_intent": "/onboard_worker",
+    "language": "english"
+  },
+  {
+    "message": "naya worker add karo",
+    "expected_intent": "/onboard_worker",
+    "language": "hindi"
+  },
+  {
+    "message": "employee register karo",
+    "expected_intent": "/onboard_worker",
+    "language": "hindi"
+  },
+  {
+    "message": "naye worker ko onboard karo",
+    "expected_intent": "/onboard_worker",
+    "language": "hindi"
+  },
+  {
+    "message": "karmchari jodna hai",
+    "expected_intent": "/onboard_worker",
+    "language": "hindi"
+  },
+  {
+    "message": "worker darj karo",
+    "expected_intent": "/onboard_worker",
+    "language": "hindi"
+  },
+  {
+    "message": "nayi employee entry",
+    "expected_intent": "/onboard_worker",
+    "language": "hindi"
+  },
+  {
+    "message": "staff add karo",
+    "expected_intent": "/onboard_worker",
+    "language": "hindi"
+  },
+  {
+    "message": "worker registration chalu karo",
+    "expected_intent": "/onboard_worker",
+    "language": "hindi"
+  },
+  {
+    "message": "naye employee ko add karo",
+    "expected_intent": "/onboard_worker",
+    "language": "hindi"
+  },
+  {
+    "message": "karmchari onboarding",
+    "expected_intent": "/onboard_worker",
+    "language": "hindi"
+  },
+  {
+    "message": "worker create karo",
+    "expected_intent": "/onboard_worker",
+    "language": "hindi"
+  },
+  {
+    "message": "employee add karna hai",
+    "expected_intent": "/onboard_worker",
+    "language": "hindi"
+  },
+  {
+    "message": "naya staff member jodo",
+    "expected_intent": "/onboard_worker",
+    "language": "hindi"
+  },
+  {
+    "message": "worker register kar do",
+    "expected_intent": "/onboard_worker",
+    "language": "hindi"
+  },
+  {
+    "message": "naye worker ki entry",
+    "expected_intent": "/onboard_worker",
+    "language": "hindi"
+  },
+  {
+    "message": "employee darj karo",
+    "expected_intent": "/onboard_worker",
+    "language": "hindi"
+  },
+  {
+    "message": "worker onboarding shuru karo",
+    "expected_intent": "/onboard_worker",
+    "language": "hindi"
+  },
+  {
+    "message": "nayi team member add karo",
+    "expected_intent": "/onboard_worker",
+    "language": "hindi"
+  },
+  {
+    "message": "karmchari register karo",
+    "expected_intent": "/onboard_worker",
+    "language": "hindi"
+  },
+  {
+    "message": "worker jod do",
+    "expected_intent": "/onboard_worker",
+    "language": "hindi"
+  },
+  {
+    "message": "employee onboarding karo",
+    "expected_intent": "/onboard_worker",
+    "language": "hindi"
+  },
+  {
+    "message": "naya worker banana hai",
+    "expected_intent": "/onboard_worker",
+    "language": "hindi"
+  },
+  {
+    "message": "staff register karo",
+    "expected_intent": "/onboard_worker",
+    "language": "hindi"
+  },
+  {
+    "message": "worker add karna padega",
+    "expected_intent": "/onboard_worker",
+    "language": "hindi"
+  },
+  {
+    "message": "employee entry banao",
+    "expected_intent": "/onboard_worker",
+    "language": "hindi"
+  },
+  {
+    "message": "naye worker ko register karo",
+    "expected_intent": "/onboard_worker",
+    "language": "hindi"
+  },
+  {
+    "message": "karmchari add karo",
+    "expected_intent": "/onboard_worker",
+    "language": "hindi"
+  },
+  {
+    "message": "worker setup karo",
+    "expected_intent": "/onboard_worker",
+    "language": "hindi"
+  },
+  {
+    "message": "employee jodna hai",
+    "expected_intent": "/onboard_worker",
+    "language": "hindi"
+  },
+  {
+    "message": "naya staff add karo",
+    "expected_intent": "/onboard_worker",
+    "language": "hindi"
+  },
+  {
+    "message": "worker register karo abhi",
+    "expected_intent": "/onboard_worker",
+    "language": "hindi"
+  },
+  {
+    "message": "employee create karo",
+    "expected_intent": "/onboard_worker",
+    "language": "hindi"
+  },
+  {
+    "message": "naye worker onboarding",
+    "expected_intent": "/onboard_worker",
+    "language": "hindi"
+  },
+  {
+    "message": "staff member add karo",
+    "expected_intent": "/onboard_worker",
+    "language": "hindi"
+  },
+  {
+    "message": "worker darj karna hai",
+    "expected_intent": "/onboard_worker",
+    "language": "hindi"
+  },
+  {
+    "message": "naya worker add karna hai",
+    "expected_intent": "/onboard_worker",
+    "language": "hinglish"
+  },
+  {
+    "message": "register new employee please",
+    "expected_intent": "/onboard_worker",
+    "language": "hinglish"
+  },
+  {
+    "message": "worker onboard karo",
+    "expected_intent": "/onboard_worker",
+    "language": "hinglish"
+  },
+  {
+    "message": "add employee Rahul",
+    "expected_intent": "/onboard_worker",
+    "language": "hinglish"
+  },
+  {
+    "message": "new worker register karo",
+    "expected_intent": "/onboard_worker",
+    "language": "hinglish"
+  },
+  {
+    "message": "staff add karna hai",
+    "expected_intent": "/onboard_worker",
+    "language": "hinglish"
+  },
+  {
+    "message": "employee onboarding start",
+    "expected_intent": "/onboard_worker",
+    "language": "hinglish"
+  },
+  {
+    "message": "worker add karo factory mein",
+    "expected_intent": "/onboard_worker",
+    "language": "hinglish"
+  },
+  {
+    "message": "register naya worker",
+    "expected_intent": "/onboard_worker",
+    "language": "hinglish"
+  },
+  {
+    "message": "onboard employee please",
+    "expected_intent": "/onboard_worker",
+    "language": "hinglish"
+  },
+  {
+    "message": "add new staff member",
+    "expected_intent": "/onboard_worker",
+    "language": "hinglish"
+  },
+  {
+    "message": "worker registration karo",
+    "expected_intent": "/onboard_worker",
+    "language": "hinglish"
+  },
+  {
+    "message": "employee add karo yaar",
+    "expected_intent": "/onboard_worker",
+    "language": "hinglish"
+  },
+  {
+    "message": "new hire onboard karo",
+    "expected_intent": "/onboard_worker",
+    "language": "hinglish"
+  },
+  {
+    "message": "worker create karna hai",
+    "expected_intent": "/onboard_worker",
+    "language": "hinglish"
+  },
+  {
+    "message": "register team member jaldi",
+    "expected_intent": "/onboard_worker",
+    "language": "hinglish"
+  },
+  {
+    "message": "add worker to department",
+    "expected_intent": "/onboard_worker",
+    "language": "hinglish"
+  },
+  {
+    "message": "employee register karo na",
+    "expected_intent": "/onboard_worker",
+    "language": "hinglish"
+  },
+  {
+    "message": "onboard new worker now",
+    "expected_intent": "/onboard_worker",
+    "language": "hinglish"
+  },
+  {
+    "message": "staff onboarding please",
+    "expected_intent": "/onboard_worker",
+    "language": "hinglish"
+  },
+  {
+    "message": "worker add please",
+    "expected_intent": "/onboard_worker",
+    "language": "hinglish"
+  },
+  {
+    "message": "register employee details",
+    "expected_intent": "/onboard_worker",
+    "language": "hinglish"
+  },
+  {
+    "message": "naya employee add karo",
+    "expected_intent": "/onboard_worker",
+    "language": "hinglish"
+  },
+  {
+    "message": "worker onboard karna hai",
+    "expected_intent": "/onboard_worker",
+    "language": "hinglish"
+  },
+  {
+    "message": "add factory worker",
+    "expected_intent": "/onboard_worker",
+    "language": "hinglish"
+  },
+  {
+    "message": "employee entry create karo",
+    "expected_intent": "/onboard_worker",
+    "language": "hinglish"
+  },
+  {
+    "message": "new worker register",
+    "expected_intent": "/onboard_worker",
+    "language": "hinglish"
+  },
+  {
+    "message": "staff member onboarding",
+    "expected_intent": "/onboard_worker",
+    "language": "hinglish"
+  },
+  {
+    "message": "worker add karo please",
+    "expected_intent": "/onboard_worker",
+    "language": "hinglish"
+  },
+  {
+    "message": "register new hire",
+    "expected_intent": "/onboard_worker",
+    "language": "hinglish"
+  },
+  {
+    "message": "employee onboarding karo",
+    "expected_intent": "/onboard_worker",
+    "language": "hinglish"
+  }
+]

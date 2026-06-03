@@ -1,0 +1,321 @@
+[
+  {
+    "id": "stk-001",
+    "file_name": "dated_en.csv",
+    "mime_type": "text/csv",
+    "document_type": "STOCK_REGISTER",
+    "storage_path": "fixtures/dated_en.csv",
+    "tags": [
+      "english"
+    ],
+    "should_fail": false,
+    "expected": {
+      "item_count": 2,
+      "first_name": "Cement"
+    }
+  },
+  {
+    "id": "stk-002",
+    "file_name": "as_of_date_col.csv",
+    "mime_type": "text/csv",
+    "document_type": "STOCK_REGISTER",
+    "storage_path": "fixtures/as_of_date_col.csv",
+    "tags": [
+      "alias"
+    ],
+    "should_fail": false,
+    "expected": {
+      "item_count": 1,
+      "as_of_date": "2026-04-30"
+    }
+  },
+  {
+    "id": "stk-003",
+    "file_name": "register_date.csv",
+    "mime_type": "text/csv",
+    "document_type": "STOCK_REGISTER",
+    "storage_path": "fixtures/register_date.csv",
+    "tags": [
+      "alias"
+    ],
+    "should_fail": false,
+    "expected": {
+      "item_count": 1
+    }
+  },
+  {
+    "id": "stk-004",
+    "file_name": "filename_date.csv",
+    "mime_type": "text/csv",
+    "document_type": "STOCK_REGISTER",
+    "storage_path": "fixtures/filename_date.csv",
+    "tags": [
+      "filename"
+    ],
+    "should_fail": false,
+    "expected": {
+      "item_count": 2,
+      "as_of_date_from_filename": "2026-05-15"
+    }
+  },
+  {
+    "id": "stk-005",
+    "file_name": "no_date.csv",
+    "mime_type": "text/csv",
+    "document_type": "STOCK_REGISTER",
+    "storage_path": "fixtures/no_date.csv",
+    "tags": [
+      "missing_optional"
+    ],
+    "should_fail": false,
+    "expected": {
+      "item_count": 1,
+      "as_of_date_missing": true
+    }
+  },
+  {
+    "id": "stk-006",
+    "file_name": "hindi_headers.csv",
+    "mime_type": "text/csv",
+    "document_type": "STOCK_REGISTER",
+    "storage_path": "fixtures/hindi_headers.csv",
+    "tags": [
+      "hindi"
+    ],
+    "should_fail": false,
+    "expected": {
+      "item_count": 1,
+      "first_name": "Cement"
+    }
+  },
+  {
+    "id": "stk-007",
+    "file_name": "closing_stock.csv",
+    "mime_type": "text/csv",
+    "document_type": "STOCK_REGISTER",
+    "storage_path": "fixtures/closing_stock.csv",
+    "tags": [
+      "alias"
+    ],
+    "should_fail": false,
+    "expected": {
+      "item_count": 1,
+      "first_qty": 12
+    }
+  },
+  {
+    "id": "stk-008",
+    "file_name": "item_name.csv",
+    "mime_type": "text/csv",
+    "document_type": "STOCK_REGISTER",
+    "storage_path": "fixtures/item_name.csv",
+    "tags": [
+      "alias"
+    ],
+    "should_fail": false,
+    "expected": {
+      "item_count": 1
+    }
+  },
+  {
+    "id": "stk-009",
+    "file_name": "multi_items.csv",
+    "mime_type": "text/csv",
+    "document_type": "STOCK_REGISTER",
+    "storage_path": "fixtures/multi_items.csv",
+    "tags": [
+      "volume"
+    ],
+    "should_fail": false,
+    "expected": {
+      "item_count": 3
+    }
+  },
+  {
+    "id": "stk-010",
+    "file_name": "sku_present.csv",
+    "mime_type": "text/csv",
+    "document_type": "STOCK_REGISTER",
+    "storage_path": "fixtures/sku_present.csv",
+    "tags": [
+      "optional"
+    ],
+    "should_fail": false,
+    "expected": {
+      "item_count": 1,
+      "first_sku": "CEM-1"
+    }
+  },
+  {
+    "id": "stk-011",
+    "file_name": "unit_present.csv",
+    "mime_type": "text/csv",
+    "document_type": "STOCK_REGISTER",
+    "storage_path": "fixtures/unit_present.csv",
+    "tags": [
+      "optional"
+    ],
+    "should_fail": false,
+    "expected": {
+      "item_count": 1
+    }
+  },
+  {
+    "id": "stk-012",
+    "file_name": "zero_qty.csv",
+    "mime_type": "text/csv",
+    "document_type": "STOCK_REGISTER",
+    "storage_path": "fixtures/zero_qty.csv",
+    "tags": [
+      "edge"
+    ],
+    "should_fail": false,
+    "expected": {
+      "item_count": 1,
+      "first_qty": 0
+    }
+  },
+  {
+    "id": "stk-013",
+    "file_name": "decimal_qty.csv",
+    "mime_type": "text/csv",
+    "document_type": "STOCK_REGISTER",
+    "storage_path": "fixtures/decimal_qty.csv",
+    "tags": [
+      "edge"
+    ],
+    "should_fail": false,
+    "expected": {
+      "item_count": 1,
+      "first_qty": 3.5
+    }
+  },
+  {
+    "id": "stk-014",
+    "file_name": "mixed_lang.csv",
+    "mime_type": "text/csv",
+    "document_type": "STOCK_REGISTER",
+    "storage_path": "fixtures/mixed_lang.csv",
+    "tags": [
+      "hinglish"
+    ],
+    "should_fail": false,
+    "expected": {
+      "item_count": 1
+    }
+  },
+  {
+    "id": "stk-015",
+    "file_name": "tab_sep.csv",
+    "mime_type": "text/csv",
+    "document_type": "STOCK_REGISTER",
+    "storage_path": "fixtures/tab_sep.csv",
+    "tags": [
+      "structured_text"
+    ],
+    "should_fail": false,
+    "expected": {
+      "item_count": 1,
+      "first_name": "Wire"
+    }
+  },
+  {
+    "id": "stk-016",
+    "file_name": "long_list.csv",
+    "mime_type": "text/csv",
+    "document_type": "STOCK_REGISTER",
+    "storage_path": "fixtures/long_list.csv",
+    "tags": [
+      "volume"
+    ],
+    "should_fail": false,
+    "expected": {
+      "item_count": 7
+    }
+  },
+  {
+    "id": "stk-017",
+    "file_name": "duplicate_items.csv",
+    "mime_type": "text/csv",
+    "document_type": "STOCK_REGISTER",
+    "storage_path": "fixtures/duplicate_items.csv",
+    "tags": [
+      "edge"
+    ],
+    "should_fail": false,
+    "expected": {
+      "item_count": 2
+    }
+  },
+  {
+    "id": "stk-018",
+    "file_name": "spaces.csv",
+    "mime_type": "text/csv",
+    "document_type": "STOCK_REGISTER",
+    "storage_path": "fixtures/spaces.csv",
+    "tags": [
+      "edge"
+    ],
+    "should_fail": false,
+    "expected": {
+      "item_count": 1,
+      "first_qty": 9
+    }
+  },
+  {
+    "id": "stk-019",
+    "file_name": "single_row.csv",
+    "mime_type": "text/csv",
+    "document_type": "STOCK_REGISTER",
+    "storage_path": "fixtures/single_row.csv",
+    "tags": [
+      "minimal"
+    ],
+    "should_fail": false,
+    "expected": {
+      "item_count": 1
+    }
+  },
+  {
+    "id": "stk-020",
+    "file_name": "standard.csv",
+    "mime_type": "text/csv",
+    "document_type": "STOCK_REGISTER",
+    "storage_path": "fixtures/standard.csv",
+    "tags": [
+      "standard"
+    ],
+    "should_fail": false,
+    "expected": {
+      "item_count": 2
+    }
+  },
+  {
+    "id": "stk-021",
+    "file_name": "empty.csv",
+    "mime_type": "text/csv",
+    "document_type": "STOCK_REGISTER",
+    "storage_path": "fixtures/empty.csv",
+    "tags": [
+      "invalid"
+    ],
+    "should_fail": true,
+    "expected": {
+      "item_count": 0
+    }
+  },
+  {
+    "id": "stk-022",
+    "file_name": "bad_headers.csv",
+    "mime_type": "text/csv",
+    "document_type": "STOCK_REGISTER",
+    "storage_path": "fixtures/bad_headers.csv",
+    "tags": [
+      "invalid"
+    ],
+    "should_fail": true,
+    "expected": {
+      "item_count": 0
+    }
+  }
+]

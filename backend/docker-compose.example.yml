@@ -1,5 +1,5 @@
-# Munshi monorepo — local stack. Copy to docker-compose.yml and adjust secrets.
-# Migrations run automatically on backend container start (AUTO_MIGRATE=1).
+# Example local stack — copy to docker-compose.yml and adjust secrets.
+# Migrations run automatically on container start (AUTO_MIGRATE=1).
 
 services:
   postgres:
@@ -13,31 +13,17 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
-  ml:
-    build:
-      context: ./ml
-      dockerfile: Dockerfile
-    ports:
-      - '8000:8000'
-    env_file:
-      - ./ml/.env
-
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    build: .
     ports:
       - '4001:4001'
     environment:
       PORT: 4001
       AUTO_MIGRATE: '1'
       POSTGRES_CONNECTION_STRING: postgresql://munshi:munshi@postgres:5432/munshi_data
-      ML_URL: http://ml:8000
-    env_file:
-      - ./backend/.env
+      ML_URL: http://host.docker.internal:8000
     depends_on:
       - postgres
-      - ml
 
 volumes:
   pgdata:
