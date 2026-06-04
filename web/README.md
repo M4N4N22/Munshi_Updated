@@ -35,10 +35,22 @@ After onboarding, team management for assign flows can also happen via WhatsApp 
 
 ---
 
+## Team CSV template (WhatsApp bulk add)
+
+Owners download a ready-made CSV from Vercel static files:
+
+- **File:** `public/team-import/munshi-team-template.csv`
+- **URL after deploy:** `https://munshi.app/team-import/munshi-team-template.csv`
+
+Edit only this file when changing columns or sample rows; the backend WhatsApp flow links here (not the API).
+
+---
+
 ## Project layout
 
 ```
 web/
+├── public/team-import/            # WhatsApp bulk-import CSV template
 ├── app/
 │   ├── onboarding/page.tsx
 │   ├── api/whatsapp/route.ts      # wa.me redirect
