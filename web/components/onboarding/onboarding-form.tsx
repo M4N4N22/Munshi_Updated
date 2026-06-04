@@ -175,7 +175,8 @@ export function OnboardingForm({
           <p className="mt-2 text-sm leading-relaxed text-emerald-900/90">
             <span className="font-medium">{formatPhoneDisplay(normalized)}</span>{" "}
             is verified. Open Munshi on WhatsApp and send{" "}
-            <span className="font-mono font-medium">START</span> to set up
+            <span className="font-mono font-medium">START</span> — bot aapka
+            menu dikhayega (employee, maal, kaam)
             employees, attendance, and tasks.
           </p>
         </div>
@@ -309,7 +310,7 @@ export function OnboardingForm({
           Munshi
         </p>
         <h1 className="mt-2 text-3xl font-semibold tracking-tight text-zinc-900">
-          Run your factory on WhatsApp
+          Run your business on WhatsApp
         </h1>
         <p className="mt-3 text-base leading-relaxed text-zinc-600">
           Register your mobile. We&apos;ll verify it by SMS, then connect you to
