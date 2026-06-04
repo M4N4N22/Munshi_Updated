@@ -1,34 +1,31 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import type { Metadata } from 'next'
+import { Geist, Geist_Mono } from 'next/font/google'
+import { Analytics } from '@vercel/analytics/next'
+import './globals.css'
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const _geist = Geist({ subsets: ["latin"] });
+const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Munshi",
-  description:
-    "WhatsApp-first operations for factories — attendance, tasks, and team management.",
-};
+  title: 'Munshi Dada - Stop Losing Customers On WhatsApp',
+  description: 'AI-assistant that answers customers and employees automatically. Close deals on WhatsApp with intelligent automation.',
+  icons: {
+    icon: '/Munshi_Icon.png',
+    apple: '/Munshi_Icon.png',
+  },
+}
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="en">
+      <body className="font-sans antialiased">
+        {children}
+        <Analytics />
+      </body>
     </html>
-  );
+  )
 }
