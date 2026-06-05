@@ -136,3 +136,14 @@ On push to **`main`**, [.github/workflows/cicd.yml](.github/workflows/cicd.yml) 
 
 For package-specific commands, tests, and feature lists, use the linked READMEs above.
 
+---
+
+## Planning docs (for implementers)
+
+| Doc | Topic |
+|-----|--------|
+| [docs/p2-inventory-task-integrations.md](docs/p2-inventory-task-integrations.md) | **P2:** Task-linked stock, CSV/Zoho import, alerts — agent-mode task list |
+| [docs/p0-production-database.md](docs/p0-production-database.md) | Supabase production DB |
+| [docs/p1-setu-bank-linking-research.md](docs/p1-setu-bank-linking-research.md) | Setu / bank linking research |
+| [docs/onboarding-otp.md](docs/onboarding-otp.md) | Web OTP onboarding |
+

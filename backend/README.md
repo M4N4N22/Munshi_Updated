@@ -205,3 +205,13 @@ When adding intents or workflows:
 4. Run `yarn test -- contract-drift`.
 
 Full contract docs: [contracts/README.md](contracts/README.md).
+
+---
+
+## P2 roadmap — inventory & task-linked stock
+
+Implementation guide for teammates (phased todos, schema, agent prompts):
+
+**[../docs/p2-inventory-task-integrations.md](../docs/p2-inventory-task-integrations.md)**
+
+Start with **Phase 0** (task completion → `recordStockOut` with `reference_type: TASK`) before Zoho OAuth.
