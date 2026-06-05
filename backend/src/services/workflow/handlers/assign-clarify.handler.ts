@@ -64,11 +64,11 @@ export class AssignClarifyWorkflowHandler implements IWorkflowHandler {
     const options = await this.loadAssignableOptions(context);
     if (!options.length) {
       const bodyText = waSection(
-        'Team required',
+        'Employee chahiye',
         `*Task:* ${description.trim()}${dueLine}\n\n` +
-          `Abhi aapki factory mein koi team member nahi hai jisko ye task diya ja sake.\n\n` +
-          `Neeche se team add karne ka tareeka chuno 👇\n\n` +
-          `Team ready hone ke baad dubara task bhejiye, jaise:\n` +
+          `Abhi aapke business mein koi employee nahi hai jisko ye kaam diya ja sake.\n\n` +
+          `Neeche se employee jodne ka tareeka chuno 👇\n\n` +
+          `Log jud jaayein to dubara kaam bhejiye, jaise:\n` +
           `*aaj website banegi*`,
       );
       return {
@@ -128,7 +128,7 @@ export class AssignClarifyWorkflowHandler implements IWorkflowHandler {
 
     if (!options.length) {
       const bodyText = waSection(
-        'Team required',
+        'Employee chahiye',
         'Pehle team member add karein, phir dubara task assign karein.\n\nNeeche se option chuno 👇',
       );
       return {

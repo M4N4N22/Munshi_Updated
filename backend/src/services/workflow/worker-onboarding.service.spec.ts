@@ -22,6 +22,10 @@ describe('WorkerOnboardingService', () => {
         { id: 3, name: 'Sales', slug: 'sales' },
       ]),
       addWorker: jest.fn(),
+      assignDepartmentHead: jest.fn().mockResolvedValue({
+        id: 3,
+        name: 'Sales',
+      }),
     } as unknown as jest.Mocked<DepartmentsService>;
 
     messagingService = {
@@ -71,6 +75,30 @@ describe('WorkerOnboardingService', () => {
       'Welcome to Munshi',
     );
     expect(result.userId).toBe(55);
+  });
+
+  it('assigns department head when role is manager', async () => {
+    factoryService.assignMember.mockResolvedValue({
+      id: 11,
+      user_id: 88,
+      factory_id: 1,
+      role: USER_ROLE.MANAGER,
+    } as any);
+
+    await service.onboardWorker({
+      factoryId: 1,
+      name: 'Mayank Pawar',
+      phoneNumber: '7247577182',
+      departmentId: 3,
+      role: USER_ROLE.MANAGER,
+    });
+
+    expect(departmentsService.assignDepartmentHead).toHaveBeenCalledWith(
+      3,
+      88,
+      1,
+    );
+    expect(departmentsService.addWorker).not.toHaveBeenCalled();
   });
 
   it('rejects department outside factory', async () => {

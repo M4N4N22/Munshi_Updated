@@ -49,7 +49,6 @@ export class Department extends Model<
         timestamps: true,
         indexes: [
           { unique: true, fields: ['factory_id', 'slug'] },
-          { unique: true, fields: ['factory_id', 'manager_user_id'] },
         ],
       },
     );

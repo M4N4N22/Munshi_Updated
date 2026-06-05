@@ -6,9 +6,10 @@ import { OnboardingOtpStoreService } from './onboarding-otp.store.service';
 import { OnboardingOtpCleanupCron } from './onboarding-otp.cron';
 import { FactoryModule } from 'src/services/factories/factories.module';
 import { DomainEventsModule } from 'src/services/domain-events/domain-events.module';
+import { DepartmentsModule } from 'src/services/departments/departments.module';
 
 @Module({
-  imports: [FactoryModule, DomainEventsModule],
+  imports: [FactoryModule, DomainEventsModule, DepartmentsModule],
   controllers: [OnboardingController],
   providers: [
     OnboardingService,

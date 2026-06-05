@@ -14,9 +14,9 @@ describe('getTeamCsvTemplateDownloadUrl', () => {
     process.env = prev;
   });
 
-  it('defaults to munshi.app static template (web/public)', () => {
+  it('defaults to Vercel static template (web/public)', () => {
     expect(getTeamCsvTemplateDownloadUrl()).toBe(TEAM_CSV_PUBLIC_TEMPLATE_URL);
-    expect(getTeamCsvTemplateDownloadUrl()).toContain('munshi.app');
+    expect(getTeamCsvTemplateDownloadUrl()).toContain('munshi-dada.vercel.app');
     expect(getTeamCsvTemplateDownloadUrl()).not.toContain('localhost');
     expect(getTeamCsvTemplateDownloadUrl()).not.toContain('api.munshi');
   });

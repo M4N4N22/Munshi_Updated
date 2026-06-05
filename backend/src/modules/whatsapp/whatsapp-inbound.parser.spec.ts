@@ -7,7 +7,25 @@ describe('parseWhatsAppInbound', () => {
       parseWhatsAppInbound({
         data: { type: 'text', from: '919999999999', text: 'hello' },
       }),
-    ).toEqual({ from: '919999999999', message: 'hello' });
+    ).toEqual({ kind: 'text', from: '919999999999', message: 'hello' });
+  });
+
+  it('does not replace plain text with webhook metadata timestamps', () => {
+    expect(
+      parseWhatsAppInbound({
+        event: 'message',
+        data: {
+          type: 'text',
+          from: '918874369725',
+          text: 'production',
+          timestamp: '1780546230',
+        },
+      }),
+    ).toEqual({
+      kind: 'text',
+      from: '918874369725',
+      message: 'production',
+    });
   });
 
   it('parses interactive button_reply', () => {
@@ -26,6 +44,7 @@ describe('parseWhatsAppInbound', () => {
         },
       }),
     ).toEqual({
+      kind: 'text',
       from: '919999999999',
       message: WA_INTERACTIVE_ID.TEAM_ONBOARD_WA,
     });
@@ -42,6 +61,7 @@ describe('parseWhatsAppInbound', () => {
         },
       }),
     ).toEqual({
+      kind: 'text',
       from: '918874369725',
       message: WA_INTERACTIVE_ID.TEAM_GOOGLE_FORM,
     });
@@ -56,8 +76,87 @@ describe('parseWhatsAppInbound', () => {
     ).toBeNull();
   });
 
+  it('parses document messages', () => {
+    expect(
+      parseWhatsAppInbound({
+        data: { type: 'document', from: '919999999999', document: {
+            id: 'doc-123',
+            filename: 'team.csv',
+          },
+        },
+      }),
+    ).toEqual({
+      kind: 'document',
+      from: '919999999999',
+      media: {
+        mediaId: 'doc-123',
+        filename: 'team.csv',
+      },
+    });
+  });
+
+  it('parses GetOlli document with data.media', () => {
+    expect(
+      parseWhatsAppInbound({
+        event: 'message',
+        data: {
+          message_id: 'wamid.HBgMTEST',
+          from: '918874369725',
+          type: 'document',
+          media: {
+            id: 'media-789',
+            filename: 'munshi-team-template.csv',
+          },
+        },
+      }),
+    ).toEqual({
+      kind: 'document',
+      from: '918874369725',
+      media: {
+        mediaId: 'media-789',
+        filename: 'munshi-team-template.csv',
+      },
+    });
+  });
+
+  it('parses shared contact as phone text', () => {
+    expect(
+      parseWhatsAppInbound({
+        event: 'message',
+        data: {
+          type: 'contacts',
+          from: '919999999999',
+          contacts: [
+            { phones: [{ wa_id: '918765432109' }] },
+          ],
+        },
+      }),
+    ).toEqual({
+      kind: 'text',
+      from: '919999999999',
+      message: '918765432109',
+    });
+  });
+
+  it('parses GetOlli contact share without phone as nudge message', () => {
+    const result = parseWhatsAppInbound({
+      event: 'message',
+      data: {
+        from: '918874369725',
+        type: 'contacts',
+        text: 'Mayank',
+        media: null,
+      },
+    });
+    expect(result?.kind).toBe('text');
+    if (result?.kind === 'text') {
+      expect(result.message).toContain('__MUNSHI_CONTACT_NO_PHONE__');
+      expect(result.message).toContain('Mayank');
+    }
+  });
+
   it('returns null for unsupported payloads', () => {
     expect(parseWhatsAppInbound({})).toBeNull();
-    expect(parseWhatsAppInbound({ data: { type: 'image' } })).toBeNull();
+    expect(parseWhatsAppInbound({ data: { type: 'image', from: '91' } })).toBeNull();
   });
 });

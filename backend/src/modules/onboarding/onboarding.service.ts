@@ -17,6 +17,7 @@ import {
 import { FactoryService } from 'src/services/factories/factories.service';
 import { UserService } from 'src/services/users/users.service';
 import { USER_ROLE } from 'src/services/users/users.constants';
+import { DepartmentsService } from 'src/services/departments/departments.service';
 
 @Injectable()
 export class OnboardingService {
@@ -26,6 +27,7 @@ export class OnboardingService {
     private readonly factoryService: FactoryService,
     private readonly usersService: UserService,
     private readonly domainEvents: DomainEventsService,
+    private readonly departmentsService: DepartmentsService,
   ) {}
 
   async sendOtp(dto: SendOtpDto) {
@@ -122,6 +124,10 @@ export class OnboardingService {
         factory_id: factory.id,
         already_registered: false,
       };
+      await this.departmentsService.ensureDefaultDepartment(
+        factory.id,
+        link.user_id,
+      );
       await this.publishRegisteredEvent(factory.id, link.user_id, phone, false);
       return result;
     }
@@ -139,6 +145,10 @@ export class OnboardingService {
       factory_id: factory.id,
       already_registered: false,
     };
+    await this.departmentsService.ensureDefaultDepartment(
+      factory.id,
+      link.user_id,
+    );
     await this.publishRegisteredEvent(factory.id, link.user_id, phone, false);
     return result;
   }

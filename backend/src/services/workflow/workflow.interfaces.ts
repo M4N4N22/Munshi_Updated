@@ -29,6 +29,7 @@ export interface IWorkerOnboardingSessionData {
   name?: string;
   phone_number?: string;
   department_id?: number;
+  worker_role?: string;
   doj?: string | null;
 }
 

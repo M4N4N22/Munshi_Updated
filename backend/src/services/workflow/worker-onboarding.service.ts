@@ -9,6 +9,7 @@ export interface OnboardWorkerInput {
   name: string;
   phoneNumber: string;
   departmentId: number;
+  role?: USER_ROLE.WORKER | USER_ROLE.MANAGER;
   doj?: Date | null;
 }
 
@@ -37,11 +38,12 @@ export class WorkerOnboardingService {
       );
     }
 
+    const memberRole = input.role ?? USER_ROLE.WORKER;
     const link = await this.factoryService.assignMember({
       factory_id: String(input.factoryId),
       phone_number: input.phoneNumber,
       name: input.name,
-      role: USER_ROLE.WORKER,
+      role: memberRole,
     });
 
     if (input.doj) {
@@ -50,9 +52,18 @@ export class WorkerOnboardingService {
       });
     }
 
-    await this.departmentsService.addWorker(input.departmentId, {
-      user_id: link.user_id,
-    });
+    // Department head handoff only when role step explicitly chose Manager.
+    if (memberRole === USER_ROLE.MANAGER) {
+      await this.departmentsService.assignDepartmentHead(
+        input.departmentId,
+        link.user_id,
+        input.factoryId,
+      );
+    } else if (memberRole === USER_ROLE.WORKER) {
+      await this.departmentsService.addWorker(input.departmentId, {
+        user_id: link.user_id,
+      });
+    }
 
     const welcomeText = this.messagingService.buildWorkerWelcomeText({
       userName: input.name,

@@ -25,15 +25,24 @@ import {
   textOutbound,
   type WaOutboundMessage,
 } from 'src/core/messaging/outbound-message.types';
+import { buildTeamSetupLinkReply } from 'src/core/messaging/team-setup-outbound';
+import { isChatHomeTrigger } from 'src/core/messaging/chat-home-triggers';
 import {
-  buildTeamSetupLinkReply,
-  getOnboardWorkerGoogleFormUrl,
-  getTeamDashboardUrl,
-} from 'src/core/messaging/team-setup-outbound';
+  buildUnrecognizedChatOutbound,
+  WA_OUTBOUND_ALREADY_SENT,
+} from 'src/core/messaging/owner-home-outbound';
+import { waUnrecognizedChatWorker } from 'src/core/messaging/owner-home.templates';
 import {
-  resolveTeamSetupActionId,
+  resolveInteractiveActionId,
   WA_INTERACTIVE_ID,
 } from 'src/core/messaging/whatsapp-interactive.constants';
+import {
+  waDashboardComingSoon,
+  waGoogleFormRetired,
+} from 'src/core/messaging/owner-home.templates';
+import { OlliMediaService, type InboundMediaRef } from 'src/core/messaging/olli-media.service';
+import { OwnerHomeService } from './owner-home.service';
+import { TeamBulkImportService } from './team-bulk-import.service';
 import { WORKFLOW_START_COMMANDS } from 'src/services/workflow/workflow.constants';
 import { DepartmentsService } from 'src/services/departments/departments.service';
 import { WorkflowRouterService } from 'src/services/workflow/workflow-engine.service';
@@ -60,7 +69,6 @@ import {
   waTaskUpdated,
   waTasksEmpty,
   waTeamEmpty,
-  waUnknownCommand,
 } from './whatsapp.templates';
 
 @Injectable()
@@ -78,7 +86,53 @@ export class WhatsAppService {
     private readonly departmentsService: DepartmentsService,
     private readonly workflowRouter: WorkflowRouterService,
     private readonly inventoryService: InventoryService,
+    private readonly ownerHomeService: OwnerHomeService,
+    private readonly teamBulkImport: TeamBulkImportService,
+    private readonly olliMedia: OlliMediaService,
   ) {}
+
+  async handleIncomingDocument(
+    from: string,
+    media: InboundMediaRef,
+  ): Promise<string> {
+    try {
+      if (!this.teamBulkImport.isAwaitingCsv(from)) {
+        await this.sendTextMessage(
+          from,
+          waSection(
+            'File received',
+            'CSV team import ke liye pehle *Employee jodiyein* → *CSV se bulk add* chuno.\n\n' +
+              'Phir template bhari hui *CSV file* yahin bhejein.\n\n' +
+              'Chhoti team ke liye *WhatsApp par add* use karein.',
+          ),
+        );
+        return 'ok';
+      }
+
+      const buffer = await this.olliMedia.downloadMedia(media);
+      const summary = await this.teamBulkImport.importFromCsvBuffer(
+        from,
+        buffer,
+        media.filename,
+      );
+      await this.sendTextMessage(from, summary);
+      return 'ok';
+    } catch (error: unknown) {
+      console.log(error);
+      const msg =
+        error instanceof Error
+          ? error.message
+          : 'File download ya import fail ho gaya.';
+      await this.sendTextMessage(
+        from,
+        waSection(
+          'CSV import fail',
+          `${msg}\n\nDubara *CSV se bulk add* chuno aur sahi template ki file bhejein.`,
+        ),
+      );
+      return 'error';
+    }
+  }
 
   async sendTextMessage(to: string, message: string) {
     await this.messagingService.sendText(to, message);
@@ -120,7 +174,12 @@ export class WhatsAppService {
     return { ok: true };
   }
 
-  private resolveOutboundFromHandlerResult(result: unknown): WaOutboundMessage {
+  private resolveOutboundFromHandlerResult(
+    result: unknown,
+  ): WaOutboundMessage | null {
+    if (result === WA_OUTBOUND_ALREADY_SENT) {
+      return null;
+    }
     if (result && typeof result === 'object' && 'type' in result) {
       const candidate = result as WaOutboundMessage;
       if (
@@ -149,47 +208,11 @@ export class WhatsAppService {
   ): Promise<void> {
     switch (actionId) {
       case WA_INTERACTIVE_ID.TEAM_GOOGLE_FORM: {
-        const formUrl = getOnboardWorkerGoogleFormUrl();
-        if (formUrl) {
-          await this.sendTextMessage(
-            phone,
-            buildTeamSetupLinkReply(
-              'Google Form',
-              'Naye team members add karne ke liye ye link kholo. Submit ke baad wapas yahan task bhej sakte hain.',
-              formUrl,
-            ),
-          );
-        } else {
-          await this.sendTextMessage(
-            phone,
-            waSection(
-              'Google Form',
-              'Google Form link abhi configure nahi hai.\n\n*WhatsApp par add* button se worker add karein, ya admin se form link maangein.',
-            ),
-          );
-        }
+        await this.sendTextMessage(phone, waGoogleFormRetired());
         return;
       }
       case WA_INTERACTIVE_ID.TEAM_DASHBOARD: {
-        const dashboardUrl = getTeamDashboardUrl();
-        if (dashboardUrl) {
-          await this.sendTextMessage(
-            phone,
-            buildTeamSetupLinkReply(
-              'Dashboard',
-              'Team manage karne ke liye dashboard kholo. (Kuch features jald aa rahe hain.)',
-              dashboardUrl,
-            ),
-          );
-        } else {
-          await this.sendTextMessage(
-            phone,
-            waSection(
-              'Dashboard',
-              'Dashboard link abhi configure nahi hai.\n\n*WhatsApp par add* se abhi worker add kar sakte hain.',
-            ),
-          );
-        }
+        await this.sendTextMessage(phone, waDashboardComingSoon());
         return;
       }
       case WA_INTERACTIVE_ID.TEAM_ONBOARD_WA: {
@@ -233,38 +256,94 @@ export class WhatsAppService {
   async handleIncomingMessage(body: WhatsAppIncomingDto) {
     console.log({ body });
     const finish = async (result: unknown) => {
-      await this.sendOutbound(
-        body.from,
-        this.resolveOutboundFromHandlerResult(result),
-      );
+      const outbound = this.resolveOutboundFromHandlerResult(result);
+      if (outbound) {
+        await this.sendOutbound(body.from, outbound);
+      }
       return 'ok';
     };
 
     try {
       const msgTrim = (body.message || '').trim();
 
-      const teamActionId = resolveTeamSetupActionId(msgTrim);
-      if (teamActionId) {
+      const interactiveActionId = resolveInteractiveActionId(msgTrim);
+      if (interactiveActionId) {
         try {
-          await this.handleTeamSetupInteractive(body.from, teamActionId);
+          if (
+            interactiveActionId === WA_INTERACTIVE_ID.HOME_ADD_EMPLOYEE ||
+            interactiveActionId === WA_INTERACTIVE_ID.HOME_ADD_STOCK ||
+            interactiveActionId === WA_INTERACTIVE_ID.HOME_ASSIGN_TASK ||
+            interactiveActionId === WA_INTERACTIVE_ID.HOME_GO_HOME ||
+            interactiveActionId === WA_INTERACTIVE_ID.HOME_BULK_CSV
+          ) {
+            await this.ownerHomeService.handleHomeAction(
+              body.from,
+              interactiveActionId,
+              {
+                sendOutbound: (to, o) => this.sendOutbound(to, o),
+                sendText: (to, t) => this.sendTextMessage(to, t),
+                handleTeamSetup: (to, id) =>
+                  this.handleTeamSetupInteractive(to, id),
+              },
+            );
+          } else {
+            await this.handleTeamSetupInteractive(
+              body.from,
+              interactiveActionId,
+            );
+          }
         } catch (error) {
           console.log(error);
           await this.sendTextMessage(
             body.from,
             waSection(
               'Could not complete',
-              'Abhi ye action complete nahi ho paya. Neeche diye link se try karein ya *WhatsApp par add* button dabayein.',
+              'Abhi ye action complete nahi ho paya. *Home par jayein* button dabayein ya dubara try karein.',
             ),
           );
         }
         return 'ok';
       }
 
+      if (isChatHomeTrigger(msgTrim)) {
+        const resumeReminder =
+          await this.workflowRouter.buildInProgressWorkerOnboardingReminder(
+            body.from,
+          );
+        if (resumeReminder) {
+          const owner = await this.usersService.findByPhone(body.from);
+          const firstName =
+            owner?.name?.trim().split(/\s+/)[0] || 'ji';
+          await this.sendTextMessage(
+            body.from,
+            `Namaste ${firstName} 👋\n\n${resumeReminder}`,
+          );
+        } else {
+          await this.ownerHomeService.sendOwnerHome(body.from, (to, o) =>
+            this.sendOutbound(to, o),
+          );
+        }
+        return 'ok';
+      }
+
       if (this.workflowRouter.isCancelCommand(msgTrim)) {
+        this.teamBulkImport.cancelAwaiting(body.from);
         const cancelResult = await this.workflowRouter.cancelWorkflow(
           body.from,
         );
         return finish(cancelResult);
+      }
+
+      if (this.teamBulkImport.isAwaitingCsv(body.from)) {
+        await this.sendTextMessage(
+          body.from,
+          waSection(
+            'CSV file bhejein',
+            'Ab *CSV file* isi chat mein attach karke bhejein (template format).\n\n' +
+              '*cancel* — band karna ho to likhein.',
+          ),
+        );
+        return 'ok';
       }
 
       const sessionState = await this.workflowRouter.resolveActiveSession(
@@ -315,10 +394,7 @@ export class WhatsAppService {
 
         const intentLc = (ml.intent || '').toLowerCase();
         if (intentLc === 'general_chat') {
-          const chatMsg =
-            ml.message?.trim() ||
-            'Main tasks/attendance mein help kar sakta hoon. /help type karo.';
-          await this.sendTextMessage(body.from, chatMsg);
+          await this.routeGeneralChat(body.from, ml.message);
           return 'ok';
         }
 
@@ -377,21 +453,27 @@ export class WhatsAppService {
               ? (payload as { message: string[] }).message.join('\n')
               : (payload as { message?: string }).message ||
                 error.message ||
-                'We could not process your request. Please try again or send /help.';
+                'Ye abhi process nahi ho paya. Dubara try karein ya *Home par jayein* button dabayein.';
         try {
-          await this.sendTextMessage(body.from, errText);
+          const sent = await this.sendFriendlyErrorReply(body.from);
+          if (!sent) {
+            await this.sendTextMessage(body.from, errText);
+          }
         } catch (sendErr) {
           console.log(sendErr);
         }
         return status >= 500 ? 'error' : 'ok';
       }
 
-      const errText =
-        error?.response?.data?.message ||
-        error?.message ||
-        'Kuch gadbad ho gayi. Dubara try karein ya */help* bhejein.';
       try {
-        await this.sendTextMessage(body.from, errText);
+        const sent = await this.sendFriendlyErrorReply(body.from);
+        if (!sent) {
+          const errText =
+            error?.response?.data?.message ||
+            error?.message ||
+            'Kuch gadbad ho gayi. Neeche *Home par jayein* dabayein ya dubara likhein.';
+          await this.sendTextMessage(body.from, errText);
+        }
       } catch (sendErr) {
         console.log(sendErr);
       }
@@ -430,7 +512,15 @@ export class WhatsAppService {
       return this.reportService.generateReport(factoryId, body.date);
     }
 
-    if (command === COMMANDS.HELP) return waHelpText(user?.name || 'User');
+    if (command === COMMANDS.HELP) {
+      if (this.isOwnerOrManagerRole(role)) {
+        await this.ownerHomeService.sendOwnerHome(phone, (to, o) =>
+          this.sendOutbound(to, o),
+        );
+        return WA_OUTBOUND_ALREADY_SENT;
+      }
+      return waHelpText(user?.name || 'User');
+    }
 
     const cmdLc = (command || '').toLowerCase();
 
@@ -874,7 +964,57 @@ export class WhatsAppService {
         : result;
     }
 
-    return waUnknownCommand();
+    if (this.isOwnerOrManagerRole(role)) {
+      return buildUnrecognizedChatOutbound();
+    }
+    return waUnrecognizedChatWorker();
+  }
+
+  private isOwnerOrManagerRole(role: string | undefined): boolean {
+    const r = (role || '').toUpperCase();
+    return r === USER_ROLE.OWNER || r === USER_ROLE.MANAGER;
+  }
+
+  /** general_chat: owners → home menu; workers → short Hindi hints. Returns true if handled. */
+  private async routeGeneralChat(
+    phone: string,
+    mlMessage?: string | null,
+  ): Promise<boolean> {
+    const user = await this.usersService.findByPhone(phone);
+    if (!user?.id) {
+      await this.sendTextMessage(
+        phone,
+        'Pehle https://munshi.app par register karein, phir *START* ya *hello* bhejein.',
+      );
+      return true;
+    }
+
+    const role = user.factory_links?.role;
+    if (this.isOwnerOrManagerRole(role)) {
+      await this.ownerHomeService.sendOwnerHome(phone, (to, o) =>
+        this.sendOutbound(to, o),
+      );
+      return true;
+    }
+
+    const chatMsg =
+      mlMessage?.trim() ||
+      'Main attendance aur kaam mein madad kar sakta hoon.\n\n*present* · *absent* · *show my tasks*';
+    await this.sendTextMessage(phone, chatMsg);
+    return true;
+  }
+
+  private async sendFriendlyErrorReply(phone: string): Promise<boolean> {
+    try {
+      const user = await this.usersService.findByPhone(phone);
+      if (user?.id && this.isOwnerOrManagerRole(user.factory_links?.role)) {
+        await this.sendOutbound(phone, buildUnrecognizedChatOutbound());
+        return true;
+      }
+    } catch {
+      /* fall through */
+    }
+    return false;
   }
 
   /** Normalize ML `/classify` payload (supports nested `data` and slug field aliases). */

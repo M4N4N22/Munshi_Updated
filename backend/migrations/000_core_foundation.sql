@@ -41,8 +41,7 @@ CREATE TABLE IF NOT EXISTS departments (
   manager_user_id INTEGER NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  CONSTRAINT uq_departments_factory_slug UNIQUE (factory_id, slug),
-  CONSTRAINT uq_departments_factory_manager UNIQUE (factory_id, manager_user_id)
+  CONSTRAINT uq_departments_factory_slug UNIQUE (factory_id, slug)
 );
 
 CREATE INDEX IF NOT EXISTS idx_departments_factory_id ON departments (factory_id);

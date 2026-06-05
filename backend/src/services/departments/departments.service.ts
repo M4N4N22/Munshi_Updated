@@ -23,6 +23,7 @@ import {
   CreateDepartmentDto,
   UpdateDepartmentDto,
 } from './departments.dto';
+import { looksLikeDepartmentInput } from 'src/services/workflow/worker-onboarding.validation';
 import { Op } from 'sequelize';
 
 @Injectable()
@@ -59,6 +60,35 @@ export class DepartmentsService {
       where: { user_id: userId, factory_id: factoryId },
     });
     return (link?.role as USER_ROLE) ?? null;
+  }
+
+  /**
+   * Managers may head only one department; owners may head many (interim until handoff).
+   */
+  private async assertSingleDepartmentHeadUnlessOwner(
+    factoryId: number,
+    headUserId: number,
+    excludeDepartmentId?: number | null,
+  ): Promise<void> {
+    const role = await this.getFactoryRole(headUserId, factoryId);
+    if (role === USER_ROLE.OWNER) {
+      return;
+    }
+
+    const where: Record<string, unknown> = {
+      factory_id: factoryId,
+      manager_user_id: headUserId,
+    };
+    if (excludeDepartmentId != null) {
+      where.id = { [Op.ne]: excludeDepartmentId };
+    }
+
+    const dup = await this.departmentModel.findOne({ where });
+    if (dup) {
+      throw new BadRequestException(
+        'This manager already heads another department in the factory',
+      );
+    }
   }
 
   async resolveManagerUserIdForSlug(
@@ -182,6 +212,90 @@ export class DepartmentsService {
     return null;
   }
 
+  /** First department for new businesses (owner as head). Idempotent. */
+  async ensureDefaultDepartment(
+    factoryId: number,
+    ownerUserId: number,
+  ): Promise<Department> {
+    const existing = await this.departmentModel.findOne({
+      where: { factory_id: factoryId },
+      order: [['id', 'ASC']],
+    });
+    if (existing) {
+      return existing;
+    }
+
+    return this.create({
+      factory_id: factoryId,
+      name: 'General',
+      slug: 'general',
+      manager_user_id: ownerUserId,
+    });
+  }
+
+  /**
+   * Match an existing department by name/slug, or create one (owner as head).
+   */
+  async findDepartmentHeadedByUser(
+    factoryId: number,
+    userId: number,
+  ): Promise<Department | null> {
+    return this.departmentModel.findOne({
+      where: { factory_id: factoryId, manager_user_id: userId },
+    });
+  }
+
+  async findOrCreateByName(
+    factoryId: number,
+    rawName: string,
+    headUserId: number,
+  ): Promise<Department> {
+    const name = rawName.trim().replace(/\s+/g, ' ');
+    if (!name) {
+      throw new BadRequestException('Department name is required');
+    }
+    if (!looksLikeDepartmentInput(name)) {
+      throw new BadRequestException(
+        'Team ka naam likhein (jaise sales, production) — sirf numbers nahi.',
+      );
+    }
+
+    const departments = await this.listByFactory(factoryId);
+    const lower = name.toLowerCase();
+    const byName = departments.find(
+      (d) => d.name.trim().toLowerCase() === lower,
+    );
+    if (byName) {
+      return byName;
+    }
+
+    const headRole = await this.getFactoryRole(headUserId, factoryId);
+    if (headRole !== USER_ROLE.OWNER) {
+      throw new BadRequestException(
+        'Nayi team sirf business owner bana sakte hain. List se team chunein.',
+      );
+    }
+
+    const slugBase = this.normalizeSlug(name) || 'team';
+    let slug = slugBase;
+    let suffix = 2;
+    while (
+      await this.departmentModel.findOne({
+        where: { factory_id: factoryId, slug },
+      })
+    ) {
+      slug = `${slugBase}-${suffix}`;
+      suffix += 1;
+    }
+
+    return this.create({
+      factory_id: factoryId,
+      name,
+      slug,
+      manager_user_id: headUserId,
+    });
+  }
+
   async listByFactory(factoryId: number) {
     return this.departmentModel.findAll({
       where: { factory_id: factoryId },
@@ -218,9 +332,9 @@ export class DepartmentsService {
       dto.manager_user_id,
       dto.factory_id,
     );
-    if (managerRole !== USER_ROLE.MANAGER) {
+    if (managerRole !== USER_ROLE.MANAGER && managerRole !== USER_ROLE.OWNER) {
       throw new BadRequestException(
-        'Department head must be a user with MANAGER role in this factory',
+        'Department head must be the business owner or a manager in this factory',
       );
     }
 
@@ -229,17 +343,10 @@ export class DepartmentsService {
     });
     if (dupSlug) throw new BadRequestException('Slug already used in factory');
 
-    const dupMgr = await this.departmentModel.findOne({
-      where: {
-        factory_id: dto.factory_id,
-        manager_user_id: dto.manager_user_id,
-      },
-    });
-    if (dupMgr) {
-      throw new BadRequestException(
-        'This manager already heads another department in the factory',
-      );
-    }
+    await this.assertSingleDepartmentHeadUnlessOwner(
+      dto.factory_id,
+      dto.manager_user_id,
+    );
 
     return this.departmentModel.create({
       factory_id: dto.factory_id,
@@ -273,23 +380,16 @@ export class DepartmentsService {
         dto.manager_user_id,
         row.factory_id,
       );
-      if (managerRole !== USER_ROLE.MANAGER) {
+      if (managerRole !== USER_ROLE.MANAGER && managerRole !== USER_ROLE.OWNER) {
         throw new BadRequestException(
-          'Department head must be a MANAGER in this factory',
+          'Department head must be the business owner or a manager in this factory',
         );
       }
-      const dupMgr = await this.departmentModel.findOne({
-        where: {
-          factory_id: row.factory_id,
-          manager_user_id: dto.manager_user_id,
-          id: { [Op.ne]: id },
-        },
-      });
-      if (dupMgr) {
-        throw new BadRequestException(
-          'That manager already heads another department',
-        );
-      }
+      await this.assertSingleDepartmentHeadUnlessOwner(
+        row.factory_id,
+        dto.manager_user_id,
+        id,
+      );
       patch.manager_user_id = dto.manager_user_id;
     }
 
@@ -309,6 +409,37 @@ export class DepartmentsService {
     });
     await row.destroy();
     return { message: 'Department deleted' };
+  }
+
+  /** Set department head (manager handoff from owner). Owners may head multiple depts. */
+  async assignDepartmentHead(
+    departmentId: number,
+    headUserId: number,
+    factoryId: number,
+  ): Promise<Department> {
+    const dept = await this.departmentModel.findByPk(departmentId);
+    if (!dept) {
+      throw new NotFoundException('Department not found');
+    }
+    if (dept.factory_id !== factoryId) {
+      throw new BadRequestException('Department does not belong to this factory');
+    }
+
+    const headRole = await this.getFactoryRole(headUserId, factoryId);
+    if (headRole !== USER_ROLE.MANAGER && headRole !== USER_ROLE.OWNER) {
+      throw new BadRequestException(
+        'Department head must be the business owner or a manager in this factory',
+      );
+    }
+
+    await this.assertSingleDepartmentHeadUnlessOwner(
+      factoryId,
+      headUserId,
+      departmentId,
+    );
+
+    await dept.update({ manager_user_id: headUserId } as any);
+    return dept;
   }
 
   async addWorker(departmentId: number, dto: AddDepartmentWorkerDto) {

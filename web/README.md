@@ -22,7 +22,7 @@ Next.js frontend for **[munshi.app](https://munshi.app)** — landing page ([Mun
 ## Team CSV template (WhatsApp bulk add)
 
 - **File:** `public/team-import/munshi-team-template.csv`
-- **URL after Vercel deploy:** `https://munshi.app/team-import/munshi-team-template.csv`
+- **URL after Vercel deploy:** `https://munshi-dada.vercel.app/team-import/munshi-team-template.csv`
 
 Backend WhatsApp flow uses this URL by default (`MUNSHI_TEAM_CSV_TEMPLATE_URL` optional override).
 

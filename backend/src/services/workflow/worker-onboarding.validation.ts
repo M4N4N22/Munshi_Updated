@@ -1,4 +1,6 @@
 import { BadRequestException } from '@nestjs/common';
+import { isLikelyMetadataTimestamp } from 'src/modules/whatsapp/whatsapp-contact.extract';
+import { USER_ROLE } from 'src/services/users/users.constants';
 import { normalizeVendorPhone } from 'src/services/vendors/vendors.validation';
 import { WORKFLOW_SKIP_KEYWORDS } from './workflow.constants';
 
@@ -17,7 +19,34 @@ export function normalizeWorkerName(name: string): string {
   return trimmed;
 }
 
+export function isInvalidStoredPhone(phone?: string): boolean {
+  if (!phone?.trim()) {
+    return false;
+  }
+  const digits = phone.replace(/\D/g, '');
+  return isLikelyMetadataTimestamp(digits);
+}
+
+/** Human-readable Indian mobile for resume copy. */
+export function formatWorkerPhoneDisplay(phone: string): string {
+  const digits = phone.replace(/\D/g, '');
+  if (digits.length === 12 && digits.startsWith('91')) {
+    const local = digits.slice(2);
+    return `+91 ${local.slice(0, 3)} ${local.slice(3, 6)} ${local.slice(6)}`;
+  }
+  if (digits.length === 10) {
+    return `+91 ${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6)}`;
+  }
+  return phone.trim();
+}
+
 export function normalizeWorkerPhone(phone: string): string {
+  const digits = phone.replace(/\D/g, '');
+  if (isLikelyMetadataTimestamp(digits)) {
+    throw new BadRequestException(
+      'Yeh number sahi nahi lag raha. Contact share ke bajay number likh kar bhejein (jaise 7247577182 ya 917247577182).',
+    );
+  }
   try {
     return normalizeVendorPhone(phone);
   } catch (error: any) {
@@ -27,6 +56,34 @@ export function normalizeWorkerPhone(phone: string): string {
     }
     throw error;
   }
+}
+
+/** True if input is mostly digits (after stripping) — not a name mistaken for phone. */
+export function looksLikePhoneInput(input: string): boolean {
+  const digits = input.replace(/\D/g, '');
+  if (digits.length < 10) {
+    return false;
+  }
+  if (isLikelyMetadataTimestamp(digits)) {
+    return false;
+  }
+  return true;
+}
+
+/** Department names should be words, not phone numbers / timestamps. */
+export function looksLikeDepartmentInput(input: string): boolean {
+  const trimmed = input.trim();
+  if (!trimmed) {
+    return false;
+  }
+  const digits = trimmed.replace(/\D/g, '');
+  if (digits.length >= 10 && digits.length / trimmed.length > 0.6) {
+    return false;
+  }
+  if (isLikelyMetadataTimestamp(digits)) {
+    return false;
+  }
+  return true;
 }
 
 export function normalizeWorkerDoj(input: string): Date | null {
@@ -115,9 +172,65 @@ export function resolveDepartmentSelection(
 
 export function formatDepartmentList(departments: DepartmentOption[]): string {
   if (departments.length === 0) {
-    return 'No departments are set up for your factory yet.\n\nPlease create a department first, then run /onboard_worker again.';
+    return '';
   }
   return departments
-    .map((d) => `• *${d.id}* — ${d.name} (\`${d.slug}\`)`)
+    .map((d) => `• *${d.id}* — ${d.name}`)
     .join('\n');
+}
+
+/** Teams owners can pick during WhatsApp add (excludes junk timestamp names). */
+export function filterSelectableDepartments(
+  departments: DepartmentOption[],
+): DepartmentOption[] {
+  return departments.filter((d) => looksLikeDepartmentInput(d.name));
+}
+
+export function normalizeRoleInput(input: string): string {
+  return input
+    .trim()
+    .replace(/[*•·]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase();
+}
+
+export function parseWorkerRole(input: string): USER_ROLE.WORKER | USER_ROLE.MANAGER {
+  const raw = normalizeRoleInput(input);
+  const firstWord = raw.split(/[\s,]+/)[0] ?? raw;
+
+  const managerHints = [
+    'manager',
+    'mgr',
+    'supervisor',
+    'maneger',
+    'menejer',
+    'मैनेजर',
+  ];
+  if (
+    managerHints.some((h) => firstWord === h || raw.includes(h)) ||
+    /^m(an)?ager$/.test(firstWord)
+  ) {
+    return USER_ROLE.MANAGER;
+  }
+
+  const workerHints = [
+    'worker',
+    'employee',
+    'staff',
+    'karmi',
+    'कर्मी',
+    'कर्मचारी',
+    'मजदूर',
+  ];
+  if (
+    workerHints.some((h) => firstWord === h || raw.includes(h)) ||
+    /^w(or)?ker$/.test(firstWord)
+  ) {
+    return USER_ROLE.WORKER;
+  }
+
+  throw new BadRequestException(
+    'Role samajh nahi aayi. Worker ya Manager likhein (chhoti/badi letters chalegi).',
+  );
 }

@@ -24,6 +24,27 @@ function parseEnvFile(path) {
   );
 }
 
+/**
+ * Supabase / sslmode=require: Node pg verifies certs strictly unless we set rejectUnauthorized: false.
+ * Matches src/core/services/db-service/providers/sql.provider.ts
+ */
+export function pgClientConfig(connectionString) {
+  const needsSsl =
+    connectionString.includes('supabase.com') ||
+    connectionString.includes('sslmode=require');
+  let conn = connectionString;
+  if (needsSsl) {
+    conn = conn
+      .replace(/([?&])sslmode=[^&]*/g, (_, sep) => (sep === '?' ? '?' : ''))
+      .replace(/\?&/, '?')
+      .replace(/\?$/, '');
+  }
+  return {
+    connectionString: conn,
+    ...(needsSsl ? { ssl: { rejectUnauthorized: false } } : {}),
+  };
+}
+
 export function loadConnectionString() {
   if (process.env.POSTGRES_CONNECTION_STRING) {
     return process.env.POSTGRES_CONNECTION_STRING;
@@ -67,7 +88,7 @@ export async function getAppliedFilenames(client) {
 }
 
 export async function getMigrationStatus(connectionString = loadConnectionString()) {
-  const client = new pg.Client({ connectionString });
+  const client = new pg.Client(pgClientConfig(connectionString));
   await client.connect();
   try {
     const files = listMigrationFiles();
@@ -100,7 +121,7 @@ export async function runPendingMigrations(options = {}) {
     stopOnError = true,
   } = options;
 
-  const client = new pg.Client({ connectionString });
+  const client = new pg.Client(pgClientConfig(connectionString));
   await client.connect();
 
   const results = [];

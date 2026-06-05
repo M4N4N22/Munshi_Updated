@@ -15,7 +15,7 @@ describe('buildTeamCsvOnboardingCta', () => {
     process.env = prev;
   });
 
-  it('returns CTA with munshi.app static template URL by default', () => {
+  it('returns CTA with Vercel static template URL by default', () => {
     const msg = buildTeamCsvOnboardingCta();
     expect(msg.type).toBe('interactive_cta_url');
     if (msg.type !== 'interactive_cta_url') {

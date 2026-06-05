@@ -206,6 +206,18 @@ export class MessagingService {
     return f?.name ?? `Factory #${factoryId}`;
   }
 
+  /** User-facing business name (avoid internal "factory" wording in WhatsApp UX). */
+  async getBusinessDisplayName(businessId: number): Promise<string> {
+    const f = await this.dbService.sqlService.Factory.findByPk(businessId, {
+      attributes: ['name'],
+    });
+    const name = f?.name?.trim();
+    if (name && name.length > 0 && name !== 'My Factory') {
+      return name;
+    }
+    return 'Aapka business';
+  }
+
   async broadcastToOwnersManagers(
     factoryId: number,
     message: string,

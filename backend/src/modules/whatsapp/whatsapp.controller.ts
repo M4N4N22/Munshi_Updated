@@ -31,6 +31,13 @@ export class WhatsAppController {
       return 'ok';
     }
 
+    if (inbound.kind === 'document') {
+      return await this.whatsappService.handleIncomingDocument(
+        inbound.from,
+        inbound.media,
+      );
+    }
+
     return await this.whatsappService.handleIncomingMessage({
       from: inbound.from,
       message: inbound.message,

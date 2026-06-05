@@ -50,6 +50,7 @@ Returns applied count, pending count, latest migration file, and status `ok` or 
 | `007_business_discovery.sql` | Business discovery profiles, readiness scores |
 | `007_p0_finance_foundation.sql` | OTP persistence, bank/ledger/match tables, `domain_events` |
 | `008_business_discovery_expansion.sql` | Manager/workforce completion columns |
+| `009_owner_multi_department_head.sql` | Drop one-head-per-user DB constraint; owners may head multiple teams interim |
 
 ## Notes
 

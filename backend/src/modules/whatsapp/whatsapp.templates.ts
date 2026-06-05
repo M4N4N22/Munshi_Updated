@@ -13,7 +13,7 @@ export function waSection(title: string, body: string, footer?: string): string 
 export function waHelpText(userName: string): string {
   return (
     `👋 Hello *${userName || 'there'}*,\n\n` +
-    `Welcome to *Munshi Assistant* — manage attendance, tasks, and issues from WhatsApp.\n\n` +
+    `Welcome to *Munshi* — attendance, kaam aur issues WhatsApp se.\n\n` +
     `${WA_DIVIDER}\n` +
     `*Attendance*\n` +
     `• "present"\n` +
@@ -149,7 +149,7 @@ export function waTasksEmpty(): string {
 export function waTeamEmpty(): string {
   return waSection(
     'Team',
-    'No members are linked to your factory yet.\n\nAdd team members from the admin dashboard to get started.',
+    'Abhi koi employee juda nahi hai.\n\n*hello* ya *Home par jayein* — phir *Employee jodiyein* → WhatsApp ya CSV se log jodiyein.\n\n_Website dashboard jald aa raha hai._',
   );
 }
 
@@ -167,7 +167,7 @@ export function waDepartmentAssignSent(
 
 export function waUnknownCommand(): string {
   return waSection(
-    'Unknown command',
-    'We did not understand that request.\n\nSend */help* to see what you can do.',
+    'Samajh nahi aaya',
+    'Ye message clear nahi hai.\n\nNeeche *Home par jayein* button dabayein, ya seedha kaam / attendance likhein.',
   );
 }

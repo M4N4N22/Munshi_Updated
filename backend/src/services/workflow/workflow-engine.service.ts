@@ -22,6 +22,7 @@ import {
 import type { WaOutboundMessage } from 'src/core/messaging/outbound-message.types';
 import { textOutbound } from 'src/core/messaging/outbound-message.types';
 import { AssignClarifyWorkflowHandler } from './handlers/assign-clarify.handler';
+import { WorkerOnboardingWorkflowHandler } from './handlers/worker-onboarding.handler';
 
 @Injectable()
 export class WorkflowEngineService {
@@ -162,6 +163,30 @@ export class WorkflowRouterService {
       'Workflow cancelled',
       'Your workflow has been cancelled.\n\nYou can start again anytime with */onboard_vendor* or */onboard_worker*.',
     );
+  }
+
+  async buildInProgressWorkerOnboardingReminder(
+    phone: string,
+  ): Promise<string | null> {
+    const resolved = await this.sessionService.resolveActiveSession(phone);
+    if (
+      !resolved.session ||
+      resolved.session.workflow_type !== WORKFLOW_TYPE.ONBOARD_WORKER
+    ) {
+      return null;
+    }
+    try {
+      const context = await this.resolveUserContext(phone);
+      const handler = this.registry.getHandlerByType(
+        WORKFLOW_TYPE.ONBOARD_WORKER,
+      );
+      if (handler instanceof WorkerOnboardingWorkflowHandler) {
+        return handler.buildResumeReminder(resolved.session, context);
+      }
+    } catch {
+      return null;
+    }
+    return null;
   }
 
   async handleActiveWorkflowMessage(
