@@ -2,24 +2,35 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   ParseIntPipe,
   Patch,
   Post,
   Query,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
   CreateInventoryCategoryDto,
   CreateInventoryItemDto,
   CreateInventoryLocationDto,
+  ImportInventoryCsvDto,
   RecordInventoryTransactionDto,
   UpdateInventoryCategoryDto,
   UpdateInventoryItemDto,
   UpdateInventoryLocationDto,
 } from './inventory.dto';
+import {
+  InventoryCsvUploadFile,
+  InventoryImportUploadService,
+} from './inventory-import-upload.service';
 import { InventoryService } from './inventory.service';
 import { InventoryTransactionService } from './inventory-transaction.service';
+import { INVENTORY_CSV_MAX_BYTES } from 'src/modules/whatsapp/inventory-csv.constants';
 
 @ApiTags('inventory')
 @Controller('inventory')
@@ -27,6 +38,7 @@ export class InventoryController {
   constructor(
     private readonly inventoryService: InventoryService,
     private readonly transactionService: InventoryTransactionService,
+    private readonly importUploadService: InventoryImportUploadService,
   ) {}
 
   @Get('categories')
@@ -192,5 +204,31 @@ export class InventoryController {
   @Post('transactions/adjustment')
   recordAdjustment(@Body() dto: RecordInventoryTransactionDto) {
     return this.transactionService.recordAdjustment(dto);
+  }
+
+  @Post('import/csv')
+  @HttpCode(HttpStatus.OK)
+  @UseInterceptors(
+    FileInterceptor('file', { limits: { fileSize: INVENTORY_CSV_MAX_BYTES } }),
+  )
+  @ApiConsumes('multipart/form-data')
+  @ApiOperation({ summary: 'Upload inventory CSV and process import' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['file', 'factory_id', 'created_by'],
+      properties: {
+        file: { type: 'string', format: 'binary' },
+        factory_id: { type: 'number', example: 1 },
+        created_by: { type: 'number', example: 42 },
+        batch_id: { type: 'number', example: 1001 },
+      },
+    },
+  })
+  importCsv(
+    @UploadedFile() file: InventoryCsvUploadFile,
+    @Body() dto: ImportInventoryCsvDto,
+  ) {
+    return this.importUploadService.uploadCsv(file, dto);
   }
 }

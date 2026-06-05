@@ -23,6 +23,14 @@ export const INVENTORY_PAGINATION = {
 
 export const INVENTORY_QUANTITY_SCALE = 4;
 
+/** Ledger reference_type values for non-task inventory movements. */
+export const INVENTORY_REFERENCE_TYPE = {
+  CSV_IMPORT: 'CSV_IMPORT',
+} as const;
+
+export type InventoryReferenceType =
+  (typeof INVENTORY_REFERENCE_TYPE)[keyof typeof INVENTORY_REFERENCE_TYPE];
+
 /** WhatsApp / REST query command (foundation). */
 export const INVENTORY_COMMANDS = {
   INVENTORY_CREATE: '/inventory_create',

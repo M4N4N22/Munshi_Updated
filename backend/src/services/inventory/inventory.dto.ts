@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import {
   IsBoolean,
   IsNumber,
@@ -190,4 +191,27 @@ export class RecordInventoryTransactionDto {
   @IsOptional()
   @IsNumber()
   created_by?: number;
+}
+
+export class ImportInventoryCsvDto {
+  @ApiProperty({ example: 1 })
+  @Transform(({ value }) => Number(value))
+  @IsNumber()
+  factory_id: number;
+
+  @ApiProperty({ example: 42 })
+  @Transform(({ value }) => Number(value))
+  @IsNumber()
+  created_by: number;
+
+  @ApiPropertyOptional({
+    example: 1001,
+    description: 'Optional ledger batch id; generated when omitted',
+  })
+  @Transform(({ value }) =>
+    value != null && value !== '' ? Number(value) : undefined,
+  )
+  @IsOptional()
+  @IsNumber()
+  batch_id?: number;
 }

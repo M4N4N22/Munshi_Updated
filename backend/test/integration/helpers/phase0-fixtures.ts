@@ -1,4 +1,4 @@
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigModule } from '@nestjs/config';
 import { DbModule } from 'src/core/services/db-service/db.module';
@@ -23,7 +23,9 @@ export interface Phase0Fixture {
   locationId: number;
 }
 
-export async function createTestApp(): Promise<{
+export async function createTestApp(options?: {
+  validationPipe?: boolean;
+}): Promise<{
   app: INestApplication;
   module: TestingModule;
   tasksService: TasksService;
@@ -43,6 +45,9 @@ export async function createTestApp(): Promise<{
   }).compile();
 
   const app = module.createNestApplication();
+  if (options?.validationPipe) {
+    app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
+  }
   await app.init();
 
   return {
