@@ -48,6 +48,11 @@ import { DepartmentsService } from 'src/services/departments/departments.service
 import { WorkflowRouterService } from 'src/services/workflow/workflow-engine.service';
 import { InventoryService } from 'src/services/inventory/inventory.service';
 import { IInventoryStatusRecord } from 'src/services/inventory/inventory.interfaces';
+import {
+  formatQuantity,
+  parsePositiveQuantity,
+} from 'src/services/inventory/inventory.validation';
+import { TASK_INVENTORY_MOVEMENT_TYPE } from 'src/services/tasks/tasks.inventory.constants';
 import { getHourIST, INDIA_TIMEZONE } from 'src/core/time/india-defaults';
 import {
   WA_DIVIDER,
@@ -69,6 +74,11 @@ import {
   waTaskUpdated,
   waTasksEmpty,
   waTeamEmpty,
+  waAssignDeliverySkuNotFound,
+  waAssignDeliveryWorkerNotFound,
+  waAssignDeliveryInvalidQuantity,
+  waAssignDeliveryInvalidFormat,
+  buildAssignDeliverySuccessText,
 } from './whatsapp.templates';
 
 @Injectable()
@@ -361,7 +371,7 @@ export class WhatsAppService {
       }
 
       const slashBypass = msgTrim.match(
-        /^\/(mgrself|mgrassign|mgrtransfer|mgrreject)\b/i,
+        /^\/(mgrself|mgrassign|mgrtransfer|mgrreject|assign_delivery)\b/i,
       );
 
       const workflowStartCmd =
@@ -793,6 +803,10 @@ export class WhatsAppService {
     }
 
     // 🧑‍🤝‍🧑 ASSIGN TASK (department NL is handled earlier via depart_slug)
+    if (cmdLc === COMMANDS.ASSIGN_DELIVERY) {
+      return this.handleAssignDelivery(rawMessage, user.id, factoryId, role);
+    }
+
     if (cmdLc === COMMANDS.ASSIGN) {
       const deadlineInput = this.classifyDeadlineRawInput(body);
 
@@ -1613,6 +1627,99 @@ export class WhatsAppService {
   }
 
   // 🧠 Parsers
+
+  private parseAssignDeliveryCommand(rawMessage: string): {
+    mention: string;
+    sku: string;
+    quantityRaw: string;
+  } | null {
+    const stripped = rawMessage
+      .replace(/^\s*\/?assign_delivery\b/i, '')
+      .trim();
+    const match = stripped.match(/^(@\S+)\s+(\S+)\s+(\S+)\s*$/);
+    if (!match) {
+      return null;
+    }
+    return {
+      mention: match[1],
+      sku: match[2],
+      quantityRaw: match[3],
+    };
+  }
+
+  private async handleAssignDelivery(
+    rawMessage: string,
+    assignedBy: number,
+    factoryId: number,
+    role: string,
+  ): Promise<string> {
+    this.ensureManager(role);
+
+    const parsed = this.parseAssignDeliveryCommand(rawMessage);
+    if (!parsed) {
+      return waAssignDeliveryInvalidFormat();
+    }
+
+    const resolved = await this.tasksService.resolveMention(
+      parsed.mention,
+      factoryId,
+    );
+
+    if (resolved.kind === 'ambiguous') {
+      return resolved.message;
+    }
+
+    if (resolved.kind === 'all') {
+      return waAssignDeliveryInvalidFormat();
+    }
+
+    if (resolved.kind === 'not_found') {
+      return waAssignDeliveryWorkerNotFound();
+    }
+
+    let item;
+    try {
+      item = await this.inventoryService.findItemBySku(factoryId, parsed.sku);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        return waAssignDeliverySkuNotFound();
+      }
+      throw error;
+    }
+
+    let quantity: number;
+    try {
+      quantity = parsePositiveQuantity(parsed.quantityRaw);
+    } catch {
+      return waAssignDeliveryInvalidQuantity();
+    }
+
+    const quantityStr = formatQuantity(quantity);
+    const itemLabel = item.unit ? `${item.name} ${item.unit}` : item.name;
+    const description = `[DELIVERY] ${itemLabel} (${item.sku}) x${quantityStr}`;
+
+    await this.tasksService.assignToUser(
+      resolved.user.id,
+      assignedBy,
+      factoryId,
+      description,
+      {
+        inventory_lines: [
+          {
+            inventory_item_id: item.id,
+            quantity_expected: quantityStr,
+            movement_type: TASK_INVENTORY_MOVEMENT_TYPE.STOCK_OUT,
+          },
+        ],
+      },
+    );
+
+    return buildAssignDeliverySuccessText({
+      workerName: resolved.user.name || `User #${resolved.user.id}`,
+      itemName: item.name,
+      quantity: quantityStr,
+    });
+  }
 
   private parseAssignCommand(message: string) {
     const parts = message.split(' ');

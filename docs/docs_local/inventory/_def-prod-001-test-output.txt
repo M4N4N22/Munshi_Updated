@@ -1,0 +1,2670 @@
+﻿yarn run v1.22.22
+$ jest --config ./test/jest-integration.json --runInBand
+  console.log
+    Executing (default): SELECT 1+1 AS result
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+          at async Promise.all (index 3)
+          at async Promise.all (index 4)
+
+  console.log
+    Executing (default): SELECT 1+1 AS result
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+          at async Promise.all (index 0)
+
+  console.log
+    Executing (default): SELECT column_name FROM information_schema.columns
+            WHERE table_name = 'task_inventory_lines'
+            ORDER BY ordinal_position
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factories" ("id","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3) RETURNING "id","name","address","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "users" ("id","phone_number","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4) RETURNING "id","phone_number","name","profile_picture","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "users" ("id","phone_number","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4) RETURNING "id","phone_number","name","profile_picture","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "users" ("id","phone_number","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4) RETURNING "id","phone_number","name","profile_picture","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factory_users" ("id","user_id","factory_id","role","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5) RETURNING "id","user_id","factory_id","role","doj","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factory_users" ("id","user_id","factory_id","role","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5) RETURNING "id","user_id","factory_id","role","doj","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factory_users" ("id","user_id","factory_id","role","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5) RETURNING "id","user_id","factory_id","role","doj","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "name", "address", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factories" AS "Factory" WHERE "Factory"."id" = 38;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "description", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_categories" AS "InventoryCategory" WHERE "InventoryCategory"."factory_id" = 38 AND "InventoryCategory"."name" ILIKE 'Cat-1780681549759-3267' LIMIT 1;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "inventory_categories" ("id","factory_id","name","description","is_active","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6) RETURNING "id","factory_id","name","description","is_active","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "name", "address", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factories" AS "Factory" WHERE "Factory"."id" = 38;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "code", "address", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_locations" AS "InventoryLocation" WHERE "InventoryLocation"."factory_id" = 38 ORDER BY "InventoryLocation"."name" ASC;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "inventory_locations" ("id","factory_id","name","code","address","is_active","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7) RETURNING "id","factory_id","name","code","address","is_active","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "name", "address", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factories" AS "Factory" WHERE "Factory"."id" = 38;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "description", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_categories" AS "InventoryCategory" WHERE "InventoryCategory"."id" = 38 AND "InventoryCategory"."factory_id" = 38;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "code", "address", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_locations" AS "InventoryLocation" WHERE "InventoryLocation"."id" = 38 AND "InventoryLocation"."factory_id" = 38;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "category_id", "location_id", "sku", "name", "unit", "current_quantity", "reorder_threshold", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_items" AS "InventoryItem" WHERE "InventoryItem"."factory_id" = 38 AND "InventoryItem"."sku" = 'S1-5BDD34FA' LIMIT 1;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "inventory_items" ("id","factory_id","category_id","location_id","sku","name","unit","current_quantity","reorder_threshold","is_active","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING "id","factory_id","category_id","location_id","sku","name","unit","current_quantity","reorder_threshold","is_active","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (8ef5326d-65bd-4538-a6b4-876027baf385): START TRANSACTION;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (8ef5326d-65bd-4538-a6b4-876027baf385): SELECT "id", "factory_id", "category_id", "location_id", "sku", "name", "unit", "current_quantity", "reorder_threshold", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_items" AS "InventoryItem" WHERE "InventoryItem"."id" = 35 AND "InventoryItem"."factory_id" = 38 FOR UPDATE;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (8ef5326d-65bd-4538-a6b4-876027baf385): INSERT INTO "inventory_transactions" ("id","factory_id","inventory_item_id","transaction_type","quantity","reference_type","reference_id","notes","created_by","created_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING "id","factory_id","inventory_item_id","transaction_type","quantity","reference_type","reference_id","notes","created_by","created_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (8ef5326d-65bd-4538-a6b4-876027baf385): UPDATE "inventory_items" SET "current_quantity"=$1,"updated_at"=$2 WHERE "id" = $3 AND "factory_id" = $4
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (8ef5326d-65bd-4538-a6b4-876027baf385): COMMIT;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 112 AND "FactoryUser"."factory_id" = 38;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 113 AND "FactoryUser"."factory_id" = 38;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 113 AND "FactoryUser"."factory_id" = 38;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 112 AND "FactoryUser"."factory_id" = 38;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 113 AND "FactoryUser"."factory_id" = 38;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "slug", "manager_user_id", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "departments" AS "Department" WHERE "Department"."factory_id" = 38 AND "Department"."manager_user_id" = 112 LIMIT 1;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "tasks" ("id","factory_id","assigned_to","assigned_by","description","routing_status","owner_id","department_id","is_completed","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING "id","factory_id","assigned_to","assigned_by","description","deadline","deadline_breach_reminded_at","routing_status","owner_id","department_id","completed_by","rejected_by","rejection_reason","rejected_at","is_completed","batch_id","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "task_inventory_lines" ("id","factory_id","task_id","inventory_item_id","quantity_expected","quantity_completed","movement_type","created_at","updated_at") VALUES (DEFAULT,38,4,35,'3','0','STOCK_OUT','2026-06-05 17:45:49.958 +00:00','2026-06-05 17:45:49.958 +00:00') RETURNING "id","factory_id","task_id","inventory_item_id","quantity_expected","quantity_completed","movement_type","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT count(*) AS "count" FROM "task_inventory_lines" AS "TaskInventoryLine" WHERE "TaskInventoryLine"."task_id" = 4;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "assigned_to", "assigned_by", "description", "is_completed", "deadline", "routing_status" FROM "tasks" AS "Task" WHERE "Task"."id" = 4;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "assigned_to", "assigned_by", "description", "deadline", "deadline_breach_reminded_at", "routing_status", "owner_id", "department_id", "completed_by", "rejected_by", "rejection_reason", "rejected_at", "is_completed", "batch_id", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "tasks" AS "Task" WHERE "Task"."id" = 4;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "phone_number", "name" FROM "users" AS "User" WHERE "User"."id" = 113;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT count(*) AS "count" FROM "task_inventory_lines" AS "TaskInventoryLine" WHERE "TaskInventoryLine"."task_id" = 4;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "name" FROM "users" AS "User" WHERE "User"."id" = 112;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (25c357d2-7c6b-4fbf-aa65-c8ed6fd356f3): START TRANSACTION;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (25c357d2-7c6b-4fbf-aa65-c8ed6fd356f3): SELECT "id", "factory_id", "task_id", "inventory_item_id", "quantity_expected", "quantity_completed", "movement_type", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "task_inventory_lines" AS "TaskInventoryLine" WHERE "TaskInventoryLine"."task_id" = 4 ORDER BY "TaskInventoryLine"."id" ASC;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (25c357d2-7c6b-4fbf-aa65-c8ed6fd356f3): SELECT "id", "factory_id", "category_id", "location_id", "sku", "name", "unit", "current_quantity", "reorder_threshold", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_items" AS "InventoryItem" WHERE "InventoryItem"."id" = 35 AND "InventoryItem"."factory_id" = 38 FOR UPDATE;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (25c357d2-7c6b-4fbf-aa65-c8ed6fd356f3): INSERT INTO "inventory_transactions" ("id","factory_id","inventory_item_id","transaction_type","quantity","reference_type","reference_id","notes","created_by","created_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING "id","factory_id","inventory_item_id","transaction_type","quantity","reference_type","reference_id","notes","created_by","created_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (25c357d2-7c6b-4fbf-aa65-c8ed6fd356f3): UPDATE "inventory_items" SET "current_quantity"=$1,"updated_at"=$2 WHERE "id" = $3 AND "factory_id" = $4
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (25c357d2-7c6b-4fbf-aa65-c8ed6fd356f3): UPDATE "tasks" SET "is_completed"=$1,"updated_at"=$2 WHERE "id" = $3
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (25c357d2-7c6b-4fbf-aa65-c8ed6fd356f3): COMMIT;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "name" FROM "factories" AS "Factory" WHERE "Factory"."id" = 38;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "assigned_to", "assigned_by", "owner_id", "description", "is_completed", "completed_by" FROM "tasks" AS "Task" WHERE "Task"."id" = 4;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "assigned_to", "assigned_by", "description", "deadline", "deadline_breach_reminded_at", "routing_status", "owner_id", "department_id", "completed_by", "rejected_by", "rejection_reason", "rejected_at", "is_completed", "batch_id", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "tasks" AS "Task" WHERE "Task"."id" = 4;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "name", "phone_number" FROM "users" AS "User" WHERE "User"."id" = 113;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "category_id", "location_id", "sku", "name", "unit", "current_quantity", "reorder_threshold", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_items" AS "InventoryItem" WHERE "InventoryItem"."id" = 35 AND "InventoryItem"."factory_id" = 38;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 113 AND "FactoryUser"."factory_id" = 38;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT count(*) AS "count" FROM "inventory_transactions" AS "InventoryTransaction" WHERE "InventoryTransaction"."reference_type" = 'TASK' AND "InventoryTransaction"."reference_id" = 4;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "slug", "manager_user_id", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "departments" AS "Department" WHERE "Department"."factory_id" = 38 AND "Department"."manager_user_id" = 113 LIMIT 1;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factories" ("id","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3) RETURNING "id","name","address","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "DepartmentWorker"."id", "DepartmentWorker"."department_id", "DepartmentWorker"."user_id", "DepartmentWorker"."created_at" AS "createdAt", "DepartmentWorker"."updated_at" AS "updatedAt", "department"."id" AS "department.id", "department"."factory_id" AS "department.factory_id", "department"."name" AS "department.name", "department"."slug" AS "department.slug", "department"."manager_user_id" AS "department.manager_user_id", "department"."created_at" AS "department.createdAt", "department"."updated_at" AS "department.updatedAt" FROM "department_workers" AS "DepartmentWorker" LEFT OUTER JOIN "departments" AS "department" ON "DepartmentWorker"."department_id" = "department"."id" AND "department"."factory_id" = 38 WHERE "DepartmentWorker"."user_id" = 113;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "users" ("id","phone_number","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4) RETURNING "id","phone_number","name","profile_picture","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "phone_number", "name" FROM "users" AS "User" WHERE "User"."id" = 112;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "users" ("id","phone_number","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4) RETURNING "id","phone_number","name","profile_picture","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "name" FROM "factories" AS "Factory" WHERE "Factory"."id" = 38;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "users" ("id","phone_number","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4) RETURNING "id","phone_number","name","profile_picture","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factory_users" ("id","user_id","factory_id","role","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5) RETURNING "id","user_id","factory_id","role","doj","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factory_users" ("id","user_id","factory_id","role","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5) RETURNING "id","user_id","factory_id","role","doj","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factory_users" ("id","user_id","factory_id","role","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5) RETURNING "id","user_id","factory_id","role","doj","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "name", "address", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factories" AS "Factory" WHERE "Factory"."id" = 39;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "description", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_categories" AS "InventoryCategory" WHERE "InventoryCategory"."factory_id" = 39 AND "InventoryCategory"."name" ILIKE 'Cat-1780681550084-6668' LIMIT 1;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "inventory_categories" ("id","factory_id","name","description","is_active","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6) RETURNING "id","factory_id","name","description","is_active","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "name", "address", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factories" AS "Factory" WHERE "Factory"."id" = 39;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "code", "address", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_locations" AS "InventoryLocation" WHERE "InventoryLocation"."factory_id" = 39 ORDER BY "InventoryLocation"."name" ASC;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "inventory_locations" ("id","factory_id","name","code","address","is_active","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7) RETURNING "id","factory_id","name","code","address","is_active","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "name", "address", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factories" AS "Factory" WHERE "Factory"."id" = 39;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "description", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_categories" AS "InventoryCategory" WHERE "InventoryCategory"."id" = 39 AND "InventoryCategory"."factory_id" = 39;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "code", "address", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_locations" AS "InventoryLocation" WHERE "InventoryLocation"."id" = 39 AND "InventoryLocation"."factory_id" = 39;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "category_id", "location_id", "sku", "name", "unit", "current_quantity", "reorder_threshold", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_items" AS "InventoryItem" WHERE "InventoryItem"."factory_id" = 39 AND "InventoryItem"."sku" = 'S2-CB94E8DF' LIMIT 1;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "inventory_items" ("id","factory_id","category_id","location_id","sku","name","unit","current_quantity","reorder_threshold","is_active","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING "id","factory_id","category_id","location_id","sku","name","unit","current_quantity","reorder_threshold","is_active","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (a46150ab-0976-429e-8f7d-c7aa06834da2): START TRANSACTION;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (a46150ab-0976-429e-8f7d-c7aa06834da2): SELECT "id", "factory_id", "category_id", "location_id", "sku", "name", "unit", "current_quantity", "reorder_threshold", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_items" AS "InventoryItem" WHERE "InventoryItem"."id" = 36 AND "InventoryItem"."factory_id" = 39 FOR UPDATE;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (a46150ab-0976-429e-8f7d-c7aa06834da2): INSERT INTO "inventory_transactions" ("id","factory_id","inventory_item_id","transaction_type","quantity","reference_type","reference_id","notes","created_by","created_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING "id","factory_id","inventory_item_id","transaction_type","quantity","reference_type","reference_id","notes","created_by","created_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (a46150ab-0976-429e-8f7d-c7aa06834da2): UPDATE "inventory_items" SET "current_quantity"=$1,"updated_at"=$2 WHERE "id" = $3 AND "factory_id" = $4
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (a46150ab-0976-429e-8f7d-c7aa06834da2): COMMIT;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 115 AND "FactoryUser"."factory_id" = 39;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 116 AND "FactoryUser"."factory_id" = 39;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 116 AND "FactoryUser"."factory_id" = 39;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 115 AND "FactoryUser"."factory_id" = 39;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 116 AND "FactoryUser"."factory_id" = 39;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "slug", "manager_user_id", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "departments" AS "Department" WHERE "Department"."factory_id" = 39 AND "Department"."manager_user_id" = 115 LIMIT 1;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "tasks" ("id","factory_id","assigned_to","assigned_by","description","routing_status","owner_id","department_id","is_completed","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING "id","factory_id","assigned_to","assigned_by","description","deadline","deadline_breach_reminded_at","routing_status","owner_id","department_id","completed_by","rejected_by","rejection_reason","rejected_at","is_completed","batch_id","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "task_inventory_lines" ("id","factory_id","task_id","inventory_item_id","quantity_expected","quantity_completed","movement_type","created_at","updated_at") VALUES (DEFAULT,39,5,36,'4','0','STOCK_IN','2026-06-05 17:45:50.177 +00:00','2026-06-05 17:45:50.177 +00:00') RETURNING "id","factory_id","task_id","inventory_item_id","quantity_expected","quantity_completed","movement_type","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "assigned_to", "assigned_by", "description", "is_completed", "deadline", "routing_status" FROM "tasks" AS "Task" WHERE "Task"."id" = 5;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "assigned_to", "assigned_by", "description", "deadline", "deadline_breach_reminded_at", "routing_status", "owner_id", "department_id", "completed_by", "rejected_by", "rejection_reason", "rejected_at", "is_completed", "batch_id", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "tasks" AS "Task" WHERE "Task"."id" = 5;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "phone_number", "name" FROM "users" AS "User" WHERE "User"."id" = 116;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "name" FROM "users" AS "User" WHERE "User"."id" = 115;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT count(*) AS "count" FROM "task_inventory_lines" AS "TaskInventoryLine" WHERE "TaskInventoryLine"."task_id" = 5;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "name" FROM "factories" AS "Factory" WHERE "Factory"."id" = 39;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (5d3ad511-24d4-4371-b161-2fe9bfa81aed): START TRANSACTION;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (5d3ad511-24d4-4371-b161-2fe9bfa81aed): SELECT "id", "factory_id", "task_id", "inventory_item_id", "quantity_expected", "quantity_completed", "movement_type", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "task_inventory_lines" AS "TaskInventoryLine" WHERE "TaskInventoryLine"."task_id" = 5 ORDER BY "TaskInventoryLine"."id" ASC;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (5d3ad511-24d4-4371-b161-2fe9bfa81aed): SELECT "id", "factory_id", "category_id", "location_id", "sku", "name", "unit", "current_quantity", "reorder_threshold", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_items" AS "InventoryItem" WHERE "InventoryItem"."id" = 36 AND "InventoryItem"."factory_id" = 39 FOR UPDATE;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (5d3ad511-24d4-4371-b161-2fe9bfa81aed): INSERT INTO "inventory_transactions" ("id","factory_id","inventory_item_id","transaction_type","quantity","reference_type","reference_id","notes","created_by","created_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING "id","factory_id","inventory_item_id","transaction_type","quantity","reference_type","reference_id","notes","created_by","created_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (5d3ad511-24d4-4371-b161-2fe9bfa81aed): UPDATE "inventory_items" SET "current_quantity"=$1,"updated_at"=$2 WHERE "id" = $3 AND "factory_id" = $4
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (5d3ad511-24d4-4371-b161-2fe9bfa81aed): UPDATE "tasks" SET "is_completed"=$1,"updated_at"=$2 WHERE "id" = $3
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (5d3ad511-24d4-4371-b161-2fe9bfa81aed): COMMIT;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "assigned_to", "assigned_by", "owner_id", "description", "is_completed", "completed_by" FROM "tasks" AS "Task" WHERE "Task"."id" = 5;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "category_id", "location_id", "sku", "name", "unit", "current_quantity", "reorder_threshold", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_items" AS "InventoryItem" WHERE "InventoryItem"."id" = 36 AND "InventoryItem"."factory_id" = 39;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "name", "phone_number" FROM "users" AS "User" WHERE "User"."id" = 116;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT count(*) AS "count" FROM "inventory_transactions" AS "InventoryTransaction" WHERE "InventoryTransaction"."reference_type" = 'TASK' AND "InventoryTransaction"."reference_id" = 5;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 116 AND "FactoryUser"."factory_id" = 39;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "assigned_to", "assigned_by", "description", "deadline", "deadline_breach_reminded_at", "routing_status", "owner_id", "department_id", "completed_by", "rejected_by", "rejection_reason", "rejected_at", "is_completed", "batch_id", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "tasks" AS "Task" WHERE "Task"."id" = 5;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "slug", "manager_user_id", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "departments" AS "Department" WHERE "Department"."factory_id" = 39 AND "Department"."manager_user_id" = 116 LIMIT 1;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factories" ("id","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3) RETURNING "id","name","address","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "DepartmentWorker"."id", "DepartmentWorker"."department_id", "DepartmentWorker"."user_id", "DepartmentWorker"."created_at" AS "createdAt", "DepartmentWorker"."updated_at" AS "updatedAt", "department"."id" AS "department.id", "department"."factory_id" AS "department.factory_id", "department"."name" AS "department.name", "department"."slug" AS "department.slug", "department"."manager_user_id" AS "department.manager_user_id", "department"."created_at" AS "department.createdAt", "department"."updated_at" AS "department.updatedAt" FROM "department_workers" AS "DepartmentWorker" LEFT OUTER JOIN "departments" AS "department" ON "DepartmentWorker"."department_id" = "department"."id" AND "department"."factory_id" = 39 WHERE "DepartmentWorker"."user_id" = 116;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "users" ("id","phone_number","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4) RETURNING "id","phone_number","name","profile_picture","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "phone_number", "name" FROM "users" AS "User" WHERE "User"."id" = 115;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "name" FROM "factories" AS "Factory" WHERE "Factory"."id" = 39;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "users" ("id","phone_number","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4) RETURNING "id","phone_number","name","profile_picture","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "users" ("id","phone_number","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4) RETURNING "id","phone_number","name","profile_picture","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factory_users" ("id","user_id","factory_id","role","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5) RETURNING "id","user_id","factory_id","role","doj","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factory_users" ("id","user_id","factory_id","role","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5) RETURNING "id","user_id","factory_id","role","doj","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factory_users" ("id","user_id","factory_id","role","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5) RETURNING "id","user_id","factory_id","role","doj","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "name", "address", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factories" AS "Factory" WHERE "Factory"."id" = 40;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "description", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_categories" AS "InventoryCategory" WHERE "InventoryCategory"."factory_id" = 40 AND "InventoryCategory"."name" ILIKE 'Cat-1780681550230-8088' LIMIT 1;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "inventory_categories" ("id","factory_id","name","description","is_active","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6) RETURNING "id","factory_id","name","description","is_active","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "name", "address", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factories" AS "Factory" WHERE "Factory"."id" = 40;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "code", "address", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_locations" AS "InventoryLocation" WHERE "InventoryLocation"."factory_id" = 40 ORDER BY "InventoryLocation"."name" ASC;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "inventory_locations" ("id","factory_id","name","code","address","is_active","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7) RETURNING "id","factory_id","name","code","address","is_active","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "name", "address", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factories" AS "Factory" WHERE "Factory"."id" = 40;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "description", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_categories" AS "InventoryCategory" WHERE "InventoryCategory"."id" = 40 AND "InventoryCategory"."factory_id" = 40;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "code", "address", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_locations" AS "InventoryLocation" WHERE "InventoryLocation"."id" = 40 AND "InventoryLocation"."factory_id" = 40;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "category_id", "location_id", "sku", "name", "unit", "current_quantity", "reorder_threshold", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_items" AS "InventoryItem" WHERE "InventoryItem"."factory_id" = 40 AND "InventoryItem"."sku" = 'S3A-4D0C7CD7' LIMIT 1;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "inventory_items" ("id","factory_id","category_id","location_id","sku","name","unit","current_quantity","reorder_threshold","is_active","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING "id","factory_id","category_id","location_id","sku","name","unit","current_quantity","reorder_threshold","is_active","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (90fa449e-8611-4179-a146-15610456f075): START TRANSACTION;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (90fa449e-8611-4179-a146-15610456f075): SELECT "id", "factory_id", "category_id", "location_id", "sku", "name", "unit", "current_quantity", "reorder_threshold", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_items" AS "InventoryItem" WHERE "InventoryItem"."id" = 37 AND "InventoryItem"."factory_id" = 40 FOR UPDATE;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (90fa449e-8611-4179-a146-15610456f075): INSERT INTO "inventory_transactions" ("id","factory_id","inventory_item_id","transaction_type","quantity","reference_type","reference_id","notes","created_by","created_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING "id","factory_id","inventory_item_id","transaction_type","quantity","reference_type","reference_id","notes","created_by","created_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (90fa449e-8611-4179-a146-15610456f075): UPDATE "inventory_items" SET "current_quantity"=$1,"updated_at"=$2 WHERE "id" = $3 AND "factory_id" = $4
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (90fa449e-8611-4179-a146-15610456f075): COMMIT;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "name", "address", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factories" AS "Factory" WHERE "Factory"."id" = 40;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "description", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_categories" AS "InventoryCategory" WHERE "InventoryCategory"."id" = 40 AND "InventoryCategory"."factory_id" = 40;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "code", "address", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_locations" AS "InventoryLocation" WHERE "InventoryLocation"."id" = 40 AND "InventoryLocation"."factory_id" = 40;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "category_id", "location_id", "sku", "name", "unit", "current_quantity", "reorder_threshold", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_items" AS "InventoryItem" WHERE "InventoryItem"."factory_id" = 40 AND "InventoryItem"."sku" = 'S3B-0C704542' LIMIT 1;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "inventory_items" ("id","factory_id","category_id","location_id","sku","name","unit","current_quantity","reorder_threshold","is_active","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING "id","factory_id","category_id","location_id","sku","name","unit","current_quantity","reorder_threshold","is_active","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (2b712001-6532-478a-a45f-86682177cf69): START TRANSACTION;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (2b712001-6532-478a-a45f-86682177cf69): SELECT "id", "factory_id", "category_id", "location_id", "sku", "name", "unit", "current_quantity", "reorder_threshold", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_items" AS "InventoryItem" WHERE "InventoryItem"."id" = 38 AND "InventoryItem"."factory_id" = 40 FOR UPDATE;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (2b712001-6532-478a-a45f-86682177cf69): INSERT INTO "inventory_transactions" ("id","factory_id","inventory_item_id","transaction_type","quantity","reference_type","reference_id","notes","created_by","created_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING "id","factory_id","inventory_item_id","transaction_type","quantity","reference_type","reference_id","notes","created_by","created_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (2b712001-6532-478a-a45f-86682177cf69): UPDATE "inventory_items" SET "current_quantity"=$1,"updated_at"=$2 WHERE "id" = $3 AND "factory_id" = $4
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (2b712001-6532-478a-a45f-86682177cf69): COMMIT;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 118 AND "FactoryUser"."factory_id" = 40;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 119 AND "FactoryUser"."factory_id" = 40;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 119 AND "FactoryUser"."factory_id" = 40;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 118 AND "FactoryUser"."factory_id" = 40;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 119 AND "FactoryUser"."factory_id" = 40;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "slug", "manager_user_id", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "departments" AS "Department" WHERE "Department"."factory_id" = 40 AND "Department"."manager_user_id" = 118 LIMIT 1;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "tasks" ("id","factory_id","assigned_to","assigned_by","description","routing_status","owner_id","department_id","is_completed","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING "id","factory_id","assigned_to","assigned_by","description","deadline","deadline_breach_reminded_at","routing_status","owner_id","department_id","completed_by","rejected_by","rejection_reason","rejected_at","is_completed","batch_id","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "task_inventory_lines" ("id","factory_id","task_id","inventory_item_id","quantity_expected","quantity_completed","movement_type","created_at","updated_at") VALUES (DEFAULT,40,6,37,'2','0','STOCK_OUT','2026-06-05 17:45:50.343 +00:00','2026-06-05 17:45:50.343 +00:00'),(DEFAULT,40,6,38,'1','0','STOCK_OUT','2026-06-05 17:45:50.343 +00:00','2026-06-05 17:45:50.343 +00:00') RETURNING "id","factory_id","task_id","inventory_item_id","quantity_expected","quantity_completed","movement_type","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "assigned_to", "assigned_by", "description", "is_completed", "deadline", "routing_status" FROM "tasks" AS "Task" WHERE "Task"."id" = 6;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "assigned_to", "assigned_by", "description", "deadline", "deadline_breach_reminded_at", "routing_status", "owner_id", "department_id", "completed_by", "rejected_by", "rejection_reason", "rejected_at", "is_completed", "batch_id", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "tasks" AS "Task" WHERE "Task"."id" = 6;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "phone_number", "name" FROM "users" AS "User" WHERE "User"."id" = 119;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT count(*) AS "count" FROM "task_inventory_lines" AS "TaskInventoryLine" WHERE "TaskInventoryLine"."task_id" = 6;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "name" FROM "users" AS "User" WHERE "User"."id" = 118;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (3c72ccde-f436-4ec7-84dd-89ffa6ada496): START TRANSACTION;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (3c72ccde-f436-4ec7-84dd-89ffa6ada496): SELECT "id", "factory_id", "task_id", "inventory_item_id", "quantity_expected", "quantity_completed", "movement_type", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "task_inventory_lines" AS "TaskInventoryLine" WHERE "TaskInventoryLine"."task_id" = 6 ORDER BY "TaskInventoryLine"."id" ASC;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "name" FROM "factories" AS "Factory" WHERE "Factory"."id" = 40;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (3c72ccde-f436-4ec7-84dd-89ffa6ada496): SELECT "id", "factory_id", "category_id", "location_id", "sku", "name", "unit", "current_quantity", "reorder_threshold", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_items" AS "InventoryItem" WHERE "InventoryItem"."id" = 37 AND "InventoryItem"."factory_id" = 40 FOR UPDATE;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (3c72ccde-f436-4ec7-84dd-89ffa6ada496): INSERT INTO "inventory_transactions" ("id","factory_id","inventory_item_id","transaction_type","quantity","reference_type","reference_id","notes","created_by","created_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING "id","factory_id","inventory_item_id","transaction_type","quantity","reference_type","reference_id","notes","created_by","created_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (3c72ccde-f436-4ec7-84dd-89ffa6ada496): UPDATE "inventory_items" SET "current_quantity"=$1,"updated_at"=$2 WHERE "id" = $3 AND "factory_id" = $4
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (3c72ccde-f436-4ec7-84dd-89ffa6ada496): SELECT "id", "factory_id", "category_id", "location_id", "sku", "name", "unit", "current_quantity", "reorder_threshold", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_items" AS "InventoryItem" WHERE "InventoryItem"."id" = 38 AND "InventoryItem"."factory_id" = 40 FOR UPDATE;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (3c72ccde-f436-4ec7-84dd-89ffa6ada496): INSERT INTO "inventory_transactions" ("id","factory_id","inventory_item_id","transaction_type","quantity","reference_type","reference_id","notes","created_by","created_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING "id","factory_id","inventory_item_id","transaction_type","quantity","reference_type","reference_id","notes","created_by","created_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (3c72ccde-f436-4ec7-84dd-89ffa6ada496): UPDATE "inventory_items" SET "current_quantity"=$1,"updated_at"=$2 WHERE "id" = $3 AND "factory_id" = $4
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (3c72ccde-f436-4ec7-84dd-89ffa6ada496): UPDATE "tasks" SET "is_completed"=$1,"updated_at"=$2 WHERE "id" = $3
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (3c72ccde-f436-4ec7-84dd-89ffa6ada496): COMMIT;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "assigned_to", "assigned_by", "owner_id", "description", "is_completed", "completed_by" FROM "tasks" AS "Task" WHERE "Task"."id" = 6;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "category_id", "location_id", "sku", "name", "unit", "current_quantity", "reorder_threshold", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_items" AS "InventoryItem" WHERE "InventoryItem"."id" = 37 AND "InventoryItem"."factory_id" = 40;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "name", "phone_number" FROM "users" AS "User" WHERE "User"."id" = 119;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 119 AND "FactoryUser"."factory_id" = 40;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "category_id", "location_id", "sku", "name", "unit", "current_quantity", "reorder_threshold", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_items" AS "InventoryItem" WHERE "InventoryItem"."id" = 38 AND "InventoryItem"."factory_id" = 40;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "slug", "manager_user_id", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "departments" AS "Department" WHERE "Department"."factory_id" = 40 AND "Department"."manager_user_id" = 119 LIMIT 1;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT count(*) AS "count" FROM "inventory_transactions" AS "InventoryTransaction" WHERE "InventoryTransaction"."reference_type" = 'TASK' AND "InventoryTransaction"."reference_id" = 6;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "DepartmentWorker"."id", "DepartmentWorker"."department_id", "DepartmentWorker"."user_id", "DepartmentWorker"."created_at" AS "createdAt", "DepartmentWorker"."updated_at" AS "updatedAt", "department"."id" AS "department.id", "department"."factory_id" AS "department.factory_id", "department"."name" AS "department.name", "department"."slug" AS "department.slug", "department"."manager_user_id" AS "department.manager_user_id", "department"."created_at" AS "department.createdAt", "department"."updated_at" AS "department.updatedAt" FROM "department_workers" AS "DepartmentWorker" LEFT OUTER JOIN "departments" AS "department" ON "DepartmentWorker"."department_id" = "department"."id" AND "department"."factory_id" = 40 WHERE "DepartmentWorker"."user_id" = 119;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "assigned_to", "assigned_by", "description", "deadline", "deadline_breach_reminded_at", "routing_status", "owner_id", "department_id", "completed_by", "rejected_by", "rejection_reason", "rejected_at", "is_completed", "batch_id", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "tasks" AS "Task" WHERE "Task"."id" = 6;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "phone_number", "name" FROM "users" AS "User" WHERE "User"."id" = 118;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "name" FROM "factories" AS "Factory" WHERE "Factory"."id" = 40;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factories" ("id","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3) RETURNING "id","name","address","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "users" ("id","phone_number","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4) RETURNING "id","phone_number","name","profile_picture","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "users" ("id","phone_number","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4) RETURNING "id","phone_number","name","profile_picture","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "users" ("id","phone_number","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4) RETURNING "id","phone_number","name","profile_picture","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factory_users" ("id","user_id","factory_id","role","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5) RETURNING "id","user_id","factory_id","role","doj","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factory_users" ("id","user_id","factory_id","role","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5) RETURNING "id","user_id","factory_id","role","doj","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factory_users" ("id","user_id","factory_id","role","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5) RETURNING "id","user_id","factory_id","role","doj","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "name", "address", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factories" AS "Factory" WHERE "Factory"."id" = 41;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "description", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_categories" AS "InventoryCategory" WHERE "InventoryCategory"."factory_id" = 41 AND "InventoryCategory"."name" ILIKE 'Cat-1780681550401-2932' LIMIT 1;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "inventory_categories" ("id","factory_id","name","description","is_active","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6) RETURNING "id","factory_id","name","description","is_active","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "name", "address", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factories" AS "Factory" WHERE "Factory"."id" = 41;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "code", "address", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_locations" AS "InventoryLocation" WHERE "InventoryLocation"."factory_id" = 41 ORDER BY "InventoryLocation"."name" ASC;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "inventory_locations" ("id","factory_id","name","code","address","is_active","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7) RETURNING "id","factory_id","name","code","address","is_active","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "name", "address", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factories" AS "Factory" WHERE "Factory"."id" = 41;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "description", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_categories" AS "InventoryCategory" WHERE "InventoryCategory"."id" = 41 AND "InventoryCategory"."factory_id" = 41;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "code", "address", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_locations" AS "InventoryLocation" WHERE "InventoryLocation"."id" = 41 AND "InventoryLocation"."factory_id" = 41;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "category_id", "location_id", "sku", "name", "unit", "current_quantity", "reorder_threshold", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_items" AS "InventoryItem" WHERE "InventoryItem"."factory_id" = 41 AND "InventoryItem"."sku" = 'S4-B8224BFF' LIMIT 1;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "inventory_items" ("id","factory_id","category_id","location_id","sku","name","unit","current_quantity","reorder_threshold","is_active","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING "id","factory_id","category_id","location_id","sku","name","unit","current_quantity","reorder_threshold","is_active","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (76221100-ef92-45fa-ae5a-de30a13d6aa6): START TRANSACTION;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (76221100-ef92-45fa-ae5a-de30a13d6aa6): SELECT "id", "factory_id", "category_id", "location_id", "sku", "name", "unit", "current_quantity", "reorder_threshold", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_items" AS "InventoryItem" WHERE "InventoryItem"."id" = 39 AND "InventoryItem"."factory_id" = 41 FOR UPDATE;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (76221100-ef92-45fa-ae5a-de30a13d6aa6): INSERT INTO "inventory_transactions" ("id","factory_id","inventory_item_id","transaction_type","quantity","reference_type","reference_id","notes","created_by","created_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING "id","factory_id","inventory_item_id","transaction_type","quantity","reference_type","reference_id","notes","created_by","created_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (76221100-ef92-45fa-ae5a-de30a13d6aa6): UPDATE "inventory_items" SET "current_quantity"=$1,"updated_at"=$2 WHERE "id" = $3 AND "factory_id" = $4
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (76221100-ef92-45fa-ae5a-de30a13d6aa6): COMMIT;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 121 AND "FactoryUser"."factory_id" = 41;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 122 AND "FactoryUser"."factory_id" = 41;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 122 AND "FactoryUser"."factory_id" = 41;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 121 AND "FactoryUser"."factory_id" = 41;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 122 AND "FactoryUser"."factory_id" = 41;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "slug", "manager_user_id", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "departments" AS "Department" WHERE "Department"."factory_id" = 41 AND "Department"."manager_user_id" = 121 LIMIT 1;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "tasks" ("id","factory_id","assigned_to","assigned_by","description","routing_status","owner_id","department_id","is_completed","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING "id","factory_id","assigned_to","assigned_by","description","deadline","deadline_breach_reminded_at","routing_status","owner_id","department_id","completed_by","rejected_by","rejection_reason","rejected_at","is_completed","batch_id","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "task_inventory_lines" ("id","factory_id","task_id","inventory_item_id","quantity_expected","quantity_completed","movement_type","created_at","updated_at") VALUES (DEFAULT,41,7,39,'3','0','STOCK_OUT','2026-06-05 17:45:50.485 +00:00','2026-06-05 17:45:50.485 +00:00'),(DEFAULT,41,7,39,'15','0','STOCK_OUT','2026-06-05 17:45:50.485 +00:00','2026-06-05 17:45:50.485 +00:00') RETURNING "id","factory_id","task_id","inventory_item_id","quantity_expected","quantity_completed","movement_type","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "assigned_to", "assigned_by", "description", "is_completed", "deadline", "routing_status" FROM "tasks" AS "Task" WHERE "Task"."id" = 7;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "assigned_to", "assigned_by", "description", "deadline", "deadline_breach_reminded_at", "routing_status", "owner_id", "department_id", "completed_by", "rejected_by", "rejection_reason", "rejected_at", "is_completed", "batch_id", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "tasks" AS "Task" WHERE "Task"."id" = 7;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "phone_number", "name" FROM "users" AS "User" WHERE "User"."id" = 122;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "name" FROM "users" AS "User" WHERE "User"."id" = 121;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "name" FROM "factories" AS "Factory" WHERE "Factory"."id" = 41;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT count(*) AS "count" FROM "task_inventory_lines" AS "TaskInventoryLine" WHERE "TaskInventoryLine"."task_id" = 7;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (271ec708-f91a-4a93-a461-5607cc474d35): START TRANSACTION;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (271ec708-f91a-4a93-a461-5607cc474d35): SELECT "id", "factory_id", "task_id", "inventory_item_id", "quantity_expected", "quantity_completed", "movement_type", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "task_inventory_lines" AS "TaskInventoryLine" WHERE "TaskInventoryLine"."task_id" = 7 ORDER BY "TaskInventoryLine"."id" ASC;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (271ec708-f91a-4a93-a461-5607cc474d35): SELECT "id", "factory_id", "category_id", "location_id", "sku", "name", "unit", "current_quantity", "reorder_threshold", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_items" AS "InventoryItem" WHERE "InventoryItem"."id" = 39 AND "InventoryItem"."factory_id" = 41 FOR UPDATE;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (271ec708-f91a-4a93-a461-5607cc474d35): INSERT INTO "inventory_transactions" ("id","factory_id","inventory_item_id","transaction_type","quantity","reference_type","reference_id","notes","created_by","created_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING "id","factory_id","inventory_item_id","transaction_type","quantity","reference_type","reference_id","notes","created_by","created_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (271ec708-f91a-4a93-a461-5607cc474d35): UPDATE "inventory_items" SET "current_quantity"=$1,"updated_at"=$2 WHERE "id" = $3 AND "factory_id" = $4
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (271ec708-f91a-4a93-a461-5607cc474d35): SELECT "id", "factory_id", "category_id", "location_id", "sku", "name", "unit", "current_quantity", "reorder_threshold", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_items" AS "InventoryItem" WHERE "InventoryItem"."id" = 39 AND "InventoryItem"."factory_id" = 41 FOR UPDATE;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (271ec708-f91a-4a93-a461-5607cc474d35): ROLLBACK;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "category_id", "location_id", "sku", "name", "unit", "current_quantity", "reorder_threshold", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_items" AS "InventoryItem" WHERE "InventoryItem"."id" = 39 AND "InventoryItem"."factory_id" = 41;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT count(*) AS "count" FROM "inventory_transactions" AS "InventoryTransaction" WHERE "InventoryTransaction"."reference_type" = 'TASK' AND "InventoryTransaction"."reference_id" = 7;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "assigned_to", "assigned_by", "description", "deadline", "deadline_breach_reminded_at", "routing_status", "owner_id", "department_id", "completed_by", "rejected_by", "rejection_reason", "rejected_at", "is_completed", "batch_id", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "tasks" AS "Task" WHERE "Task"."id" = 7;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factories" ("id","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3) RETURNING "id","name","address","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "users" ("id","phone_number","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4) RETURNING "id","phone_number","name","profile_picture","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "users" ("id","phone_number","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4) RETURNING "id","phone_number","name","profile_picture","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "users" ("id","phone_number","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4) RETURNING "id","phone_number","name","profile_picture","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factory_users" ("id","user_id","factory_id","role","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5) RETURNING "id","user_id","factory_id","role","doj","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factory_users" ("id","user_id","factory_id","role","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5) RETURNING "id","user_id","factory_id","role","doj","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factory_users" ("id","user_id","factory_id","role","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5) RETURNING "id","user_id","factory_id","role","doj","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "name", "address", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factories" AS "Factory" WHERE "Factory"."id" = 42;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "description", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_categories" AS "InventoryCategory" WHERE "InventoryCategory"."factory_id" = 42 AND "InventoryCategory"."name" ILIKE 'Cat-1780681550577-9878' LIMIT 1;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "inventory_categories" ("id","factory_id","name","description","is_active","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6) RETURNING "id","factory_id","name","description","is_active","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "name", "address", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factories" AS "Factory" WHERE "Factory"."id" = 42;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "code", "address", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_locations" AS "InventoryLocation" WHERE "InventoryLocation"."factory_id" = 42 ORDER BY "InventoryLocation"."name" ASC;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "inventory_locations" ("id","factory_id","name","code","address","is_active","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7) RETURNING "id","factory_id","name","code","address","is_active","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "name", "address", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factories" AS "Factory" WHERE "Factory"."id" = 42;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "description", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_categories" AS "InventoryCategory" WHERE "InventoryCategory"."id" = 42 AND "InventoryCategory"."factory_id" = 42;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "code", "address", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_locations" AS "InventoryLocation" WHERE "InventoryLocation"."id" = 42 AND "InventoryLocation"."factory_id" = 42;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "category_id", "location_id", "sku", "name", "unit", "current_quantity", "reorder_threshold", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_items" AS "InventoryItem" WHERE "InventoryItem"."factory_id" = 42 AND "InventoryItem"."sku" = 'S5-E1AC7B82' LIMIT 1;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "inventory_items" ("id","factory_id","category_id","location_id","sku","name","unit","current_quantity","reorder_threshold","is_active","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING "id","factory_id","category_id","location_id","sku","name","unit","current_quantity","reorder_threshold","is_active","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (9a3ebe22-6e87-491f-baa4-d77d7c75f3c0): START TRANSACTION;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (9a3ebe22-6e87-491f-baa4-d77d7c75f3c0): SELECT "id", "factory_id", "category_id", "location_id", "sku", "name", "unit", "current_quantity", "reorder_threshold", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_items" AS "InventoryItem" WHERE "InventoryItem"."id" = 40 AND "InventoryItem"."factory_id" = 42 FOR UPDATE;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (9a3ebe22-6e87-491f-baa4-d77d7c75f3c0): INSERT INTO "inventory_transactions" ("id","factory_id","inventory_item_id","transaction_type","quantity","reference_type","reference_id","notes","created_by","created_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING "id","factory_id","inventory_item_id","transaction_type","quantity","reference_type","reference_id","notes","created_by","created_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (9a3ebe22-6e87-491f-baa4-d77d7c75f3c0): UPDATE "inventory_items" SET "current_quantity"=$1,"updated_at"=$2 WHERE "id" = $3 AND "factory_id" = $4
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (9a3ebe22-6e87-491f-baa4-d77d7c75f3c0): COMMIT;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 124 AND "FactoryUser"."factory_id" = 42;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 125 AND "FactoryUser"."factory_id" = 42;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 125 AND "FactoryUser"."factory_id" = 42;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 124 AND "FactoryUser"."factory_id" = 42;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 125 AND "FactoryUser"."factory_id" = 42;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "slug", "manager_user_id", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "departments" AS "Department" WHERE "Department"."factory_id" = 42 AND "Department"."manager_user_id" = 124 LIMIT 1;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "tasks" ("id","factory_id","assigned_to","assigned_by","description","routing_status","owner_id","department_id","is_completed","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING "id","factory_id","assigned_to","assigned_by","description","deadline","deadline_breach_reminded_at","routing_status","owner_id","department_id","completed_by","rejected_by","rejection_reason","rejected_at","is_completed","batch_id","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "task_inventory_lines" ("id","factory_id","task_id","inventory_item_id","quantity_expected","quantity_completed","movement_type","created_at","updated_at") VALUES (DEFAULT,42,8,40,'5','0','STOCK_OUT','2026-06-05 17:45:50.671 +00:00','2026-06-05 17:45:50.671 +00:00') RETURNING "id","factory_id","task_id","inventory_item_id","quantity_expected","quantity_completed","movement_type","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "assigned_to", "assigned_by", "description", "is_completed", "deadline", "routing_status" FROM "tasks" AS "Task" WHERE "Task"."id" = 8;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "assigned_to", "assigned_by", "description", "deadline", "deadline_breach_reminded_at", "routing_status", "owner_id", "department_id", "completed_by", "rejected_by", "rejection_reason", "rejected_at", "is_completed", "batch_id", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "tasks" AS "Task" WHERE "Task"."id" = 8;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "phone_number", "name" FROM "users" AS "User" WHERE "User"."id" = 125;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT count(*) AS "count" FROM "task_inventory_lines" AS "TaskInventoryLine" WHERE "TaskInventoryLine"."task_id" = 8;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "name" FROM "users" AS "User" WHERE "User"."id" = 124;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (3167e884-e6c7-4ff1-9513-1abf8c2b1f00): START TRANSACTION;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (3167e884-e6c7-4ff1-9513-1abf8c2b1f00): SELECT "id", "factory_id", "task_id", "inventory_item_id", "quantity_expected", "quantity_completed", "movement_type", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "task_inventory_lines" AS "TaskInventoryLine" WHERE "TaskInventoryLine"."task_id" = 8 ORDER BY "TaskInventoryLine"."id" ASC;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "name" FROM "factories" AS "Factory" WHERE "Factory"."id" = 42;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (3167e884-e6c7-4ff1-9513-1abf8c2b1f00): SELECT "id", "factory_id", "category_id", "location_id", "sku", "name", "unit", "current_quantity", "reorder_threshold", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_items" AS "InventoryItem" WHERE "InventoryItem"."id" = 40 AND "InventoryItem"."factory_id" = 42 FOR UPDATE;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (3167e884-e6c7-4ff1-9513-1abf8c2b1f00): ROLLBACK;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "category_id", "location_id", "sku", "name", "unit", "current_quantity", "reorder_threshold", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_items" AS "InventoryItem" WHERE "InventoryItem"."id" = 40 AND "InventoryItem"."factory_id" = 42;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "assigned_to", "assigned_by", "description", "deadline", "deadline_breach_reminded_at", "routing_status", "owner_id", "department_id", "completed_by", "rejected_by", "rejection_reason", "rejected_at", "is_completed", "batch_id", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "tasks" AS "Task" WHERE "Task"."id" = 8;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factories" ("id","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3) RETURNING "id","name","address","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "users" ("id","phone_number","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4) RETURNING "id","phone_number","name","profile_picture","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "users" ("id","phone_number","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4) RETURNING "id","phone_number","name","profile_picture","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "users" ("id","phone_number","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4) RETURNING "id","phone_number","name","profile_picture","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factory_users" ("id","user_id","factory_id","role","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5) RETURNING "id","user_id","factory_id","role","doj","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factory_users" ("id","user_id","factory_id","role","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5) RETURNING "id","user_id","factory_id","role","doj","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factory_users" ("id","user_id","factory_id","role","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5) RETURNING "id","user_id","factory_id","role","doj","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "name", "address", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factories" AS "Factory" WHERE "Factory"."id" = 43;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "description", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_categories" AS "InventoryCategory" WHERE "InventoryCategory"."factory_id" = 43 AND "InventoryCategory"."name" ILIKE 'Cat-1780681550771-6616' LIMIT 1;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "inventory_categories" ("id","factory_id","name","description","is_active","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6) RETURNING "id","factory_id","name","description","is_active","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "name", "address", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factories" AS "Factory" WHERE "Factory"."id" = 43;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "code", "address", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_locations" AS "InventoryLocation" WHERE "InventoryLocation"."factory_id" = 43 ORDER BY "InventoryLocation"."name" ASC;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "inventory_locations" ("id","factory_id","name","code","address","is_active","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7) RETURNING "id","factory_id","name","code","address","is_active","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "name", "address", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factories" AS "Factory" WHERE "Factory"."id" = 43;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "description", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_categories" AS "InventoryCategory" WHERE "InventoryCategory"."id" = 43 AND "InventoryCategory"."factory_id" = 43;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "code", "address", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_locations" AS "InventoryLocation" WHERE "InventoryLocation"."id" = 43 AND "InventoryLocation"."factory_id" = 43;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "category_id", "location_id", "sku", "name", "unit", "current_quantity", "reorder_threshold", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_items" AS "InventoryItem" WHERE "InventoryItem"."factory_id" = 43 AND "InventoryItem"."sku" = 'S6-992AB6AD' LIMIT 1;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "inventory_items" ("id","factory_id","category_id","location_id","sku","name","unit","current_quantity","reorder_threshold","is_active","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING "id","factory_id","category_id","location_id","sku","name","unit","current_quantity","reorder_threshold","is_active","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (6d5ed52e-b94a-4548-82ea-359c1a982f05): START TRANSACTION;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (6d5ed52e-b94a-4548-82ea-359c1a982f05): SELECT "id", "factory_id", "category_id", "location_id", "sku", "name", "unit", "current_quantity", "reorder_threshold", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_items" AS "InventoryItem" WHERE "InventoryItem"."id" = 41 AND "InventoryItem"."factory_id" = 43 FOR UPDATE;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (6d5ed52e-b94a-4548-82ea-359c1a982f05): INSERT INTO "inventory_transactions" ("id","factory_id","inventory_item_id","transaction_type","quantity","reference_type","reference_id","notes","created_by","created_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING "id","factory_id","inventory_item_id","transaction_type","quantity","reference_type","reference_id","notes","created_by","created_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (6d5ed52e-b94a-4548-82ea-359c1a982f05): UPDATE "inventory_items" SET "current_quantity"=$1,"updated_at"=$2 WHERE "id" = $3 AND "factory_id" = $4
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (6d5ed52e-b94a-4548-82ea-359c1a982f05): COMMIT;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 127 AND "FactoryUser"."factory_id" = 43;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 128 AND "FactoryUser"."factory_id" = 43;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 128 AND "FactoryUser"."factory_id" = 43;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 127 AND "FactoryUser"."factory_id" = 43;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 128 AND "FactoryUser"."factory_id" = 43;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "slug", "manager_user_id", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "departments" AS "Department" WHERE "Department"."factory_id" = 43 AND "Department"."manager_user_id" = 127 LIMIT 1;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "tasks" ("id","factory_id","assigned_to","assigned_by","description","routing_status","owner_id","department_id","is_completed","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING "id","factory_id","assigned_to","assigned_by","description","deadline","deadline_breach_reminded_at","routing_status","owner_id","department_id","completed_by","rejected_by","rejection_reason","rejected_at","is_completed","batch_id","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "task_inventory_lines" ("id","factory_id","task_id","inventory_item_id","quantity_expected","quantity_completed","movement_type","created_at","updated_at") VALUES (DEFAULT,43,9,41,'1','0','STOCK_OUT','2026-06-05 17:45:50.851 +00:00','2026-06-05 17:45:50.851 +00:00') RETURNING "id","factory_id","task_id","inventory_item_id","quantity_expected","quantity_completed","movement_type","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "assigned_to", "assigned_by", "description", "is_completed", "deadline", "routing_status" FROM "tasks" AS "Task" WHERE "Task"."id" = 9;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "assigned_to", "assigned_by", "description", "deadline", "deadline_breach_reminded_at", "routing_status", "owner_id", "department_id", "completed_by", "rejected_by", "rejection_reason", "rejected_at", "is_completed", "batch_id", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "tasks" AS "Task" WHERE "Task"."id" = 9;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "phone_number", "name" FROM "users" AS "User" WHERE "User"."id" = 128;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT count(*) AS "count" FROM "task_inventory_lines" AS "TaskInventoryLine" WHERE "TaskInventoryLine"."task_id" = 9;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "name" FROM "users" AS "User" WHERE "User"."id" = 127;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (5c2c3b37-1004-42ff-8ab2-ba345c529564): START TRANSACTION;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "name" FROM "factories" AS "Factory" WHERE "Factory"."id" = 43;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (5c2c3b37-1004-42ff-8ab2-ba345c529564): SELECT "id", "factory_id", "task_id", "inventory_item_id", "quantity_expected", "quantity_completed", "movement_type", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "task_inventory_lines" AS "TaskInventoryLine" WHERE "TaskInventoryLine"."task_id" = 9 ORDER BY "TaskInventoryLine"."id" ASC;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (5c2c3b37-1004-42ff-8ab2-ba345c529564): SELECT "id", "factory_id", "category_id", "location_id", "sku", "name", "unit", "current_quantity", "reorder_threshold", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_items" AS "InventoryItem" WHERE "InventoryItem"."id" = 41 AND "InventoryItem"."factory_id" = 43 FOR UPDATE;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (5c2c3b37-1004-42ff-8ab2-ba345c529564): INSERT INTO "inventory_transactions" ("id","factory_id","inventory_item_id","transaction_type","quantity","reference_type","reference_id","notes","created_by","created_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING "id","factory_id","inventory_item_id","transaction_type","quantity","reference_type","reference_id","notes","created_by","created_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (5c2c3b37-1004-42ff-8ab2-ba345c529564): UPDATE "inventory_items" SET "current_quantity"=$1,"updated_at"=$2 WHERE "id" = $3 AND "factory_id" = $4
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (5c2c3b37-1004-42ff-8ab2-ba345c529564): UPDATE "tasks" SET "is_completed"=$1,"updated_at"=$2 WHERE "id" = $3
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (5c2c3b37-1004-42ff-8ab2-ba345c529564): COMMIT;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "assigned_to", "assigned_by", "owner_id", "description", "is_completed", "completed_by" FROM "tasks" AS "Task" WHERE "Task"."id" = 9;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "assigned_to", "assigned_by", "description", "deadline", "deadline_breach_reminded_at", "routing_status", "owner_id", "department_id", "completed_by", "rejected_by", "rejection_reason", "rejected_at", "is_completed", "batch_id", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "tasks" AS "Task" WHERE "Task"."id" = 9;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "name", "phone_number" FROM "users" AS "User" WHERE "User"."id" = 128;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT count(*) AS "count" FROM "task_inventory_lines" AS "TaskInventoryLine" WHERE "TaskInventoryLine"."task_id" = 9;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 128 AND "FactoryUser"."factory_id" = 43;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "assigned_to", "assigned_by", "description", "deadline", "deadline_breach_reminded_at", "routing_status", "owner_id", "department_id", "completed_by", "rejected_by", "rejection_reason", "rejected_at", "is_completed", "batch_id", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "tasks" AS "Task" WHERE "Task"."id" = 9;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "slug", "manager_user_id", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "departments" AS "Department" WHERE "Department"."factory_id" = 43 AND "Department"."manager_user_id" = 128 LIMIT 1;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factories" ("id","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3) RETURNING "id","name","address","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "DepartmentWorker"."id", "DepartmentWorker"."department_id", "DepartmentWorker"."user_id", "DepartmentWorker"."created_at" AS "createdAt", "DepartmentWorker"."updated_at" AS "updatedAt", "department"."id" AS "department.id", "department"."factory_id" AS "department.factory_id", "department"."name" AS "department.name", "department"."slug" AS "department.slug", "department"."manager_user_id" AS "department.manager_user_id", "department"."created_at" AS "department.createdAt", "department"."updated_at" AS "department.updatedAt" FROM "department_workers" AS "DepartmentWorker" LEFT OUTER JOIN "departments" AS "department" ON "DepartmentWorker"."department_id" = "department"."id" AND "department"."factory_id" = 43 WHERE "DepartmentWorker"."user_id" = 128;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "users" ("id","phone_number","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4) RETURNING "id","phone_number","name","profile_picture","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "phone_number", "name" FROM "users" AS "User" WHERE "User"."id" = 127;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "name" FROM "factories" AS "Factory" WHERE "Factory"."id" = 43;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "users" ("id","phone_number","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4) RETURNING "id","phone_number","name","profile_picture","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "users" ("id","phone_number","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4) RETURNING "id","phone_number","name","profile_picture","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factory_users" ("id","user_id","factory_id","role","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5) RETURNING "id","user_id","factory_id","role","doj","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factory_users" ("id","user_id","factory_id","role","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5) RETURNING "id","user_id","factory_id","role","doj","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factory_users" ("id","user_id","factory_id","role","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5) RETURNING "id","user_id","factory_id","role","doj","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "name", "address", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factories" AS "Factory" WHERE "Factory"."id" = 44;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "description", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_categories" AS "InventoryCategory" WHERE "InventoryCategory"."factory_id" = 44 AND "InventoryCategory"."name" ILIKE 'Cat-1780681550897-3026' LIMIT 1;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "inventory_categories" ("id","factory_id","name","description","is_active","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6) RETURNING "id","factory_id","name","description","is_active","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "name", "address", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factories" AS "Factory" WHERE "Factory"."id" = 44;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "code", "address", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_locations" AS "InventoryLocation" WHERE "InventoryLocation"."factory_id" = 44 ORDER BY "InventoryLocation"."name" ASC;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "inventory_locations" ("id","factory_id","name","code","address","is_active","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7) RETURNING "id","factory_id","name","code","address","is_active","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 130 AND "FactoryUser"."factory_id" = 44;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 131 AND "FactoryUser"."factory_id" = 44;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 131 AND "FactoryUser"."factory_id" = 44;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 130 AND "FactoryUser"."factory_id" = 44;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 131 AND "FactoryUser"."factory_id" = 44;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "slug", "manager_user_id", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "departments" AS "Department" WHERE "Department"."factory_id" = 44 AND "Department"."manager_user_id" = 130 LIMIT 1;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "tasks" ("id","factory_id","assigned_to","assigned_by","description","routing_status","owner_id","department_id","is_completed","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING "id","factory_id","assigned_to","assigned_by","description","deadline","deadline_breach_reminded_at","routing_status","owner_id","department_id","completed_by","rejected_by","rejection_reason","rejected_at","is_completed","batch_id","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "assigned_to", "assigned_by", "description", "is_completed", "deadline", "routing_status" FROM "tasks" AS "Task" WHERE "Task"."id" = 10;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "assigned_to", "assigned_by", "description", "deadline", "deadline_breach_reminded_at", "routing_status", "owner_id", "department_id", "completed_by", "rejected_by", "rejection_reason", "rejected_at", "is_completed", "batch_id", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "tasks" AS "Task" WHERE "Task"."id" = 10;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "phone_number", "name" FROM "users" AS "User" WHERE "User"."id" = 131;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT count(*) AS "count" FROM "task_inventory_lines" AS "TaskInventoryLine" WHERE "TaskInventoryLine"."task_id" = 10;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): UPDATE "tasks" SET "is_completed"=$1,"updated_at"=$2 WHERE "id" = $3
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "name" FROM "users" AS "User" WHERE "User"."id" = 130;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "assigned_to", "assigned_by", "owner_id", "description", "is_completed", "completed_by" FROM "tasks" AS "Task" WHERE "Task"."id" = 10;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "assigned_to", "assigned_by", "description", "deadline", "deadline_breach_reminded_at", "routing_status", "owner_id", "department_id", "completed_by", "rejected_by", "rejection_reason", "rejected_at", "is_completed", "batch_id", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "tasks" AS "Task" WHERE "Task"."id" = 10;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "name", "phone_number" FROM "users" AS "User" WHERE "User"."id" = 131;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "name" FROM "factories" AS "Factory" WHERE "Factory"."id" = 44;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 131 AND "FactoryUser"."factory_id" = 44;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT count(*) AS "count" FROM "task_inventory_lines" AS "TaskInventoryLine" WHERE "TaskInventoryLine"."task_id" = 10;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "slug", "manager_user_id", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "departments" AS "Department" WHERE "Department"."factory_id" = 44 AND "Department"."manager_user_id" = 131 LIMIT 1;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): UPDATE "tasks" SET "is_completed"=$1,"updated_at"=$2 WHERE "id" = $3
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "DepartmentWorker"."id", "DepartmentWorker"."department_id", "DepartmentWorker"."user_id", "DepartmentWorker"."created_at" AS "createdAt", "DepartmentWorker"."updated_at" AS "updatedAt", "department"."id" AS "department.id", "department"."factory_id" AS "department.factory_id", "department"."name" AS "department.name", "department"."slug" AS "department.slug", "department"."manager_user_id" AS "department.manager_user_id", "department"."created_at" AS "department.createdAt", "department"."updated_at" AS "department.updatedAt" FROM "department_workers" AS "DepartmentWorker" LEFT OUTER JOIN "departments" AS "department" ON "DepartmentWorker"."department_id" = "department"."id" AND "department"."factory_id" = 44 WHERE "DepartmentWorker"."user_id" = 131;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "assigned_to", "assigned_by", "description", "deadline", "deadline_breach_reminded_at", "routing_status", "owner_id", "department_id", "completed_by", "rejected_by", "rejection_reason", "rejected_at", "is_completed", "batch_id", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "tasks" AS "Task" WHERE "Task"."id" = 10;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "phone_number", "name" FROM "users" AS "User" WHERE "User"."id" = 130;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factories" ("id","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3) RETURNING "id","name","address","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "name" FROM "factories" AS "Factory" WHERE "Factory"."id" = 44;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "users" ("id","phone_number","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4) RETURNING "id","phone_number","name","profile_picture","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "users" ("id","phone_number","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4) RETURNING "id","phone_number","name","profile_picture","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "users" ("id","phone_number","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4) RETURNING "id","phone_number","name","profile_picture","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factory_users" ("id","user_id","factory_id","role","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5) RETURNING "id","user_id","factory_id","role","doj","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factory_users" ("id","user_id","factory_id","role","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5) RETURNING "id","user_id","factory_id","role","doj","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factory_users" ("id","user_id","factory_id","role","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5) RETURNING "id","user_id","factory_id","role","doj","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "name", "address", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factories" AS "Factory" WHERE "Factory"."id" = 45;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "description", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_categories" AS "InventoryCategory" WHERE "InventoryCategory"."factory_id" = 45 AND "InventoryCategory"."name" ILIKE 'Cat-1780681550992-5174' LIMIT 1;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "inventory_categories" ("id","factory_id","name","description","is_active","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6) RETURNING "id","factory_id","name","description","is_active","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "name", "address", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factories" AS "Factory" WHERE "Factory"."id" = 45;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "code", "address", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_locations" AS "InventoryLocation" WHERE "InventoryLocation"."factory_id" = 45 ORDER BY "InventoryLocation"."name" ASC;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "inventory_locations" ("id","factory_id","name","code","address","is_active","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7) RETURNING "id","factory_id","name","code","address","is_active","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "name", "address", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factories" AS "Factory" WHERE "Factory"."id" = 45;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "description", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_categories" AS "InventoryCategory" WHERE "InventoryCategory"."id" = 45 AND "InventoryCategory"."factory_id" = 45;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "code", "address", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_locations" AS "InventoryLocation" WHERE "InventoryLocation"."id" = 45 AND "InventoryLocation"."factory_id" = 45;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "category_id", "location_id", "sku", "name", "unit", "current_quantity", "reorder_threshold", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_items" AS "InventoryItem" WHERE "InventoryItem"."factory_id" = 45 AND "InventoryItem"."sku" = 'S8-295A2F35' LIMIT 1;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "inventory_items" ("id","factory_id","category_id","location_id","sku","name","unit","current_quantity","reorder_threshold","is_active","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING "id","factory_id","category_id","location_id","sku","name","unit","current_quantity","reorder_threshold","is_active","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (02f634d7-4c86-40da-a587-7cac0f6fe61b): START TRANSACTION;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (02f634d7-4c86-40da-a587-7cac0f6fe61b): SELECT "id", "factory_id", "category_id", "location_id", "sku", "name", "unit", "current_quantity", "reorder_threshold", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_items" AS "InventoryItem" WHERE "InventoryItem"."id" = 42 AND "InventoryItem"."factory_id" = 45 FOR UPDATE;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (02f634d7-4c86-40da-a587-7cac0f6fe61b): INSERT INTO "inventory_transactions" ("id","factory_id","inventory_item_id","transaction_type","quantity","reference_type","reference_id","notes","created_by","created_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING "id","factory_id","inventory_item_id","transaction_type","quantity","reference_type","reference_id","notes","created_by","created_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (02f634d7-4c86-40da-a587-7cac0f6fe61b): UPDATE "inventory_items" SET "current_quantity"=$1,"updated_at"=$2 WHERE "id" = $3 AND "factory_id" = $4
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (02f634d7-4c86-40da-a587-7cac0f6fe61b): COMMIT;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factories" ("id","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3) RETURNING "id","name","address","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "users" ("id","phone_number","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4) RETURNING "id","phone_number","name","profile_picture","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "users" ("id","phone_number","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4) RETURNING "id","phone_number","name","profile_picture","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "users" ("id","phone_number","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4) RETURNING "id","phone_number","name","profile_picture","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factory_users" ("id","user_id","factory_id","role","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5) RETURNING "id","user_id","factory_id","role","doj","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factory_users" ("id","user_id","factory_id","role","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5) RETURNING "id","user_id","factory_id","role","doj","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factory_users" ("id","user_id","factory_id","role","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5) RETURNING "id","user_id","factory_id","role","doj","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "name", "address", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factories" AS "Factory" WHERE "Factory"."id" = 46;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "description", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_categories" AS "InventoryCategory" WHERE "InventoryCategory"."factory_id" = 46 AND "InventoryCategory"."name" ILIKE 'Cat-1780681551069-9360' LIMIT 1;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "inventory_categories" ("id","factory_id","name","description","is_active","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6) RETURNING "id","factory_id","name","description","is_active","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "name", "address", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factories" AS "Factory" WHERE "Factory"."id" = 46;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "code", "address", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_locations" AS "InventoryLocation" WHERE "InventoryLocation"."factory_id" = 46 ORDER BY "InventoryLocation"."name" ASC;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "inventory_locations" ("id","factory_id","name","code","address","is_active","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7) RETURNING "id","factory_id","name","code","address","is_active","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "name", "address", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factories" AS "Factory" WHERE "Factory"."id" = 46;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "description", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_categories" AS "InventoryCategory" WHERE "InventoryCategory"."id" = 46 AND "InventoryCategory"."factory_id" = 46;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "code", "address", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_locations" AS "InventoryLocation" WHERE "InventoryLocation"."id" = 46 AND "InventoryLocation"."factory_id" = 46;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "category_id", "location_id", "sku", "name", "unit", "current_quantity", "reorder_threshold", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_items" AS "InventoryItem" WHERE "InventoryItem"."factory_id" = 46 AND "InventoryItem"."sku" = 'S9-6A5FAB32' LIMIT 1;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "inventory_items" ("id","factory_id","category_id","location_id","sku","name","unit","current_quantity","reorder_threshold","is_active","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING "id","factory_id","category_id","location_id","sku","name","unit","current_quantity","reorder_threshold","is_active","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (432c29d2-a5e5-4cee-8110-014b39164fdc): START TRANSACTION;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (432c29d2-a5e5-4cee-8110-014b39164fdc): SELECT "id", "factory_id", "category_id", "location_id", "sku", "name", "unit", "current_quantity", "reorder_threshold", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_items" AS "InventoryItem" WHERE "InventoryItem"."id" = 43 AND "InventoryItem"."factory_id" = 46 FOR UPDATE;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (432c29d2-a5e5-4cee-8110-014b39164fdc): INSERT INTO "inventory_transactions" ("id","factory_id","inventory_item_id","transaction_type","quantity","reference_type","reference_id","notes","created_by","created_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING "id","factory_id","inventory_item_id","transaction_type","quantity","reference_type","reference_id","notes","created_by","created_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (432c29d2-a5e5-4cee-8110-014b39164fdc): UPDATE "inventory_items" SET "current_quantity"=$1,"updated_at"=$2 WHERE "id" = $3 AND "factory_id" = $4
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (432c29d2-a5e5-4cee-8110-014b39164fdc): COMMIT;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 136 AND "FactoryUser"."factory_id" = 46;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 137 AND "FactoryUser"."factory_id" = 46;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 137 AND "FactoryUser"."factory_id" = 46;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 136 AND "FactoryUser"."factory_id" = 46;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 137 AND "FactoryUser"."factory_id" = 46;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "slug", "manager_user_id", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "departments" AS "Department" WHERE "Department"."factory_id" = 46 AND "Department"."manager_user_id" = 136 LIMIT 1;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "tasks" ("id","factory_id","assigned_to","assigned_by","description","routing_status","owner_id","department_id","is_completed","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING "id","factory_id","assigned_to","assigned_by","description","deadline","deadline_breach_reminded_at","routing_status","owner_id","department_id","completed_by","rejected_by","rejection_reason","rejected_at","is_completed","batch_id","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "task_inventory_lines" ("id","factory_id","task_id","inventory_item_id","quantity_expected","quantity_completed","movement_type","created_at","updated_at") VALUES (DEFAULT,46,11,43,'1','0','TRANSFER','2026-06-05 17:45:51.155 +00:00','2026-06-05 17:45:51.155 +00:00') RETURNING "id","factory_id","task_id","inventory_item_id","quantity_expected","quantity_completed","movement_type","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "assigned_to", "assigned_by", "description", "is_completed", "deadline", "routing_status" FROM "tasks" AS "Task" WHERE "Task"."id" = 11;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "assigned_to", "assigned_by", "description", "deadline", "deadline_breach_reminded_at", "routing_status", "owner_id", "department_id", "completed_by", "rejected_by", "rejection_reason", "rejected_at", "is_completed", "batch_id", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "tasks" AS "Task" WHERE "Task"."id" = 11;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "phone_number", "name" FROM "users" AS "User" WHERE "User"."id" = 137;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT count(*) AS "count" FROM "task_inventory_lines" AS "TaskInventoryLine" WHERE "TaskInventoryLine"."task_id" = 11;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "name" FROM "users" AS "User" WHERE "User"."id" = 136;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (a03cdbf1-4cb6-4e17-8341-9c800d1fee44): START TRANSACTION;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (a03cdbf1-4cb6-4e17-8341-9c800d1fee44): SELECT "id", "factory_id", "task_id", "inventory_item_id", "quantity_expected", "quantity_completed", "movement_type", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "task_inventory_lines" AS "TaskInventoryLine" WHERE "TaskInventoryLine"."task_id" = 11 ORDER BY "TaskInventoryLine"."id" ASC;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "name" FROM "factories" AS "Factory" WHERE "Factory"."id" = 46;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (a03cdbf1-4cb6-4e17-8341-9c800d1fee44): ROLLBACK;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "category_id", "location_id", "sku", "name", "unit", "current_quantity", "reorder_threshold", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_items" AS "InventoryItem" WHERE "InventoryItem"."id" = 43 AND "InventoryItem"."factory_id" = 46;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "assigned_to", "assigned_by", "description", "deadline", "deadline_breach_reminded_at", "routing_status", "owner_id", "department_id", "completed_by", "rejected_by", "rejection_reason", "rejected_at", "is_completed", "batch_id", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "tasks" AS "Task" WHERE "Task"."id" = 11;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factories" ("id","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3) RETURNING "id","name","address","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "users" ("id","phone_number","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4) RETURNING "id","phone_number","name","profile_picture","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "users" ("id","phone_number","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4) RETURNING "id","phone_number","name","profile_picture","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "users" ("id","phone_number","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4) RETURNING "id","phone_number","name","profile_picture","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factory_users" ("id","user_id","factory_id","role","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5) RETURNING "id","user_id","factory_id","role","doj","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factory_users" ("id","user_id","factory_id","role","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5) RETURNING "id","user_id","factory_id","role","doj","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factory_users" ("id","user_id","factory_id","role","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5) RETURNING "id","user_id","factory_id","role","doj","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "name", "address", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factories" AS "Factory" WHERE "Factory"."id" = 47;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "description", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_categories" AS "InventoryCategory" WHERE "InventoryCategory"."factory_id" = 47 AND "InventoryCategory"."name" ILIKE 'Cat-1780681551179-9396' LIMIT 1;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "inventory_categories" ("id","factory_id","name","description","is_active","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6) RETURNING "id","factory_id","name","description","is_active","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "name", "address", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factories" AS "Factory" WHERE "Factory"."id" = 47;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "code", "address", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_locations" AS "InventoryLocation" WHERE "InventoryLocation"."factory_id" = 47 ORDER BY "InventoryLocation"."name" ASC;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "inventory_locations" ("id","factory_id","name","code","address","is_active","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7) RETURNING "id","factory_id","name","code","address","is_active","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "name", "address", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factories" AS "Factory" WHERE "Factory"."id" = 47;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "description", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_categories" AS "InventoryCategory" WHERE "InventoryCategory"."id" = 47 AND "InventoryCategory"."factory_id" = 47;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "code", "address", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_locations" AS "InventoryLocation" WHERE "InventoryLocation"."id" = 47 AND "InventoryLocation"."factory_id" = 47;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "category_id", "location_id", "sku", "name", "unit", "current_quantity", "reorder_threshold", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_items" AS "InventoryItem" WHERE "InventoryItem"."factory_id" = 47 AND "InventoryItem"."sku" = 'S10-CA2115F3' LIMIT 1;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "inventory_items" ("id","factory_id","category_id","location_id","sku","name","unit","current_quantity","reorder_threshold","is_active","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING "id","factory_id","category_id","location_id","sku","name","unit","current_quantity","reorder_threshold","is_active","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (02e1f1d0-06ca-4e6c-ba3c-4aa432b820aa): START TRANSACTION;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (02e1f1d0-06ca-4e6c-ba3c-4aa432b820aa): SELECT "id", "factory_id", "category_id", "location_id", "sku", "name", "unit", "current_quantity", "reorder_threshold", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_items" AS "InventoryItem" WHERE "InventoryItem"."id" = 44 AND "InventoryItem"."factory_id" = 47 FOR UPDATE;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (02e1f1d0-06ca-4e6c-ba3c-4aa432b820aa): INSERT INTO "inventory_transactions" ("id","factory_id","inventory_item_id","transaction_type","quantity","reference_type","reference_id","notes","created_by","created_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING "id","factory_id","inventory_item_id","transaction_type","quantity","reference_type","reference_id","notes","created_by","created_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (02e1f1d0-06ca-4e6c-ba3c-4aa432b820aa): UPDATE "inventory_items" SET "current_quantity"=$1,"updated_at"=$2 WHERE "id" = $3 AND "factory_id" = $4
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (02e1f1d0-06ca-4e6c-ba3c-4aa432b820aa): COMMIT;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 139 AND "FactoryUser"."factory_id" = 47;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 140 AND "FactoryUser"."factory_id" = 47;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 140 AND "FactoryUser"."factory_id" = 47;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 139 AND "FactoryUser"."factory_id" = 47;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 140 AND "FactoryUser"."factory_id" = 47;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "slug", "manager_user_id", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "departments" AS "Department" WHERE "Department"."factory_id" = 47 AND "Department"."manager_user_id" = 139 LIMIT 1;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "tasks" ("id","factory_id","assigned_to","assigned_by","description","routing_status","owner_id","department_id","is_completed","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING "id","factory_id","assigned_to","assigned_by","description","deadline","deadline_breach_reminded_at","routing_status","owner_id","department_id","completed_by","rejected_by","rejection_reason","rejected_at","is_completed","batch_id","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "task_inventory_lines" ("id","factory_id","task_id","inventory_item_id","quantity_expected","quantity_completed","movement_type","created_at","updated_at") VALUES (DEFAULT,47,12,44,'2','0','STOCK_OUT','2026-06-05 17:45:51.258 +00:00','2026-06-05 17:45:51.258 +00:00') RETURNING "id","factory_id","task_id","inventory_item_id","quantity_expected","quantity_completed","movement_type","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "assigned_to", "assigned_by", "description", "is_completed", "deadline", "routing_status" FROM "tasks" AS "Task" WHERE "Task"."id" = 12;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "assigned_to", "assigned_by", "description", "deadline", "deadline_breach_reminded_at", "routing_status", "owner_id", "department_id", "completed_by", "rejected_by", "rejection_reason", "rejected_at", "is_completed", "batch_id", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "tasks" AS "Task" WHERE "Task"."id" = 12;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "phone_number", "name" FROM "users" AS "User" WHERE "User"."id" = 140;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT count(*) AS "count" FROM "task_inventory_lines" AS "TaskInventoryLine" WHERE "TaskInventoryLine"."task_id" = 12;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "name" FROM "users" AS "User" WHERE "User"."id" = 139;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (398e2bf9-afe8-419f-b238-e4458cd345ae): START TRANSACTION;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (398e2bf9-afe8-419f-b238-e4458cd345ae): SELECT "id", "factory_id", "task_id", "inventory_item_id", "quantity_expected", "quantity_completed", "movement_type", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "task_inventory_lines" AS "TaskInventoryLine" WHERE "TaskInventoryLine"."task_id" = 12 ORDER BY "TaskInventoryLine"."id" ASC;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "name" FROM "factories" AS "Factory" WHERE "Factory"."id" = 47;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (398e2bf9-afe8-419f-b238-e4458cd345ae): SELECT "id", "factory_id", "category_id", "location_id", "sku", "name", "unit", "current_quantity", "reorder_threshold", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_items" AS "InventoryItem" WHERE "InventoryItem"."id" = 44 AND "InventoryItem"."factory_id" = 47 FOR UPDATE;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (398e2bf9-afe8-419f-b238-e4458cd345ae): INSERT INTO "inventory_transactions" ("id","factory_id","inventory_item_id","transaction_type","quantity","reference_type","reference_id","notes","created_by","created_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING "id","factory_id","inventory_item_id","transaction_type","quantity","reference_type","reference_id","notes","created_by","created_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (398e2bf9-afe8-419f-b238-e4458cd345ae): UPDATE "inventory_items" SET "current_quantity"=$1,"updated_at"=$2 WHERE "id" = $3 AND "factory_id" = $4
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (398e2bf9-afe8-419f-b238-e4458cd345ae): UPDATE "tasks" SET "is_completed"=$1,"updated_at"=$2 WHERE "id" = $3
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (398e2bf9-afe8-419f-b238-e4458cd345ae): COMMIT;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "assigned_to", "assigned_by", "owner_id", "description", "is_completed", "completed_by" FROM "tasks" AS "Task" WHERE "Task"."id" = 12;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "category_id", "location_id", "sku", "name", "unit", "current_quantity", "reorder_threshold", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_items" AS "InventoryItem" WHERE "InventoryItem"."id" = 44 AND "InventoryItem"."factory_id" = 47;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "name", "phone_number" FROM "users" AS "User" WHERE "User"."id" = 140;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT count(*) AS "count" FROM "inventory_transactions" AS "InventoryTransaction" WHERE "InventoryTransaction"."reference_type" = 'TASK' AND "InventoryTransaction"."reference_id" = 12;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 140 AND "FactoryUser"."factory_id" = 47;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "assigned_to", "assigned_by", "description", "deadline", "deadline_breach_reminded_at", "routing_status", "owner_id", "department_id", "completed_by", "rejected_by", "rejection_reason", "rejected_at", "is_completed", "batch_id", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "tasks" AS "Task" WHERE "Task"."id" = 12;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "category_id", "location_id", "sku", "name", "unit", "current_quantity", "reorder_threshold", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_items" AS "InventoryItem" WHERE "InventoryItem"."id" = 44 AND "InventoryItem"."factory_id" = 47;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "slug", "manager_user_id", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "departments" AS "Department" WHERE "Department"."factory_id" = 47 AND "Department"."manager_user_id" = 140 LIMIT 1;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT count(*) AS "count" FROM "inventory_transactions" AS "InventoryTransaction" WHERE "InventoryTransaction"."reference_type" = 'TASK' AND "InventoryTransaction"."reference_id" = 12;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "DepartmentWorker"."id", "DepartmentWorker"."department_id", "DepartmentWorker"."user_id", "DepartmentWorker"."created_at" AS "createdAt", "DepartmentWorker"."updated_at" AS "updatedAt", "department"."id" AS "department.id", "department"."factory_id" AS "department.factory_id", "department"."name" AS "department.name", "department"."slug" AS "department.slug", "department"."manager_user_id" AS "department.manager_user_id", "department"."created_at" AS "department.createdAt", "department"."updated_at" AS "department.updatedAt" FROM "department_workers" AS "DepartmentWorker" LEFT OUTER JOIN "departments" AS "department" ON "DepartmentWorker"."department_id" = "department"."id" AND "department"."factory_id" = 47 WHERE "DepartmentWorker"."user_id" = 140;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factories" ("id","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3) RETURNING "id","name","address","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "phone_number", "name" FROM "users" AS "User" WHERE "User"."id" = 139;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "name" FROM "factories" AS "Factory" WHERE "Factory"."id" = 47;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "users" ("id","phone_number","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4) RETURNING "id","phone_number","name","profile_picture","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "users" ("id","phone_number","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4) RETURNING "id","phone_number","name","profile_picture","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "users" ("id","phone_number","name","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4) RETURNING "id","phone_number","name","profile_picture","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factory_users" ("id","user_id","factory_id","role","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5) RETURNING "id","user_id","factory_id","role","doj","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factory_users" ("id","user_id","factory_id","role","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5) RETURNING "id","user_id","factory_id","role","doj","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "factory_users" ("id","user_id","factory_id","role","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5) RETURNING "id","user_id","factory_id","role","doj","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "name", "address", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factories" AS "Factory" WHERE "Factory"."id" = 48;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "description", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_categories" AS "InventoryCategory" WHERE "InventoryCategory"."factory_id" = 48 AND "InventoryCategory"."name" ILIKE 'Cat-1780681551306-3386' LIMIT 1;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "inventory_categories" ("id","factory_id","name","description","is_active","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6) RETURNING "id","factory_id","name","description","is_active","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "name", "address", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factories" AS "Factory" WHERE "Factory"."id" = 48;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "code", "address", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_locations" AS "InventoryLocation" WHERE "InventoryLocation"."factory_id" = 48 ORDER BY "InventoryLocation"."name" ASC;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "inventory_locations" ("id","factory_id","name","code","address","is_active","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7) RETURNING "id","factory_id","name","code","address","is_active","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "name", "address", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factories" AS "Factory" WHERE "Factory"."id" = 48;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "description", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_categories" AS "InventoryCategory" WHERE "InventoryCategory"."id" = 48 AND "InventoryCategory"."factory_id" = 48;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "code", "address", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_locations" AS "InventoryLocation" WHERE "InventoryLocation"."id" = 48 AND "InventoryLocation"."factory_id" = 48;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "category_id", "location_id", "sku", "name", "unit", "current_quantity", "reorder_threshold", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_items" AS "InventoryItem" WHERE "InventoryItem"."factory_id" = 48 AND "InventoryItem"."sku" = 'P02-A4F7780C' LIMIT 1;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "inventory_items" ("id","factory_id","category_id","location_id","sku","name","unit","current_quantity","reorder_threshold","is_active","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING "id","factory_id","category_id","location_id","sku","name","unit","current_quantity","reorder_threshold","is_active","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (9474751e-02ca-467f-aa82-e9c0f90131f4): START TRANSACTION;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (9474751e-02ca-467f-aa82-e9c0f90131f4): SELECT "id", "factory_id", "category_id", "location_id", "sku", "name", "unit", "current_quantity", "reorder_threshold", "is_active", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "inventory_items" AS "InventoryItem" WHERE "InventoryItem"."id" = 45 AND "InventoryItem"."factory_id" = 48 FOR UPDATE;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (9474751e-02ca-467f-aa82-e9c0f90131f4): INSERT INTO "inventory_transactions" ("id","factory_id","inventory_item_id","transaction_type","quantity","reference_type","reference_id","notes","created_by","created_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING "id","factory_id","inventory_item_id","transaction_type","quantity","reference_type","reference_id","notes","created_by","created_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (9474751e-02ca-467f-aa82-e9c0f90131f4): UPDATE "inventory_items" SET "current_quantity"=$1,"updated_at"=$2 WHERE "id" = $3 AND "factory_id" = $4
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (9474751e-02ca-467f-aa82-e9c0f90131f4): COMMIT;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 142 AND "FactoryUser"."factory_id" = 48;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 143 AND "FactoryUser"."factory_id" = 48;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 143 AND "FactoryUser"."factory_id" = 48;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 142 AND "FactoryUser"."factory_id" = 48;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "user_id", "factory_id", "role", "doj", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "factory_users" AS "FactoryUser" WHERE "FactoryUser"."user_id" = 143 AND "FactoryUser"."factory_id" = 48;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "name", "slug", "manager_user_id", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "departments" AS "Department" WHERE "Department"."factory_id" = 48 AND "Department"."manager_user_id" = 142 LIMIT 1;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "tasks" ("id","factory_id","assigned_to","assigned_by","description","routing_status","owner_id","department_id","is_completed","created_at","updated_at") VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING "id","factory_id","assigned_to","assigned_by","description","deadline","deadline_breach_reminded_at","routing_status","owner_id","department_id","completed_by","rejected_by","rejection_reason","rejected_at","is_completed","batch_id","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): INSERT INTO "task_inventory_lines" ("id","factory_id","task_id","inventory_item_id","quantity_expected","quantity_completed","movement_type","created_at","updated_at") VALUES (DEFAULT,48,13,45,'2','0','STOCK_OUT','2026-06-05 17:45:51.386 +00:00','2026-06-05 17:45:51.386 +00:00') RETURNING "id","factory_id","task_id","inventory_item_id","quantity_expected","quantity_completed","movement_type","created_at","updated_at";
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "assigned_to", "assigned_by", "description", "is_completed", "deadline", "routing_status" FROM "tasks" AS "Task" WHERE "Task"."id" = 13;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "Task"."id", "Task"."factory_id", "Task"."assigned_to", "Task"."assigned_by", "Task"."description", "Task"."deadline", "Task"."deadline_breach_reminded_at", "Task"."routing_status", "Task"."owner_id", "Task"."department_id", "Task"."completed_by", "Task"."rejected_by", "Task"."rejection_reason", "Task"."rejected_at", "Task"."is_completed", "Task"."batch_id", "Task"."created_at" AS "createdAt", "Task"."updated_at" AS "updatedAt", "assignee"."id" AS "assignee.id", "assignee"."name" AS "assignee.name", "assignee"."phone_number" AS "assignee.phone_number", "assigner"."id" AS "assigner.id", "assigner"."name" AS "assigner.name", "assigner"."phone_number" AS "assigner.phone_number", "updates"."id" AS "updates.id", "updates"."task_id" AS "updates.task_id", "updates"."user_id" AS "updates.user_id", "updates"."message" AS "updates.message", "updates"."created_at" AS "updates.createdAt", "updates"."updated_at" AS "updates.updatedAt", "inventory_lines"."id" AS "inventory_lines.id", "inventory_lines"."factory_id" AS "inventory_lines.factory_id", "inventory_lines"."task_id" AS "inventory_lines.task_id", "inventory_lines"."inventory_item_id" AS "inventory_lines.inventory_item_id", "inventory_lines"."quantity_expected" AS "inventory_lines.quantity_expected", "inventory_lines"."quantity_completed" AS "inventory_lines.quantity_completed", "inventory_lines"."movement_type" AS "inventory_lines.movement_type", "inventory_lines"."created_at" AS "inventory_lines.createdAt", "inventory_lines"."updated_at" AS "inventory_lines.updatedAt", "inventory_lines->inventory_item"."id" AS "inventory_lines.inventory_item.id", "inventory_lines->inventory_item"."name" AS "inventory_lines.inventory_item.name", "inventory_lines->inventory_item"."sku" AS "inventory_lines.inventory_item.sku", "inventory_lines->inventory_item"."unit" AS "inventory_lines.inventory_item.unit" FROM "tasks" AS "Task" LEFT OUTER JOIN "users" AS "assignee" ON "Task"."assigned_to" = "assignee"."id" LEFT OUTER JOIN "users" AS "assigner" ON "Task"."assigned_by" = "assigner"."id" LEFT OUTER JOIN "task_updates" AS "updates" ON "Task"."id" = "updates"."task_id" LEFT OUTER JOIN "task_inventory_lines" AS "inventory_lines" ON "Task"."id" = "inventory_lines"."task_id" LEFT OUTER JOIN "inventory_items" AS "inventory_lines->inventory_item" ON "inventory_lines"."inventory_item_id" = "inventory_lines->inventory_item"."id" WHERE "Task"."id" = 13;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "phone_number", "name" FROM "users" AS "User" WHERE "User"."id" = 143;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "name" FROM "users" AS "User" WHERE "User"."id" = 142;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "name" FROM "factories" AS "Factory" WHERE "Factory"."id" = 48;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT "id", "factory_id", "assigned_to", "assigned_by", "description", "deadline", "deadline_breach_reminded_at", "routing_status", "owner_id", "department_id", "completed_by", "rejected_by", "rejection_reason", "rejected_at", "is_completed", "batch_id", "created_at" AS "createdAt", "updated_at" AS "updatedAt" FROM "tasks" AS "Task" WHERE "Task"."id" = 13;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): DELETE FROM "task_updates" WHERE "task_id" = 13
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): DELETE FROM "task_inventory_lines" WHERE "task_id" = 13
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): DELETE FROM "tasks" WHERE "id" = 13
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+  console.log
+    Executing (default): SELECT count(*) AS "count" FROM "task_inventory_lines" AS "TaskInventoryLine" WHERE "TaskInventoryLine"."task_id" = 13;
+
+      at Sequelize.log (../node_modules/sequelize/src/sequelize.js:1281:15)
+
+node.exe : PASS test/integration/task-inventory-phase0.integration.spec.ts (15.996 s)
+At C:\Users\shant\AppData\Roaming\npm\yarn.ps1:24 char:5
++     & "node$exe"  "$basedir/node_modules/yarn/bin/yarn.js" $args
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (PASS test/integ...c.ts (15.996 s):String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  Phase 0 task-inventory integration
+    Phase 0.1 ΓÇö foundation
+      ΓêÜ task_inventory_lines table and TaskInventoryLine model exist (52 ms)
+    Scenario 1 ΓÇö single STOCK_OUT completion
+      ΓêÜ decreases stock, completes task, writes TASK reference (325 ms)
+    Scenario 2 ΓÇö single STOCK_IN completion
+      ΓêÜ increases stock, completes task, writes TASK reference (145 ms)
+    Scenario 3 ΓÇö multi-line completion success
+      ΓêÜ applies all movements and completes task (171 ms)
+    Scenario 4 ΓÇö multi-line failure rollback
+      ΓêÜ leaves stock unchanged and task incomplete when second line fails (175 ms)
+    Scenario 5 ΓÇö insufficient stock
+      ΓêÜ blocks completion and leaves stock unchanged (193 ms)
+    Scenario 6 ΓÇö reopen inventory-linked task
+      ΓêÜ rejects reopen (125 ms)
+    Scenario 7 ΓÇö reopen non-inventory task
+      ΓêÜ allows reopen (94 ms)
+    Scenario 8 ΓÇö assignToAll + inventory_lines
+      ΓêÜ rejects batch assign with inventory lines (77 ms)
+    Scenario 9 ΓÇö TRANSFER movement
+      ΓêÜ rejects completion with TRANSFER line (109 ms)
+    Scenario 10 ΓÇö duplicate completion
+      ΓêÜ moves stock only once (127 ms)
+    Phase 0.2 ΓÇö persistence and retrieval
+      ΓêÜ persists lines on create and returns them on adminFindOne (129 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       12 passed, 12 total
+Snapshots:   0 total
+Time:        16.716 s, estimated 19 s
+Ran all test suites.
+Jest did not exit one second after the test run has completed.
+
+'This usually means that there are asynchronous operations that weren't stopped in your tests. Consider running Jest 
+with `--detectOpenHandles` to troubleshoot this issue.
+Done in 29.43s.

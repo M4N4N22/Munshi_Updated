@@ -1,0 +1,89 @@
+{
+  "runAt": "2026-06-05T18:46:18.087Z",
+  "environment": {
+    "database": "PASS",
+    "databaseDetail": "Postgres reachable at localhost:5432",
+    "backendStartup": "FAIL",
+    "backendStartupDetail": "23: 00007FF7AF2FB632 \r\n24: 00007FF7AF5BC646 \r\n25: 00007FF7AE734EA0 \r\n26: 00007FF7AE8C18F3 \r\n27: 00007FF7B014964B \r\n28: 00007FFEE99EE957 \r\n29: 00007FFEEA8E427C \r\n",
+    "integrationSuite": "PASS",
+    "integrationDetail": "12 passed, 12 total (verified in separate yarn test:integration run)"
+  },
+  "scenarios": {
+    "s1": {
+      "pass": true,
+      "qty": 100,
+      "itemId": 124
+    },
+    "s2": {
+      "pass": true,
+      "taskId": 87,
+      "lines": 1,
+      "assignHandlerResult": "✅ Delivery task create ho gaya.\n\n👤 Worker: Ramesh Worker\n📦 Item: Cement 50kg\n🔢 Qty: 5.0000\n\nTask worker ko assign kar diya gaya hai.",
+      "description": "[DELIVERY] Cement 50kg bag (CEMENT_50KG) x5.0000",
+      "movementType": "STOCK_OUT",
+      "workerAssigned": true,
+      "workerAssignmentNote": "assignToUser fires notifyWorkerTaskAssigned via fireAndForget; OLLI send may fail without valid OLLI_KEY"
+    },
+    "s3": {
+      "pass": true,
+      "visible": true,
+      "inventoryLineCount": 1
+    },
+    "s4": {
+      "pass": true,
+      "completeMessage": "Task #87 marked as completed.\n\n*Completed by:* Ramesh Worker (#381)\n*Role:* Worker\n*Phone:* 91999001886143"
+    },
+    "s5": {
+      "pass": false,
+      "qty": 95,
+      "refs": 1
+    },
+    "s6": {
+      "pass": false,
+      "lines": [
+        {
+          "itemName": "Cement 50kg",
+          "unit": "bag",
+          "movementType": "STOCK_OUT",
+          "quantityMoved": "5.0000",
+          "previousQty": "100.0000",
+          "currentQty": "95.0000"
+        }
+      ],
+      "notificationPreview": "━━━━━━━━━━━━━━━━\n✅ *Task #87 complete ho gaya.*\n━━━━━━━━━━━━━━━━\n\n🏭 *Factory:* Munshi Demo Factory 1780685188614\n📝 [DELIVERY] Cement 50kg\n\n📦 *Cement 50kg bag*\nStock: 100.0000 → 95.0000\nQty moved: 5.0000\nMovement: Stock out (nikala)\n\n✔️ *Completed by:* Ramesh Worker\n🎭 *Role:* Worker\n\n━━━━━━━━━━━━━━━━"
+    },
+    "s7": {
+      "pass": true
+    },
+    "s8": {
+      "pass": true,
+      "qtyAfter": 95,
+      "blocked": true
+    },
+    "s9": {
+      "pass": true,
+      "qty": 95,
+      "refs": 1,
+      "message": "Task #87 was already marked as completed."
+    },
+    "s10": {
+      "pass": true
+    },
+    "s11": {
+      "pass": true,
+      "stockUnchanged": true
+    },
+    "s12": {
+      "pass": true,
+      "detail": "12 passed, 12 total (verified in separate yarn test:integration run)"
+    }
+  },
+  "testData": {
+    "factoryId": 127,
+    "factoryName": "Munshi Demo Factory 1780685188614",
+    "ownerPhone": "91999001886141",
+    "workerPhone": "91999001886143",
+    "workerName": "Ramesh Worker",
+    "sku": "CEMENT_50KG"
+  }
+}

@@ -33,38 +33,50 @@ export class InventoryTransactionService {
 
   async recordStockIn(
     input: RecordStockMovementInput,
+    transaction?: Transaction,
   ): Promise<IInventoryTransactionRecord> {
     const qty = parsePositiveQuantity(input.quantity, 'Stock in quantity');
-    return this.applyMovement({
-      ...input,
-      transactionType: INVENTORY_TRANSACTION_TYPE.STOCK_IN,
-      delta: qty,
-      storedQuantity: qty,
-    });
+    return this.applyMovement(
+      {
+        ...input,
+        transactionType: INVENTORY_TRANSACTION_TYPE.STOCK_IN,
+        delta: qty,
+        storedQuantity: qty,
+      },
+      transaction,
+    );
   }
 
   async recordStockOut(
     input: RecordStockMovementInput,
+    transaction?: Transaction,
   ): Promise<IInventoryTransactionRecord> {
     const qty = parsePositiveQuantity(input.quantity, 'Stock out quantity');
-    return this.applyMovement({
-      ...input,
-      transactionType: INVENTORY_TRANSACTION_TYPE.STOCK_OUT,
-      delta: -qty,
-      storedQuantity: qty,
-    });
+    return this.applyMovement(
+      {
+        ...input,
+        transactionType: INVENTORY_TRANSACTION_TYPE.STOCK_OUT,
+        delta: -qty,
+        storedQuantity: qty,
+      },
+      transaction,
+    );
   }
 
   async recordAdjustment(
     input: RecordStockMovementInput,
+    transaction?: Transaction,
   ): Promise<IInventoryTransactionRecord> {
     const delta = parseSignedQuantity(input.quantity, 'Adjustment quantity');
-    return this.applyMovement({
-      ...input,
-      transactionType: INVENTORY_TRANSACTION_TYPE.ADJUSTMENT,
-      delta,
-      storedQuantity: Math.abs(delta),
-    });
+    return this.applyMovement(
+      {
+        ...input,
+        transactionType: INVENTORY_TRANSACTION_TYPE.ADJUSTMENT,
+        delta,
+        storedQuantity: Math.abs(delta),
+      },
+      transaction,
+    );
   }
 
   /** Sum signed quantities from transaction ledger (audit verification). */
@@ -96,18 +108,21 @@ export class InventoryTransactionService {
     return roundQuantity(total);
   }
 
-  private async applyMovement(params: {
-    factory_id: number;
-    inventory_item_id: number;
-    transactionType: string;
-    delta: number;
-    storedQuantity: number;
-    notes?: string | null;
-    reference_type?: string | null;
-    reference_id?: number | null;
-    created_by?: number | null;
-  }): Promise<IInventoryTransactionRecord> {
-    return this.repository.sequelize.transaction(async (transaction) => {
+  private async applyMovement(
+    params: {
+      factory_id: number;
+      inventory_item_id: number;
+      transactionType: string;
+      delta: number;
+      storedQuantity: number;
+      notes?: string | null;
+      reference_type?: string | null;
+      reference_id?: number | null;
+      created_by?: number | null;
+    },
+    parentTransaction?: Transaction,
+  ): Promise<IInventoryTransactionRecord> {
+    const run = async (transaction: Transaction) => {
       const item = await this.repository.findItemById(
         params.inventory_item_id,
         params.factory_id,
@@ -155,7 +170,13 @@ export class InventoryTransactionService {
       );
 
       return this.toTransactionRecord(row);
-    });
+    };
+
+    if (parentTransaction) {
+      return run(parentTransaction);
+    }
+
+    return this.repository.sequelize.transaction(run);
   }
 
   private toTransactionRecord(row: any): IInventoryTransactionRecord {

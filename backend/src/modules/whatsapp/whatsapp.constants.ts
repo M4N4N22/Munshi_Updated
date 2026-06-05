@@ -4,6 +4,7 @@ export const COMMANDS = {
   TASKS: '/tasks',
   COMPLETE: '/complete',
   ASSIGN: '/assign',
+  ASSIGN_DELIVERY: '/assign_delivery',
   DEPART_ASSIGN: '/depart_assign',
   MGR_SELF: '/mgrself',
   MGR_ASSIGN: '/mgrassign',
@@ -32,6 +33,10 @@ export const COMMAND_HINTS = [
   {
     command: COMMANDS.ASSIGN,
     hint: '/assign @<name|id|phone> or @all [task]',
+  },
+  {
+    command: COMMANDS.ASSIGN_DELIVERY,
+    hint: '/assign_delivery @<worker> <SKU> <qty>',
   },
   {
     command: COMMANDS.DEPART_ASSIGN,

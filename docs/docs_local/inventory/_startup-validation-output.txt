@@ -1,0 +1,201 @@
+﻿[Nest] 5896  - 06/05/2026, 11:40:28 PM     LOG [Migrations] [migrate] Database schema is up to date
+[Nest] 5896  - 06/05/2026, 11:40:28 PM     LOG [NestFactory] Starting Nest application... +4ms
+[Nest] 5896  - 06/05/2026, 11:40:28 PM     LOG [SqlService] Initializing models...
+[Nest] 5896  - 06/05/2026, 11:40:28 PM     LOG [SqlService] Γ£à All models initialized and associated.
+[Nest] 5896  - 06/05/2026, 11:40:28 PM     LOG [DbService] Initializing DbService...
+[Nest] 5896  - 06/05/2026, 11:40:28 PM     LOG [SqlService] Authenticating database connection (host: localhost:5432)...
+[Nest] 5896  - 06/05/2026, 11:40:28 PM     LOG [InstanceLoader] AppModule dependencies initialized +15ms
+[Nest] 5896  - 06/05/2026, 11:40:28 PM     LOG [InstanceLoader] LoggerModule dependencies initialized +1ms
+[Nest] 5896  - 06/05/2026, 11:40:28 PM     LOG [InstanceLoader] ConfigHostModule dependencies initialized +0ms
+[Nest] 5896  - 06/05/2026, 11:40:28 PM     LOG [InstanceLoader] MigrationHealthModule dependencies initialized +0ms
+[Nest] 5896  - 06/05/2026, 11:40:28 PM     LOG [InstanceLoader] DiscoveryModule dependencies initialized +1ms
+[Nest] 5896  - 06/05/2026, 11:40:28 PM     LOG [InstanceLoader] TerminusModule dependencies initialized +0ms
+[Nest] 5896  - 06/05/2026, 11:40:28 PM     LOG [InstanceLoader] ConfigModule dependencies initialized +0ms
+[Nest] 5896  - 06/05/2026, 11:40:28 PM     LOG [InstanceLoader] ScheduleModule dependencies initialized +0ms
+Executing (default): SELECT 1+1 AS result
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [SqlService] Γ£à Successfully connected to PostgreSQL (localhost:5432)
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [DbService] Γ£à SQL connection and model setup complete.
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [InstanceLoader] DbModule dependencies initialized +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [InstanceLoader] MessagingModule dependencies initialized +2ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [InstanceLoader] DomainEventsModule dependencies initialized +1ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [InstanceLoader] ReportsModule dependencies initialized +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [InstanceLoader] HealthCheckModule dependencies initialized +1ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [InstanceLoader] UserModule dependencies initialized +1ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [InstanceLoader] DepartmentsModule dependencies initialized +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [InstanceLoader] AttendanceModule dependencies initialized +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [InstanceLoader] BusinessDiscoveryModule dependencies initialized +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [InstanceLoader] OnboardingModule dependencies initialized +1ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [InstanceLoader] VendorModule dependencies initialized +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [InstanceLoader] ApprovalModule dependencies initialized +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [InstanceLoader] IssueModule dependencies initialized +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [InstanceLoader] FactoryModule dependencies initialized +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [InstanceLoader] InventoryModule dependencies initialized +1ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [InstanceLoader] PurchaseRequestModule dependencies initialized +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [InstanceLoader] TasksModule dependencies initialized +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [InstanceLoader] DocumentModule dependencies initialized +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [InstanceLoader] WorkflowModule dependencies initialized +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [InstanceLoader] WhatsAppModule dependencies initialized +1ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RoutesResolver] HealthController {/health}: +11ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/health, GET} route +3ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RoutesResolver] MigrationHealthController {/health/migrations}: +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/health/migrations, GET} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RoutesResolver] WhatsAppController {/webhook}: +1ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/webhook, GET} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/webhook, POST} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/webhook/test, POST} route +1ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RoutesResolver] DepartmentsController {/departments}: +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/departments, GET} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/departments/eligible-assignees, GET} route +1ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/departments, POST} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/departments/:id, PATCH} route +1ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/departments/:id, DELETE} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/departments/:id/workers, POST} route +1ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/departments/:id/workers/:userId, DELETE} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RoutesResolver] AttendanceController {/attendance}: +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/attendance, GET} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/attendance/:id, GET} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/attendance, POST} route +1ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RoutesResolver] UserController {/users}: +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/users, POST} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/users, GET} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/users/by-phone, GET} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/users/:id, GET} route +1ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/users/:id, PATCH} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/users/:id, DELETE} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RoutesResolver] IssueController {/issues}: +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/issues, GET} route +2ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/issues/:id, GET} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/issues, POST} route +1ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/issues/:id, PATCH} route +1ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/issues/:id/resolve, PATCH} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/issues/:id, DELETE} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RoutesResolver] TasksController {/tasks}: +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/tasks, GET} route +1ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/tasks/:id, GET} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/tasks, POST} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/tasks/:id, PATCH} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/tasks/:id/complete, PATCH} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/tasks/:id/reopen, PATCH} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/tasks/:id, DELETE} route +1ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/tasks/:id/updates, GET} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/tasks/:id/updates, POST} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RoutesResolver] InventoryController {/inventory}: +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/inventory/categories, GET} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/inventory/categories, POST} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/inventory/categories/:id, PATCH} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/inventory/categories/:id/deactivate, PATCH} route +1ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/inventory/locations, GET} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/inventory/locations, POST} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/inventory/locations/:id, PATCH} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/inventory/locations/:id/deactivate, PATCH} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/inventory/items, GET} route +1ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/inventory/items/low-stock, GET} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/inventory/items/by-sku, GET} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/inventory/items/:id, GET} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/inventory/items/:id/status, GET} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/inventory/items/:id/quantity, GET} route +1ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/inventory/items, POST} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/inventory/items/:id, PATCH} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/inventory/items/:id/deactivate, PATCH} route +1ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/inventory/transactions, GET} route +5ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/inventory/transactions/stock-in, POST} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/inventory/transactions/stock-out, POST} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/inventory/transactions/adjustment, POST} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RoutesResolver] FactoryController {/factories}: +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/factories, POST} route +1ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/factories, GET} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/factories/assign-user, POST} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/factories/:id, GET} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/factories/:id, PATCH} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/factories/:id, DELETE} route +1ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/factories/members/:id, PATCH} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/factories/members/:id, DELETE} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/factories/:id/users, GET} route +1ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RoutesResolver] ReportsController {/reports}: +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/reports, GET} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RoutesResolver] VendorController {/vendors}: +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/vendors, GET} route +1ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/vendors/search, GET} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/vendors/:id, GET} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/vendors, POST} route +1ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/vendors/:id, PATCH} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/vendors/:id/deactivate, PATCH} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RoutesResolver] PurchaseRequestController {/purchase-requests}: +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/purchase-requests, GET} route +1ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/purchase-requests/suggestions/low-stock, GET} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/purchase-requests/:id, GET} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/purchase-requests/:id/audit, GET} route +1ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/purchase-requests, POST} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/purchase-requests/from-suggestion, POST} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/purchase-requests/:id, PATCH} route +1ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/purchase-requests/:id/approve, POST} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/purchase-requests/:id/reject, POST} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/purchase-requests/:id/assign-vendor, POST} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/purchase-requests/:id/remove-vendor, POST} route +1ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/purchase-requests/:id/close, POST} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RoutesResolver] DocumentController {/documents}: +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/documents/registry/types, GET} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/documents, GET} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/documents/:id, GET} route +1ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/documents/upload, POST} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/documents/:id/process, POST} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/documents, POST} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/documents/:id/extractions, POST} route +1ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/documents/:id/extractions/:extractionId/suggestions, POST} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/documents/:id/suggestions, GET} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/documents/suggestions/:suggestionId/approve-workflow, POST} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/documents/suggestions/:suggestionId/reject, POST} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RoutesResolver] BusinessDiscoveryController {/business-discovery}: +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/business-discovery, GET} route +1ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/business-discovery/progress, GET} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/business-discovery/buckets, GET} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/business-discovery/readiness, GET} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/business-discovery/pause, POST} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/business-discovery/resume, POST} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/business-discovery/reminder, POST} route +1ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RoutesResolver] ApprovalController {/approvals}: +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/approvals, GET} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/approvals/:id, GET} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/approvals, POST} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/approvals/:id, PATCH} route +1ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RoutesResolver] OnboardingController {/onboarding}: +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/onboarding/otp/send, POST} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/onboarding/otp/verify, POST} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [RouterExplorer] Mapped {/onboarding/register, POST} route +0ms
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [DbService] Initializing DbService...
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [SqlService] Authenticating database connection (host: localhost:5432)...
+Executing (default): SELECT 1+1 AS result
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [SqlService] Γ£à Successfully connected to PostgreSQL (localhost:5432)
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [DbService] Γ£à SQL connection and model setup complete.
+[Nest] 5896  - 06/05/2026, 11:40:29 PM     LOG [NestApplication] Nest application successfully started +32ms
+node.exe : [Nest] 5896  - 06/05/2026, 11:40:29 PM   ERROR [NestApplication] Error: listen EADDRINUSE: address already 
+in use :::4001 +3ms
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([Nest] 5896  - ...se :::4001 +3ms:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+node:net:1940
+    const ex = new UVExceptionWithHostPort(err, 'listen', address, port);
+               ^
+
+Error: listen EADDRINUSE: address already in use :::4001
+    at Server.setupListenHandle [as _listen2] (node:net:1940:16)
+    at listenInCluster (node:net:1997:12)
+    at Server.listen (node:net:2102:7)
+    at ExpressAdapter.listen 
+(D:\Munshi_Updated\backend\node_modules\@nestjs\platform-express\adapters\express-adapter.js:108:32)
+    at D:\Munshi_Updated\backend\node_modules\@nestjs\core\nest-application.js:185:30
+    at new Promise (<anonymous>)
+    at NestApplication.listen (D:\Munshi_Updated\backend\node_modules\@nestjs\core\nest-application.js:175:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async bootstrap (D:\Munshi_Updated\backend\src\main.ts:76:3) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::',
+  port: 4001
+}
+
+Node.js v22.22.0

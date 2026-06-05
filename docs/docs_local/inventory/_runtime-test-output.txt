@@ -1,0 +1,350 @@
+﻿yarn run v1.22.22
+$ jest --config ./test/jest-integration.json --runInBand
+node.exe : FAIL test/integration/task-inventory-phase0.integration.spec.ts (7.27 s)
+At C:\Users\shant\AppData\Roaming\npm\yarn.ps1:24 char:5
++     & "node$exe"  "$basedir/node_modules/yarn/bin/yarn.js" $args
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (FAIL test/integ...pec.ts (7.27 s):String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  Phase 0 task-inventory integration
+    Phase 0.1 ΓÇö foundation
+      ├ù task_inventory_lines table and TaskInventoryLine model exist (2 ms)
+    Scenario 1 ΓÇö single STOCK_OUT completion
+      ├ù decreases stock, completes task, writes TASK reference
+    Scenario 2 ΓÇö single STOCK_IN completion
+      ├ù increases stock, completes task, writes TASK reference (1 ms)
+    Scenario 3 ΓÇö multi-line completion success
+      ├ù applies all movements and completes task
+    Scenario 4 ΓÇö multi-line failure rollback
+      ├ù leaves stock unchanged and task incomplete when second line fails
+    Scenario 5 ΓÇö insufficient stock
+      ├ù blocks completion and leaves stock unchanged
+    Scenario 6 ΓÇö reopen inventory-linked task
+      ├ù rejects reopen
+    Scenario 7 ΓÇö reopen non-inventory task
+      ├ù allows reopen
+    Scenario 8 ΓÇö assignToAll + inventory_lines
+      ├ù rejects batch assign with inventory lines (1 ms)
+    Scenario 9 ΓÇö TRANSFER movement
+      ├ù rejects completion with TRANSFER line
+    Scenario 10 ΓÇö duplicate completion
+      ├ù moves stock only once
+    Phase 0.2 ΓÇö persistence and retrieval
+      ├ù persists lines on create and returns them on adminFindOne (1 ms)
+
+  ΓùÅ Phase 0 task-inventory integration ΓÇ║ Phase 0.1 ΓÇö foundation ΓÇ║ task_inventory_lines table and 
+TaskInventoryLine model exist
+
+    Command failed: node scripts/apply-migrations.mjs
+    node:internal/modules/cjs/loader:1386
+      throw err;
+      ^
+
+    Error: Cannot find module 'D:\Munshi_Updated\backend\test\scripts\apply-migrations.mjs'
+
+      at Function._resolveFilename (../node:internal/modules/cjs/loader:1383:15)
+      at defaultResolveImpl (../node:internal/modules/cjs/loader:1025:19)
+      at resolveForCJSWithHooks (../node:internal/modules/cjs/loader:1030:22)
+      at Function._load (../node:internal/modules/cjs/loader:1192:37)
+      at TracingChannel.traceSync (../node:diagnostics_channel:328:14)
+      at wrapModuleLoad (../node:internal/modules/cjs/loader:237:24)
+      at Function.executeUserEntryPoint [as runMain] (../node:internal/modules/run_main:171:5)
+      at ../node:internal/main/run_main_module:36:49 {
+        code: 'MODULE_NOT_FOUND',
+        requireStack: []
+      }
+      
+      Node.js v22.22.0
+      at runMigrations (integration/helpers/db-env.ts:29:11)
+      at Object.<anonymous> (integration/task-inventory-phase0.integration.spec.ts:41:18)
+
+  ΓùÅ Phase 0 task-inventory integration ΓÇ║ Scenario 1 ΓÇö single STOCK_OUT completion ΓÇ║ decreases stock, completes 
+task, writes TASK reference
+
+    Command failed: node scripts/apply-migrations.mjs
+    node:internal/modules/cjs/loader:1386
+      throw err;
+      ^
+
+    Error: Cannot find module 'D:\Munshi_Updated\backend\test\scripts\apply-migrations.mjs'
+
+      at Function._resolveFilename (../node:internal/modules/cjs/loader:1383:15)
+      at defaultResolveImpl (../node:internal/modules/cjs/loader:1025:19)
+      at resolveForCJSWithHooks (../node:internal/modules/cjs/loader:1030:22)
+      at Function._load (../node:internal/modules/cjs/loader:1192:37)
+      at TracingChannel.traceSync (../node:diagnostics_channel:328:14)
+      at wrapModuleLoad (../node:internal/modules/cjs/loader:237:24)
+      at Function.executeUserEntryPoint [as runMain] (../node:internal/modules/run_main:171:5)
+      at ../node:internal/main/run_main_module:36:49 {
+        code: 'MODULE_NOT_FOUND',
+        requireStack: []
+      }
+      
+      Node.js v22.22.0
+      at runMigrations (integration/helpers/db-env.ts:29:11)
+      at Object.<anonymous> (integration/task-inventory-phase0.integration.spec.ts:41:18)
+
+  ΓùÅ Phase 0 task-inventory integration ΓÇ║ Scenario 2 ΓÇö single STOCK_IN completion ΓÇ║ increases stock, completes 
+task, writes TASK reference
+
+    Command failed: node scripts/apply-migrations.mjs
+    node:internal/modules/cjs/loader:1386
+      throw err;
+      ^
+
+    Error: Cannot find module 'D:\Munshi_Updated\backend\test\scripts\apply-migrations.mjs'
+
+      at Function._resolveFilename (../node:internal/modules/cjs/loader:1383:15)
+      at defaultResolveImpl (../node:internal/modules/cjs/loader:1025:19)
+      at resolveForCJSWithHooks (../node:internal/modules/cjs/loader:1030:22)
+      at Function._load (../node:internal/modules/cjs/loader:1192:37)
+      at TracingChannel.traceSync (../node:diagnostics_channel:328:14)
+      at wrapModuleLoad (../node:internal/modules/cjs/loader:237:24)
+      at Function.executeUserEntryPoint [as runMain] (../node:internal/modules/run_main:171:5)
+      at ../node:internal/main/run_main_module:36:49 {
+        code: 'MODULE_NOT_FOUND',
+        requireStack: []
+      }
+      
+      Node.js v22.22.0
+      at runMigrations (integration/helpers/db-env.ts:29:11)
+      at Object.<anonymous> (integration/task-inventory-phase0.integration.spec.ts:41:18)
+
+  ΓùÅ Phase 0 task-inventory integration ΓÇ║ Scenario 3 ΓÇö multi-line completion success ΓÇ║ applies all movements 
+and completes task
+
+    Command failed: node scripts/apply-migrations.mjs
+    node:internal/modules/cjs/loader:1386
+      throw err;
+      ^
+
+    Error: Cannot find module 'D:\Munshi_Updated\backend\test\scripts\apply-migrations.mjs'
+
+      at Function._resolveFilename (../node:internal/modules/cjs/loader:1383:15)
+      at defaultResolveImpl (../node:internal/modules/cjs/loader:1025:19)
+      at resolveForCJSWithHooks (../node:internal/modules/cjs/loader:1030:22)
+      at Function._load (../node:internal/modules/cjs/loader:1192:37)
+      at TracingChannel.traceSync (../node:diagnostics_channel:328:14)
+      at wrapModuleLoad (../node:internal/modules/cjs/loader:237:24)
+      at Function.executeUserEntryPoint [as runMain] (../node:internal/modules/run_main:171:5)
+      at ../node:internal/main/run_main_module:36:49 {
+        code: 'MODULE_NOT_FOUND',
+        requireStack: []
+      }
+      
+      Node.js v22.22.0
+      at runMigrations (integration/helpers/db-env.ts:29:11)
+      at Object.<anonymous> (integration/task-inventory-phase0.integration.spec.ts:41:18)
+
+  ΓùÅ Phase 0 task-inventory integration ΓÇ║ Scenario 4 ΓÇö multi-line failure rollback ΓÇ║ leaves stock unchanged and 
+task incomplete when second line fails
+
+    Command failed: node scripts/apply-migrations.mjs
+    node:internal/modules/cjs/loader:1386
+      throw err;
+      ^
+
+    Error: Cannot find module 'D:\Munshi_Updated\backend\test\scripts\apply-migrations.mjs'
+
+      at Function._resolveFilename (../node:internal/modules/cjs/loader:1383:15)
+      at defaultResolveImpl (../node:internal/modules/cjs/loader:1025:19)
+      at resolveForCJSWithHooks (../node:internal/modules/cjs/loader:1030:22)
+      at Function._load (../node:internal/modules/cjs/loader:1192:37)
+      at TracingChannel.traceSync (../node:diagnostics_channel:328:14)
+      at wrapModuleLoad (../node:internal/modules/cjs/loader:237:24)
+      at Function.executeUserEntryPoint [as runMain] (../node:internal/modules/run_main:171:5)
+      at ../node:internal/main/run_main_module:36:49 {
+        code: 'MODULE_NOT_FOUND',
+        requireStack: []
+      }
+      
+      Node.js v22.22.0
+      at runMigrations (integration/helpers/db-env.ts:29:11)
+      at Object.<anonymous> (integration/task-inventory-phase0.integration.spec.ts:41:18)
+
+  ΓùÅ Phase 0 task-inventory integration ΓÇ║ Scenario 5 ΓÇö insufficient stock ΓÇ║ blocks completion and leaves stock 
+unchanged
+
+    Command failed: node scripts/apply-migrations.mjs
+    node:internal/modules/cjs/loader:1386
+      throw err;
+      ^
+
+    Error: Cannot find module 'D:\Munshi_Updated\backend\test\scripts\apply-migrations.mjs'
+
+      at Function._resolveFilename (../node:internal/modules/cjs/loader:1383:15)
+      at defaultResolveImpl (../node:internal/modules/cjs/loader:1025:19)
+      at resolveForCJSWithHooks (../node:internal/modules/cjs/loader:1030:22)
+      at Function._load (../node:internal/modules/cjs/loader:1192:37)
+      at TracingChannel.traceSync (../node:diagnostics_channel:328:14)
+      at wrapModuleLoad (../node:internal/modules/cjs/loader:237:24)
+      at Function.executeUserEntryPoint [as runMain] (../node:internal/modules/run_main:171:5)
+      at ../node:internal/main/run_main_module:36:49 {
+        code: 'MODULE_NOT_FOUND',
+        requireStack: []
+      }
+      
+      Node.js v22.22.0
+      at runMigrations (integration/helpers/db-env.ts:29:11)
+      at Object.<anonymous> (integration/task-inventory-phase0.integration.spec.ts:41:18)
+
+  ΓùÅ Phase 0 task-inventory integration ΓÇ║ Scenario 6 ΓÇö reopen inventory-linked task ΓÇ║ rejects reopen
+
+    Command failed: node scripts/apply-migrations.mjs
+    node:internal/modules/cjs/loader:1386
+      throw err;
+      ^
+
+    Error: Cannot find module 'D:\Munshi_Updated\backend\test\scripts\apply-migrations.mjs'
+
+      at Function._resolveFilename (../node:internal/modules/cjs/loader:1383:15)
+      at defaultResolveImpl (../node:internal/modules/cjs/loader:1025:19)
+      at resolveForCJSWithHooks (../node:internal/modules/cjs/loader:1030:22)
+      at Function._load (../node:internal/modules/cjs/loader:1192:37)
+      at TracingChannel.traceSync (../node:diagnostics_channel:328:14)
+      at wrapModuleLoad (../node:internal/modules/cjs/loader:237:24)
+      at Function.executeUserEntryPoint [as runMain] (../node:internal/modules/run_main:171:5)
+      at ../node:internal/main/run_main_module:36:49 {
+        code: 'MODULE_NOT_FOUND',
+        requireStack: []
+      }
+      
+      Node.js v22.22.0
+      at runMigrations (integration/helpers/db-env.ts:29:11)
+      at Object.<anonymous> (integration/task-inventory-phase0.integration.spec.ts:41:18)
+
+  ΓùÅ Phase 0 task-inventory integration ΓÇ║ Scenario 7 ΓÇö reopen non-inventory task ΓÇ║ allows reopen
+
+    Command failed: node scripts/apply-migrations.mjs
+    node:internal/modules/cjs/loader:1386
+      throw err;
+      ^
+
+    Error: Cannot find module 'D:\Munshi_Updated\backend\test\scripts\apply-migrations.mjs'
+
+      at Function._resolveFilename (../node:internal/modules/cjs/loader:1383:15)
+      at defaultResolveImpl (../node:internal/modules/cjs/loader:1025:19)
+      at resolveForCJSWithHooks (../node:internal/modules/cjs/loader:1030:22)
+      at Function._load (../node:internal/modules/cjs/loader:1192:37)
+      at TracingChannel.traceSync (../node:diagnostics_channel:328:14)
+      at wrapModuleLoad (../node:internal/modules/cjs/loader:237:24)
+      at Function.executeUserEntryPoint [as runMain] (../node:internal/modules/run_main:171:5)
+      at ../node:internal/main/run_main_module:36:49 {
+        code: 'MODULE_NOT_FOUND',
+        requireStack: []
+      }
+      
+      Node.js v22.22.0
+      at runMigrations (integration/helpers/db-env.ts:29:11)
+      at Object.<anonymous> (integration/task-inventory-phase0.integration.spec.ts:41:18)
+
+  ΓùÅ Phase 0 task-inventory integration ΓÇ║ Scenario 8 ΓÇö assignToAll + inventory_lines ΓÇ║ rejects batch assign 
+with inventory lines
+
+    Command failed: node scripts/apply-migrations.mjs
+    node:internal/modules/cjs/loader:1386
+      throw err;
+      ^
+
+    Error: Cannot find module 'D:\Munshi_Updated\backend\test\scripts\apply-migrations.mjs'
+
+      at Function._resolveFilename (../node:internal/modules/cjs/loader:1383:15)
+      at defaultResolveImpl (../node:internal/modules/cjs/loader:1025:19)
+      at resolveForCJSWithHooks (../node:internal/modules/cjs/loader:1030:22)
+      at Function._load (../node:internal/modules/cjs/loader:1192:37)
+      at TracingChannel.traceSync (../node:diagnostics_channel:328:14)
+      at wrapModuleLoad (../node:internal/modules/cjs/loader:237:24)
+      at Function.executeUserEntryPoint [as runMain] (../node:internal/modules/run_main:171:5)
+      at ../node:internal/main/run_main_module:36:49 {
+        code: 'MODULE_NOT_FOUND',
+        requireStack: []
+      }
+      
+      Node.js v22.22.0
+      at runMigrations (integration/helpers/db-env.ts:29:11)
+      at Object.<anonymous> (integration/task-inventory-phase0.integration.spec.ts:41:18)
+
+  ΓùÅ Phase 0 task-inventory integration ΓÇ║ Scenario 9 ΓÇö TRANSFER movement ΓÇ║ rejects completion with TRANSFER line
+
+    Command failed: node scripts/apply-migrations.mjs
+    node:internal/modules/cjs/loader:1386
+      throw err;
+      ^
+
+    Error: Cannot find module 'D:\Munshi_Updated\backend\test\scripts\apply-migrations.mjs'
+
+      at Function._resolveFilename (../node:internal/modules/cjs/loader:1383:15)
+      at defaultResolveImpl (../node:internal/modules/cjs/loader:1025:19)
+      at resolveForCJSWithHooks (../node:internal/modules/cjs/loader:1030:22)
+      at Function._load (../node:internal/modules/cjs/loader:1192:37)
+      at TracingChannel.traceSync (../node:diagnostics_channel:328:14)
+      at wrapModuleLoad (../node:internal/modules/cjs/loader:237:24)
+      at Function.executeUserEntryPoint [as runMain] (../node:internal/modules/run_main:171:5)
+      at ../node:internal/main/run_main_module:36:49 {
+        code: 'MODULE_NOT_FOUND',
+        requireStack: []
+      }
+      
+      Node.js v22.22.0
+      at runMigrations (integration/helpers/db-env.ts:29:11)
+      at Object.<anonymous> (integration/task-inventory-phase0.integration.spec.ts:41:18)
+
+  ΓùÅ Phase 0 task-inventory integration ΓÇ║ Scenario 10 ΓÇö duplicate completion ΓÇ║ moves stock only once
+
+    Command failed: node scripts/apply-migrations.mjs
+    node:internal/modules/cjs/loader:1386
+      throw err;
+      ^
+
+    Error: Cannot find module 'D:\Munshi_Updated\backend\test\scripts\apply-migrations.mjs'
+
+      at Function._resolveFilename (../node:internal/modules/cjs/loader:1383:15)
+      at defaultResolveImpl (../node:internal/modules/cjs/loader:1025:19)
+      at resolveForCJSWithHooks (../node:internal/modules/cjs/loader:1030:22)
+      at Function._load (../node:internal/modules/cjs/loader:1192:37)
+      at TracingChannel.traceSync (../node:diagnostics_channel:328:14)
+      at wrapModuleLoad (../node:internal/modules/cjs/loader:237:24)
+      at Function.executeUserEntryPoint [as runMain] (../node:internal/modules/run_main:171:5)
+      at ../node:internal/main/run_main_module:36:49 {
+        code: 'MODULE_NOT_FOUND',
+        requireStack: []
+      }
+      
+      Node.js v22.22.0
+      at runMigrations (integration/helpers/db-env.ts:29:11)
+      at Object.<anonymous> (integration/task-inventory-phase0.integration.spec.ts:41:18)
+
+  ΓùÅ Phase 0 task-inventory integration ΓÇ║ Phase 0.2 ΓÇö persistence and retrieval ΓÇ║ persists lines on create and 
+returns them on adminFindOne
+
+    Command failed: node scripts/apply-migrations.mjs
+    node:internal/modules/cjs/loader:1386
+      throw err;
+      ^
+
+    Error: Cannot find module 'D:\Munshi_Updated\backend\test\scripts\apply-migrations.mjs'
+
+      at Function._resolveFilename (../node:internal/modules/cjs/loader:1383:15)
+      at defaultResolveImpl (../node:internal/modules/cjs/loader:1025:19)
+      at resolveForCJSWithHooks (../node:internal/modules/cjs/loader:1030:22)
+      at Function._load (../node:internal/modules/cjs/loader:1192:37)
+      at TracingChannel.traceSync (../node:diagnostics_channel:328:14)
+      at wrapModuleLoad (../node:internal/modules/cjs/loader:237:24)
+      at Function.executeUserEntryPoint [as runMain] (../node:internal/modules/run_main:171:5)
+      at ../node:internal/main/run_main_module:36:49 {
+        code: 'MODULE_NOT_FOUND',
+        requireStack: []
+      }
+      
+      Node.js v22.22.0
+      at runMigrations (integration/helpers/db-env.ts:29:11)
+      at Object.<anonymous> (integration/task-inventory-phase0.integration.spec.ts:41:18)
+
+Test Suites: 1 failed, 1 total
+Tests:       12 failed, 12 total
+Snapshots:   0 total
+Time:        7.962 s, estimated 9 s
+Ran all test suites.
+error Command failed with exit code 1.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.

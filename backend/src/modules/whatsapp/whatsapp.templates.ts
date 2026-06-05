@@ -114,6 +114,68 @@ export function waTaskCompleted(taskId: number, detail: string): string {
   return waSection('Task completed', `*Task #${taskId}*\n\n${detail}`);
 }
 
+export type TaskInventoryCompletionLine = {
+  itemName: string;
+  unit: string;
+  movementType: string;
+  quantityMoved: string;
+  previousQty: string;
+  currentQty: string;
+};
+
+function waInventoryMovementLabel(movementType: string): string {
+  switch (movementType.toUpperCase()) {
+    case 'STOCK_OUT':
+      return 'Stock out (nikala)';
+    case 'STOCK_IN':
+      return 'Stock in (jhoda)';
+    default:
+      return movementType;
+  }
+}
+
+/** Owner/manager WhatsApp text when a task with inventory lines is completed. */
+export function buildTaskInventoryCompletionOwnerText(params: {
+  factoryName: string;
+  taskId: number;
+  description: string;
+  completerName: string;
+  completerDesignation: string;
+  completerPhone?: string;
+  inventoryLines: TaskInventoryCompletionLine[];
+}): string {
+  const phoneLine = params.completerPhone
+    ? `\n📞 *Phone:* ${params.completerPhone}`
+    : '';
+
+  const stockBlocks = params.inventoryLines
+    .map((line) => {
+      const itemLabel = line.unit
+        ? `${line.itemName} ${line.unit}`
+        : line.itemName;
+      return (
+        `📦 *${itemLabel}*\n` +
+        `Stock: ${line.previousQty} → ${line.currentQty}\n` +
+        `Qty moved: ${line.quantityMoved}\n` +
+        `Movement: ${waInventoryMovementLabel(line.movementType)}`
+      );
+    })
+    .join('\n\n');
+
+  return (
+    `${WA_DIVIDER_WIDE}\n` +
+    `✅ *Task #${params.taskId} complete ho gaya.*\n` +
+    `${WA_DIVIDER_WIDE}\n\n` +
+    `🏭 *Factory:* ${params.factoryName}\n` +
+    `📝 ${params.description}\n\n` +
+    `${stockBlocks}\n\n` +
+    `✔️ *Completed by:* ${params.completerName}\n` +
+    `🎭 *Role:* ${params.completerDesignation}` +
+    `${phoneLine}\n\n` +
+    `${WA_DIVIDER_WIDE}`
+  );
+}
+
 export function waTaskUpdated(taskId: number, update: string, detail: string): string {
   return waSection(
     'Task updated',
@@ -162,6 +224,40 @@ export function waDepartmentAssignSent(
     `*Task:* ${description}\n` +
       `*Department:* ${dept.name} (\`${dept.slug}\`)\n\n` +
       `The department manager has been notified. They will accept the task or assign it to a team member.`,
+  );
+}
+
+export function waAssignDeliverySkuNotFound(): string {
+  return '❌ SKU nahi mila.';
+}
+
+export function waAssignDeliveryWorkerNotFound(): string {
+  return '❌ Worker nahi mila.';
+}
+
+export function waAssignDeliveryInvalidQuantity(): string {
+  return '❌ Quantity valid number hona chahiye.';
+}
+
+export function waAssignDeliveryInvalidFormat(): string {
+  return waErrorInvalidFormat(
+    '/assign_delivery',
+    '/assign_delivery @<worker> <SKU> <qty>',
+    '/assign_delivery @ramesh CEMENT_50KG 5',
+  );
+}
+
+export function buildAssignDeliverySuccessText(params: {
+  workerName: string;
+  itemName: string;
+  quantity: string;
+}): string {
+  return (
+    '✅ Delivery task create ho gaya.\n\n' +
+    `👤 Worker: ${params.workerName}\n` +
+    `📦 Item: ${params.itemName}\n` +
+    `🔢 Qty: ${params.quantity}\n\n` +
+    'Task worker ko assign kar diya gaya hai.'
   );
 }
 

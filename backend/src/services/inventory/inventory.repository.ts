@@ -136,25 +136,35 @@ export class InventoryRepository {
   }
 
   findItemById(id: number, factoryId?: number, transaction?: Transaction) {
-    return this.itemModel.findOne({
-      where: {
-        id,
-        ...(factoryId != null ? { factory_id: factoryId } : {}),
+    const where = {
+      id,
+      ...(factoryId != null ? { factory_id: factoryId } : {}),
+    };
+    const includes = [
+      {
+        model: this.categoryModel,
+        as: 'category',
+        attributes: ['id', 'name'],
       },
-      include: [
-        {
-          model: this.categoryModel,
-          as: 'category',
-          attributes: ['id', 'name'],
-        },
-        {
-          model: this.locationModel,
-          as: 'location',
-          attributes: ['id', 'name'],
-        },
-      ],
-      transaction,
-      lock: transaction ? Transaction.LOCK.UPDATE : undefined,
+      {
+        model: this.locationModel,
+        as: 'location',
+        attributes: ['id', 'name'],
+      },
+    ];
+
+    // PostgreSQL rejects FOR UPDATE on LEFT OUTER JOIN — lock inventory_items only.
+    if (transaction) {
+      return this.itemModel.findOne({
+        where,
+        transaction,
+        lock: Transaction.LOCK.UPDATE,
+      });
+    }
+
+    return this.itemModel.findOne({
+      where,
+      include: includes,
     });
   }
 

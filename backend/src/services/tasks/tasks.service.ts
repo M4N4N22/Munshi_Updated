@@ -18,7 +18,7 @@ import { DbService } from 'src/core/services/db-service/db.service';
 import { UserService } from '../users/users.service';
 import { randomUUID } from 'crypto';
 import { USER_ROLE } from '../users/users.constants';
-import { Task, TaskUpdate } from './tasks.schema';
+import { Task, TaskInventoryLine, TaskUpdate } from './tasks.schema';
 import { FactoryUser } from '../factories/factories.schema';
 import { User } from '../users/users.schema';
 import {
@@ -26,13 +26,21 @@ import {
   CreateTaskDto,
   UpdateTaskDto,
 } from './tasks.dto';
-import { waSection } from 'src/modules/whatsapp/whatsapp.templates';
+import { TaskInventoryLineDto } from './task-inventory-line.dto';
+import {
+  buildTaskInventoryCompletionOwnerText,
+  waSection,
+} from 'src/modules/whatsapp/whatsapp.templates';
 import { MessagingService } from 'src/core/messaging/messaging.service';
 import { Op, literal } from 'sequelize';
 import { TASK_ROUTING_STATUS } from './tasks.routing.constants';
 import { DepartmentsService } from '../departments/departments.service';
 import { DepartmentWorker } from '../departments/departments.schema';
 import { parseIndiaDefaultDeadline } from 'src/core/time/india-defaults';
+import { InventoryTransactionService } from '../inventory/inventory-transaction.service';
+import { executeTaskInventoryMovements } from './tasks.inventory.helper';
+import { loadInventoryCompletionNotifyLines } from './tasks.inventory-notification.helper';
+import { InventoryItem } from '../inventory/inventory.schema';
 
 type ResolvedMention =
   | { kind: 'all' }
@@ -45,6 +53,8 @@ export class TasksService {
   private readonly log = new Logger(TasksService.name);
   private readonly taskModel: typeof Task;
   private readonly taskUpdateModel: typeof TaskUpdate;
+  private readonly taskInventoryLineModel: typeof TaskInventoryLine;
+  private readonly inventoryItemModel: typeof InventoryItem;
   private readonly factoryUserModel: typeof FactoryUser;
   private readonly userModel: typeof User;
   private readonly departmentWorkerModel: typeof DepartmentWorker;
@@ -54,12 +64,92 @@ export class TasksService {
     private readonly usersService: UserService,
     private readonly messagingService: MessagingService,
     private readonly departmentsService: DepartmentsService,
+    private readonly inventoryTransactionService: InventoryTransactionService,
   ) {
     this.taskModel = this.dbService.sqlService.Task;
     this.taskUpdateModel = this.dbService.sqlService.TaskUpdate;
+    this.taskInventoryLineModel = this.dbService.sqlService.TaskInventoryLine;
+    this.inventoryItemModel = this.dbService.sqlService.InventoryItem;
     this.factoryUserModel = this.dbService.sqlService.FactoryUser;
     this.userModel = this.dbService.sqlService.User;
     this.departmentWorkerModel = this.dbService.sqlService.DepartmentWorker;
+  }
+
+  private async persistInventoryLines(
+    taskId: number,
+    factoryId: number,
+    lines?: TaskInventoryLineDto[],
+  ): Promise<void> {
+    if (!lines?.length) return;
+
+    await this.taskInventoryLineModel.bulkCreate(
+      lines.map((line) => ({
+        factory_id: factoryId,
+        task_id: taskId,
+        inventory_item_id: line.inventory_item_id,
+        quantity_expected: line.quantity_expected,
+        quantity_completed: '0',
+        movement_type: line.movement_type,
+      })),
+    );
+  }
+
+  /** Completer for ledger created_by — explicit user or existing task fields. */
+  private resolveCompleterUserId(task: Task, explicitUserId?: number): number {
+    if (explicitUserId != null) return explicitUserId;
+    return (task as any).completed_by ?? task.assigned_to;
+  }
+
+  private async taskHasInventoryLines(taskId: number): Promise<boolean> {
+    const count = await this.taskInventoryLineModel.count({
+      where: { task_id: taskId },
+    });
+    return count > 0;
+  }
+
+  private async assertInventoryLinkedTaskCanReopen(task: Task): Promise<void> {
+    if (await this.taskHasInventoryLines(task.id)) {
+      throw new BadRequestException(
+        `Task #${task.id} has inventory lines and cannot be reopened. ` +
+          'Stock movements for inventory-linked tasks are final.',
+      );
+    }
+  }
+
+  /**
+   * Atomically completes a task and runs inventory movements when lines exist.
+   * One Sequelize transaction wraps all line movements + task row update.
+   * Tasks without inventory lines use a simple update (unchanged behavior).
+   */
+  private async completeTaskWithAtomicInventory(
+    task: Task,
+    completedByUserId: number,
+    patch: Record<string, unknown>,
+  ): Promise<void> {
+    const completionPatch = { ...patch, is_completed: true };
+    const hasLines = await this.taskHasInventoryLines(task.id);
+
+    if (!hasLines) {
+      await task.update(completionPatch as any);
+      return;
+    }
+
+    const sequelize = this.taskModel.sequelize;
+    if (!sequelize) {
+      throw new Error('Task model sequelize is not initialized');
+    }
+
+    await sequelize.transaction(async (transaction) => {
+      await executeTaskInventoryMovements({
+        taskInventoryLineModel: this.taskInventoryLineModel,
+        inventoryTransactionService: this.inventoryTransactionService,
+        taskId: task.id,
+        factoryId: task.factory_id,
+        completedByUserId,
+        transaction,
+      });
+      await task.update(completionPatch as any, { transaction });
+    });
   }
 
   /** Parsed with India (IST) as default timezone for naive deadline strings. */
@@ -267,7 +357,11 @@ export class TasksService {
     assigned_by: number,
     factory_id: number,
     description: string,
-    options?: { slugDepartmentId?: number; deadline?: string | null },
+    options?: {
+      slugDepartmentId?: number;
+      deadline?: string | null;
+      inventory_lines?: TaskInventoryLineDto[];
+    },
   ) {
     if (!assigneeUserId) {
       throw new NotFoundException('Assignee not found');
@@ -315,6 +409,12 @@ export class TasksService {
         : {}),
     } as any);
 
+    await this.persistInventoryLines(
+      task.id,
+      factory_id,
+      options?.inventory_lines,
+    );
+
     if (routing_status === TASK_ROUTING_STATUS.AWAITING_MANAGER_ACTION) {
       this.messagingService.fireAndForget(
         this.notifyManagerRoutingPrompt(task.id),
@@ -343,8 +443,18 @@ export class TasksService {
     assigned_by: number,
     factory_id: number,
     description: string,
-    options?: { deadline?: string | null },
+    options?: {
+      deadline?: string | null;
+      inventory_lines?: TaskInventoryLineDto[];
+    },
   ) {
+    if (options?.inventory_lines?.length) {
+      throw new BadRequestException(
+        'inventory_lines cannot be used with assign-to-all (@all). ' +
+          'Assign inventory tasks to one worker at a time to avoid duplicate stock movements.',
+      );
+    }
+
     const assignerRole = await this.getFactoryRole(assigned_by, factory_id);
 
     const workerWhere: Record<string, unknown> = {
@@ -411,6 +521,11 @@ export class TasksService {
       attributes: ['id'],
     });
     for (const row of created) {
+      await this.persistInventoryLines(
+        row.id,
+        factory_id,
+        options?.inventory_lines,
+      );
       this.messagingService.fireAndForget(
         this.notifyWorkerTaskAssigned(row.id),
         'task-assigned',
@@ -842,10 +957,9 @@ export class TasksService {
       );
     }
 
-    await task.update({
-      is_completed: true,
+    await this.completeTaskWithAtomicInventory(task, user_id, {
       completed_by: user_id,
-    } as any);
+    });
 
     this.messagingService.fireAndForget(
       this.notifyTaskCompleted(task.id, user_id),
@@ -1039,6 +1153,18 @@ export class TasksService {
           model: this.taskUpdateModel,
           as: 'updates',
         },
+        {
+          model: this.taskInventoryLineModel,
+          as: 'inventory_lines',
+          include: [
+            {
+              model: this.dbService.sqlService.InventoryItem,
+              as: 'inventory_item',
+              attributes: ['id', 'name', 'sku', 'unit'],
+              required: false,
+            },
+          ],
+        },
       ],
     });
     if (!task) throw new NotFoundException('Task not found');
@@ -1092,6 +1218,12 @@ export class TasksService {
         : {}),
     } as any);
 
+    await this.persistInventoryLines(
+      task.id,
+      dto.factory_id,
+      dto.inventory_lines,
+    );
+
     if (routing_status === TASK_ROUTING_STATUS.AWAITING_MANAGER_ACTION) {
       this.messagingService.fireAndForget(
         this.notifyManagerRoutingPrompt(task.id),
@@ -1123,6 +1255,13 @@ export class TasksService {
 
     const becomesComplete =
       dto.is_completed === true && !task.is_completed;
+
+    const becomesReopen =
+      dto.is_completed === false && task.is_completed;
+
+    if (becomesReopen) {
+      await this.assertInventoryLinkedTaskCanReopen(task);
+    }
 
     if (
       dto.assigned_to !== undefined &&
@@ -1177,10 +1316,19 @@ export class TasksService {
         });
     }
 
-    await task.update(patch as any);
+    if (becomesComplete) {
+      const completerId = this.resolveCompleterUserId(task);
+      await this.completeTaskWithAtomicInventory(task, completerId, patch);
+    } else {
+      await task.update(patch as any);
+    }
+
     if (becomesComplete) {
       this.messagingService.fireAndForget(
-        this.notifyTaskCompleted(task.id, (task as any).completed_by ?? task.assigned_to),
+        this.notifyTaskCompleted(
+          task.id,
+          this.resolveCompleterUserId(task),
+        ),
         'task-completed',
       );
     }
@@ -1191,6 +1339,7 @@ export class TasksService {
     const task = await this.taskModel.findByPk(id);
     if (!task) throw new NotFoundException('Task not found');
     await this.taskUpdateModel.destroy({ where: { task_id: id } });
+    await this.taskInventoryLineModel.destroy({ where: { task_id: id } });
     await task.destroy();
     return { message: 'Task deleted' };
   }
@@ -1198,14 +1347,33 @@ export class TasksService {
   async adminComplete(id: number, is_completed = true) {
     const task = await this.taskModel.findByPk(id);
     if (!task) throw new NotFoundException('Task not found');
+
+    if (is_completed && task.is_completed) {
+      return { message: `Task #${id} was already marked as completed.` };
+    }
+
+    if (!is_completed && task.is_completed) {
+      await this.assertInventoryLinkedTaskCanReopen(task);
+    }
+
     const patch: Record<string, unknown> = { is_completed };
     if (!is_completed) {
       patch.deadline_breach_reminded_at = null;
     }
-    await task.update(patch as any);
+
+    if (is_completed) {
+      const completerId = this.resolveCompleterUserId(task);
+      await this.completeTaskWithAtomicInventory(task, completerId, patch);
+    } else {
+      await task.update(patch as any);
+    }
+
     if (is_completed) {
       this.messagingService.fireAndForget(
-        this.notifyTaskCompleted(task.id, (task as any).completed_by ?? task.assigned_to),
+        this.notifyTaskCompleted(
+          task.id,
+          this.resolveCompleterUserId(task),
+        ),
         'task-completed',
       );
     }
@@ -1417,14 +1585,39 @@ export class TasksService {
     const factoryName = await this.messagingService.getFactoryName(
       task.factory_id,
     );
-    const text = this.messagingService.buildTaskCompletedText({
-      factoryName,
-      completerName: completer.name,
-      completerDesignation: completer.designation,
-      completerPhone: completer.phone,
-      taskId: task.id,
-      description: task.description,
+
+    const inventoryLineCount = await this.taskInventoryLineModel.count({
+      where: { task_id: taskId },
     });
+
+    let text: string;
+    if (inventoryLineCount > 0) {
+      const inventoryLines = await loadInventoryCompletionNotifyLines(
+        taskId,
+        task.factory_id,
+        this.taskInventoryLineModel,
+        this.inventoryItemModel,
+      );
+      text = buildTaskInventoryCompletionOwnerText({
+        factoryName,
+        taskId: task.id,
+        description: task.description,
+        completerName: completer.name,
+        completerDesignation: completer.designation,
+        completerPhone: completer.phone,
+        inventoryLines,
+      });
+    } else {
+      text = this.messagingService.buildTaskCompletedText({
+        factoryName,
+        completerName: completer.name,
+        completerDesignation: completer.designation,
+        completerPhone: completer.phone,
+        taskId: task.id,
+        description: task.description,
+      });
+    }
+
     await this.messagingService.sendText(assigner.phone_number, text);
   }
 

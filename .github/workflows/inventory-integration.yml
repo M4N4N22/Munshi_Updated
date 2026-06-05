@@ -1,0 +1,66 @@
+# Phase 0 — task ↔ inventory integration validation.
+# Fails on pending migrations, DB unavailable, or any integration test failure.
+name: Inventory Integration (Phase 0)
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/**'
+      - '.github/workflows/inventory-integration.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'backend/**'
+      - '.github/workflows/inventory-integration.yml'
+
+env:
+  POSTGRES_CONNECTION_STRING: postgresql://munshi:munshi@localhost:5432/munshi_test
+
+defaults:
+  run:
+    working-directory: backend
+
+jobs:
+  inventory-integration:
+    name: Migrations + Integration Tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: munshi
+          POSTGRES_PASSWORD: munshi
+          POSTGRES_DB: munshi_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U munshi -d munshi_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: yarn
+          cache-dependency-path: backend/yarn.lock
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Apply migrations
+        run: yarn migrate
+
+      - name: Verify migration status (fail if pending)
+        run: yarn migrate:status
+
+      - name: Run Phase 0 integration tests
+        run: yarn test:integration

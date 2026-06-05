@@ -113,6 +113,10 @@ export class Task extends Model<
     });
 
     Task.hasMany(models.TaskUpdate, { foreignKey: 'task_id', as: 'updates' });
+    Task.hasMany(models.TaskInventoryLine, {
+      foreignKey: 'task_id',
+      as: 'inventory_lines',
+    });
   }
 }
 
@@ -166,6 +170,81 @@ export class TaskUpdate extends Model<
     TaskUpdate.belongsTo(models.User, {
       foreignKey: 'user_id',
       as: 'user',
+    });
+  }
+}
+
+export class TaskInventoryLine extends Model<
+  InferAttributes<TaskInventoryLine>,
+  InferCreationAttributes<TaskInventoryLine>
+> {
+  declare id: CreationOptional<number>;
+  declare factory_id: number;
+  declare task_id: number;
+  declare inventory_item_id: number;
+  declare quantity_expected: string;
+  declare quantity_completed: CreationOptional<string>;
+  declare movement_type: string;
+
+  static setup(sequelize: Sequelize) {
+    TaskInventoryLine.init(
+      {
+        id: {
+          type: DataTypes.INTEGER,
+          autoIncrement: true,
+          primaryKey: true,
+        },
+        factory_id: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
+        },
+        task_id: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
+        },
+        inventory_item_id: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
+        },
+        quantity_expected: {
+          type: DataTypes.DECIMAL(18, 4),
+          allowNull: false,
+        },
+        quantity_completed: {
+          type: DataTypes.DECIMAL(18, 4),
+          allowNull: false,
+          defaultValue: 0,
+        },
+        movement_type: {
+          type: DataTypes.STRING(64),
+          allowNull: false,
+        },
+      },
+      {
+        sequelize,
+        tableName: 'task_inventory_lines',
+        underscored: true,
+        timestamps: true,
+        indexes: [
+          { fields: ['task_id'] },
+          { fields: ['inventory_item_id'] },
+          { fields: ['factory_id'] },
+        ],
+      },
+    );
+    return TaskInventoryLine;
+  }
+
+  static associate(models: any) {
+    TaskInventoryLine.belongsTo(models.Task, {
+      foreignKey: 'task_id',
+      as: 'task',
+      onDelete: 'CASCADE',
+    });
+
+    TaskInventoryLine.belongsTo(models.InventoryItem, {
+      foreignKey: 'inventory_item_id',
+      as: 'inventory_item',
     });
   }
 }

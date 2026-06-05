@@ -1,5 +1,14 @@
-import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsArray,
+  IsBoolean,
+  IsNumber,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { TaskInventoryLineDto } from './task-inventory-line.dto';
 
 export class CreateTaskDto {
   @ApiProperty({ example: 1 })
@@ -22,6 +31,13 @@ export class CreateTaskDto {
   @IsOptional()
   @IsString()
   deadline?: string;
+
+  @ApiPropertyOptional({ type: [TaskInventoryLineDto] })
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => TaskInventoryLineDto)
+  inventory_lines?: TaskInventoryLineDto[];
 }
 
 export class UpdateTaskDto {
