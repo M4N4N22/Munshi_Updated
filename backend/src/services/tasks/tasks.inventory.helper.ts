@@ -7,6 +7,12 @@ import {
   TASK_INVENTORY_REFERENCE_TYPE,
 } from './tasks.inventory.constants';
 
+/** Ledger row created during task completion — used for post-commit stock push events. */
+export interface TaskInventoryMovementCaptured {
+  inventory_transaction_id: number;
+  transaction_type: string;
+}
+
 export interface ExecuteTaskInventoryMovementsParams {
   taskInventoryLineModel: typeof TaskInventoryLine;
   inventoryTransactionService: InventoryTransactionService;
@@ -27,14 +33,16 @@ export interface ExecuteTaskInventoryMovementsParams {
  */
 export async function executeTaskInventoryMovements(
   params: ExecuteTaskInventoryMovementsParams,
-): Promise<void> {
+): Promise<TaskInventoryMovementCaptured[]> {
   const lines = await params.taskInventoryLineModel.findAll({
     where: { task_id: params.taskId },
     order: [['id', 'ASC']],
     ...(params.transaction ? { transaction: params.transaction } : {}),
   });
 
-  if (!lines.length) return;
+  if (!lines.length) return [];
+
+  const captured: TaskInventoryMovementCaptured[] = [];
 
   for (const line of lines) {
     const movementType = String(line.movement_type).trim().toUpperCase();
@@ -56,15 +64,23 @@ export async function executeTaskInventoryMovements(
     };
 
     if (movementType === TASK_INVENTORY_MOVEMENT_TYPE.STOCK_OUT) {
-      await params.inventoryTransactionService.recordStockOut(
+      const record = await params.inventoryTransactionService.recordStockOut(
         movementInput,
         params.transaction,
       );
+      captured.push({
+        inventory_transaction_id: record.id,
+        transaction_type: record.transaction_type,
+      });
     } else if (movementType === TASK_INVENTORY_MOVEMENT_TYPE.STOCK_IN) {
-      await params.inventoryTransactionService.recordStockIn(
+      const record = await params.inventoryTransactionService.recordStockIn(
         movementInput,
         params.transaction,
       );
+      captured.push({
+        inventory_transaction_id: record.id,
+        transaction_type: record.transaction_type,
+      });
     } else {
       throw new BadRequestException(
         `Task #${params.taskId} has unsupported movement_type "${line.movement_type}" ` +
@@ -72,4 +88,6 @@ export async function executeTaskInventoryMovements(
       );
     }
   }
+
+  return captured;
 }

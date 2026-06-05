@@ -52,6 +52,7 @@ Returns applied count, pending count, latest migration file, and status `ok` or 
 | `008_business_discovery_expansion.sql` | Manager/workforce completion columns |
 | `009_owner_multi_department_head.sql` | Drop one-head-per-user DB constraint; owners may head multiple teams interim |
 | `010_task_inventory_lines.sql` | Task ↔ inventory line items (expected/completed qty, movement_type) |
+| `011_integration_foundation.sql` | Integration connections, item mappings, sync run audit (Phase 2.1) |
 
 ## Notes
 

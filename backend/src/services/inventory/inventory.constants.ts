@@ -26,6 +26,8 @@ export const INVENTORY_QUANTITY_SCALE = 4;
 /** Ledger reference_type values for non-task inventory movements. */
 export const INVENTORY_REFERENCE_TYPE = {
   CSV_IMPORT: 'CSV_IMPORT',
+  ZOHO_PULL: 'ZOHO_PULL',
+  ZOHO_PUSH: 'ZOHO_PUSH',
 } as const;
 
 export type InventoryReferenceType =

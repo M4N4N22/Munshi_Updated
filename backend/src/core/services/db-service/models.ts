@@ -48,6 +48,12 @@ import {
   OnboardingOtpChallenge,
   OnboardingPhoneVerification,
 } from 'src/modules/onboarding/onboarding-otp.schema';
+import {
+  IntegrationConnection,
+  IntegrationItemMapping,
+  IntegrationPushDelivery,
+  IntegrationSyncRun,
+} from 'src/services/integrations/integration.schema';
 
 export const MONGOOSE_MODELS = {};
 
@@ -76,6 +82,10 @@ export const SQL_MODELS = {
   InventoryItem: InventoryItem.setup,
   InventoryLocation: InventoryLocation.setup,
   InventoryTransaction: InventoryTransaction.setup,
+  IntegrationConnection: IntegrationConnection.setup,
+  IntegrationItemMapping: IntegrationItemMapping.setup,
+  IntegrationPushDelivery: IntegrationPushDelivery.setup,
+  IntegrationSyncRun: IntegrationSyncRun.setup,
   Issue: Issue.setup,
   BusinessDiscoveryProfile: BusinessDiscoveryProfile.setup,
   PurchaseRequest: PurchaseRequest.setup,

@@ -39,6 +39,8 @@ import { DepartmentWorker } from '../departments/departments.schema';
 import { parseIndiaDefaultDeadline } from 'src/core/time/india-defaults';
 import { InventoryTransactionService } from '../inventory/inventory-transaction.service';
 import { executeTaskInventoryMovements } from './tasks.inventory.helper';
+import { publishZohoStockPushRequestedEvents } from './tasks.stock-push-events.helper';
+import { DomainEventsService } from '../domain-events/domain-events.service';
 import { loadInventoryCompletionNotifyLines } from './tasks.inventory-notification.helper';
 import { InventoryItem } from '../inventory/inventory.schema';
 
@@ -65,6 +67,7 @@ export class TasksService {
     private readonly messagingService: MessagingService,
     private readonly departmentsService: DepartmentsService,
     private readonly inventoryTransactionService: InventoryTransactionService,
+    private readonly domainEventsService: DomainEventsService,
   ) {
     this.taskModel = this.dbService.sqlService.Task;
     this.taskUpdateModel = this.dbService.sqlService.TaskUpdate;
@@ -139,8 +142,8 @@ export class TasksService {
       throw new Error('Task model sequelize is not initialized');
     }
 
-    await sequelize.transaction(async (transaction) => {
-      await executeTaskInventoryMovements({
+    const movements = await sequelize.transaction(async (transaction) => {
+      const captured = await executeTaskInventoryMovements({
         taskInventoryLineModel: this.taskInventoryLineModel,
         inventoryTransactionService: this.inventoryTransactionService,
         taskId: task.id,
@@ -149,7 +152,17 @@ export class TasksService {
         transaction,
       });
       await task.update(completionPatch as any, { transaction });
+      return captured;
     });
+
+    if (movements.length > 0) {
+      await publishZohoStockPushRequestedEvents({
+        domainEventsService: this.domainEventsService,
+        factoryId: task.factory_id,
+        taskId: task.id,
+        movements,
+      });
+    }
   }
 
   /** Parsed with India (IST) as default timezone for naive deadline strings. */

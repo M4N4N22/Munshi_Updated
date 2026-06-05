@@ -23,6 +23,7 @@ import { BusinessDiscoveryModule } from 'src/services/business-discovery/busines
 import { DocumentModule } from 'src/services/documents/documents.module';
 import { OnboardingModule } from 'src/modules/onboarding/onboarding.module';
 import { DomainEventsModule } from 'src/services/domain-events/domain-events.module';
+import { IntegrationModule } from 'src/services/integrations/integration.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { DomainEventsModule } from 'src/services/domain-events/domain-events.mod
     BusinessDiscoveryModule,
     OnboardingModule,
     DomainEventsModule,
+    IntegrationModule,
   ],
   providers: [
     {

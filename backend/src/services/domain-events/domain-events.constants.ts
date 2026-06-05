@@ -12,4 +12,5 @@ export const DOMAIN_EVENT_TYPE = {
   BANK_STATEMENT_FETCHED: 'bank.statement.fetched',
   MATCH_SUGGESTION_CREATED: 'match.suggestion.created',
   JOURNAL_ENTRY_POSTED: 'journal.entry.posted',
+  ZOHO_STOCK_PUSH_REQUESTED: 'zoho.stock_push.requested',
 } as const;
