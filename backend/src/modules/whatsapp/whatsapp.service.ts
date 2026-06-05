@@ -43,6 +43,10 @@ import {
 import { OlliMediaService, type InboundMediaRef } from 'src/core/messaging/olli-media.service';
 import { OwnerHomeService } from './owner-home.service';
 import { TeamBulkImportService } from './team-bulk-import.service';
+import {
+  InventoryBulkImportService,
+  WA_INVENTORY_CSV_UNSUPPORTED,
+} from './inventory-bulk-import.service';
 import { WORKFLOW_START_COMMANDS } from 'src/services/workflow/workflow.constants';
 import { DepartmentsService } from 'src/services/departments/departments.service';
 import { WorkflowRouterService } from 'src/services/workflow/workflow-engine.service';
@@ -98,6 +102,7 @@ export class WhatsAppService {
     private readonly inventoryService: InventoryService,
     private readonly ownerHomeService: OwnerHomeService,
     private readonly teamBulkImport: TeamBulkImportService,
+    private readonly inventoryBulkImport: InventoryBulkImportService,
     private readonly olliMedia: OlliMediaService,
   ) {}
 
@@ -106,26 +111,66 @@ export class WhatsAppService {
     media: InboundMediaRef,
   ): Promise<string> {
     try {
-      if (!this.teamBulkImport.isAwaitingCsv(from)) {
-        await this.sendTextMessage(
-          from,
-          waSection(
-            'File received',
-            'CSV team import ke liye pehle *Employee jodiyein* → *CSV se bulk add* chuno.\n\n' +
-              'Phir template bhari hui *CSV file* yahin bhejein.\n\n' +
-              'Chhoti team ke liye *WhatsApp par add* use karein.',
-          ),
-        );
+      const inventoryPending = this.inventoryBulkImport.isAwaitingCsv(from);
+      const teamPending = this.teamBulkImport.isAwaitingCsv(from);
+
+      if (!teamPending && this.inventoryBulkImport.isRejectedDocumentType(media)) {
+        await this.sendTextMessage(from, WA_INVENTORY_CSV_UNSUPPORTED);
+        return 'ok';
+      }
+
+      if (
+        !inventoryPending &&
+        !teamPending &&
+        !this.inventoryBulkImport.isCsvDocument(media)
+      ) {
+        await this.sendTextMessage(from, WA_INVENTORY_CSV_UNSUPPORTED);
         return 'ok';
       }
 
       const buffer = await this.olliMedia.downloadMedia(media);
-      const summary = await this.teamBulkImport.importFromCsvBuffer(
+
+      if (inventoryPending) {
+        const summary = await this.inventoryBulkImport.importFromCsvBuffer(
+          from,
+          buffer,
+          media.filename,
+          media.mimeType,
+        );
+        await this.sendTextMessage(from, summary);
+        return 'ok';
+      }
+
+      if (teamPending) {
+        const summary = await this.teamBulkImport.importFromCsvBuffer(
+          from,
+          buffer,
+          media.filename,
+        );
+        await this.sendTextMessage(from, summary);
+        return 'ok';
+      }
+
+      if (await this.inventoryBulkImport.canAutoImport(from)) {
+        const summary = await this.inventoryBulkImport.importFromCsvBuffer(
+          from,
+          buffer,
+          media.filename,
+          media.mimeType,
+        );
+        await this.sendTextMessage(from, summary);
+        return 'ok';
+      }
+
+      await this.sendTextMessage(
         from,
-        buffer,
-        media.filename,
+        waSection(
+          'File received',
+          'Inventory CSV import ke liye owner/manager account se *CSV file* bhejein.\n\n' +
+            'Ya pehle */inventory_import_csv* likhein, phir file attach karein.\n\n' +
+            'Team employee CSV ke liye *Employee jodiyein* → *CSV se bulk add* chuno.',
+        ),
       );
-      await this.sendTextMessage(from, summary);
       return 'ok';
     } catch (error: unknown) {
       console.log(error);
@@ -137,7 +182,7 @@ export class WhatsAppService {
         from,
         waSection(
           'CSV import fail',
-          `${msg}\n\nDubara *CSV se bulk add* chuno aur sahi template ki file bhejein.`,
+          `${msg}\n\nDubara */inventory_import_csv* likhein aur sahi CSV file bhejein.`,
         ),
       );
       return 'error';
@@ -338,10 +383,23 @@ export class WhatsAppService {
 
       if (this.workflowRouter.isCancelCommand(msgTrim)) {
         this.teamBulkImport.cancelAwaiting(body.from);
+        this.inventoryBulkImport.cancelAwaiting(body.from);
         const cancelResult = await this.workflowRouter.cancelWorkflow(
           body.from,
         );
         return finish(cancelResult);
+      }
+
+      if (this.inventoryBulkImport.isAwaitingCsv(body.from)) {
+        await this.sendTextMessage(
+          body.from,
+          waSection(
+            'Inventory CSV bhejein',
+            'Ab *inventory CSV file* isi chat mein attach karke bhejein.\n\n' +
+              '*cancel* — band karna ho to likhein.',
+          ),
+        );
+        return 'ok';
       }
 
       if (this.teamBulkImport.isAwaitingCsv(body.from)) {
@@ -537,6 +595,18 @@ export class WhatsAppService {
     if (cmdLc === COMMANDS.INVENTORY_STATUS) {
       this.ensureManager(role);
       return this.handleInventoryStatus(factoryId, rawMessage);
+    }
+
+    if (cmdLc === COMMANDS.INVENTORY_IMPORT_CSV) {
+      this.ensureManager(role);
+      this.teamBulkImport.cancelAwaiting(phone);
+      this.inventoryBulkImport.startAwaitingCsv(phone, factoryId, user.id);
+      return waSection(
+        'Inventory CSV import',
+        'Ab *inventory CSV file* isi chat mein attach karke bhejein.\n\n' +
+          'Columns: sku, name, category, location, unit, quantity\n\n' +
+          '*cancel* — band karna ho to likhein.',
+      );
     }
 
     if (cmdLc === COMMANDS.CANCEL) {

@@ -25,6 +25,7 @@ import { UserService } from 'src/services/users/users.service';
 import { WorkflowRouterService } from 'src/services/workflow/workflow-engine.service';
 import { WORKFLOW_START_COMMANDS } from 'src/services/workflow/workflow.constants';
 import { TeamBulkImportService } from './team-bulk-import.service';
+import { InventoryBulkImportService } from './inventory-bulk-import.service';
 import { waGoogleFormRetired } from 'src/core/messaging/owner-home.templates';
 import { buildTeamCsvOnboardingCta } from 'src/core/messaging/team-csv-onboarding.outbound';
 
@@ -41,6 +42,7 @@ export class OwnerHomeService {
     private readonly messagingService: MessagingService,
     private readonly workflowRouter: WorkflowRouterService,
     private readonly teamBulkImport: TeamBulkImportService,
+    private readonly inventoryBulkImport: InventoryBulkImportService,
   ) {}
 
   async sendOwnerHome(
@@ -131,6 +133,7 @@ export class OwnerHomeService {
         return;
 
       case WA_INTERACTIVE_ID.HOME_BULK_CSV:
+        this.inventoryBulkImport.cancelAwaiting(phone);
         this.teamBulkImport.startAwaitingCsv(
           phone,
           ctx.businessId,
