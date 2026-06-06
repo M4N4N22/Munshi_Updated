@@ -1,8 +1,9 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Optional } from '@nestjs/common';
 import { Op } from 'sequelize';
 import { DbService } from 'src/core/services/db-service/db.service';
-import { DOMAIN_EVENT_STATUS } from './domain-events.constants';
+import { DOMAIN_EVENT_STATUS, DOMAIN_EVENT_TYPE } from './domain-events.constants';
 import { DomainEvent } from './domain-events.schema';
+import { ZohoStockPushHandler } from '../integrations/zoho/zoho-stock-push.handler';
 
 export interface PublishDomainEventInput {
   factory_id?: number;
@@ -20,7 +21,10 @@ export class DomainEventsService {
   private readonly logger = new Logger(DomainEventsService.name);
   private readonly model: typeof DomainEvent;
 
-  constructor(private readonly dbService: DbService) {
+  constructor(
+    private readonly dbService: DbService,
+    @Optional() private readonly zohoStockPushHandler?: ZohoStockPushHandler,
+  ) {
     this.model = this.dbService.sqlService.DomainEvent;
   }
 
@@ -81,9 +85,19 @@ export class DomainEventsService {
   }
 
   private async dispatch(event: DomainEvent): Promise<void> {
-    // P0: no-op dispatch — events are persisted for P1 handlers (AA, matching, ledger).
+    if (event.event_type === DOMAIN_EVENT_TYPE.ZOHO_STOCK_PUSH_REQUESTED) {
+      if (!this.zohoStockPushHandler) {
+        this.logger.warn(
+          `Domain event ${event.id} (${event.event_type}) has no handler wired`,
+        );
+        return;
+      }
+      await this.zohoStockPushHandler.handle(event);
+      return;
+    }
+
     this.logger.debug(
-      `Domain event ${event.id} ${event.event_type} aggregate=${event.aggregate_type}:${event.aggregate_id}`,
+      `Domain event ${event.id} ${event.event_type} aggregate=${event.aggregate_type}:${event.aggregate_id} (no handler)`,
     );
   }
 }

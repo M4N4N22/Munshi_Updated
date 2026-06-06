@@ -12,6 +12,10 @@ import { ZohoInventoryClient } from './zoho/zoho-inventory.client';
 import { ZohoPullSyncService } from './zoho/zoho-pull-sync.service';
 import { ZohoScheduledSyncService } from './zoho/zoho-scheduled-sync.service';
 import { ZohoScheduledSyncCron } from './zoho/zoho-scheduled-sync.cron';
+import { ZohoStockPushHandler } from './zoho/zoho-stock-push.handler';
+import { ZohoPushExecutionService } from './zoho/zoho-push-execution.service';
+import { ZohoPushRetryService } from './zoho/zoho-push-retry.service';
+import { ZohoPushRetryCron } from './zoho/zoho-push-retry.cron';
 
 @Module({
   imports: [InventoryModule],
@@ -27,6 +31,10 @@ import { ZohoScheduledSyncCron } from './zoho/zoho-scheduled-sync.cron';
     ZohoPullSyncService,
     ZohoScheduledSyncService,
     ZohoScheduledSyncCron,
+    ZohoPushExecutionService,
+    ZohoStockPushHandler,
+    ZohoPushRetryService,
+    ZohoPushRetryCron,
   ],
   exports: [
     IntegrationRepository,
@@ -36,6 +44,9 @@ import { ZohoScheduledSyncCron } from './zoho/zoho-scheduled-sync.cron';
     ZohoInventoryClient,
     ZohoPullSyncService,
     ZohoScheduledSyncService,
+    ZohoStockPushHandler,
+    ZohoPushExecutionService,
+    ZohoPushRetryService,
   ],
 })
 export class IntegrationModule {}

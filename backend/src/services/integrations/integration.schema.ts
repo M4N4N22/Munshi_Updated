@@ -249,6 +249,9 @@ export class IntegrationPushDelivery extends Model<
   declare zoho_reference?: string | null;
   declare last_error?: string | null;
   declare delivered_at?: Date | null;
+  declare retry_count: CreationOptional<number>;
+  declare last_attempt_at?: Date | null;
+  declare next_retry_at?: Date | null;
 
   static setup(sequelize: Sequelize) {
     IntegrationPushDelivery.init(
@@ -278,6 +281,13 @@ export class IntegrationPushDelivery extends Model<
         zoho_reference: DataTypes.STRING(256),
         last_error: DataTypes.TEXT,
         delivered_at: DataTypes.DATE,
+        retry_count: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
+          defaultValue: 0,
+        },
+        last_attempt_at: DataTypes.DATE,
+        next_retry_at: DataTypes.DATE,
       },
       {
         sequelize,

@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Op, Transaction } from 'sequelize';
-import { DbService } from 'src/core/services/db-service/db.service';
+import { Op, Transaction } from 'sequelize';import { DbService } from 'src/core/services/db-service/db.service';
 import {
   IntegrationConnection,
   IntegrationItemMapping,
@@ -14,6 +13,7 @@ import {
   SYNC_DIRECTION,
   SYNC_STATUS,
 } from './integration.constants';
+import { MAX_PUSH_DELIVERY_ATTEMPTS } from './zoho/zoho-push-retry.constants';
 
 @Injectable()
 export class IntegrationRepository {
@@ -303,6 +303,7 @@ export class IntegrationRepository {
         zoho_reference: zohoReference ?? null,
         last_error: null,
         delivered_at: new Date(),
+        next_retry_at: null,
       } as any,
       {
         where: { id, factory_id: factoryId },
@@ -318,6 +319,58 @@ export class IntegrationRepository {
     });
   }
 
+  async markFailedWithRetry(
+    id: number,
+    factoryId: number,
+    lastError: string,
+    retry: { retryCount: number; nextRetryAt: Date | null },
+    transaction?: Transaction,
+  ) {
+    const [count] = await this.pushDeliveryModel.update(
+      {
+        status: PUSH_DELIVERY_STATUS.FAILED,
+        last_error: lastError.slice(0, 2000),
+        retry_count: retry.retryCount,
+        next_retry_at: retry.nextRetryAt,
+      } as any,
+      {
+        where: { id, factory_id: factoryId },
+        transaction,
+      },
+    );
+    if (count === 0) {
+      return null;
+    }
+    return this.pushDeliveryModel.findOne({
+      where: { id, factory_id: factoryId },
+      transaction,
+    });
+  }
+
+  async touchPushAttempt(
+    id: number,
+    factoryId: number,
+    at: Date,
+    transaction?: Transaction,
+  ) {
+    await this.pushDeliveryModel.update(
+      { last_attempt_at: at } as any,
+      { where: { id, factory_id: factoryId }, transaction },
+    );
+  }
+
+  listFailedDeliveriesDueRetry(limit = 50, now: Date = new Date()) {
+    return this.pushDeliveryModel.findAll({
+      where: {
+        status: PUSH_DELIVERY_STATUS.FAILED,
+        retry_count: { [Op.lt]: MAX_PUSH_DELIVERY_ATTEMPTS },
+        next_retry_at: { [Op.lte]: now },
+      },
+      order: [['next_retry_at', 'ASC']],
+      limit,
+    });
+  }
+
   async markFailed(
     id: number,
     factoryId: number,
@@ -328,6 +381,32 @@ export class IntegrationRepository {
       {
         status: PUSH_DELIVERY_STATUS.FAILED,
         last_error: lastError.slice(0, 2000),
+      } as any,
+      {
+        where: { id, factory_id: factoryId },
+        transaction,
+      },
+    );
+    if (count === 0) {
+      return null;
+    }
+    return this.pushDeliveryModel.findOne({
+      where: { id, factory_id: factoryId },
+      transaction,
+    });
+  }
+
+  async markSkippedUnmapped(
+    id: number,
+    factoryId: number,
+    lastError?: string,
+    transaction?: Transaction,
+  ) {
+    const [count] = await this.pushDeliveryModel.update(
+      {
+        status: PUSH_DELIVERY_STATUS.SKIPPED_UNMAPPED,
+        last_error: lastError?.slice(0, 2000) ?? null,
+        next_retry_at: null,
       } as any,
       {
         where: { id, factory_id: factoryId },
