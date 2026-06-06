@@ -14,6 +14,7 @@ import {
   computeNextRetryAt,
   MAX_PUSH_DELIVERY_ATTEMPTS,
 } from './zoho-push-retry.constants';
+import { IntegrationSyncFailedPublisher } from '../integration-sync-failed.publisher';
 
 export type PushExecutionOutcome =
   | { kind: 'delivered'; externalReference: string }
@@ -30,6 +31,7 @@ export class ZohoPushExecutionService {
     private readonly integrationRepository: IntegrationRepository,
     private readonly zohoInventoryClient: ZohoInventoryClient,
     private readonly zohoOAuthService: ZohoOAuthService,
+    private readonly syncFailedPublisher: IntegrationSyncFailedPublisher,
   ) {}
 
   /**
@@ -157,7 +159,7 @@ export class ZohoPushExecutionService {
     }
 
     if (outcome.kind === 'terminal_failed') {
-      return this.integrationRepository.markFailedWithRetry(
+      const updated = await this.integrationRepository.markFailedWithRetry(
         delivery.id,
         factoryId,
         outcome.error,
@@ -166,6 +168,8 @@ export class ZohoPushExecutionService {
           nextRetryAt: null,
         },
       );
+      await this.publishTerminalPushFailureIfNeeded(delivery, outcome.error);
+      return updated;
     }
 
     if (outcome.preserveRetryCount) {
@@ -182,7 +186,7 @@ export class ZohoPushExecutionService {
 
     const nextRetryCount = (delivery.retry_count ?? 0) + 1;
     if (!outcome.scheduleRetry || nextRetryCount >= MAX_PUSH_DELIVERY_ATTEMPTS) {
-      return this.integrationRepository.markFailedWithRetry(
+      const updated = await this.integrationRepository.markFailedWithRetry(
         delivery.id,
         factoryId,
         outcome.error,
@@ -191,6 +195,8 @@ export class ZohoPushExecutionService {
           nextRetryAt: null,
         },
       );
+      await this.publishTerminalPushFailureIfNeeded(delivery, outcome.error);
+      return updated;
     }
 
     return this.integrationRepository.markFailedWithRetry(
@@ -202,5 +208,22 @@ export class ZohoPushExecutionService {
         nextRetryAt: computeNextRetryAt(nextRetryCount),
       },
     );
+  }
+
+  private async publishTerminalPushFailureIfNeeded(
+    delivery: IntegrationPushDelivery,
+    errorSummary: string,
+  ): Promise<void> {
+    const connection = await this.integrationRepository.getConnection(
+      delivery.connection_id,
+      delivery.factory_id,
+    );
+    await this.syncFailedPublisher.publishPushDeliveryFailure({
+      factoryId: delivery.factory_id,
+      connectionId: delivery.connection_id,
+      deliveryId: delivery.id,
+      provider: connection?.provider,
+      errorSummary,
+    });
   }
 }

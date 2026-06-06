@@ -234,3 +234,22 @@ export class PurchaseRequestSuggestionResponseDto {
   @ApiProperty() unit: string;
   @ApiProperty() reason: string;
 }
+
+export class PurchaseRequestPrefillQueryDto extends PurchaseRequestFactoryQueryDto {
+  @ApiProperty({ example: 42 })
+  @Transform(({ value }) => Number(value))
+  @IsNumber()
+  inventory_item_id: number;
+}
+
+export class PurchaseRequestPrefillResponseDto {
+  @ApiProperty() inventory_item_id: number;
+  @ApiProperty() item_name: string;
+  @ApiProperty() sku: string;
+  @ApiProperty() title: string;
+  @ApiProperty() suggested_quantity: string;
+  @ApiProperty() unit: string;
+  @ApiProperty() current_quantity: string;
+  @ApiPropertyOptional() reorder_threshold: string | null;
+  @ApiProperty() workflow_command: string;
+}

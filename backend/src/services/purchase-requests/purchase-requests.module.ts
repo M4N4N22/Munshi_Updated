@@ -6,6 +6,7 @@ import { PurchaseRequestService } from './purchase-requests.service';
 import { PurchaseRequestRepository } from './purchase-requests.repository';
 import { PurchaseRequestValidationService } from './purchase-requests.validation';
 import { PurchaseRequestSuggestionService } from './purchase-request-suggestion.service';
+import { PurchaseRequestPrefillService } from './purchase-request-prefill.service';
 
 @Module({
   imports: [VendorModule, InventoryModule],
@@ -15,11 +16,13 @@ import { PurchaseRequestSuggestionService } from './purchase-request-suggestion.
     PurchaseRequestRepository,
     PurchaseRequestValidationService,
     PurchaseRequestSuggestionService,
+    PurchaseRequestPrefillService,
   ],
   exports: [
     PurchaseRequestService,
     PurchaseRequestRepository,
     PurchaseRequestSuggestionService,
+    PurchaseRequestPrefillService,
   ],
 })
 export class PurchaseRequestModule {}

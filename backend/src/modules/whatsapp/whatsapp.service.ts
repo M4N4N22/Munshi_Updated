@@ -448,7 +448,7 @@ export class WhatsAppService {
       } else if (workflowStartCmd) {
         result = await this.workflowRouter.startWorkflowFromCommand(
           body.from,
-          workflowStartCmd,
+          msgTrim,
         );
       } else {
         const ml_url = process.env.ML_URL || `http://localhost:8000`;

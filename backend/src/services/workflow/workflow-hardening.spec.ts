@@ -53,11 +53,16 @@ describe('Workflow hardening — cancel, expiry, recovery', () => {
       findByPhone: jest.fn().mockResolvedValue(user),
     } as unknown as jest.Mocked<UserService>;
 
+    const purchaseRequestPrefillService = {
+      buildLowStockPrefill: jest.fn().mockResolvedValue(null),
+    };
+
     router = new WorkflowRouterService(
       engine,
       {} as WorkflowRegistry,
       sessionService,
       usersService,
+      purchaseRequestPrefillService as any,
     );
   });
 
@@ -130,6 +135,7 @@ describe('Workflow hardening — cancel, expiry, recovery', () => {
       registry,
       sessionService,
       usersService,
+      { buildLowStockPrefill: jest.fn().mockResolvedValue(null) } as any,
     );
 
     const msg = await router.startWorkflowFromCommand(

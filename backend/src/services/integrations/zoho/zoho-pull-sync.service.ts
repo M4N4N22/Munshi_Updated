@@ -33,6 +33,7 @@ import type {
   ZohoPullSyncSummary,
 } from './zoho-pull-sync.types';
 import type { SyncTrigger } from '../integration.constants';
+import { IntegrationSyncFailedPublisher } from '../integration-sync-failed.publisher';
 
 export type { ZohoPullItemFailure, ZohoPullSyncSummary };
 
@@ -55,6 +56,7 @@ export class ZohoPullSyncService {
     private readonly tokenCrypto: TokenCryptoService,
     private readonly zohoInventoryClient: ZohoInventoryClient,
     private readonly authValidation: IntegrationAuthValidationService,
+    private readonly syncFailedPublisher: IntegrationSyncFailedPublisher,
   ) {}
 
   async runPullSync(
@@ -164,6 +166,19 @@ export class ZohoPullSyncService {
         finished_at: new Date(),
       });
 
+      if (runStatus === SYNC_STATUS.FAILED) {
+        await this.syncFailedPublisher.publishPullSyncFailure({
+          factoryId,
+          connectionId,
+          syncRunId: syncRun.id,
+          provider: connection.provider,
+          errorSummary:
+            failures.length > 0
+              ? failures[0].detail
+              : 'All items failed during pull sync',
+        });
+      }
+
       return {
         addedCount,
         updatedCount,
@@ -180,6 +195,13 @@ export class ZohoPullSyncService {
         items_processed: addedCount + updatedCount + failedCount,
         error_summary: msg.slice(0, 2000),
         finished_at: new Date(),
+      });
+      await this.syncFailedPublisher.publishPullSyncFailure({
+        factoryId,
+        connectionId,
+        syncRunId: syncRun.id,
+        provider: connection.provider,
+        errorSummary: msg,
       });
       throw err;
     }

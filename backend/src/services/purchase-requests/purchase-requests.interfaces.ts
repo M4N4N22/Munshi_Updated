@@ -86,3 +86,15 @@ export interface IPurchaseRequestSuggestion {
   unit: string;
   reason: string;
 }
+
+/** Read-only prefill payload for purchase request creation (no DB writes). */
+export interface IPurchaseRequestPrefill {
+  inventory_item_id: number;
+  item_name: string;
+  sku: string;
+  title: string;
+  suggested_quantity: string;
+  unit: string;
+  current_quantity: string;
+  reorder_threshold: string | null;
+}

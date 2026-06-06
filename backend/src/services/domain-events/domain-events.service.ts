@@ -4,6 +4,8 @@ import { DbService } from 'src/core/services/db-service/db.service';
 import { DOMAIN_EVENT_STATUS, DOMAIN_EVENT_TYPE } from './domain-events.constants';
 import { DomainEvent } from './domain-events.schema';
 import { ZohoStockPushHandler } from '../integrations/zoho/zoho-stock-push.handler';
+import { InventoryLowStockAlertHandler } from '../inventory/inventory-low-stock-alert.handler';
+import { IntegrationSyncFailedAlertHandler } from '../integrations/integration-sync-failed-alert.handler';
 
 export interface PublishDomainEventInput {
   factory_id?: number;
@@ -24,6 +26,10 @@ export class DomainEventsService {
   constructor(
     private readonly dbService: DbService,
     @Optional() private readonly zohoStockPushHandler?: ZohoStockPushHandler,
+    @Optional()
+    private readonly inventoryLowStockAlertHandler?: InventoryLowStockAlertHandler,
+    @Optional()
+    private readonly integrationSyncFailedAlertHandler?: IntegrationSyncFailedAlertHandler,
   ) {
     this.model = this.dbService.sqlService.DomainEvent;
   }
@@ -93,6 +99,28 @@ export class DomainEventsService {
         return;
       }
       await this.zohoStockPushHandler.handle(event);
+      return;
+    }
+
+    if (event.event_type === DOMAIN_EVENT_TYPE.INVENTORY_LOW_STOCK) {
+      if (!this.inventoryLowStockAlertHandler) {
+        this.logger.warn(
+          `Domain event ${event.id} (${event.event_type}) has no handler wired`,
+        );
+        return;
+      }
+      await this.inventoryLowStockAlertHandler.handle(event);
+      return;
+    }
+
+    if (event.event_type === DOMAIN_EVENT_TYPE.INTEGRATION_SYNC_FAILED) {
+      if (!this.integrationSyncFailedAlertHandler) {
+        this.logger.warn(
+          `Domain event ${event.id} (${event.event_type}) has no handler wired`,
+        );
+        return;
+      }
+      await this.integrationSyncFailedAlertHandler.handle(event);
       return;
     }
 

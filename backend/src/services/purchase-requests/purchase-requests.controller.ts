@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  NotFoundException,
   Param,
   ParseIntPipe,
   Patch,
@@ -22,12 +23,16 @@ import {
   PurchaseRequestAuditResponseDto,
   PurchaseRequestFactoryQueryDto,
   PurchaseRequestListResponseDto,
+  PurchaseRequestPrefillQueryDto,
+  PurchaseRequestPrefillResponseDto,
   PurchaseRequestResponseDto,
   PurchaseRequestSuggestionResponseDto,
   UpdatePurchaseRequestDto,
 } from './purchase-requests.dto';
 import { PurchaseRequestService } from './purchase-requests.service';
 import { PurchaseRequestSuggestionService } from './purchase-request-suggestion.service';
+import { PurchaseRequestPrefillService } from './purchase-request-prefill.service';
+import { buildPurchaseRequestCreateCommand } from './purchase-request-prefill.helper';
 
 @ApiTags('PurchaseRequest')
 @Controller('purchase-requests')
@@ -35,6 +40,7 @@ export class PurchaseRequestController {
   constructor(
     private readonly purchaseRequestService: PurchaseRequestService,
     private readonly suggestionService: PurchaseRequestSuggestionService,
+    private readonly prefillService: PurchaseRequestPrefillService,
   ) {}
 
   @Get()
@@ -53,6 +59,29 @@ export class PurchaseRequestController {
   @ApiResponse({ status: 200, type: [PurchaseRequestSuggestionResponseDto] })
   listLowStockSuggestions(@Query() query: PurchaseRequestFactoryQueryDto) {
     return this.suggestionService.generateLowStockSuggestions(query.factory_id);
+  }
+
+  @Get('prefill/low-stock')
+  @ApiOperation({
+    summary: 'Read-only prefill payload for purchase request from low-stock item',
+  })
+  @ApiResponse({ status: 200, type: PurchaseRequestPrefillResponseDto })
+  async getLowStockPrefill(@Query() query: PurchaseRequestPrefillQueryDto) {
+    const prefill = await this.prefillService.buildLowStockPrefill(
+      query.factory_id,
+      query.inventory_item_id,
+    );
+    if (!prefill) {
+      throw new NotFoundException(
+        `Inventory item #${query.inventory_item_id} not found in factory #${query.factory_id}`,
+      );
+    }
+    return {
+      ...prefill,
+      workflow_command: buildPurchaseRequestCreateCommand(
+        prefill.inventory_item_id,
+      ),
+    };
   }
 
   @Get(':id')

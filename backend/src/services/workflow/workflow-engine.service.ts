@@ -23,6 +23,12 @@ import type { WaOutboundMessage } from 'src/core/messaging/outbound-message.type
 import { textOutbound } from 'src/core/messaging/outbound-message.types';
 import { AssignClarifyWorkflowHandler } from './handlers/assign-clarify.handler';
 import { WorkerOnboardingWorkflowHandler } from './handlers/worker-onboarding.handler';
+import { PurchaseRequestPrefillService } from 'src/services/purchase-requests/purchase-request-prefill.service';
+import {
+  buildPurchaseRequestPrefillPrompt,
+  buildPurchaseRequestPrefillSessionData,
+  parsePurchaseRequestItemIdFromCommand,
+} from 'src/services/purchase-requests/purchase-request-prefill.helper';
 
 @Injectable()
 export class WorkflowEngineService {
@@ -116,6 +122,7 @@ export class WorkflowRouterService {
     private readonly registry: WorkflowRegistry,
     private readonly sessionService: WorkflowSessionService,
     private readonly usersService: UserService,
+    private readonly purchaseRequestPrefillService: PurchaseRequestPrefillService,
   ) {}
 
   isCancelCommand(message: string): boolean {
@@ -204,14 +211,38 @@ export class WorkflowRouterService {
 
   async startWorkflowFromCommand(
     phone: string,
-    command: string,
+    commandOrMessage: string,
   ): Promise<string> {
+    const trimmed = commandOrMessage.trim();
+    const matchedCommand =
+      this.registry.matchWorkflowStartCommand(trimmed) ?? trimmed;
     const context = await this.resolveUserContext(phone);
     this.ensureCanRunWorkflow(context.role);
 
-    const handler = this.registry.getHandlerByCommand(command);
+    const handler = this.registry.getHandlerByCommand(matchedCommand);
     if (!handler) {
-      throw new NotFoundException(`Unknown workflow command: ${command}`);
+      throw new NotFoundException(`Unknown workflow command: ${commandOrMessage}`);
+    }
+
+    if (handler.workflowType === WORKFLOW_TYPE.PURCHASE_REQUEST_CREATE) {
+      const itemId = parsePurchaseRequestItemIdFromCommand(trimmed);
+      if (itemId != null) {
+        const prefill = await this.purchaseRequestPrefillService.buildLowStockPrefill(
+          context.factoryId,
+          itemId,
+        );
+        if (prefill) {
+          const sessionData = buildPurchaseRequestPrefillSessionData(prefill);
+          const firstMessage = buildPurchaseRequestPrefillPrompt(prefill);
+          const result = await this.engine.startWorkflowWithSessionData(
+            handler,
+            context,
+            sessionData as Record<string, unknown>,
+            firstMessage,
+          );
+          return typeof result === 'string' ? result : firstMessage;
+        }
+      }
     }
 
     return this.engine.startWorkflow(handler, context);

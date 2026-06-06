@@ -1,4 +1,5 @@
 import type { WaOutboundMessage } from 'src/core/messaging/outbound-message.types';
+import type { IPurchaseRequestPrefill } from '../purchase-requests/purchase-requests.interfaces';
 import {
   WorkflowStatus,
   WorkflowType,
@@ -84,6 +85,9 @@ export interface IPurchaseRequestCreateSessionData {
   }>;
   purchase_request_id?: number;
   adding_more?: boolean;
+  prefill_source?: 'low_stock_alert';
+  prefill_pending_confirm?: boolean;
+  prefill_context?: IPurchaseRequestPrefill;
 }
 
 export interface IBusinessDiscoverySessionData {

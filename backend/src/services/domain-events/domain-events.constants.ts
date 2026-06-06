@@ -13,4 +13,6 @@ export const DOMAIN_EVENT_TYPE = {
   MATCH_SUGGESTION_CREATED: 'match.suggestion.created',
   JOURNAL_ENTRY_POSTED: 'journal.entry.posted',
   ZOHO_STOCK_PUSH_REQUESTED: 'zoho.stock_push.requested',
+  INVENTORY_LOW_STOCK: 'inventory.low_stock',
+  INTEGRATION_SYNC_FAILED: 'integration.sync_failed',
 } as const;

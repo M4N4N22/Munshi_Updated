@@ -42,11 +42,16 @@ describe('WorkflowRouterService routing', () => {
       findByPhone: jest.fn().mockResolvedValue(user),
     } as unknown as jest.Mocked<UserService>;
 
+    const purchaseRequestPrefillService = {
+      buildLowStockPrefill: jest.fn().mockResolvedValue(null),
+    };
+
     router = new WorkflowRouterService(
       engine,
       registry as unknown as WorkflowRegistry,
       sessionService,
       usersService,
+      purchaseRequestPrefillService as any,
     );
   });
 

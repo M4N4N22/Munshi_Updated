@@ -43,6 +43,10 @@ export class WorkflowRegistry {
   }
 
   getHandlerByCommand(command: string): IWorkflowHandler | undefined {
+    const matched = this.matchWorkflowStartCommand(command);
+    if (matched) {
+      return this.byCommand.get(matched);
+    }
     const normalized = command.startsWith('/')
       ? command.toLowerCase()
       : `/${command}`.toLowerCase();
@@ -58,19 +62,17 @@ export class WorkflowRegistry {
   }
 
   isWorkflowStartCommand(message: string): boolean {
-    const trimmed = message.trim().toLowerCase();
-    for (const cmd of this.byCommand.keys()) {
-      if (trimmed === cmd || trimmed.startsWith(`${cmd} `)) {
-        return true;
-      }
-    }
-    return false;
+    return this.matchWorkflowStartCommand(message) != null;
   }
 
   matchWorkflowStartCommand(message: string): string | null {
     const trimmed = message.trim().toLowerCase();
     for (const cmd of this.byCommand.keys()) {
-      if (trimmed === cmd || trimmed.startsWith(`${cmd} `)) {
+      if (
+        trimmed === cmd ||
+        trimmed.startsWith(`${cmd} `) ||
+        trimmed.startsWith(`${cmd}?`)
+      ) {
         return cmd;
       }
     }

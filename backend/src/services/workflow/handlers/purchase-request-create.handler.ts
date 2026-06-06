@@ -13,6 +13,9 @@ import {
   normalizeQuantity,
 } from 'src/services/purchase-requests/purchase-requests.validation';
 import {
+  buildPurchaseRequestPrefillPrompt,
+} from 'src/services/purchase-requests/purchase-request-prefill.helper';
+import {
   PURCHASE_REQUEST_CREATE_STEP,
   WORKFLOW_SKIP_KEYWORDS,
   WORKFLOW_START_COMMANDS,
@@ -78,6 +81,10 @@ export class PurchaseRequestCreateWorkflowHandler implements IWorkflowHandler {
     data: IPurchaseRequestCreateSessionData,
     context: WorkflowUserContext,
   ): Promise<WorkflowStepResult> {
+    if (data.prefill_pending_confirm) {
+      return this.handlePrefillConfirmation(session, input, data, context);
+    }
+
     if (!data.title) {
       if (input.length < 3) {
         return {
@@ -163,6 +170,69 @@ export class PurchaseRequestCreateWorkflowHandler implements IWorkflowHandler {
       };
     }
 
+    return this.submitPurchaseRequestFromSession(data, context);
+  }
+
+  private async handlePrefillConfirmation(
+    _session: IWorkflowSessionRecord,
+    input: string,
+    data: IPurchaseRequestCreateSessionData,
+    context: WorkflowUserContext,
+  ): Promise<WorkflowStepResult> {
+    if (isNo(input)) {
+      return {
+        message: this.getInitialPrompt(),
+        nextStep: PURCHASE_REQUEST_CREATE_STEP.REQUEST_CREATION,
+        sessionData: {} as Record<string, unknown>,
+      };
+    }
+
+    if (isYes(input)) {
+      return this.submitPurchaseRequestFromSession(data, context);
+    }
+
+    try {
+      const qty = normalizeQuantity(input);
+      const base = data.prefill_context ?? {
+        inventory_item_id: data.inventory_item_id!,
+        item_name: data.item_name!,
+        sku: '',
+        title: data.title!,
+        suggested_quantity: data.item_quantity!,
+        unit: data.item_unit ?? 'pcs',
+        current_quantity: data.item_quantity ?? qty,
+        reorder_threshold: null,
+      };
+      return {
+        message: buildPurchaseRequestPrefillPrompt({
+          ...base,
+          suggested_quantity: qty,
+        }),
+        nextStep: PURCHASE_REQUEST_CREATE_STEP.REQUEST_CREATION,
+        sessionData: {
+          ...data,
+          item_quantity: qty,
+          prefill_pending_confirm: true,
+          prefill_context: { ...base, suggested_quantity: qty },
+        } as Record<string, unknown>,
+      };
+    } catch (error: any) {
+      return {
+        message: waSection(
+          'Confirm purchase request',
+          `${error?.message ?? 'Invalid input.'}\n\n` +
+            'Reply *YES* to submit, *NO* to start over, or send a new *quantity*.',
+        ),
+        nextStep: PURCHASE_REQUEST_CREATE_STEP.REQUEST_CREATION,
+        sessionData: { ...data } as Record<string, unknown>,
+      };
+    }
+  }
+
+  private async submitPurchaseRequestFromSession(
+    data: IPurchaseRequestCreateSessionData,
+    context: WorkflowUserContext,
+  ): Promise<WorkflowStepResult> {
     const items = [
       ...(data.items ?? []),
       {

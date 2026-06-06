@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { InventoryModule } from 'src/services/inventory/inventory.module';
 import { IntegrationRepository } from './integration.repository';
 import { IntegrationAuthValidationService } from './integration-auth.validation';
@@ -16,9 +16,17 @@ import { ZohoStockPushHandler } from './zoho/zoho-stock-push.handler';
 import { ZohoPushExecutionService } from './zoho/zoho-push-execution.service';
 import { ZohoPushRetryService } from './zoho/zoho-push-retry.service';
 import { ZohoPushRetryCron } from './zoho/zoho-push-retry.cron';
+import { IntegrationSyncFailedPublisher } from './integration-sync-failed.publisher';
+import { IntegrationSyncFailedAlertHandler } from './integration-sync-failed-alert.handler';
+import { DomainEventsModule } from 'src/services/domain-events/domain-events.module';
+import { MessagingModule } from 'src/core/messaging/messaging.module';
 
 @Module({
-  imports: [InventoryModule],
+  imports: [
+    forwardRef(() => InventoryModule),
+    forwardRef(() => DomainEventsModule),
+    MessagingModule,
+  ],
   controllers: [ZohoOAuthController, ZohoSyncController],
   providers: [
     IntegrationRepository,
@@ -35,6 +43,8 @@ import { ZohoPushRetryCron } from './zoho/zoho-push-retry.cron';
     ZohoStockPushHandler,
     ZohoPushRetryService,
     ZohoPushRetryCron,
+    IntegrationSyncFailedPublisher,
+    IntegrationSyncFailedAlertHandler,
   ],
   exports: [
     IntegrationRepository,
@@ -47,6 +57,7 @@ import { ZohoPushRetryCron } from './zoho/zoho-push-retry.cron';
     ZohoStockPushHandler,
     ZohoPushExecutionService,
     ZohoPushRetryService,
+    IntegrationSyncFailedAlertHandler,
   ],
 })
 export class IntegrationModule {}
