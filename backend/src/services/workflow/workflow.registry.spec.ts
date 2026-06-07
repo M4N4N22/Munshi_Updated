@@ -4,6 +4,8 @@ import { WorkerOnboardingWorkflowHandler } from './handlers/worker-onboarding.ha
 import { InventoryCreateWorkflowHandler } from './handlers/inventory-create.handler';
 import { PurchaseRequestCreateWorkflowHandler } from './handlers/purchase-request-create.handler';
 import { BusinessDiscoveryWorkflowHandler } from './handlers/business-discovery.handler';
+import { AssignClarifyWorkflowHandler } from './handlers/assign-clarify.handler';
+import { TaskInventoryCreationWorkflowHandler } from './handlers/task-inventory-creation.handler';
 import { SuggestionApprovalWorkflowHandler } from './handlers/suggestion-approval.handler';
 import {
   WORKFLOW_START_COMMANDS,
@@ -62,6 +64,22 @@ describe('WorkflowRegistry', () => {
       handleStep: jest.fn(),
     } as unknown as BusinessDiscoveryWorkflowHandler;
 
+    const assignClarifyHandler = {
+      workflowType: WORKFLOW_TYPE.ASSIGN_CLARIFY,
+      startCommand: WORKFLOW_START_COMMANDS.ASSIGN_CLARIFY,
+      firstStep: 'ASSIGNEE',
+      getInitialPrompt: () => 'prompt',
+      handleStep: jest.fn(),
+    } as unknown as AssignClarifyWorkflowHandler;
+
+    const taskInventoryCreationHandler = {
+      workflowType: WORKFLOW_TYPE.TASK_INVENTORY_CREATION,
+      startCommand: WORKFLOW_START_COMMANDS.TASK_INVENTORY_CREATION,
+      firstStep: 'STARTED',
+      getInitialPrompt: () => 'prompt',
+      handleStep: jest.fn(),
+    } as unknown as TaskInventoryCreationWorkflowHandler;
+
     registry = new WorkflowRegistry(
       vendorHandler,
       workerHandler,
@@ -69,6 +87,8 @@ describe('WorkflowRegistry', () => {
       suggestionHandler,
       purchaseRequestHandler,
       businessDiscoveryHandler,
+      assignClarifyHandler,
+      taskInventoryCreationHandler,
     );
   });
 
@@ -94,9 +114,15 @@ describe('WorkflowRegistry', () => {
     expect(
       registry.getHandlerByCommand('/continue_discovery')?.workflowType,
     ).toBe(WORKFLOW_TYPE.BUSINESS_DISCOVERY);
+    expect(registry.getHandlerByCommand('/assign_clarify')?.workflowType).toBe(
+      WORKFLOW_TYPE.ASSIGN_CLARIFY,
+    );
+    expect(registry.getHandlerByCommand('/task_inventory_nl')?.workflowType).toBe(
+      WORKFLOW_TYPE.TASK_INVENTORY_CREATION,
+    );
   });
 
   it('lists registered start commands including discovery aliases', () => {
-    expect(registry.listStartCommands()).toHaveLength(7);
+    expect(registry.listStartCommands()).toHaveLength(9);
   });
 });

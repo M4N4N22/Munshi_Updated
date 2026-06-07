@@ -128,6 +128,9 @@ describe('Workflow hardening — cancel, expiry, recovery', () => {
         getInitialPrompt: () => 'prompt',
         handleStep: jest.fn(),
       }),
+      matchWorkflowStartCommand: jest
+        .fn()
+        .mockReturnValue(WORKFLOW_START_COMMANDS.ONBOARD_WORKER),
     } as unknown as WorkflowRegistry;
 
     router = new WorkflowRouterService(
