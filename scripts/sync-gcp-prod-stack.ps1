@@ -19,14 +19,39 @@ if (-not (Test-Path $localDir)) {
 }
 
 $sshTarget = "${User}@${HostIp}"
-Write-Host "Creating $RemotePath on $sshTarget ..."
-ssh -i $keyPath -o StrictHostKeyChecking=accept-new $sshTarget "mkdir -p $RemotePath"
+$sshCommon = @(
+  "-i", $keyPath,
+  "-o", "BatchMode=yes",
+  "-o", "ConnectTimeout=15",
+  "-o", "ConnectionAttempts=3",
+  "-o", "ServerAliveInterval=5",
+  "-o", "ServerAliveCountMax=3",
+  "-o", "StrictHostKeyChecking=accept-new"
+)
 
-Write-Host "Uploading docker-compose.yml, .env.example, ml.env.example ..."
-scp -i $keyPath (Join-Path $localDir "docker-compose.yml") "${sshTarget}:${RemotePath}/"
-scp -i $keyPath (Join-Path $localDir ".env.example") "${sshTarget}:${RemotePath}/"
-scp -i $keyPath (Join-Path $localDir "ml.env.example") "${sshTarget}:${RemotePath}/"
+Write-Host "Testing SSH to $sshTarget ..."
+& ssh @sshCommon $sshTarget "echo ok"
+if ($LASTEXITCODE -ne 0) {
+  Write-Error "SSH failed. Fix keys first (docs/p0-gcp-deploy-ssh.md)."
+}
 
-Write-Host "Done. SSH in and run:"
+Write-Host "Creating $RemotePath ..."
+& ssh @sshCommon $sshTarget "mkdir -p $RemotePath"
+if ($LASTEXITCODE -ne 0) {
+  Write-Error "mkdir on VM failed"
+}
+
+Write-Host "Uploading compose + env templates ..."
+& scp @sshCommon `
+  (Join-Path $localDir "docker-compose.yml") `
+  (Join-Path $localDir ".env.example") `
+  (Join-Path $localDir "ml.env.example") `
+  "${sshTarget}:${RemotePath}/"
+if ($LASTEXITCODE -ne 0) {
+  Write-Error "scp failed"
+}
+
+Write-Host "Done. Next on VM:"
+Write-Host "  ssh -i .ssh/ssh ubuntu@${HostIp}"
 Write-Host "  cd $RemotePath && cp .env.example .env && cp ml.env.example ml.env"
-Write-Host "  nano .env && nano ml.env && docker compose up -d"
+Write-Host "  nano .env && nano ml.env && docker compose pull && docker compose up -d"
