@@ -1,0 +1,29 @@
+# Production stack for munshi-prod (GCP VM).
+# Path on VM: /home/ubuntu/munshi-dada
+# Image built by CI: shantanugarg2004/munshi_dada:latest
+
+services:
+  backend:
+    image: shantanugarg2004/munshi_dada:latest
+    container_name: munshi-backend
+    restart: unless-stopped
+    ports:
+      - '4001:4001'
+    env_file:
+      - .env
+    environment:
+      PORT: '4001'
+      AUTO_MIGRATE: '1'
+      NODE_ENV: production
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'wget',
+          '-qO-',
+          'http://127.0.0.1:4001/health/migrations',
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 90s

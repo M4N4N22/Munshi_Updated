@@ -74,6 +74,30 @@ Or push to `main` for full CI/CD.
 
 ---
 
+## Bootstrap production stack (first time)
+
+Files live in [deploy/gcp-vm/](../deploy/gcp-vm/).
+
+**From Windows (after SSH `echo ok` works):**
+
+```powershell
+cd Munshi_Updated
+.\scripts\sync-gcp-prod-stack.ps1 -HostIp 34.14.139.96
+```
+
+**Or on the VM (browser SSH):**
+
+```bash
+curl -sSL https://raw.githubusercontent.com/ShantanuGarg2004/Munshi_Updated/main/scripts/install-gcp-prod-stack.sh | bash
+cd /home/ubuntu/munshi-dada
+nano .env    # Supabase, Olli, MUNSHI_PUBLIC_API_HOST
+docker compose pull && docker compose up -d
+```
+
+See [deploy/gcp-vm/README.md](../deploy/gcp-vm/README.md).
+
+---
+
 ## What CI runs on the VM
 
 ```bash
