@@ -1,71 +1,88 @@
 # P0 — GCP VM deploy SSH (GitHub Actions)
 
-Production API runs on **GCP Compute Engine** (`munshi-prod`, default user **`ubuntu`**).  
-CI deploy job: [.github/workflows/cicd.yml](../.github/workflows/cicd.yml) → `deploy-on-vm`.
+Production: **GCP Compute Engine** `munshi-prod` (`asia-south1-b`), user **`ubuntu`**, path **`/home/ubuntu/munshi-dada`**.
 
-Legacy secret names `EC2_HOST` / `EC2_SSH_KEY` are kept so existing GitHub Actions secrets keep working.
+CI: [.github/workflows/cicd.yml](../.github/workflows/cicd.yml)  
+Manual redeploy only: [.github/workflows/deploy-gcp-vm.yml](../.github/workflows/deploy-gcp-vm.yml)
 
 ---
 
-## GitHub Actions secrets
+## Fix `unable to authenticate` (do both steps)
+
+### Step A — Add public key on the VM (required)
+
+**Option 1 — GCP Console (easiest)**
+
+1. [Compute Engine → VM instances](https://console.cloud.google.com/compute/instances) → **munshi-prod** → **Edit**
+2. Scroll to **SSH Keys** → **Add item**
+3. Paste this **entire line**:
+
+   ```text
+   ubuntu:ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMc96iDIAZMHxKkYtPvhQxyKCqtdgcFb1zxQDr7VGmFG github-actions-gcp
+   ```
+
+4. Save
+
+Also in repo: [deploy/github-actions-gcp.pub](../deploy/github-actions-gcp.pub)
+
+**Option 2 — Browser SSH on the VM**
+
+```bash
+curl -sSL https://raw.githubusercontent.com/ShantanuGarg2004/Munshi_Updated/main/scripts/bootstrap-gcp-vm-deploy-access.sh | bash
+```
+
+Or copy [scripts/bootstrap-gcp-vm-deploy-access.sh](../scripts/bootstrap-gcp-vm-deploy-access.sh) and run on the VM.
+
+---
+
+### Step B — Set GitHub secrets
 
 | Secret | Value |
 |--------|--------|
-| `EC2_HOST` | VM external IP, e.g. `34.14.139.96` |
-| `EC2_SSH_KEY` | Full **private** OpenSSH key (see below) |
-| `DOCKER_PASSWORD` | Docker Hub token/password |
+| `EC2_HOST` | `34.14.139.96` (your VM external IP) |
+| `EC2_SSH_KEY` | Private key matching the public key above |
 
----
+**From Windows (GitHub CLI):**
 
-## One-time VM setup
-
-SSH into the VM (GCP Console → SSH, or local):
-
-```bash
-# 1) Add the GitHub Actions public key for user ubuntu
-mkdir -p ~/.ssh
-chmod 700 ~/.ssh
-cat >> ~/.ssh/authorized_keys << 'EOF'
-ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMc96iDIAZMHxKkYtPvhQxyKCqtdgcFb1zxQDr7VGmFG github-actions-gcp
-EOF
-chmod 600 ~/.ssh/authorized_keys
-
-# 2) Confirm deploy path exists
-ls -la /home/ubuntu/munshi-dada/docker-compose.yml
-
-# 3) ubuntu user can run docker
-groups
-# If docker not listed:
-# sudo usermod -aG docker ubuntu   # then log out/in
+```powershell
+cd Munshi_Updated
+.\scripts\set-github-deploy-secrets.ps1 -HostIp 34.14.139.96
 ```
 
-Public key file in repo: [`.ssh/ssh.pub`](../.ssh/ssh.pub) (`github-actions-gcp`).
+Private key file: `.ssh/ssh` (local only, gitignored).
+
+**Or manually:** GitHub → Munshi_Updated → Settings → Secrets → Actions → paste full private key into `EC2_SSH_KEY` (include `BEGIN`/`END` lines, no extra quotes).
 
 ---
 
-## GitHub secret `EC2_SSH_KEY`
-
-Paste the **matching private key** (entire file, including `BEGIN`/`END` lines).  
-It must pair with the public key in `authorized_keys` above.
-
-**Do not commit private keys.** If you rotated keys, update both the VM `authorized_keys` and the GitHub secret.
-
-Test from your laptop:
+## Verify before re-running CI
 
 ```bash
-ssh -i /path/to/private_key ubuntu@34.14.139.96
+ssh -i Munshi_Updated/.ssh/ssh ubuntu@34.14.139.96 "echo ok"
 ```
+
+Must print `ok`. If **Permission denied (publickey)**, Step A is not done.
 
 ---
 
-## Deploy script (what CI runs)
+## Re-run deploy
+
+- **Actions** → **Deploy GCP VM (manual)** → **Run workflow**  
+  (skips build; only pull + restart)
+
+Or push to `main` for full CI/CD.
+
+---
+
+## What CI runs on the VM
 
 ```bash
 cd /home/ubuntu/munshi-dada
 docker compose pull
-restart-docker-compose    # if installed on VM
-# else: docker compose up -d --remove-orphans
+restart-docker-compose   # or: docker compose up -d --remove-orphans
 ```
+
+Ensure `ubuntu` is in the `docker` group: `sudo usermod -aG docker ubuntu`
 
 ---
 
@@ -73,14 +90,14 @@ restart-docker-compose    # if installed on VM
 
 | Error | Fix |
 |-------|-----|
-| `unable to authenticate, attempted methods [none publickey]` | Wrong user (use `ubuntu`), wrong private key in `EC2_SSH_KEY`, or public key missing from `~ubuntu/.ssh/authorized_keys` |
-| `cd: ... No such file` | Create `/home/ubuntu/munshi-dada` and copy `docker-compose.yml` + `.env` |
-| `permission denied` on docker | Add `ubuntu` to `docker` group |
-| Connection timeout | GCP firewall: allow `tcp:22` to the VM |
+| `unable to authenticate` | Step A + B above |
+| `EC2_SSH_KEY is not a valid OpenSSH private key` | Secret is truncated or you pasted the `.pub` file |
+| `cd: ... No such file` | Create `/home/ubuntu/munshi-dada` with `docker-compose.yml` |
+| Connection timeout | GCP firewall: allow `tcp:22` |
 
 ---
 
 ## Related
 
-- [p0-production-database.md](./p0-production-database.md) — Supabase `POSTGRES_CONNECTION_STRING` on the VM
-- [README.md](../README.md) — CI/CD overview
+- [p0-production-database.md](./p0-production-database.md) — Supabase on VM
+- [README.md](../README.md)

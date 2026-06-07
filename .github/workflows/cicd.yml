@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 env:
   DOCKER_USERNAME: shantanugarg2004
@@ -94,14 +95,36 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-and-push
     steps:
+      - name: Validate deploy secrets and SSH key
+        id: deploy-key
+        env:
+          DEPLOY_KEY: ${{ secrets.EC2_SSH_KEY }}
+        run: |
+          if [ -z "${{ secrets.EC2_HOST }}" ]; then
+            echo "::error::Missing GitHub secret EC2_HOST (VM IP, e.g. 34.14.139.96)"
+            exit 1
+          fi
+          if [ -z "$DEPLOY_KEY" ]; then
+            echo "::error::Missing GitHub secret EC2_SSH_KEY. Run scripts/set-github-deploy-secrets.ps1 or see docs/p0-gcp-deploy-ssh.md"
+            exit 1
+          fi
+          KEY_FILE="${RUNNER_TEMP}/munshi_deploy_key"
+          printf '%s\n' "$DEPLOY_KEY" > "$KEY_FILE"
+          chmod 600 "$KEY_FILE"
+          if ! ssh-keygen -y -f "$KEY_FILE" > /dev/null 2>&1; then
+            echo "::error::EC2_SSH_KEY is not a valid OpenSSH private key (must match deploy/github-actions-gcp.pub)"
+            exit 1
+          fi
+          echo "key_file=$KEY_FILE" >> "$GITHUB_OUTPUT"
+
       - name: SSH to production VM, pull image, restart stack
-        uses: appleboy/ssh-action@v1.0.3
+        uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ env.DEPLOY_SSH_USER }}
           port: 22
-          key: ${{ secrets.EC2_SSH_KEY }}
-          timeout: 30s
+          key_path: ${{ steps.deploy-key.outputs.key_file }}
+          timeout: 60s
           command_timeout: 10m
           script: |
             set -e
