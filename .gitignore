@@ -27,5 +27,8 @@
 # Local uploads
 backend/storage/
 
+# Local dev (embedded Postgres, etc.)
+.local/
+
 # Python
 **/*.pyc

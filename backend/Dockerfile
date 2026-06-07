@@ -18,7 +18,7 @@ COPY --from=build /build/scripts ./scripts
 ENV AUTO_MIGRATE=1
 ENV NODE_ENV=production
 
-EXPOSE 4000
+EXPOSE 4001
 
 # Run pending SQL migrations, then start NestJS
 CMD [ "node", "scripts/docker-entrypoint.mjs" ]

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Post, Query } from '@nestjs/common';
 import { WhatsAppService } from './whatsapp.service';
 import { WhatsAppIncomingDto } from './whatsapp.dto';
 import { parseWhatsAppInbound } from './whatsapp-inbound.parser';
@@ -46,6 +46,9 @@ export class WhatsAppController {
 
   @Post('test')
   async handleMessage(@Body() body: WhatsAppIncomingDto) {
+    if (process.env.ENABLE_WEBHOOK_TEST_ROUTE !== 'true') {
+      throw new NotFoundException();
+    }
     return this.whatsappService.handleIncomingMessage(body);
   }
 }

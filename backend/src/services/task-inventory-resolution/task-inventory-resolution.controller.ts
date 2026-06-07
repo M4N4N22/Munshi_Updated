@@ -1,5 +1,6 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { InternalCallGuard } from 'src/core/guards/guards';
 import { ResolveTaskInventoryDto } from './task-inventory-resolution.dto';
 import { TaskInventoryResolutionService } from './task-inventory-resolution.service';
 
@@ -12,6 +13,7 @@ export class TaskInventoryResolutionController {
   ) {}
 
   @Post('task-inventory')
+  @UseGuards(InternalCallGuard)
   @ApiOperation({
     summary: 'Resolve ML task-inventory extraction to backend entities (testing)',
   })

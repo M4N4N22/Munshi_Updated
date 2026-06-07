@@ -1,4 +1,5 @@
 import { Module, forwardRef } from '@nestjs/common';
+import { InternalCallGuard } from 'src/core/guards/guards';
 import { InventoryModule } from 'src/services/inventory/inventory.module';
 import { TasksModule } from 'src/services/tasks/tasks.module';
 import { FactoryModule } from 'src/services/factories/factories.module';
@@ -23,6 +24,7 @@ import { TaskInventoryNlOrchestratorService } from './task-inventory-nl.orchestr
   ],
   controllers: [TaskInventoryResolutionController],
   providers: [
+    InternalCallGuard,
     InventoryResolverService,
     WorkerResolverService,
     TaskInventoryResolutionService,

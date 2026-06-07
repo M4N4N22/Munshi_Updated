@@ -48,7 +48,7 @@ function ensureDatabaseMigrations() {
 async function bootstrap() {
   const logger = new Logger('App');
   ensureDatabaseMigrations();
-  const port = process.env.PORT ?? 3000;
+  const port = process.env.PORT ?? 4001;
   const app = await NestFactory.create(AppModule);
   const loggerService = app.get(LoggerService);
   app.enableCors({
