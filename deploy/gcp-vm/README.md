@@ -47,3 +47,32 @@ See [docs/p0-gcp-deploy-ssh.md](../../docs/p0-gcp-deploy-ssh.md).
 ## Firewall
 
 Allow **tcp:4001** for the API (and **8000** only if you need external ML access; usually internal-only).
+
+## Troubleshooting
+
+### `Permission denied` on `.env` / `ml.env`
+
+Files were created as another user (browser SSH). On the VM:
+
+```bash
+sudo chown -R ubuntu:ubuntu /home/ubuntu/munshi-dada
+cp .env.example .env && cp ml.env.example ml.env
+```
+
+### `nano: command not found`
+
+Use `vi .env` or `sudo apt-get install -y nano`.
+
+### `pull access denied` / `repository does not exist`
+
+1. **Log in to Docker Hub** on the VM:
+   ```bash
+   docker login -u shantanugarg2004
+   ```
+2. **Ensure images were pushed** — check [Docker Hub](https://hub.docker.com/u/shantanugarg2004).  
+   Backend needs **`shantanugarg2004/munshi_dada:latest`** from a green **CI/CD Pipeline → build-and-push** run on `main`.
+3. **ML interim fallback** (old public image until CI pushes `munshi_dada-intent-extracter`):
+   In `docker-compose.yml` set `ml.image` to `shantanugarg2004/munshi_intent_classifier:latest`
+
+Run helper on VM: `bash scripts/gcp-vm-on-vm-setup.sh` (after copying or curling from repo).
+
