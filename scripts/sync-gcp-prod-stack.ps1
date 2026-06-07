@@ -22,8 +22,11 @@ $sshTarget = "${User}@${HostIp}"
 Write-Host "Creating $RemotePath on $sshTarget ..."
 ssh -i $keyPath -o StrictHostKeyChecking=accept-new $sshTarget "mkdir -p $RemotePath"
 
-Write-Host "Uploading docker-compose.yml and .env.example ..."
+Write-Host "Uploading docker-compose.yml, .env.example, ml.env.example ..."
 scp -i $keyPath (Join-Path $localDir "docker-compose.yml") "${sshTarget}:${RemotePath}/"
 scp -i $keyPath (Join-Path $localDir ".env.example") "${sshTarget}:${RemotePath}/"
+scp -i $keyPath (Join-Path $localDir "ml.env.example") "${sshTarget}:${RemotePath}/"
 
-Write-Host "Done. SSH in and run: cd $RemotePath && cp .env.example .env && nano .env && docker compose up -d"
+Write-Host "Done. SSH in and run:"
+Write-Host "  cd $RemotePath && cp .env.example .env && cp ml.env.example ml.env"
+Write-Host "  nano .env && nano ml.env && docker compose up -d"

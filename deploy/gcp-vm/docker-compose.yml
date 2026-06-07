@@ -1,8 +1,26 @@
 # Production stack for munshi-prod (GCP VM).
 # Path on VM: /home/ubuntu/munshi-dada
-# Image built by CI: shantanugarg2004/munshi_dada:latest
+#
+# Images (Docker Hub):
+#   backend: shantanugarg2004/munshi_dada:latest
+#   ml:      shantanugarg2004/munshi_dada-intent-extracter:latest
 
 services:
+  ml:
+    image: shantanugarg2004/munshi_dada-intent-extracter:latest
+    container_name: munshi-ml
+    restart: unless-stopped
+    env_file:
+      - ml.env
+    ports:
+      - '8000:8000'
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:8000/health']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 45s
+
   backend:
     image: shantanugarg2004/munshi_dada:latest
     container_name: munshi-backend
@@ -15,6 +33,10 @@ services:
       PORT: '4001'
       AUTO_MIGRATE: '1'
       NODE_ENV: production
+      ML_URL: http://ml:8000
+    depends_on:
+      ml:
+        condition: service_healthy
     healthcheck:
       test:
         [

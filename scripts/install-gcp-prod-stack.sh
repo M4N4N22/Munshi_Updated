@@ -11,6 +11,7 @@ sudo chown ubuntu:ubuntu "$DEPLOY_DIR"
 
 sudo -u ubuntu curl -fsSL "$REPO_RAW/deploy/gcp-vm/docker-compose.yml" -o "$DEPLOY_DIR/docker-compose.yml"
 sudo -u ubuntu curl -fsSL "$REPO_RAW/deploy/gcp-vm/.env.example" -o "$DEPLOY_DIR/.env.example"
+sudo -u ubuntu curl -fsSL "$REPO_RAW/deploy/gcp-vm/ml.env.example" -o "$DEPLOY_DIR/ml.env.example"
 
 if [ ! -f "$DEPLOY_DIR/.env" ]; then
   sudo -u ubuntu cp "$DEPLOY_DIR/.env.example" "$DEPLOY_DIR/.env"
@@ -19,5 +20,12 @@ else
   echo ".env already exists — not overwritten"
 fi
 
-echo "Next: nano $DEPLOY_DIR/.env"
+if [ ! -f "$DEPLOY_DIR/ml.env" ]; then
+  sudo -u ubuntu cp "$DEPLOY_DIR/ml.env.example" "$DEPLOY_DIR/ml.env"
+  echo "Created $DEPLOY_DIR/ml.env — set OPENAI_API_KEY"
+else
+  echo "ml.env already exists — not overwritten"
+fi
+
+echo "Next: nano $DEPLOY_DIR/.env && nano $DEPLOY_DIR/ml.env"
 echo "Then:  cd $DEPLOY_DIR && docker compose pull && docker compose up -d"
