@@ -4,12 +4,16 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 env:
   DOCKER_USERNAME: shantanugarg2004
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
   DOCKERHUB_REPO: munshi_dada
+  DOCKERHUB_ML_REPO: munshi_dada-intent-extracter
   PROJECT_PATH: /home/ubuntu/munshi-dada
+  # GCP Compute Engine default user (munshi-prod VM)
+  DEPLOY_SSH_USER: ubuntu
 
 defaults:
   run:
@@ -59,7 +63,7 @@ jobs:
         run: yarn build
 
   build-and-push:
-    name: Build & Push Multi-Arch Docker Image
+    name: Build & Push Backend + ML Images
     runs-on: ubuntu-latest
     needs: migration-validation
     defaults:
@@ -78,7 +82,7 @@ jobs:
           username: ${{ env.DOCKER_USERNAME }}
           password: ${{ env.DOCKER_PASSWORD }}
 
-      - name: Build and Push Multi-Arch Image
+      - name: Build and push backend image
         uses: docker/build-push-action@v5
         with:
           context: ./backend
@@ -87,18 +91,57 @@ jobs:
           tags: ${{ env.DOCKER_USERNAME }}/${{ env.DOCKERHUB_REPO }}:latest
           platforms: linux/amd64,linux/arm64
 
+      - name: Build and push ML image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./ml
+          file: ./ml/Dockerfile
+          push: true
+          tags: ${{ env.DOCKER_USERNAME }}/${{ env.DOCKERHUB_ML_REPO }}:latest
+          platforms: linux/amd64,linux/arm64
+
   deploy-on-vm:
     name: Deploy on GCP VM
     runs-on: ubuntu-latest
     needs: build-and-push
     steps:
+      - name: Validate deploy secrets and SSH key
+        id: deploy-key
+        env:
+          DEPLOY_KEY: ${{ secrets.EC2_SSH_KEY }}
+        run: |
+          if [ -z "${{ secrets.EC2_HOST }}" ]; then
+            echo "::error::Missing GitHub secret EC2_HOST (VM IP, e.g. 34.14.139.96)"
+            exit 1
+          fi
+          if [ -z "$DEPLOY_KEY" ]; then
+            echo "::error::Missing GitHub secret EC2_SSH_KEY. Run scripts/set-github-deploy-secrets.ps1 or see docs/p0-gcp-deploy-ssh.md"
+            exit 1
+          fi
+          KEY_FILE="${RUNNER_TEMP}/munshi_deploy_key"
+          printf '%s\n' "$DEPLOY_KEY" > "$KEY_FILE"
+          chmod 600 "$KEY_FILE"
+          if ! ssh-keygen -y -f "$KEY_FILE" > /dev/null 2>&1; then
+            echo "::error::EC2_SSH_KEY is not a valid OpenSSH private key (must match deploy/github-actions-gcp.pub)"
+            exit 1
+          fi
+          echo "key_file=$KEY_FILE" >> "$GITHUB_OUTPUT"
+
       - name: SSH to production VM, pull image, restart stack
-        uses: appleboy/ssh-action@v1.0.3
+        uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.EC2_HOST }}
-          username: munshidev
-          key: ${{ secrets.EC2_SSH_KEY }}
+          username: ${{ env.DEPLOY_SSH_USER }}
+          port: 22
+          key_path: ${{ steps.deploy-key.outputs.key_file }}
+          timeout: 60s
+          command_timeout: 10m
           script: |
+            set -e
             cd ${{ env.PROJECT_PATH }}
             docker compose pull
-            restart-docker-compose
+            if command -v restart-docker-compose >/dev/null 2>&1; then
+              restart-docker-compose
+            else
+              docker compose up -d --remove-orphans
+            fi

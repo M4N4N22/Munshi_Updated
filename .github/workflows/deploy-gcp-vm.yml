@@ -1,0 +1,53 @@
+# Manual redeploy to munshi-prod (pull latest Docker image + restart).
+# Use when build succeeded but deploy failed (e.g. SSH key setup).
+name: Deploy GCP VM (manual)
+
+on:
+  workflow_dispatch:
+
+env:
+  PROJECT_PATH: /home/ubuntu/munshi-dada
+  DEPLOY_SSH_USER: ubuntu
+
+jobs:
+  deploy-on-vm:
+    name: Deploy on GCP VM
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate deploy secrets and SSH key
+        id: deploy-key
+        env:
+          DEPLOY_KEY: ${{ secrets.EC2_SSH_KEY }}
+        run: |
+          if [ -z "${{ secrets.EC2_HOST }}" ]; then
+            echo "::error::Missing GitHub secret EC2_HOST"
+            exit 1
+          fi
+          if [ -z "$DEPLOY_KEY" ]; then
+            echo "::error::Missing GitHub secret EC2_SSH_KEY"
+            exit 1
+          fi
+          KEY_FILE="${RUNNER_TEMP}/munshi_deploy_key"
+          printf '%s\n' "$DEPLOY_KEY" > "$KEY_FILE"
+          chmod 600 "$KEY_FILE"
+          ssh-keygen -y -f "$KEY_FILE" > /dev/null
+          echo "key_file=$KEY_FILE" >> "$GITHUB_OUTPUT"
+
+      - name: SSH pull and restart
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ env.DEPLOY_SSH_USER }}
+          port: 22
+          key_path: ${{ steps.deploy-key.outputs.key_file }}
+          timeout: 60s
+          command_timeout: 10m
+          script: |
+            set -e
+            cd ${{ env.PROJECT_PATH }}
+            docker compose pull
+            if command -v restart-docker-compose >/dev/null 2>&1; then
+              restart-docker-compose
+            else
+              docker compose up -d --remove-orphans
+            fi
