@@ -12,6 +12,7 @@
 **/.env
 **/.env.local
 !**/.env.example
+.ssh/ssh
 
 # IDE / OS
 .idea/

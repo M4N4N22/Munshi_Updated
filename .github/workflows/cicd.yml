@@ -10,6 +10,8 @@ env:
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
   DOCKERHUB_REPO: munshi_dada
   PROJECT_PATH: /home/ubuntu/munshi-dada
+  # GCP Compute Engine default user (munshi-prod VM)
+  DEPLOY_SSH_USER: ubuntu
 
 defaults:
   run:
@@ -96,9 +98,17 @@ jobs:
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
-          username: munshidev
+          username: ${{ env.DEPLOY_SSH_USER }}
+          port: 22
           key: ${{ secrets.EC2_SSH_KEY }}
+          timeout: 30s
+          command_timeout: 10m
           script: |
+            set -e
             cd ${{ env.PROJECT_PATH }}
             docker compose pull
-            restart-docker-compose
+            if command -v restart-docker-compose >/dev/null 2>&1; then
+              restart-docker-compose
+            else
+              docker compose up -d --remove-orphans
+            fi
