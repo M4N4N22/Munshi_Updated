@@ -1,0 +1,13 @@
+name,sku,quantity,unit,category
+Cement 50kg Bag,CEM-001,120,bags,Building Materials
+Steel Rod 12mm,STL-012,450,kg,Steel
+PVC Pipe 2 inch,PVC-002,85,meter,Plumbing
+Premium Emulsion Paint,PAI-WHT,60,litre,Paint
+Electrical Wire 2.5mm,ELW-025,200,meter,Electrical
+Hex Bolt M10,BOL-M10,500,pcs,Fasteners
+Hex Nut M10,NUT-M10,500,pcs,Fasteners
+Safety Gloves Pair,SAF-GLV,40,pcs,Safety
+Cutting Oil 5L,CON-OIL,25,litre,Industrial Consumables
+Welding Rod 3.2mm,WEL-032,80,kg,Industrial Consumables
+Angle Grinder Disc,GRD-DSC,30,pcs,Tools
+Industrial Tape Roll,TAP-IND,50,pcs,Industrial Consumables

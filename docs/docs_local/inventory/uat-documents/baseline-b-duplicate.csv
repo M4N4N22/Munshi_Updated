@@ -1,0 +1,4 @@
+sku,name,category,location,unit,quantity,reorder_threshold
+CEM-001,Cement 50kg Bag,Building Materials,Main Warehouse,bags,50,10
+STL-012,Steel Rod 12mm,Steel,Main Warehouse,kg,100,20
+PVC-002,PVC Pipe 2 inch,Plumbing,Main Warehouse,meter,20,5

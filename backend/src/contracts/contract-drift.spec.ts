@@ -46,6 +46,9 @@ describe('Shared contract drift detection', () => {
     expect(WORKFLOW_START_COMMANDS.PURCHASE_REQUEST_CREATE).toBe(
       '/purchase_request_create',
     );
+    expect(WORKFLOW_START_COMMANDS.TASK_INVENTORY_CREATION).toBe(
+      '/task_inventory_nl',
+    );
     expect(SUGGESTION_APPROVAL_COMMAND).toBe('/suggestion_approve');
   });
 

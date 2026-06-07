@@ -95,3 +95,16 @@ export const COMMAND_HINTS = [
     hint: 'Cancel the active multi-step workflow',
   },
 ];
+
+const KNOWN_SLASH_COMMANDS = new Set(
+  Object.values(COMMANDS).map((c) => c.toLowerCase()),
+);
+
+/** First token of message when it matches a registered slash command. */
+export function parseDirectSlashCommand(message: string): string | null {
+  const trimmed = message.trim();
+  const match = trimmed.match(/^(\/[a-z_]+)/i);
+  if (!match) return null;
+  const token = match[1].toLowerCase();
+  return KNOWN_SLASH_COMMANDS.has(token) ? token : null;
+}

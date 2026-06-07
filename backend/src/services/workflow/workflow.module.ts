@@ -14,6 +14,8 @@ import { PurchaseRequestCreateWorkflowHandler } from './handlers/purchase-reques
 import { BusinessDiscoveryModule } from 'src/services/business-discovery/business-discovery.module';
 import { BusinessDiscoveryWorkflowHandler } from './handlers/business-discovery.handler';
 import { AssignClarifyWorkflowHandler } from './handlers/assign-clarify.handler';
+import { TaskInventoryCreationWorkflowHandler } from './handlers/task-inventory-creation.handler';
+import { TaskInventoryResolutionModule } from 'src/services/task-inventory-resolution/task-inventory-resolution.module';
 import { TasksModule } from 'src/services/tasks/tasks.module';
 import { SuggestionApprovalWorkflowHandler } from './handlers/suggestion-approval.handler';
 import { WorkflowSessionRepository } from './workflow-session.repository';
@@ -38,6 +40,7 @@ import { WorkflowExpiryCronService } from './workflow-expiry.cron';
     TasksModule,
     forwardRef(() => DocumentModule),
     BusinessDiscoveryModule,
+    forwardRef(() => TaskInventoryResolutionModule),
   ],
   providers: [
     WorkflowSessionRepository,
@@ -49,6 +52,7 @@ import { WorkflowExpiryCronService } from './workflow-expiry.cron';
     PurchaseRequestCreateWorkflowHandler,
     BusinessDiscoveryWorkflowHandler,
     AssignClarifyWorkflowHandler,
+    TaskInventoryCreationWorkflowHandler,
     WorkerOnboardingService,
     WorkflowRegistry,
     WorkflowEngineService,

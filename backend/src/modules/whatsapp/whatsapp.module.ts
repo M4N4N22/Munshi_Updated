@@ -11,6 +11,7 @@ import { MessagingModule } from 'src/core/messaging/messaging.module';
 import { DepartmentsModule } from 'src/services/departments/departments.module';
 import { WorkflowModule } from 'src/services/workflow/workflow.module';
 import { InventoryModule } from 'src/services/inventory/inventory.module';
+import { TaskInventoryResolutionModule } from 'src/services/task-inventory-resolution/task-inventory-resolution.module';
 import { BusinessReadinessService } from './business-readiness.service';
 import { OwnerHomeService } from './owner-home.service';
 import { TeamBulkImportService } from './team-bulk-import.service';
@@ -29,6 +30,7 @@ import { OlliMediaService } from 'src/core/messaging/olli-media.service';
     ReportsModule,
     WorkflowModule,
     InventoryModule,
+    TaskInventoryResolutionModule,
   ],
   providers: [
     WhatsAppService,
@@ -42,4 +44,4 @@ import { OlliMediaService } from 'src/core/messaging/olli-media.service';
   controllers: [WhatsAppController],
 })
 export class WhatsAppModule {}
-
+

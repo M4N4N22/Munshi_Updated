@@ -58,12 +58,13 @@ export class WorkflowEngineService {
     sessionData: Record<string, unknown>,
     firstMessage: string,
     outbound?: WaOutboundMessage,
+    initialStep?: string,
   ): Promise<string | WaOutboundMessage> {
     await this.sessionService.createSession({
       factory_id: context.factoryId,
       phone_number: context.phone,
       workflow_type: handler.workflowType,
-      current_step: handler.firstStep,
+      current_step: initialStep ?? handler.firstStep,
       session_data: sessionData,
     });
 

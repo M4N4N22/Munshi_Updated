@@ -39,3 +39,24 @@ class ParseResponse(BaseModel):
     extraction_version: str = "v1"
     payload: Union[InventoryImportExtraction, StockRegisterExtraction, dict]
     warnings: Optional[List[str]] = None
+
+
+class TaskInventoryExtraction(BaseModel):
+    """Phase 4.1 — structured NL task extraction for inventory-linked assignments."""
+
+    item_name_or_sku: Optional[str] = None
+    quantity: Optional[float] = Field(default=None, ge=0)
+    assignee_hint: Optional[str] = None
+    task_kind: Optional[Literal["delivery", "issue", "inventory_count"]] = None
+
+    model_config = {"extra": "forbid"}
+
+    def model_dump(self, **kwargs):
+        """Always emit all four contract keys; null when value is unknown."""
+        data = super().model_dump(**kwargs)
+        return {
+            "item_name_or_sku": data.get("item_name_or_sku"),
+            "quantity": data.get("quantity"),
+            "assignee_hint": data.get("assignee_hint"),
+            "task_kind": data.get("task_kind"),
+        }

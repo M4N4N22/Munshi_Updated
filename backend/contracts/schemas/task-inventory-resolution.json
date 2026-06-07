@@ -1,0 +1,129 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ResolvedTaskInventoryIntent",
+  "description": "Phase 4.2 resolver response — matched inventory/worker entities and disambiguation payloads",
+  "type": "object",
+  "required": ["task_kind", "quantity", "inventory", "worker", "disambiguation"],
+  "additionalProperties": false,
+  "properties": {
+    "task_kind": {
+      "type": ["string", "null"],
+      "enum": ["delivery", "issue", "inventory_count", null]
+    },
+    "quantity": {
+      "type": ["number", "null"],
+      "minimum": 0
+    },
+    "inventory": {
+      "$ref": "#/definitions/inventoryMatchResult"
+    },
+    "worker": {
+      "$ref": "#/definitions/workerMatchResult"
+    },
+    "disambiguation": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/disambiguationPayload"
+      }
+    }
+  },
+  "definitions": {
+    "resolverStatus": {
+      "type": "string",
+      "enum": ["resolved", "ambiguous", "not_found"]
+    },
+    "inventoryMatchResult": {
+      "type": "object",
+      "required": ["status"],
+      "additionalProperties": false,
+      "properties": {
+        "status": { "$ref": "#/definitions/resolverStatus" },
+        "item_id": { "type": "integer" },
+        "sku": { "type": "string" },
+        "name": { "type": "string" },
+        "match_type": {
+          "type": "string",
+          "enum": [
+            "exact_sku",
+            "exact_name",
+            "case_insensitive",
+            "partial",
+            "fuzzy"
+          ]
+        },
+        "candidates": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/inventoryCandidate" }
+        }
+      }
+    },
+    "inventoryCandidate": {
+      "type": "object",
+      "required": ["item_id", "sku", "name", "match_type"],
+      "additionalProperties": false,
+      "properties": {
+        "item_id": { "type": "integer" },
+        "sku": { "type": "string" },
+        "name": { "type": "string" },
+        "match_type": {
+          "type": "string",
+          "enum": [
+            "exact_sku",
+            "exact_name",
+            "case_insensitive",
+            "partial",
+            "fuzzy"
+          ]
+        },
+        "score": { "type": "number" }
+      }
+    },
+    "workerMatchResult": {
+      "type": "object",
+      "required": ["status"],
+      "additionalProperties": false,
+      "properties": {
+        "status": { "$ref": "#/definitions/resolverStatus" },
+        "user_id": { "type": "integer" },
+        "name": { "type": "string" },
+        "match_type": {
+          "type": "string",
+          "enum": ["exact", "case_insensitive", "partial", "fuzzy"]
+        },
+        "candidates": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/workerCandidate" }
+        }
+      }
+    },
+    "workerCandidate": {
+      "type": "object",
+      "required": ["user_id", "name", "match_type"],
+      "additionalProperties": false,
+      "properties": {
+        "user_id": { "type": "integer" },
+        "name": { "type": "string" },
+        "match_type": {
+          "type": "string",
+          "enum": ["exact", "case_insensitive", "partial", "fuzzy"]
+        },
+        "score": { "type": "number" }
+      }
+    },
+    "disambiguationPayload": {
+      "type": "object",
+      "required": ["type", "candidates"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["inventory_disambiguation", "worker_disambiguation"]
+        },
+        "candidates": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

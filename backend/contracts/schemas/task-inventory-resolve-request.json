@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ResolveTaskInventoryRequest",
+  "description": "Phase 4.2 resolver request — factory scope + ML extraction payload",
+  "type": "object",
+  "required": ["factory_id", "extraction"],
+  "additionalProperties": false,
+  "properties": {
+    "factory_id": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "extraction": {
+      "$ref": "task-inventory-extraction.json"
+    }
+  }
+}

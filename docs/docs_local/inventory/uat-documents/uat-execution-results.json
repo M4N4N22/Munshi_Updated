@@ -1,0 +1,1330 @@
+{
+  "implementation": {
+    "ocrImplemented": false,
+    "parserService": "ML service POST /parse (tabular CSV/XLS only)",
+    "supportedTypes": [
+      "INVENTORY_IMPORT",
+      "STOCK_REGISTER",
+      "PURCHASE_INVOICE (contract only)",
+      "GOODS_RECEIPT (contract only)"
+    ],
+    "uploadEndpoint": "POST /documents/upload",
+    "approvalCommand": "/suggestion_approve (WhatsApp YES/NO workflow)",
+    "whatsappDocumentPath": "CSV bulk import only — NOT document parsing pipeline",
+    "autoProcessBlocker": "auto_process=true fails when outbound messaging returns 401"
+  },
+  "csvBaselines": [
+    {
+      "file": "baseline-a-clean.csv",
+      "factoryId": 2168,
+      "status": 200,
+      "summary": {
+        "addedCount": 12,
+        "updatedCount": 0,
+        "failedCount": 0,
+        "skippedCount": 0,
+        "rowResults": [
+          {
+            "line": 2,
+            "sku": "CEM-001",
+            "status": "added",
+            "detail": "item create + stock in"
+          },
+          {
+            "line": 3,
+            "sku": "STL-012",
+            "status": "added",
+            "detail": "item create + stock in"
+          },
+          {
+            "line": 4,
+            "sku": "PVC-002",
+            "status": "added",
+            "detail": "item create + stock in"
+          },
+          {
+            "line": 5,
+            "sku": "PAI-WHT",
+            "status": "added",
+            "detail": "item create + stock in"
+          },
+          {
+            "line": 6,
+            "sku": "ELW-025",
+            "status": "added",
+            "detail": "item create + stock in"
+          },
+          {
+            "line": 7,
+            "sku": "BOL-M10",
+            "status": "added",
+            "detail": "item create + stock in"
+          },
+          {
+            "line": 8,
+            "sku": "NUT-M10",
+            "status": "added",
+            "detail": "item create + stock in"
+          },
+          {
+            "line": 9,
+            "sku": "SAF-GLV",
+            "status": "added",
+            "detail": "item create + stock in"
+          },
+          {
+            "line": 10,
+            "sku": "CON-OIL",
+            "status": "added",
+            "detail": "item create + stock in"
+          },
+          {
+            "line": 11,
+            "sku": "WEL-032",
+            "status": "added",
+            "detail": "item create + stock in"
+          },
+          {
+            "line": 12,
+            "sku": "GRD-DSC",
+            "status": "added",
+            "detail": "item create + stock in"
+          },
+          {
+            "line": 13,
+            "sku": "TAP-IND",
+            "status": "added",
+            "detail": "item create + stock in"
+          }
+        ]
+      },
+      "itemCount": {
+        "data": {
+          "data": [
+            {
+              "id": 1570,
+              "factory_id": 2168,
+              "category_id": 2161,
+              "location_id": 2161,
+              "sku": "GRD-DSC",
+              "name": "Angle Grinder Disc",
+              "unit": "pcs",
+              "current_quantity": "30.0000",
+              "reorder_threshold": "5.0000",
+              "is_active": true,
+              "category": {
+                "id": 2161,
+                "name": "Raw Materials"
+              },
+              "location": {
+                "id": 2161,
+                "name": "Main Warehouse"
+              }
+            },
+            {
+              "id": 1560,
+              "factory_id": 2168,
+              "category_id": 2161,
+              "location_id": 2161,
+              "sku": "CEM-001",
+              "name": "Cement 50kg Bag",
+              "unit": "bags",
+              "current_quantity": "120.0000",
+              "reorder_threshold": "50.0000",
+              "is_active": true,
+              "category": {
+                "id": 2161,
+                "name": "Raw Materials"
+              },
+              "location": {
+                "id": 2161,
+                "name": "Main Warehouse"
+              }
+            },
+            {
+              "id": 1568,
+              "factory_id": 2168,
+              "category_id": 2161,
+              "location_id": 2161,
+              "sku": "CON-OIL",
+              "name": "Cutting Oil 5L",
+              "unit": "litre",
+              "current_quantity": "25.0000",
+              "reorder_threshold": "5.0000",
+              "is_active": true,
+              "category": {
+                "id": 2161,
+                "name": "Raw Materials"
+              },
+              "location": {
+                "id": 2161,
+                "name": "Main Warehouse"
+              }
+            },
+            {
+              "id": 1564,
+              "factory_id": 2168,
+              "category_id": 2161,
+              "location_id": 2161,
+              "sku": "ELW-025",
+              "name": "Electrical Wire 2.5mm",
+              "unit": "meter",
+              "current_quantity": "200.0000",
+              "reorder_threshold": "50.0000",
+              "is_active": true,
+              "category": {
+                "id": 2161,
+                "name": "Raw Materials"
+              },
+              "location": {
+                "id": 2161,
+                "name": "Main Warehouse"
+              }
+            },
+            {
+              "id": 1565,
+              "factory_id": 2168,
+              "category_id": 2161,
+              "location_id": 2161,
+              "sku": "BOL-M10",
+              "name": "Hex Bolt M10",
+              "unit": "pcs",
+              "current_quantity": "500.0000",
+              "reorder_threshold": "100.0000",
+              "is_active": true,
+              "category": {
+                "id": 2161,
+                "name": "Raw Materials"
+              },
+              "location": {
+                "id": 2161,
+                "name": "Main Warehouse"
+              }
+            },
+            {
+              "id": 1566,
+              "factory_id": 2168,
+              "category_id": 2161,
+              "location_id": 2161,
+              "sku": "NUT-M10",
+              "name": "Hex Nut M10",
+              "unit": "pcs",
+              "current_quantity": "500.0000",
+              "reorder_threshold": "100.0000",
+              "is_active": true,
+              "category": {
+                "id": 2161,
+                "name": "Raw Materials"
+              },
+              "location": {
+                "id": 2161,
+                "name": "Main Warehouse"
+              }
+            },
+            {
+              "id": 1571,
+              "factory_id": 2168,
+              "category_id": 2161,
+              "location_id": 2161,
+              "sku": "TAP-IND",
+              "name": "Industrial Tape Roll",
+              "unit": "pcs",
+              "current_quantity": "50.0000",
+              "reorder_threshold": "10.0000",
+              "is_active": true,
+              "category": {
+                "id": 2161,
+                "name": "Raw Materials"
+              },
+              "location": {
+                "id": 2161,
+                "name": "Main Warehouse"
+              }
+            },
+            {
+              "id": 1562,
+              "factory_id": 2168,
+              "category_id": 2161,
+              "location_id": 2161,
+              "sku": "PVC-002",
+              "name": "PVC Pipe 2 inch",
+              "unit": "meter",
+              "current_quantity": "85.0000",
+              "reorder_threshold": "20.0000",
+              "is_active": true,
+              "category": {
+                "id": 2161,
+                "name": "Raw Materials"
+              },
+              "location": {
+                "id": 2161,
+                "name": "Main Warehouse"
+              }
+            },
+            {
+              "id": 1563,
+              "factory_id": 2168,
+              "category_id": 2161,
+              "location_id": 2161,
+              "sku": "PAI-WHT",
+              "name": "Premium Emulsion Paint",
+              "unit": "litre",
+              "current_quantity": "60.0000",
+              "reorder_threshold": "15.0000",
+              "is_active": true,
+              "category": {
+                "id": 2161,
+                "name": "Raw Materials"
+              },
+              "location": {
+                "id": 2161,
+                "name": "Main Warehouse"
+              }
+            },
+            {
+              "id": 1567,
+              "factory_id": 2168,
+              "category_id": 2161,
+              "location_id": 2161,
+              "sku": "SAF-GLV",
+              "name": "Safety Gloves Pair",
+              "unit": "pcs",
+              "current_quantity": "40.0000",
+              "reorder_threshold": "10.0000",
+              "is_active": true,
+              "category": {
+                "id": 2161,
+                "name": "Raw Materials"
+              },
+              "location": {
+                "id": 2161,
+                "name": "Main Warehouse"
+              }
+            },
+            {
+              "id": 1561,
+              "factory_id": 2168,
+              "category_id": 2161,
+              "location_id": 2161,
+              "sku": "STL-012",
+              "name": "Steel Rod 12mm",
+              "unit": "kg",
+              "current_quantity": "450.0000",
+              "reorder_threshold": "100.0000",
+              "is_active": true,
+              "category": {
+                "id": 2161,
+                "name": "Raw Materials"
+              },
+              "location": {
+                "id": 2161,
+                "name": "Main Warehouse"
+              }
+            },
+            {
+              "id": 1569,
+              "factory_id": 2168,
+              "category_id": 2161,
+              "location_id": 2161,
+              "sku": "WEL-032",
+              "name": "Welding Rod 3.2mm",
+              "unit": "kg",
+              "current_quantity": "80.0000",
+              "reorder_threshold": "20.0000",
+              "is_active": true,
+              "category": {
+                "id": 2161,
+                "name": "Raw Materials"
+              },
+              "location": {
+                "id": 2161,
+                "name": "Main Warehouse"
+              }
+            }
+          ],
+          "meta": {
+            "total": 12,
+            "page": 1,
+            "page_size": 25
+          }
+        },
+        "meta": {
+          "success": true,
+          "message": "SUCCESS",
+          "statusCode": 200
+        }
+      }
+    }
+  ],
+  "documents": [
+    {
+      "id": "A",
+      "file": "doc-a-clean-supplier-inventory.csv",
+      "factoryId": 2169,
+      "expectedRows": 12,
+      "parsingAccuracyPct": 100,
+      "uploadStatus": 201,
+      "docId": 12,
+      "parsedItems": [
+        {
+          "name": "Cement 50kg Bag",
+          "quantity": 120,
+          "sku": "CEM-001",
+          "unit": "bags",
+          "category_name": "Building Materials",
+          "location_name": null
+        },
+        {
+          "name": "Steel Rod 12mm",
+          "quantity": 450,
+          "sku": "STL-012",
+          "unit": "kg",
+          "category_name": "Steel",
+          "location_name": null
+        },
+        {
+          "name": "PVC Pipe 2 inch",
+          "quantity": 85,
+          "sku": "PVC-002",
+          "unit": "meter",
+          "category_name": "Plumbing",
+          "location_name": null
+        },
+        {
+          "name": "Premium Emulsion Paint",
+          "quantity": 60,
+          "sku": "PAI-WHT",
+          "unit": "litre",
+          "category_name": "Paint",
+          "location_name": null
+        },
+        {
+          "name": "Electrical Wire 2.5mm",
+          "quantity": 200,
+          "sku": "ELW-025",
+          "unit": "meter",
+          "category_name": "Electrical",
+          "location_name": null
+        },
+        {
+          "name": "Hex Bolt M10",
+          "quantity": 500,
+          "sku": "BOL-M10",
+          "unit": "pcs",
+          "category_name": "Fasteners",
+          "location_name": null
+        },
+        {
+          "name": "Hex Nut M10",
+          "quantity": 500,
+          "sku": "NUT-M10",
+          "unit": "pcs",
+          "category_name": "Fasteners",
+          "location_name": null
+        },
+        {
+          "name": "Safety Gloves Pair",
+          "quantity": 40,
+          "sku": "SAF-GLV",
+          "unit": "pcs",
+          "category_name": "Safety",
+          "location_name": null
+        },
+        {
+          "name": "Cutting Oil 5L",
+          "quantity": 25,
+          "sku": "CON-OIL",
+          "unit": "litre",
+          "category_name": "Industrial Consumables",
+          "location_name": null
+        },
+        {
+          "name": "Welding Rod 3.2mm",
+          "quantity": 80,
+          "sku": "WEL-032",
+          "unit": "kg",
+          "category_name": "Industrial Consumables",
+          "location_name": null
+        },
+        {
+          "name": "Angle Grinder Disc",
+          "quantity": 30,
+          "sku": "GRD-DSC",
+          "unit": "pcs",
+          "category_name": "Tools",
+          "location_name": null
+        },
+        {
+          "name": "Industrial Tape Roll",
+          "quantity": 50,
+          "sku": "TAP-IND",
+          "unit": "pcs",
+          "category_name": "Industrial Consumables",
+          "location_name": null
+        }
+      ],
+      "parsedWarnings": [],
+      "suggestions": [
+        {
+          "id": 10,
+          "type": "INITIAL_INVENTORY_IMPORT",
+          "itemCount": 12,
+          "status": "PENDING"
+        }
+      ],
+      "approveOk": true,
+      "inventoryCount": 12,
+      "inventoryItems": [
+        {
+          "sku": "GRD-DSC",
+          "name": "Angle Grinder Disc",
+          "qty": "30.0000",
+          "unit": "pcs"
+        },
+        {
+          "sku": "CEM-001",
+          "name": "Cement 50kg Bag",
+          "qty": "120.0000",
+          "unit": "bags"
+        },
+        {
+          "sku": "CON-OIL",
+          "name": "Cutting Oil 5L",
+          "qty": "25.0000",
+          "unit": "litre"
+        },
+        {
+          "sku": "ELW-025",
+          "name": "Electrical Wire 2.5mm",
+          "qty": "200.0000",
+          "unit": "meter"
+        },
+        {
+          "sku": "BOL-M10",
+          "name": "Hex Bolt M10",
+          "qty": "500.0000",
+          "unit": "pcs"
+        },
+        {
+          "sku": "NUT-M10",
+          "name": "Hex Nut M10",
+          "qty": "500.0000",
+          "unit": "pcs"
+        },
+        {
+          "sku": "TAP-IND",
+          "name": "Industrial Tape Roll",
+          "qty": "50.0000",
+          "unit": "pcs"
+        },
+        {
+          "sku": "PVC-002",
+          "name": "PVC Pipe 2 inch",
+          "qty": "85.0000",
+          "unit": "meter"
+        },
+        {
+          "sku": "PAI-WHT",
+          "name": "Premium Emulsion Paint",
+          "qty": "60.0000",
+          "unit": "litre"
+        },
+        {
+          "sku": "SAF-GLV",
+          "name": "Safety Gloves Pair",
+          "qty": "40.0000",
+          "unit": "pcs"
+        },
+        {
+          "sku": "STL-012",
+          "name": "Steel Rod 12mm",
+          "qty": "450.0000",
+          "unit": "kg"
+        },
+        {
+          "sku": "WEL-032",
+          "name": "Welding Rod 3.2mm",
+          "qty": "80.0000",
+          "unit": "kg"
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "file": "doc-b-duplicate-items.csv",
+      "factoryId": 2170,
+      "expectedRows": 5,
+      "parsingAccuracyPct": 100,
+      "uploadStatus": 201,
+      "docId": 13,
+      "parsedItems": [
+        {
+          "name": "Cement 50kg Bag",
+          "quantity": 50,
+          "sku": "CEM-001",
+          "unit": "bags",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "Steel Rod 12mm",
+          "quantity": 100,
+          "sku": "STL-012",
+          "unit": "kg",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "Cement 50kg Bag",
+          "quantity": 30,
+          "sku": "CEM-001",
+          "unit": "bags",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "PVC Pipe 2 inch",
+          "quantity": 20,
+          "sku": "PVC-002",
+          "unit": "meter",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "Steel Rod 12mm",
+          "quantity": 50,
+          "sku": "STL-012",
+          "unit": "kg",
+          "category_name": null,
+          "location_name": null
+        }
+      ],
+      "parsedWarnings": [],
+      "suggestions": [
+        {
+          "id": 11,
+          "type": "INITIAL_INVENTORY_IMPORT",
+          "itemCount": 5,
+          "status": "PENDING"
+        }
+      ],
+      "approveOk": true,
+      "inventoryCount": 2,
+      "inventoryItems": [
+        {
+          "sku": "CEM-001",
+          "name": "Cement 50kg Bag",
+          "qty": "50.0000",
+          "unit": "bags"
+        },
+        {
+          "sku": "STL-012",
+          "name": "Steel Rod 12mm",
+          "qty": "100.0000",
+          "unit": "kg"
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "file": "doc-c-missing-quantity.csv",
+      "factoryId": 2171,
+      "expectedRows": 5,
+      "parsingAccuracyPct": 100,
+      "uploadStatus": 201,
+      "docId": 14,
+      "parsedItems": [
+        {
+          "name": "Cement 50kg Bag",
+          "quantity": null,
+          "sku": "CEM-001",
+          "unit": "bags",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "Steel Rod 12mm",
+          "quantity": null,
+          "sku": "STL-012",
+          "unit": "kg",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "PVC Pipe 2 inch",
+          "quantity": null,
+          "sku": "PVC-002",
+          "unit": "meter",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "Premium Emulsion Paint",
+          "quantity": null,
+          "sku": "PAI-WHT",
+          "unit": "litre",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "Electrical Wire 2.5mm",
+          "quantity": null,
+          "sku": "ELW-025",
+          "unit": "meter",
+          "category_name": null,
+          "location_name": null
+        }
+      ],
+      "parsedWarnings": [],
+      "suggestions": [
+        {
+          "id": 12,
+          "type": "INITIAL_INVENTORY_IMPORT",
+          "itemCount": 5,
+          "status": "PENDING"
+        }
+      ],
+      "approveOk": true,
+      "inventoryCount": 5,
+      "inventoryItems": [
+        {
+          "sku": "CEM-001",
+          "name": "Cement 50kg Bag",
+          "qty": "0.0000",
+          "unit": "bags"
+        },
+        {
+          "sku": "ELW-025",
+          "name": "Electrical Wire 2.5mm",
+          "qty": "0.0000",
+          "unit": "meter"
+        },
+        {
+          "sku": "PVC-002",
+          "name": "PVC Pipe 2 inch",
+          "qty": "0.0000",
+          "unit": "meter"
+        },
+        {
+          "sku": "PAI-WHT",
+          "name": "Premium Emulsion Paint",
+          "qty": "0.0000",
+          "unit": "litre"
+        },
+        {
+          "sku": "STL-012",
+          "name": "Steel Rod 12mm",
+          "qty": "0.0000",
+          "unit": "kg"
+        }
+      ]
+    },
+    {
+      "id": "D",
+      "file": "doc-d-missing-sku.csv",
+      "factoryId": 2172,
+      "expectedRows": 5,
+      "parsingAccuracyPct": 100,
+      "uploadStatus": 201,
+      "docId": 15,
+      "parsedItems": [
+        {
+          "name": "Cement 50kg Bag",
+          "quantity": 120,
+          "sku": null,
+          "unit": "bags",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "Steel Rod 12mm",
+          "quantity": 450,
+          "sku": null,
+          "unit": "kg",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "PVC Pipe 2 inch",
+          "quantity": 85,
+          "sku": null,
+          "unit": "meter",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "Premium Emulsion Paint",
+          "quantity": 60,
+          "sku": null,
+          "unit": "litre",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "Electrical Wire 2.5mm",
+          "quantity": 200,
+          "sku": null,
+          "unit": "meter",
+          "category_name": null,
+          "location_name": null
+        }
+      ],
+      "parsedWarnings": [],
+      "suggestions": [
+        {
+          "id": 13,
+          "type": "INITIAL_INVENTORY_IMPORT",
+          "itemCount": 5,
+          "status": "PENDING"
+        }
+      ],
+      "approveOk": true,
+      "inventoryCount": 5,
+      "inventoryItems": [
+        {
+          "sku": "CEMENT507146",
+          "name": "Cement 50kg Bag",
+          "qty": "120.0000",
+          "unit": "bags"
+        },
+        {
+          "sku": "ELECTRIC7220",
+          "name": "Electrical Wire 2.5mm",
+          "qty": "200.0000",
+          "unit": "meter"
+        },
+        {
+          "sku": "PVCPIPE27181",
+          "name": "PVC Pipe 2 inch",
+          "qty": "85.0000",
+          "unit": "meter"
+        },
+        {
+          "sku": "PREMIUME7200",
+          "name": "Premium Emulsion Paint",
+          "qty": "60.0000",
+          "unit": "litre"
+        },
+        {
+          "sku": "STEELROD7164",
+          "name": "Steel Rod 12mm",
+          "qty": "450.0000",
+          "unit": "kg"
+        }
+      ]
+    },
+    {
+      "id": "E",
+      "file": "doc-e-large-inventory.csv",
+      "factoryId": 2173,
+      "expectedRows": 25,
+      "parsingAccuracyPct": 100,
+      "uploadStatus": 201,
+      "docId": 16,
+      "parsedItems": [
+        {
+          "name": "Cement 50kg Bag",
+          "quantity": 120,
+          "sku": "CEM-001",
+          "unit": "bags",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "Steel Rod 12mm",
+          "quantity": 450,
+          "sku": "STL-012",
+          "unit": "kg",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "PVC Pipe 2 inch",
+          "quantity": 85,
+          "sku": "PVC-002",
+          "unit": "meter",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "Premium Emulsion Paint",
+          "quantity": 60,
+          "sku": "PAI-WHT",
+          "unit": "litre",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "Electrical Wire 2.5mm",
+          "quantity": 200,
+          "sku": "ELW-025",
+          "unit": "meter",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "Hex Bolt M10",
+          "quantity": 500,
+          "sku": "BOL-M10",
+          "unit": "pcs",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "Hex Nut M10",
+          "quantity": 500,
+          "sku": "NUT-M10",
+          "unit": "pcs",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "Safety Gloves Pair",
+          "quantity": 40,
+          "sku": "SAF-GLV",
+          "unit": "pcs",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "Cutting Oil 5L",
+          "quantity": 25,
+          "sku": "CON-OIL",
+          "unit": "litre",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "Welding Rod 3.2mm",
+          "quantity": 80,
+          "sku": "WEL-032",
+          "unit": "kg",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "Angle Grinder Disc",
+          "quantity": 30,
+          "sku": "GRD-DSC",
+          "unit": "pcs",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "Industrial Tape Roll",
+          "quantity": 50,
+          "sku": "TAP-IND",
+          "unit": "pcs",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "Hydraulic Oil 20L",
+          "quantity": 15,
+          "sku": "HYD-020",
+          "unit": "litre",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "Grease Cartridge",
+          "quantity": 35,
+          "sku": "GRS-CAR",
+          "unit": "pcs",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "Safety Helmet",
+          "quantity": 20,
+          "sku": "SAF-HEL",
+          "unit": "pcs",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "Face Shield",
+          "quantity": 15,
+          "sku": "SAF-FSH",
+          "unit": "pcs",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "Drill Bit 10mm",
+          "quantity": 25,
+          "sku": "DRL-010",
+          "unit": "pcs",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "Hammer Claw 500g",
+          "quantity": 10,
+          "sku": "HAM-500",
+          "unit": "pcs",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "Measuring Tape 5m",
+          "quantity": 18,
+          "sku": "MEA-005",
+          "unit": "pcs",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "Spirit Level 600mm",
+          "quantity": 8,
+          "sku": "SPI-600",
+          "unit": "pcs",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "Chain Block 1T",
+          "quantity": 4,
+          "sku": "CHN-1T",
+          "unit": "pcs",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "Rope PP 12mm",
+          "quantity": 100,
+          "sku": "ROP-012",
+          "unit": "meter",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "Sandpaper 120 grit",
+          "quantity": 200,
+          "sku": "SND-120",
+          "unit": "pcs",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "Masking Tape 2 inch",
+          "quantity": 60,
+          "sku": "MSK-002",
+          "unit": "pcs",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "Cable Tie 200mm",
+          "quantity": 300,
+          "sku": "CAB-200",
+          "unit": "pcs",
+          "category_name": null,
+          "location_name": null
+        }
+      ],
+      "parsedWarnings": [],
+      "suggestions": [
+        {
+          "id": 14,
+          "type": "INITIAL_INVENTORY_IMPORT",
+          "itemCount": 25,
+          "status": "PENDING"
+        }
+      ],
+      "approveOk": true,
+      "inventoryCount": 25,
+      "inventoryItems": [
+        {
+          "sku": "GRD-DSC",
+          "name": "Angle Grinder Disc",
+          "qty": "30.0000",
+          "unit": "pcs"
+        },
+        {
+          "sku": "CAB-200",
+          "name": "Cable Tie 200mm",
+          "qty": "300.0000",
+          "unit": "pcs"
+        },
+        {
+          "sku": "CEM-001",
+          "name": "Cement 50kg Bag",
+          "qty": "120.0000",
+          "unit": "bags"
+        },
+        {
+          "sku": "CHN-1T",
+          "name": "Chain Block 1T",
+          "qty": "4.0000",
+          "unit": "pcs"
+        },
+        {
+          "sku": "CON-OIL",
+          "name": "Cutting Oil 5L",
+          "qty": "25.0000",
+          "unit": "litre"
+        },
+        {
+          "sku": "DRL-010",
+          "name": "Drill Bit 10mm",
+          "qty": "25.0000",
+          "unit": "pcs"
+        },
+        {
+          "sku": "ELW-025",
+          "name": "Electrical Wire 2.5mm",
+          "qty": "200.0000",
+          "unit": "meter"
+        },
+        {
+          "sku": "SAF-FSH",
+          "name": "Face Shield",
+          "qty": "15.0000",
+          "unit": "pcs"
+        },
+        {
+          "sku": "GRS-CAR",
+          "name": "Grease Cartridge",
+          "qty": "35.0000",
+          "unit": "pcs"
+        },
+        {
+          "sku": "HAM-500",
+          "name": "Hammer Claw 500g",
+          "qty": "10.0000",
+          "unit": "pcs"
+        },
+        {
+          "sku": "BOL-M10",
+          "name": "Hex Bolt M10",
+          "qty": "500.0000",
+          "unit": "pcs"
+        },
+        {
+          "sku": "NUT-M10",
+          "name": "Hex Nut M10",
+          "qty": "500.0000",
+          "unit": "pcs"
+        },
+        {
+          "sku": "HYD-020",
+          "name": "Hydraulic Oil 20L",
+          "qty": "15.0000",
+          "unit": "litre"
+        },
+        {
+          "sku": "TAP-IND",
+          "name": "Industrial Tape Roll",
+          "qty": "50.0000",
+          "unit": "pcs"
+        },
+        {
+          "sku": "MSK-002",
+          "name": "Masking Tape 2 inch",
+          "qty": "60.0000",
+          "unit": "pcs"
+        },
+        {
+          "sku": "MEA-005",
+          "name": "Measuring Tape 5m",
+          "qty": "18.0000",
+          "unit": "pcs"
+        },
+        {
+          "sku": "PVC-002",
+          "name": "PVC Pipe 2 inch",
+          "qty": "85.0000",
+          "unit": "meter"
+        },
+        {
+          "sku": "PAI-WHT",
+          "name": "Premium Emulsion Paint",
+          "qty": "60.0000",
+          "unit": "litre"
+        },
+        {
+          "sku": "ROP-012",
+          "name": "Rope PP 12mm",
+          "qty": "100.0000",
+          "unit": "meter"
+        },
+        {
+          "sku": "SAF-GLV",
+          "name": "Safety Gloves Pair",
+          "qty": "40.0000",
+          "unit": "pcs"
+        },
+        {
+          "sku": "SAF-HEL",
+          "name": "Safety Helmet",
+          "qty": "20.0000",
+          "unit": "pcs"
+        },
+        {
+          "sku": "SND-120",
+          "name": "Sandpaper 120 grit",
+          "qty": "200.0000",
+          "unit": "pcs"
+        },
+        {
+          "sku": "SPI-600",
+          "name": "Spirit Level 600mm",
+          "qty": "8.0000",
+          "unit": "pcs"
+        },
+        {
+          "sku": "STL-012",
+          "name": "Steel Rod 12mm",
+          "qty": "450.0000",
+          "unit": "kg"
+        },
+        {
+          "sku": "WEL-032",
+          "name": "Welding Rod 3.2mm",
+          "qty": "80.0000",
+          "unit": "kg"
+        }
+      ]
+    },
+    {
+      "id": "F",
+      "file": "doc-f-mixed-units.csv",
+      "factoryId": 2174,
+      "expectedRows": 7,
+      "parsingAccuracyPct": 100,
+      "uploadStatus": 201,
+      "docId": 17,
+      "parsedItems": [
+        {
+          "name": "Cement 50kg Bag",
+          "quantity": 120,
+          "sku": "CEM-001",
+          "unit": "bags",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "Steel Rod 12mm",
+          "quantity": 450,
+          "sku": "STL-012",
+          "unit": "kg",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "PVC Pipe 2 inch",
+          "quantity": 85,
+          "sku": "PVC-002",
+          "unit": "meter",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "Premium Emulsion Paint",
+          "quantity": 60,
+          "sku": "PAI-WHT",
+          "unit": "litre",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "Electrical Wire 2.5mm",
+          "quantity": 200,
+          "sku": "ELW-025",
+          "unit": "meter",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "Hex Bolt M10",
+          "quantity": 500,
+          "sku": "BOL-M10",
+          "unit": "pcs",
+          "category_name": null,
+          "location_name": null
+        },
+        {
+          "name": "Cutting Oil 5L",
+          "quantity": 25,
+          "sku": "CON-OIL",
+          "unit": "litre",
+          "category_name": null,
+          "location_name": null
+        }
+      ],
+      "parsedWarnings": [],
+      "suggestions": [
+        {
+          "id": 15,
+          "type": "INITIAL_INVENTORY_IMPORT",
+          "itemCount": 7,
+          "status": "PENDING"
+        }
+      ],
+      "approveOk": true,
+      "inventoryCount": 7,
+      "inventoryItems": [
+        {
+          "sku": "CEM-001",
+          "name": "Cement 50kg Bag",
+          "qty": "120.0000",
+          "unit": "bags"
+        },
+        {
+          "sku": "CON-OIL",
+          "name": "Cutting Oil 5L",
+          "qty": "25.0000",
+          "unit": "litre"
+        },
+        {
+          "sku": "ELW-025",
+          "name": "Electrical Wire 2.5mm",
+          "qty": "200.0000",
+          "unit": "meter"
+        },
+        {
+          "sku": "BOL-M10",
+          "name": "Hex Bolt M10",
+          "qty": "500.0000",
+          "unit": "pcs"
+        },
+        {
+          "sku": "PVC-002",
+          "name": "PVC Pipe 2 inch",
+          "qty": "85.0000",
+          "unit": "meter"
+        },
+        {
+          "sku": "PAI-WHT",
+          "name": "Premium Emulsion Paint",
+          "qty": "60.0000",
+          "unit": "litre"
+        },
+        {
+          "sku": "STL-012",
+          "name": "Steel Rod 12mm",
+          "qty": "450.0000",
+          "unit": "kg"
+        }
+      ]
+    }
+  ],
+  "failures": [
+    {
+      "name": "empty",
+      "uploadStatus": 400,
+      "mlParseStatus": 422
+    },
+    {
+      "name": "corrupt",
+      "uploadStatus": 201,
+      "mlParseStatus": 422
+    },
+    {
+      "name": "unsupported_pdf",
+      "uploadStatus": 201
+    }
+  ],
+  "ml": "UP"
+}

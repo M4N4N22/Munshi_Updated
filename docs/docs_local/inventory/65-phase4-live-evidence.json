@@ -1,0 +1,2173 @@
+{
+  "started_at": "2026-06-07T12:32:41.606Z",
+  "scenarios": [
+    {
+      "name": "G1_delivery_happy_path",
+      "steps": [
+        {
+          "type": "ml",
+          "message": "Ram ko 20 cement deliver kar do",
+          "at": "2026-06-07T12:32:42.874Z",
+          "ml": {
+            "item_name_or_sku": "cement",
+            "quantity": 20,
+            "assignee_hint": "Ram",
+            "task_kind": "delivery"
+          }
+        },
+        {
+          "type": "resolve",
+          "extraction": {
+            "item_name_or_sku": "cement",
+            "quantity": 20,
+            "assignee_hint": "Ram",
+            "task_kind": "delivery"
+          },
+          "at": "2026-06-07T12:32:42.887Z",
+          "resolve": {
+            "status": 201,
+            "body": {
+              "data": {
+                "task_kind": "delivery",
+                "quantity": 20,
+                "inventory": {
+                  "status": "ambiguous",
+                  "candidates": [
+                    {
+                      "item_id": 18,
+                      "sku": "CEMENT_50KG",
+                      "name": "Cement 50kg",
+                      "match_type": "partial"
+                    },
+                    {
+                      "item_id": 19,
+                      "sku": "CEMENT_PREM",
+                      "name": "Cement Premium",
+                      "match_type": "partial"
+                    },
+                    {
+                      "item_id": 20,
+                      "sku": "WHITE_CEM",
+                      "name": "White Cement",
+                      "match_type": "partial"
+                    }
+                  ]
+                },
+                "worker": {
+                  "status": "ambiguous",
+                  "candidates": [
+                    {
+                      "user_id": 39,
+                      "name": "Ram Kumar",
+                      "match_type": "case_insensitive"
+                    },
+                    {
+                      "user_id": 40,
+                      "name": "Ram Singh",
+                      "match_type": "case_insensitive"
+                    }
+                  ]
+                },
+                "disambiguation": [
+                  {
+                    "type": "inventory_disambiguation",
+                    "candidates": [
+                      "Cement 50kg",
+                      "Cement Premium",
+                      "White Cement"
+                    ]
+                  },
+                  {
+                    "type": "worker_disambiguation",
+                    "candidates": [
+                      "Ram Kumar",
+                      "Ram Singh"
+                    ]
+                  }
+                ]
+              },
+              "meta": {
+                "success": true,
+                "message": "SUCCESS",
+                "statusCode": 201
+              }
+            }
+          }
+        },
+        {
+          "type": "webhook",
+          "message": "Ram ko 20 cement deliver kar do",
+          "at": "2026-06-07T12:32:43.075Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": {
+            "id": 134,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "ACTIVE",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 20,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 20 cement deliver kar do",
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            },
+            "created_at": "2026-06-07T12:32:43.400Z",
+            "updated_at": "2026-06-07T12:32:43.400Z"
+          },
+          "latest_task": null
+        },
+        {
+          "type": "webhook",
+          "message": "CONFIRM",
+          "at": "2026-06-07T12:32:44.808Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": {
+            "id": 134,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "ACTIVE",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 20,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 20 cement deliver kar do",
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            },
+            "created_at": "2026-06-07T12:32:43.400Z",
+            "updated_at": "2026-06-07T12:32:43.400Z"
+          },
+          "latest_task": null
+        },
+        {
+          "type": "db",
+          "sql": "SELECT t.id, t.description FROM tasks t WHERE t.factory_id=$1 ORDER BY t.id DESC LIMIT 1",
+          "params": [
+            5
+          ],
+          "at": "2026-06-07T12:32:46.368Z",
+          "query_result": []
+        }
+      ]
+    },
+    {
+      "name": "G2_issue_happy_path",
+      "steps": [
+        {
+          "type": "webhook",
+          "message": "Shyam ko 5 PVC pipes issue karo",
+          "at": "2026-06-07T12:32:47.568Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": {
+            "id": 135,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "ACTIVE",
+            "current_step": "WAITING_CONFIRMATION",
+            "session_data": {
+              "quantity": 5,
+              "task_kind": "issue",
+              "raw_message": "Shyam ko 5 PVC pipes issue karo",
+              "worker_name": "Shyam",
+              "inventory_sku": "PVC_PIPE",
+              "inventory_name": "PVC Pipe",
+              "worker_user_id": 41,
+              "inventory_item_id": 21
+            },
+            "created_at": "2026-06-07T12:32:47.855Z",
+            "updated_at": "2026-06-07T12:32:47.855Z"
+          },
+          "latest_task": null
+        },
+        {
+          "type": "webhook",
+          "message": "CONFIRM",
+          "at": "2026-06-07T12:32:49.237Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": null,
+          "latest_session": {
+            "id": 135,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "COMPLETED",
+            "current_step": "WAITING_CONFIRMATION",
+            "session_data": {
+              "quantity": 5,
+              "task_kind": "issue",
+              "raw_message": "Shyam ko 5 PVC pipes issue karo",
+              "worker_name": "Shyam",
+              "inventory_sku": "PVC_PIPE",
+              "inventory_name": "PVC Pipe",
+              "worker_user_id": 41,
+              "inventory_item_id": 21
+            }
+          },
+          "latest_task": {
+            "id": 122,
+            "description": "[ISSUE] PVC Pipe pcs (PVC_PIPE) x5.0000",
+            "assigned_to": 41,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:49.759Z"
+          }
+        }
+      ]
+    },
+    {
+      "name": "G3_inventory_count",
+      "steps": [
+        {
+          "type": "webhook",
+          "message": "Inventory count karwa do",
+          "at": "2026-06-07T12:32:52.500Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": {
+            "id": 136,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "ACTIVE",
+            "current_step": "WAITING_CONFIRMATION",
+            "session_data": {
+              "quantity": null,
+              "task_kind": "inventory_count",
+              "raw_message": "Inventory count karwa do",
+              "worker_name": "Priya",
+              "worker_user_id": 37
+            },
+            "created_at": "2026-06-07T12:32:52.651Z",
+            "updated_at": "2026-06-07T12:32:52.651Z"
+          },
+          "latest_task": {
+            "id": 122,
+            "description": "[ISSUE] PVC Pipe pcs (PVC_PIPE) x5.0000",
+            "assigned_to": 41,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:49.759Z"
+          }
+        },
+        {
+          "type": "webhook",
+          "message": "CONFIRM",
+          "at": "2026-06-07T12:32:54.071Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": null,
+          "latest_session": {
+            "id": 136,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "COMPLETED",
+            "current_step": "WAITING_CONFIRMATION",
+            "session_data": {
+              "quantity": null,
+              "task_kind": "inventory_count",
+              "raw_message": "Inventory count karwa do",
+              "worker_name": "Priya",
+              "worker_user_id": 37
+            }
+          },
+          "latest_task": {
+            "id": 123,
+            "description": "[INVENTORY_COUNT] Inventory count karwa do",
+            "assigned_to": 37,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:54.552Z"
+          }
+        }
+      ]
+    },
+    {
+      "name": "G4_inventory_disambiguation",
+      "steps": [
+        {
+          "type": "webhook",
+          "message": "Ram ko 10 cement deliver kar do",
+          "at": "2026-06-07T12:32:57.163Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": {
+            "id": 137,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "ACTIVE",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 10,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 10 cement deliver kar do",
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            },
+            "created_at": "2026-06-07T12:32:57.491Z",
+            "updated_at": "2026-06-07T12:32:57.491Z"
+          },
+          "latest_task": {
+            "id": 123,
+            "description": "[INVENTORY_COUNT] Inventory count karwa do",
+            "assigned_to": 37,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:54.552Z"
+          }
+        },
+        {
+          "type": "webhook",
+          "message": "1",
+          "at": "2026-06-07T12:32:58.941Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": null,
+          "latest_session": {
+            "id": 137,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "CANCELLED",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 10,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 10 cement deliver kar do",
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            }
+          },
+          "latest_task": {
+            "id": 123,
+            "description": "[INVENTORY_COUNT] Inventory count karwa do",
+            "assigned_to": 37,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:54.552Z"
+          }
+        },
+        {
+          "type": "webhook",
+          "message": "CONFIRM",
+          "at": "2026-06-07T12:33:00.620Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": null,
+          "latest_session": {
+            "id": 137,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "CANCELLED",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 10,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 10 cement deliver kar do",
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            }
+          },
+          "latest_task": {
+            "id": 123,
+            "description": "[INVENTORY_COUNT] Inventory count karwa do",
+            "assigned_to": 37,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:54.552Z"
+          }
+        }
+      ]
+    },
+    {
+      "name": "G5_worker_disambiguation",
+      "steps": [
+        {
+          "type": "webhook",
+          "message": "Ram ko 10 cement deliver kar do",
+          "at": "2026-06-07T12:33:08.904Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": {
+            "id": 138,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "ACTIVE",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 10,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 10 cement deliver kar do",
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            },
+            "created_at": "2026-06-07T12:33:09.229Z",
+            "updated_at": "2026-06-07T12:33:09.229Z"
+          },
+          "latest_task": {
+            "id": 123,
+            "description": "[INVENTORY_COUNT] Inventory count karwa do",
+            "assigned_to": 37,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:54.552Z"
+          }
+        },
+        {
+          "type": "webhook",
+          "message": "1",
+          "at": "2026-06-07T12:33:10.751Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": null,
+          "latest_session": {
+            "id": 138,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "CANCELLED",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 10,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 10 cement deliver kar do",
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            }
+          },
+          "latest_task": {
+            "id": 123,
+            "description": "[INVENTORY_COUNT] Inventory count karwa do",
+            "assigned_to": 37,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:54.552Z"
+          }
+        },
+        {
+          "type": "webhook",
+          "message": "CONFIRM",
+          "at": "2026-06-07T12:33:12.709Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": null,
+          "latest_session": {
+            "id": 138,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "CANCELLED",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 10,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 10 cement deliver kar do",
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            }
+          },
+          "latest_task": {
+            "id": 123,
+            "description": "[INVENTORY_COUNT] Inventory count karwa do",
+            "assigned_to": 37,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:54.552Z"
+          }
+        }
+      ]
+    },
+    {
+      "name": "G7_confirm_YES",
+      "steps": [
+        {
+          "type": "webhook",
+          "message": "Ram ko 5 cement deliver kar do",
+          "at": "2026-06-07T12:33:16.677Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": {
+            "id": 139,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "ACTIVE",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 5,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 5 cement deliver kar do",
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            },
+            "created_at": "2026-06-07T12:33:17.000Z",
+            "updated_at": "2026-06-07T12:33:17.000Z"
+          },
+          "latest_task": {
+            "id": 123,
+            "description": "[INVENTORY_COUNT] Inventory count karwa do",
+            "assigned_to": 37,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:54.552Z"
+          }
+        },
+        {
+          "type": "webhook",
+          "message": "YES",
+          "at": "2026-06-07T12:33:18.540Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": {
+            "id": 139,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "ACTIVE",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 5,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 5 cement deliver kar do",
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            },
+            "created_at": "2026-06-07T12:33:17.000Z",
+            "updated_at": "2026-06-07T12:33:17.000Z"
+          },
+          "latest_task": {
+            "id": 123,
+            "description": "[INVENTORY_COUNT] Inventory count karwa do",
+            "assigned_to": 37,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:54.552Z"
+          }
+        }
+      ]
+    },
+    {
+      "name": "G7_confirm_1",
+      "steps": [
+        {
+          "type": "webhook",
+          "message": "Ram ko 5 cement deliver kar do",
+          "at": "2026-06-07T12:33:21.403Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": {
+            "id": 140,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "ACTIVE",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 5,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 5 cement deliver kar do",
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            },
+            "created_at": "2026-06-07T12:33:21.726Z",
+            "updated_at": "2026-06-07T12:33:21.726Z"
+          },
+          "latest_task": {
+            "id": 123,
+            "description": "[INVENTORY_COUNT] Inventory count karwa do",
+            "assigned_to": 37,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:54.552Z"
+          }
+        },
+        {
+          "type": "webhook",
+          "message": "1",
+          "at": "2026-06-07T12:33:23.241Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": null,
+          "latest_session": {
+            "id": 140,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "CANCELLED",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 5,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 5 cement deliver kar do",
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            }
+          },
+          "latest_task": {
+            "id": 123,
+            "description": "[INVENTORY_COUNT] Inventory count karwa do",
+            "assigned_to": 37,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:54.552Z"
+          }
+        }
+      ]
+    },
+    {
+      "name": "G7_confirm_haan",
+      "steps": [
+        {
+          "type": "webhook",
+          "message": "Ram ko 5 cement deliver kar do",
+          "at": "2026-06-07T12:33:26.261Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": {
+            "id": 141,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "ACTIVE",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 5,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 5 cement deliver kar do",
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            },
+            "created_at": "2026-06-07T12:33:26.589Z",
+            "updated_at": "2026-06-07T12:33:26.589Z"
+          },
+          "latest_task": {
+            "id": 123,
+            "description": "[INVENTORY_COUNT] Inventory count karwa do",
+            "assigned_to": 37,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:54.552Z"
+          }
+        },
+        {
+          "type": "webhook",
+          "message": "haan",
+          "at": "2026-06-07T12:33:28.168Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": {
+            "id": 141,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "ACTIVE",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 5,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 5 cement deliver kar do",
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            },
+            "created_at": "2026-06-07T12:33:26.589Z",
+            "updated_at": "2026-06-07T12:33:26.589Z"
+          },
+          "latest_task": {
+            "id": 123,
+            "description": "[INVENTORY_COUNT] Inventory count karwa do",
+            "assigned_to": 37,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:54.552Z"
+          }
+        }
+      ]
+    },
+    {
+      "name": "G7_confirm_ok",
+      "steps": [
+        {
+          "type": "webhook",
+          "message": "Ram ko 5 cement deliver kar do",
+          "at": "2026-06-07T12:33:30.968Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": {
+            "id": 142,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "ACTIVE",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 5,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 5 cement deliver kar do",
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            },
+            "created_at": "2026-06-07T12:33:31.293Z",
+            "updated_at": "2026-06-07T12:33:31.293Z"
+          },
+          "latest_task": {
+            "id": 123,
+            "description": "[INVENTORY_COUNT] Inventory count karwa do",
+            "assigned_to": 37,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:54.552Z"
+          }
+        },
+        {
+          "type": "webhook",
+          "message": "ok",
+          "at": "2026-06-07T12:33:32.830Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": {
+            "id": 142,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "ACTIVE",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 5,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 5 cement deliver kar do",
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            },
+            "created_at": "2026-06-07T12:33:31.293Z",
+            "updated_at": "2026-06-07T12:33:31.293Z"
+          },
+          "latest_task": {
+            "id": 123,
+            "description": "[INVENTORY_COUNT] Inventory count karwa do",
+            "assigned_to": 37,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:54.552Z"
+          }
+        }
+      ]
+    },
+    {
+      "name": "G8_cancel_CANCEL",
+      "steps": [
+        {
+          "type": "webhook",
+          "message": "Ram ko 5 cement deliver kar do",
+          "at": "2026-06-07T12:33:35.793Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": {
+            "id": 143,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "ACTIVE",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 5,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 5 cement deliver kar do",
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            },
+            "created_at": "2026-06-07T12:33:36.125Z",
+            "updated_at": "2026-06-07T12:33:36.125Z"
+          },
+          "latest_task": {
+            "id": 123,
+            "description": "[INVENTORY_COUNT] Inventory count karwa do",
+            "assigned_to": 37,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:54.552Z"
+          }
+        },
+        {
+          "type": "webhook",
+          "message": "CANCEL",
+          "at": "2026-06-07T12:33:37.638Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": null,
+          "latest_session": {
+            "id": 143,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "CANCELLED",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 5,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 5 cement deliver kar do",
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            }
+          },
+          "latest_task": {
+            "id": 123,
+            "description": "[INVENTORY_COUNT] Inventory count karwa do",
+            "assigned_to": 37,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:54.552Z"
+          }
+        }
+      ]
+    },
+    {
+      "name": "G8_cancel_NO",
+      "steps": [
+        {
+          "type": "webhook",
+          "message": "Ram ko 5 cement deliver kar do",
+          "at": "2026-06-07T12:33:40.496Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": {
+            "id": 144,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "ACTIVE",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 5,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 5 cement deliver kar do",
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            },
+            "created_at": "2026-06-07T12:33:40.822Z",
+            "updated_at": "2026-06-07T12:33:40.822Z"
+          },
+          "latest_task": {
+            "id": 123,
+            "description": "[INVENTORY_COUNT] Inventory count karwa do",
+            "assigned_to": 37,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:54.552Z"
+          }
+        },
+        {
+          "type": "webhook",
+          "message": "NO",
+          "at": "2026-06-07T12:33:42.365Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": null,
+          "latest_session": {
+            "id": 144,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "CANCELLED",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 5,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 5 cement deliver kar do",
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            }
+          },
+          "latest_task": {
+            "id": 123,
+            "description": "[INVENTORY_COUNT] Inventory count karwa do",
+            "assigned_to": 37,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:54.552Z"
+          }
+        }
+      ]
+    },
+    {
+      "name": "G8_cancel_2",
+      "steps": [
+        {
+          "type": "webhook",
+          "message": "Ram ko 5 cement deliver kar do",
+          "at": "2026-06-07T12:33:45.369Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": {
+            "id": 145,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "ACTIVE",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 5,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 5 cement deliver kar do",
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            },
+            "created_at": "2026-06-07T12:33:45.691Z",
+            "updated_at": "2026-06-07T12:33:45.691Z"
+          },
+          "latest_task": {
+            "id": 123,
+            "description": "[INVENTORY_COUNT] Inventory count karwa do",
+            "assigned_to": 37,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:54.552Z"
+          }
+        },
+        {
+          "type": "webhook",
+          "message": "2",
+          "at": "2026-06-07T12:33:47.264Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": null,
+          "latest_session": {
+            "id": 145,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "CANCELLED",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 5,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 5 cement deliver kar do",
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            }
+          },
+          "latest_task": {
+            "id": 123,
+            "description": "[INVENTORY_COUNT] Inventory count karwa do",
+            "assigned_to": 37,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:54.552Z"
+          }
+        }
+      ]
+    },
+    {
+      "name": "G8_cancel_nahi",
+      "steps": [
+        {
+          "type": "webhook",
+          "message": "Ram ko 5 cement deliver kar do",
+          "at": "2026-06-07T12:33:50.128Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": {
+            "id": 146,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "ACTIVE",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 5,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 5 cement deliver kar do",
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            },
+            "created_at": "2026-06-07T12:33:50.456Z",
+            "updated_at": "2026-06-07T12:33:50.456Z"
+          },
+          "latest_task": {
+            "id": 123,
+            "description": "[INVENTORY_COUNT] Inventory count karwa do",
+            "assigned_to": 37,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:54.552Z"
+          }
+        },
+        {
+          "type": "webhook",
+          "message": "nahi",
+          "at": "2026-06-07T12:33:52.024Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": null,
+          "latest_session": {
+            "id": 146,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "CANCELLED",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 5,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 5 cement deliver kar do",
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            }
+          },
+          "latest_task": {
+            "id": 123,
+            "description": "[INVENTORY_COUNT] Inventory count karwa do",
+            "assigned_to": 37,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:54.552Z"
+          }
+        }
+      ]
+    },
+    {
+      "name": "G9_invalid_selection",
+      "steps": [
+        {
+          "type": "webhook",
+          "message": "Ram ko 10 cement deliver kar do",
+          "at": "2026-06-07T12:33:55.035Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": {
+            "id": 147,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "ACTIVE",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 10,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 10 cement deliver kar do",
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            },
+            "created_at": "2026-06-07T12:33:55.356Z",
+            "updated_at": "2026-06-07T12:33:55.356Z"
+          },
+          "latest_task": {
+            "id": 123,
+            "description": "[INVENTORY_COUNT] Inventory count karwa do",
+            "assigned_to": 37,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:54.552Z"
+          }
+        },
+        {
+          "type": "webhook",
+          "message": "hello",
+          "at": "2026-06-07T12:33:56.827Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": {
+            "id": 147,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "ACTIVE",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 10,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 10 cement deliver kar do",
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            },
+            "created_at": "2026-06-07T12:33:55.356Z",
+            "updated_at": "2026-06-07T12:33:55.356Z"
+          },
+          "latest_task": {
+            "id": 123,
+            "description": "[INVENTORY_COUNT] Inventory count karwa do",
+            "assigned_to": 37,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:54.552Z"
+          }
+        },
+        {
+          "type": "webhook",
+          "message": "1",
+          "at": "2026-06-07T12:33:59.247Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": null,
+          "latest_session": {
+            "id": 147,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "CANCELLED",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 10,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 10 cement deliver kar do",
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            }
+          },
+          "latest_task": {
+            "id": 123,
+            "description": "[INVENTORY_COUNT] Inventory count karwa do",
+            "assigned_to": 37,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:54.552Z"
+          }
+        }
+      ]
+    },
+    {
+      "name": "G9_invalid_confirm",
+      "steps": [
+        {
+          "type": "webhook",
+          "message": "Ram ko 5 cement deliver kar do",
+          "at": "2026-06-07T12:34:02.409Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": {
+            "id": 148,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "ACTIVE",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 5,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 5 cement deliver kar do",
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            },
+            "created_at": "2026-06-07T12:34:02.749Z",
+            "updated_at": "2026-06-07T12:34:02.749Z"
+          },
+          "latest_task": {
+            "id": 123,
+            "description": "[INVENTORY_COUNT] Inventory count karwa do",
+            "assigned_to": 37,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:54.552Z"
+          }
+        },
+        {
+          "type": "webhook",
+          "message": "later",
+          "at": "2026-06-07T12:34:04.295Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": {
+            "id": 148,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "ACTIVE",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 5,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 5 cement deliver kar do",
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            },
+            "created_at": "2026-06-07T12:34:02.749Z",
+            "updated_at": "2026-06-07T12:34:02.749Z"
+          },
+          "latest_task": {
+            "id": 123,
+            "description": "[INVENTORY_COUNT] Inventory count karwa do",
+            "assigned_to": 37,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:54.552Z"
+          }
+        },
+        {
+          "type": "webhook",
+          "message": "CONFIRM",
+          "at": "2026-06-07T12:34:05.978Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": {
+            "id": 148,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "ACTIVE",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 5,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 5 cement deliver kar do",
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            },
+            "created_at": "2026-06-07T12:34:02.749Z",
+            "updated_at": "2026-06-07T12:34:02.749Z"
+          },
+          "latest_task": {
+            "id": 123,
+            "description": "[INVENTORY_COUNT] Inventory count karwa do",
+            "assigned_to": 37,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:54.552Z"
+          }
+        }
+      ]
+    },
+    {
+      "name": "G10_unknown_inventory",
+      "steps": [
+        {
+          "type": "ml",
+          "message": "Ram ko 10 moon rocks deliver kar do",
+          "at": "2026-06-07T12:34:08.887Z",
+          "ml": {
+            "item_name_or_sku": "moon rock",
+            "quantity": 10,
+            "assignee_hint": "Ram",
+            "task_kind": "delivery"
+          }
+        },
+        {
+          "type": "webhook",
+          "message": "Ram ko 10 moon rocks deliver kar do",
+          "at": "2026-06-07T12:34:08.893Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": null,
+          "latest_session": {
+            "id": 148,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "CANCELLED",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 5,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 5 cement deliver kar do",
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            }
+          },
+          "latest_task": {
+            "id": 123,
+            "description": "[INVENTORY_COUNT] Inventory count karwa do",
+            "assigned_to": 37,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:54.552Z"
+          }
+        }
+      ]
+    },
+    {
+      "name": "G11_unknown_worker",
+      "steps": [
+        {
+          "type": "webhook",
+          "message": "Batman ko 10 cement deliver kar do",
+          "at": "2026-06-07T12:34:11.871Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": null,
+          "latest_session": {
+            "id": 148,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "CANCELLED",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 5,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 5 cement deliver kar do",
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            }
+          },
+          "latest_task": {
+            "id": 123,
+            "description": "[INVENTORY_COUNT] Inventory count karwa do",
+            "assigned_to": 37,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:54.552Z"
+          }
+        }
+      ]
+    },
+    {
+      "name": "G12_duplicate_confirm",
+      "steps": [
+        {
+          "type": "webhook",
+          "message": "Ram ko 3 cement deliver kar do",
+          "at": "2026-06-07T12:34:14.845Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": {
+            "id": 149,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "ACTIVE",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 3,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 3 cement deliver kar do",
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            },
+            "created_at": "2026-06-07T12:34:15.174Z",
+            "updated_at": "2026-06-07T12:34:15.174Z"
+          },
+          "latest_task": {
+            "id": 123,
+            "description": "[INVENTORY_COUNT] Inventory count karwa do",
+            "assigned_to": 37,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:54.552Z"
+          }
+        },
+        {
+          "type": "webhook",
+          "message": "CONFIRM",
+          "at": "2026-06-07T12:34:16.725Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": {
+            "id": 149,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "ACTIVE",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 3,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 3 cement deliver kar do",
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            },
+            "created_at": "2026-06-07T12:34:15.174Z",
+            "updated_at": "2026-06-07T12:34:15.174Z"
+          },
+          "latest_task": {
+            "id": 123,
+            "description": "[INVENTORY_COUNT] Inventory count karwa do",
+            "assigned_to": 37,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:54.552Z"
+          }
+        },
+        {
+          "type": "webhook",
+          "message": "CONFIRM",
+          "at": "2026-06-07T12:34:18.356Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": {
+            "id": 149,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "ACTIVE",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 3,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 3 cement deliver kar do",
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            },
+            "created_at": "2026-06-07T12:34:15.174Z",
+            "updated_at": "2026-06-07T12:34:15.174Z"
+          },
+          "latest_task": {
+            "id": 123,
+            "description": "[INVENTORY_COUNT] Inventory count karwa do",
+            "assigned_to": 37,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:54.552Z"
+          }
+        }
+      ]
+    },
+    {
+      "name": "G13_expired_session",
+      "steps": [
+        {
+          "type": "webhook",
+          "message": "Ram ko 2 cement deliver kar do",
+          "at": "2026-06-07T12:34:21.248Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": {
+            "id": 150,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "ACTIVE",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 2,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 2 cement deliver kar do",
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            },
+            "created_at": "2026-06-07T12:34:21.573Z",
+            "updated_at": "2026-06-07T12:34:21.573Z"
+          },
+          "latest_task": {
+            "id": 123,
+            "description": "[INVENTORY_COUNT] Inventory count karwa do",
+            "assigned_to": 37,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:54.552Z"
+          }
+        },
+        {
+          "type": "expire",
+          "at": "2026-06-07T12:34:23.113Z",
+          "expired_session_id": 150
+        },
+        {
+          "type": "webhook",
+          "message": "CONFIRM",
+          "at": "2026-06-07T12:34:23.202Z",
+          "webhook": {
+            "status": 400,
+            "body": "{\"data\":null,\"meta\":{\"success\":false,\"message\":\"Request failed with status code 400\",\"failures\":{\"message\":\"(#131056) (Business Account, Consumer Account) pair rate limit hit\",\"success\":false,\"error\":\"whatsapp_api_error\",\"details\":{\"message\":\"(#131056) (Business Account, Consumer Account) pair rate limit hit\",\"code\":131056,\"type\":\"OAuthException\",\"error_data\":{\"messaging_product\":\"whatsapp\",\"details\":\"Message failed to send because there were too many messages sent from this phone number to the same phone number in a short period of time.\"},\"fbtrace_id\":\"ASW9satm895LXhHAuAssxeh\"}}}}"
+          },
+          "session": {
+            "id": 150,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "ACTIVE",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 2,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 2 cement deliver kar do",
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            },
+            "created_at": "2026-06-07T12:34:21.573Z",
+            "updated_at": "2026-06-06T11:34:23.313Z"
+          },
+          "latest_task": {
+            "id": 123,
+            "description": "[INVENTORY_COUNT] Inventory count karwa do",
+            "assigned_to": 37,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:54.552Z"
+          }
+        }
+      ]
+    },
+    {
+      "name": "G15_help",
+      "steps": [
+        {
+          "type": "webhook",
+          "message": "/help",
+          "at": "2026-06-07T12:34:25.933Z",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"error\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": null,
+          "latest_session": {
+            "id": 150,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "CANCELLED",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 2,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 2 cement deliver kar do",
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            }
+          },
+          "latest_task": {
+            "id": 123,
+            "description": "[INVENTORY_COUNT] Inventory count karwa do",
+            "assigned_to": 37,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:54.552Z"
+          }
+        }
+      ]
+    },
+    {
+      "name": "G15_members",
+      "steps": [
+        {
+          "type": "webhook",
+          "message": "/members",
+          "at": "2026-06-07T12:34:30.449Z",
+          "webhook": {
+            "status": 400,
+            "body": "{\"data\":null,\"meta\":{\"success\":false,\"message\":\"Request failed with status code 400\",\"failures\":{\"message\":\"(#131056) (Business Account, Consumer Account) pair rate limit hit\",\"success\":false,\"error\":\"whatsapp_api_error\",\"details\":{\"message\":\"(#131056) (Business Account, Consumer Account) pair rate limit hit\",\"code\":131056,\"type\":\"OAuthException\",\"error_data\":{\"messaging_product\":\"whatsapp\",\"details\":\"Message failed to send because there were too many messages sent from this phone number to the same phone number in a short period of time.\"},\"fbtrace_id\":\"A-MWaPHo6x7WVrP97NFgy69\"}}}}"
+          },
+          "session": null,
+          "latest_session": {
+            "id": 150,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "CANCELLED",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 2,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 2 cement deliver kar do",
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            }
+          },
+          "latest_task": {
+            "id": 123,
+            "description": "[INVENTORY_COUNT] Inventory count karwa do",
+            "assigned_to": 37,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:54.552Z"
+          }
+        }
+      ]
+    },
+    {
+      "name": "G15_present",
+      "steps": [
+        {
+          "type": "webhook",
+          "message": "/present",
+          "at": "2026-06-07T12:34:33.151Z",
+          "webhook": {
+            "status": 400,
+            "body": "{\"data\":null,\"meta\":{\"success\":false,\"message\":\"Request failed with status code 400\",\"failures\":{\"message\":\"(#131056) (Business Account, Consumer Account) pair rate limit hit\",\"success\":false,\"error\":\"whatsapp_api_error\",\"details\":{\"message\":\"(#131056) (Business Account, Consumer Account) pair rate limit hit\",\"code\":131056,\"type\":\"OAuthException\",\"error_data\":{\"messaging_product\":\"whatsapp\",\"details\":\"Message failed to send because there were too many messages sent from this phone number to the same phone number in a short period of time.\"},\"fbtrace_id\":\"AY6TWUl6Xf5J2HJ410_C71O\"}}}}"
+          },
+          "session": null,
+          "latest_session": {
+            "id": 150,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "CANCELLED",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 2,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 2 cement deliver kar do",
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            }
+          },
+          "latest_task": {
+            "id": 123,
+            "description": "[INVENTORY_COUNT] Inventory count karwa do",
+            "assigned_to": 37,
+            "factory_id": 5,
+            "created_at": "2026-06-07T12:32:54.552Z"
+          }
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "factory_id": 5,
+    "owner_phone": "919900000001",
+    "task_count": 2,
+    "workflow_session_count": 18,
+    "inventory_lines_count": 1
+  },
+  "finished_at": "2026-06-07T12:34:34.917Z"
+}

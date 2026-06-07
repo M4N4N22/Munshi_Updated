@@ -7,6 +7,7 @@ from .document_types import (
     WORKFLOW_TYPES,
     INTENT_TYPES,
     DEPARTMENT_SLUGS,
+    TASK_KINDS,
 )
 from .models import (
     ClassifyResponse,
@@ -14,6 +15,7 @@ from .models import (
     InventoryImportExtraction,
     StockRegisterExtraction,
     ParseResponse,
+    TaskInventoryExtraction,
 )
 
 __all__ = [
@@ -23,9 +25,11 @@ __all__ = [
     "WORKFLOW_TYPES",
     "INTENT_TYPES",
     "DEPARTMENT_SLUGS",
+    "TASK_KINDS",
     "ClassifyResponse",
     "ExtractionItem",
     "InventoryImportExtraction",
     "StockRegisterExtraction",
     "ParseResponse",
+    "TaskInventoryExtraction",
 ]

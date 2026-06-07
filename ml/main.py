@@ -178,9 +178,10 @@ from bot_engine import (
     CommandParser,
     WaMessageConverter,
 )
-from contracts.python.models import ClassifyResponse, ParseResponse
+from contracts.python.models import ClassifyResponse, ParseResponse, TaskInventoryExtraction
 from parsers.base import ParserInput
 from parsers.router import ParserRouter
+from extractors.task_inventory_extractor import TaskInventoryExtractor
 
 # ============================================================
 # GLOBALS
@@ -194,6 +195,8 @@ wa_converter = None
 
 parser_router = None
 
+task_inventory_extractor = None
+
 # ============================================================
 # LIFESPAN
 # ============================================================
@@ -206,6 +209,7 @@ async def lifespan(app: FastAPI):
     global command_parser
     global wa_converter
     global parser_router
+    global task_inventory_extractor
 
     print("Loading Hybrid Intent Classifier...")
 
@@ -216,6 +220,8 @@ async def lifespan(app: FastAPI):
     wa_converter = WaMessageConverter()
 
     parser_router = ParserRouter()
+
+    task_inventory_extractor = TaskInventoryExtractor()
 
     print("API Ready")
 
@@ -326,6 +332,20 @@ async def convert_wa_message(
 ):
     plain = wa_converter.convert(message)
     return {"message": plain}
+
+
+@app.post(
+    "/extract/task-inventory",
+    response_model=TaskInventoryExtraction,
+)
+async def extract_task_inventory_message(
+    message: str = Query(
+        ...,
+        description="Natural-language inventory task message (Hindi/Hinglish/English)",
+    ),
+):
+    result = task_inventory_extractor.extract(message)
+    return result.model_dump()
 
 
 @app.post("/parse", response_model=ParseResponse)

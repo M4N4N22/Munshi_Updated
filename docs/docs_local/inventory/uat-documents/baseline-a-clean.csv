@@ -1,0 +1,13 @@
+sku,name,category,location,unit,quantity,reorder_threshold
+CEM-001,Cement 50kg Bag,Raw Materials,Main Warehouse,bags,120,50
+STL-012,Steel Rod 12mm,Raw Materials,Main Warehouse,kg,450,100
+PVC-002,PVC Pipe 2 inch,Raw Materials,Main Warehouse,meter,85,20
+PAI-WHT,Premium Emulsion Paint,Raw Materials,Main Warehouse,litre,60,15
+ELW-025,Electrical Wire 2.5mm,Raw Materials,Main Warehouse,meter,200,50
+BOL-M10,Hex Bolt M10,Raw Materials,Main Warehouse,pcs,500,100
+NUT-M10,Hex Nut M10,Raw Materials,Main Warehouse,pcs,500,100
+SAF-GLV,Safety Gloves Pair,Raw Materials,Main Warehouse,pcs,40,10
+CON-OIL,Cutting Oil 5L,Raw Materials,Main Warehouse,litre,25,5
+WEL-032,Welding Rod 3.2mm,Raw Materials,Main Warehouse,kg,80,20
+GRD-DSC,Angle Grinder Disc,Raw Materials,Main Warehouse,pcs,30,5
+TAP-IND,Industrial Tape Roll,Raw Materials,Main Warehouse,pcs,50,10

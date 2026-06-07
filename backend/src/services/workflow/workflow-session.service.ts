@@ -67,13 +67,12 @@ export class WorkflowSessionService {
   }
 
   isExpired(session: IWorkflowSessionRecord): boolean {
-    const createdAt = session.created_at
-      ? new Date(session.created_at).getTime()
-      : 0;
-    if (!createdAt) {
+    const lastActivity = session.updated_at ?? session.created_at;
+    const activityAt = lastActivity ? new Date(lastActivity).getTime() : 0;
+    if (!activityAt) {
       return false;
     }
-    return Date.now() - createdAt > getWorkflowSessionTtlMs();
+    return Date.now() - activityAt > getWorkflowSessionTtlMs();
   }
 
   /** Expire stale ACTIVE session for phone; returns whether one was expired. */
@@ -155,6 +154,10 @@ export class WorkflowSessionService {
   }
 
   private toRecord(row: WorkflowSession): IWorkflowSessionRecord {
+    const rowAny = row as WorkflowSession & {
+      createdAt?: Date;
+      updatedAt?: Date;
+    };
     return {
       id: row.id,
       factory_id: row.factory_id,
@@ -163,8 +166,8 @@ export class WorkflowSessionService {
       current_step: row.current_step,
       session_data: (row.session_data ?? {}) as Record<string, unknown>,
       status: row.status as WorkflowStatus,
-      created_at: row.created_at,
-      updated_at: row.updated_at,
+      created_at: rowAny.created_at ?? rowAny.createdAt,
+      updated_at: rowAny.updated_at ?? rowAny.updatedAt,
     };
   }
 }

@@ -7,6 +7,7 @@ export const WORKFLOW_TYPE = {
   PURCHASE_REQUEST_CREATE: 'PURCHASE_REQUEST_CREATE',
   BUSINESS_DISCOVERY: 'BUSINESS_DISCOVERY',
   ASSIGN_CLARIFY: 'ASSIGN_CLARIFY',
+  TASK_INVENTORY_CREATION: 'TASK_INVENTORY_CREATION',
 } as const;
 
 export type WorkflowType =
@@ -32,6 +33,7 @@ export const WORKFLOW_START_COMMANDS = {
   PURCHASE_REQUEST_CREATE: '/purchase_request_create',
   BUSINESS_DISCOVERY: '/business_discovery',
   ASSIGN_CLARIFY: '/assign_clarify',
+  TASK_INVENTORY_CREATION: '/task_inventory_nl',
 } as const;
 
 /** Cancels the active workflow session for the sender. */
@@ -123,3 +125,17 @@ export const ASSIGN_CLARIFY_STEP = {
 
 export type AssignClarifyStep =
   (typeof ASSIGN_CLARIFY_STEP)[keyof typeof ASSIGN_CLARIFY_STEP];
+
+/** NL task-inventory creation workflow steps (Phase 4.3). */
+export const TASK_INVENTORY_CREATION_STEP = {
+  STARTED: 'STARTED',
+  WAITING_INVENTORY_SELECTION: 'WAITING_INVENTORY_SELECTION',
+  WAITING_WORKER_SELECTION: 'WAITING_WORKER_SELECTION',
+  WAITING_CONFIRMATION: 'WAITING_CONFIRMATION',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED',
+  EXPIRED: 'EXPIRED',
+} as const;
+
+export type TaskInventoryCreationStep =
+  (typeof TASK_INVENTORY_CREATION_STEP)[keyof typeof TASK_INVENTORY_CREATION_STEP];

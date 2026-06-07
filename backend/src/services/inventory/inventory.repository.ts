@@ -174,6 +174,24 @@ export class InventoryRepository {
     });
   }
 
+  findItemBySkuIgnoreCase(factoryId: number, sku: string) {
+    return this.itemModel.findOne({
+      where: {
+        factory_id: factoryId,
+        sku: { [Op.iLike]: sku.trim() },
+        is_active: true,
+      },
+    });
+  }
+
+  findActiveItemSummaries(factoryId: number) {
+    return this.itemModel.findAll({
+      where: { factory_id: factoryId, is_active: true },
+      attributes: ['id', 'sku', 'name'],
+      order: [['name', 'ASC']],
+    });
+  }
+
   findItemByName(factoryId: number, name: string) {
     return this.itemModel.findOne({
       where: {

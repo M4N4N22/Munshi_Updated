@@ -1,5 +1,6 @@
 import type { WaOutboundMessage } from 'src/core/messaging/outbound-message.types';
 import type { IPurchaseRequestPrefill } from '../purchase-requests/purchase-requests.interfaces';
+import type { TaskKind } from '../../../contracts/typescript/index';
 import {
   WorkflowStatus,
   WorkflowType,
@@ -97,6 +98,27 @@ export interface IBusinessDiscoverySessionData {
   entity_index?: number;
   /** After completing one manager/worker entity, awaiting yes/skip */
   awaiting_more?: boolean;
+}
+
+export interface ITaskInventoryCreationSessionData {
+  task_kind?: TaskKind | null;
+  quantity?: number | null;
+  raw_message?: string;
+  inventory_item_id?: number;
+  inventory_sku?: string;
+  inventory_name?: string;
+  worker_user_id?: number;
+  worker_name?: string;
+  inventory_candidates?: Array<{
+    item_id: number;
+    sku: string;
+    name: string;
+  }>;
+  worker_candidates?: Array<{
+    user_id: number;
+    name: string;
+  }>;
+  task_created_id?: number;
 }
 
 export interface WorkflowSessionResolveResult {

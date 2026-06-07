@@ -1,0 +1,389 @@
+{
+  "started_at": "2026-06-07T14:26:27.358Z",
+  "remediation": true,
+  "scenarios": [
+    {
+      "name": "G1_delivery_happy_path",
+      "steps": [
+        {
+          "type": "webhook",
+          "message": "Ram ko 20 cement deliver kar do",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          }
+        },
+        {
+          "type": "session_after_start",
+          "session": {
+            "id": 170,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "ACTIVE",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 20,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 20 cement deliver kar do",
+              "worker_candidates": [
+                {
+                  "name": "Ram Kumar",
+                  "user_id": 39
+                },
+                {
+                  "name": "Ram Singh",
+                  "user_id": 40
+                }
+              ],
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            },
+            "updated_at": "2026-06-07T14:26:32.198Z"
+          }
+        },
+        {
+          "type": "webhook",
+          "message": "1",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          }
+        },
+        {
+          "type": "session_after_inventory",
+          "session": {
+            "id": 170,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "ACTIVE",
+            "current_step": "WAITING_WORKER_SELECTION",
+            "session_data": {
+              "quantity": 20,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 20 cement deliver kar do",
+              "inventory_sku": "CEMENT_50KG",
+              "inventory_name": "Cement 50kg",
+              "inventory_item_id": 18,
+              "worker_candidates": [
+                {
+                  "name": "Ram Kumar",
+                  "user_id": 39
+                },
+                {
+                  "name": "Ram Singh",
+                  "user_id": 40
+                }
+              ]
+            },
+            "updated_at": "2026-06-07T14:26:33.866Z"
+          }
+        },
+        {
+          "type": "webhook",
+          "message": "1",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          }
+        },
+        {
+          "type": "session_after_worker",
+          "session": {
+            "id": 170,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "ACTIVE",
+            "current_step": "WAITING_CONFIRMATION",
+            "session_data": {
+              "quantity": 20,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 20 cement deliver kar do",
+              "worker_name": "Ram Kumar",
+              "inventory_sku": "CEMENT_50KG",
+              "inventory_name": "Cement 50kg",
+              "worker_user_id": 39,
+              "inventory_item_id": 18
+            },
+            "updated_at": "2026-06-07T14:26:35.477Z"
+          }
+        },
+        {
+          "type": "webhook",
+          "message": "CONFIRM",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          }
+        },
+        {
+          "type": "final",
+          "session": {
+            "id": 170,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "COMPLETED",
+            "current_step": "WAITING_CONFIRMATION",
+            "session_data": {
+              "quantity": 20,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 20 cement deliver kar do",
+              "worker_name": "Ram Kumar",
+              "inventory_sku": "CEMENT_50KG",
+              "inventory_name": "Cement 50kg",
+              "worker_user_id": 39,
+              "inventory_item_id": 18
+            },
+            "updated_at": "2026-06-07T14:26:37.372Z"
+          },
+          "task": {
+            "id": 130,
+            "description": "[DELIVERY] Cement 50kg pcs (CEMENT_50KG) x20.0000",
+            "assigned_to": 39,
+            "factory_id": 5,
+            "created_at": "2026-06-07T14:26:37.185Z",
+            "line_count": 1
+          },
+          "pass": true
+        }
+      ]
+    },
+    {
+      "name": "G4_inventory_disambiguation",
+      "steps": [
+        {
+          "type": "inventory_pick",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": {
+            "id": 171,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "ACTIVE",
+            "current_step": "WAITING_WORKER_SELECTION",
+            "session_data": {
+              "quantity": 10,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 10 cement deliver kar do",
+              "inventory_sku": "CEMENT_50KG",
+              "inventory_name": "Cement 50kg",
+              "inventory_item_id": 18,
+              "worker_candidates": [
+                {
+                  "name": "Ram Kumar",
+                  "user_id": 39
+                },
+                {
+                  "name": "Ram Singh",
+                  "user_id": 40
+                }
+              ]
+            },
+            "updated_at": "2026-06-07T14:26:41.444Z"
+          },
+          "pass": true
+        }
+      ]
+    },
+    {
+      "name": "G5_worker_disambiguation",
+      "steps": [
+        {
+          "type": "worker_pick",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": {
+            "id": 172,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "ACTIVE",
+            "current_step": "WAITING_CONFIRMATION",
+            "session_data": {
+              "quantity": 20,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 20 CEMENT_50KG deliver kar do",
+              "worker_name": "Ram Kumar",
+              "inventory_sku": "CEMENT_50KG",
+              "inventory_name": "Cement 50kg",
+              "worker_user_id": 39,
+              "inventory_item_id": 18
+            },
+            "updated_at": "2026-06-07T14:26:45.322Z"
+          },
+          "pass": true
+        }
+      ]
+    },
+    {
+      "name": "G6_double_disambiguation",
+      "steps": [
+        {
+          "type": "double_pick",
+          "session": {
+            "id": 173,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "ACTIVE",
+            "current_step": "WAITING_CONFIRMATION",
+            "session_data": {
+              "quantity": 10,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 10 cement deliver kar do",
+              "worker_name": "Ram Singh",
+              "inventory_sku": "CEMENT_PREM",
+              "inventory_name": "Cement Premium",
+              "worker_user_id": 40,
+              "inventory_item_id": 19
+            },
+            "updated_at": "2026-06-07T14:26:51.036Z"
+          },
+          "pass": true
+        }
+      ]
+    },
+    {
+      "name": "G7_confirm_theek_hai",
+      "steps": [
+        {
+          "type": "confirm_theek_hai",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": {
+            "id": 174,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "COMPLETED",
+            "current_step": "WAITING_CONFIRMATION",
+            "session_data": {
+              "quantity": 20,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 20 CEMENT_50KG deliver kar do",
+              "worker_name": "Ram Kumar",
+              "inventory_sku": "CEMENT_50KG",
+              "inventory_name": "Cement 50kg",
+              "worker_user_id": 39,
+              "inventory_item_id": 18
+            },
+            "updated_at": "2026-06-07T14:26:57.968Z"
+          },
+          "pass": true
+        }
+      ]
+    },
+    {
+      "name": "G12_duplicate_confirm",
+      "steps": [
+        {
+          "type": "duplicate_confirm",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "session": {
+            "id": 175,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "COMPLETED",
+            "current_step": "WAITING_CONFIRMATION",
+            "session_data": {
+              "quantity": 5,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 5 CEMENT_50KG deliver kar do",
+              "worker_name": "Ram Kumar",
+              "inventory_sku": "CEMENT_50KG",
+              "inventory_name": "Cement 50kg",
+              "worker_user_id": 39,
+              "inventory_item_id": 18
+            },
+            "updated_at": "2026-06-07T14:27:03.673Z"
+          },
+          "task_count_before": 9,
+          "task_count_after": 9,
+          "pass": true
+        }
+      ]
+    },
+    {
+      "name": "G13_expired_session",
+      "steps": [
+        {
+          "type": "expired_reply",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "before_id": 176,
+          "session": {
+            "id": 176,
+            "workflow_type": "TASK_INVENTORY_CREATION",
+            "status": "EXPIRED",
+            "current_step": "WAITING_INVENTORY_SELECTION",
+            "session_data": {
+              "quantity": 10,
+              "task_kind": "delivery",
+              "raw_message": "Ram ko 10 cement deliver kar do",
+              "worker_candidates": [
+                {
+                  "name": "Ram Kumar",
+                  "user_id": 39
+                },
+                {
+                  "name": "Ram Singh",
+                  "user_id": 40
+                }
+              ],
+              "inventory_candidates": [
+                {
+                  "sku": "CEMENT_50KG",
+                  "name": "Cement 50kg",
+                  "item_id": 18
+                },
+                {
+                  "sku": "CEMENT_PREM",
+                  "name": "Cement Premium",
+                  "item_id": 19
+                },
+                {
+                  "sku": "WHITE_CEM",
+                  "name": "White Cement",
+                  "item_id": 20
+                }
+              ]
+            },
+            "updated_at": "2026-06-07T14:27:11.130Z"
+          },
+          "pass": true
+        }
+      ]
+    },
+    {
+      "name": "G15_help",
+      "steps": [
+        {
+          "type": "help",
+          "webhook": {
+            "status": 201,
+            "body": "{\"data\":\"ok\",\"meta\":{\"success\":true,\"message\":\"SUCCESS\",\"statusCode\":201}}"
+          },
+          "pass": true
+        }
+      ]
+    }
+  ],
+  "finished_at": "2026-06-07T14:27:14.303Z",
+  "summary": {
+    "pass": 8,
+    "total": 8
+  }
+}

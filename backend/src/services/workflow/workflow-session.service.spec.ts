@@ -134,14 +134,34 @@ describe('WorkflowSessionService', () => {
     const old = {
       ...activeRow,
       created_at: new Date(Date.now() - 25 * 60 * 60 * 1000),
+      updated_at: new Date(Date.now() - 25 * 60 * 60 * 1000),
     };
     expect(service.isExpired(old)).toBe(true);
+  });
+
+  it('isExpired uses updated_at so recent activity keeps session alive', () => {
+    const recentActivity = {
+      ...activeRow,
+      created_at: new Date(Date.now() - 25 * 60 * 60 * 1000),
+      updated_at: new Date(),
+    };
+    expect(service.isExpired(recentActivity)).toBe(false);
+  });
+
+  it('isExpired returns true when updated_at is stale even if created_at is recent', () => {
+    const staleActivity = {
+      ...activeRow,
+      created_at: new Date(),
+      updated_at: new Date(Date.now() - 25 * 60 * 60 * 1000),
+    };
+    expect(service.isExpired(staleActivity)).toBe(true);
   });
 
   it('resolveActiveSession expires stale session', async () => {
     const stale = {
       ...activeRow,
-      created_at: new Date(Date.now() - 25 * 60 * 60 * 1000),
+      created_at: new Date(),
+      updated_at: new Date(Date.now() - 25 * 60 * 60 * 1000),
       update: jest.fn().mockImplementation(async (patch: any) => {
         stale.status = patch.status;
       }),
@@ -159,7 +179,8 @@ describe('WorkflowSessionService', () => {
     const stale = {
       ...activeRow,
       id: 2,
-      created_at: new Date(Date.now() - 25 * 60 * 60 * 1000),
+      created_at: new Date(),
+      updated_at: new Date(Date.now() - 25 * 60 * 60 * 1000),
       update: jest.fn().mockImplementation(async (patch: any) => {
         stale.status = patch.status;
       }),

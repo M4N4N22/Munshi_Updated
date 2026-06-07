@@ -63,6 +63,22 @@ def _check_extraction_contracts() -> dict[str, Any]:
     return {"passed": all(c["passed"] for c in checks), "checks": checks}
 
 
+def _check_task_inventory_contracts() -> dict[str, Any]:
+    schema = _load_json("schemas/task-inventory-extraction.json")
+    task_kinds = _load_json("task-kinds.json")
+    schema_enum = [
+        v for v in schema["properties"]["task_kind"]["enum"] if v is not None
+    ]
+    catalog = task_kinds.get("task_kinds", [])
+    models_text = (CONTRACTS / "python" / "models.py").read_text(encoding="utf-8")
+    return {
+        "passed": sorted(schema_enum) == sorted(catalog),
+        "schema_task_kinds": sorted(schema_enum),
+        "catalog_task_kinds": sorted(catalog),
+        "models_py_present": "TaskInventoryExtraction" in models_text,
+    }
+
+
 def _check_suggestion_and_workflow_enums() -> dict[str, Any]:
     suggestions = _load_json("suggestion-types.json")
     workflows = _load_json("workflow-types.json")
@@ -77,6 +93,7 @@ def _check_suggestion_and_workflow_enums() -> dict[str, Any]:
         "ONBOARD_WORKER",
         "INVENTORY_CREATE",
         "SUGGESTION_APPROVAL",
+        "TASK_INVENTORY_CREATION",
     }
     missing_s = required_suggestions - set(suggestions.get("types", []))
     missing_w = required_workflows - set(workflows.get("types", []))
@@ -99,6 +116,7 @@ def evaluate() -> dict[str, Any]:
     sections = {
         "intent_contract": _check_intent_contract(),
         "extraction_contracts": _check_extraction_contracts(),
+        "task_inventory_contracts": _check_task_inventory_contracts(),
         "suggestion_workflow_contracts": _check_suggestion_and_workflow_enums(),
         "parse_response": _check_parse_response(),
     }

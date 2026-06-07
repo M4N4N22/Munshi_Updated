@@ -29,6 +29,7 @@ export const WORKFLOW_TYPES = [
   'PURCHASE_REQUEST_CREATE',
   'BUSINESS_DISCOVERY',
   'ASSIGN_CLARIFY',
+  'TASK_INVENTORY_CREATION',
 ] as const;
 
 export const INTENT_TYPES = [
@@ -105,3 +106,19 @@ export interface StockRegisterExtractionContract {
 export type DocumentExtractionContract =
   | InventoryImportExtractionContract
   | StockRegisterExtractionContract;
+
+export const TASK_KINDS = [
+  'delivery',
+  'issue',
+  'inventory_count',
+] as const;
+
+export type TaskKind = (typeof TASK_KINDS)[number];
+
+/** Phase 4.1 — NL inventory-linked task extraction (all keys always present; null when unknown). */
+export interface TaskInventoryExtractionContract {
+  item_name_or_sku: string | null;
+  quantity: number | null;
+  assignee_hint: string | null;
+  task_kind: TaskKind | null;
+}

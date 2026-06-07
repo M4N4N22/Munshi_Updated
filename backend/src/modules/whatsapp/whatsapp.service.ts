@@ -14,7 +14,7 @@ import {
 import { IssueService } from 'src/services/issues/issues.service';
 import { USER_ROLE } from 'src/services/users/users.constants';
 import { TasksService } from 'src/services/tasks/tasks.service';
-import { COMMAND_HINTS, COMMANDS } from './whatsapp.constants';
+import { COMMAND_HINTS, COMMANDS, parseDirectSlashCommand } from './whatsapp.constants';
 import { FactoryService } from 'src/services/factories/factories.service';
 import axios from 'axios';
 import { Cron, CronExpression } from '@nestjs/schedule';
@@ -56,6 +56,7 @@ import {
   formatQuantity,
   parsePositiveQuantity,
 } from 'src/services/inventory/inventory.validation';
+import { TaskInventoryNlOrchestratorService } from 'src/services/task-inventory-resolution/task-inventory-nl.orchestrator';
 import { TASK_INVENTORY_MOVEMENT_TYPE } from 'src/services/tasks/tasks.inventory.constants';
 import { getHourIST, INDIA_TIMEZONE } from 'src/core/time/india-defaults';
 import {
@@ -104,6 +105,7 @@ export class WhatsAppService {
     private readonly teamBulkImport: TeamBulkImportService,
     private readonly inventoryBulkImport: InventoryBulkImportService,
     private readonly olliMedia: OlliMediaService,
+    private readonly taskInventoryNl: TaskInventoryNlOrchestratorService,
   ) {}
 
   async handleIncomingDocument(
@@ -313,7 +315,11 @@ export class WhatsAppService {
     const finish = async (result: unknown) => {
       const outbound = this.resolveOutboundFromHandlerResult(result);
       if (outbound) {
-        await this.sendOutbound(body.from, outbound);
+        try {
+          await this.sendOutbound(body.from, outbound);
+        } catch (sendErr) {
+          console.log(sendErr);
+        }
       }
       return 'ok';
     };
@@ -420,6 +426,15 @@ export class WhatsAppService {
       if (sessionState.expiredJustNow) {
         return finish(this.workflowRouter.getExpiredSessionMessage());
       } else if (sessionState.session) {
+        const directSlash = parseDirectSlashCommand(msgTrim);
+        if (directSlash) {
+          const slashResult = await this.processCommand({
+            ...body,
+            message: msgTrim,
+            command: directSlash,
+          });
+          return finish(slashResult);
+        }
         const workflowResult =
           await this.workflowRouter.handleActiveWorkflowMessage(
             body.from,
@@ -451,6 +466,24 @@ export class WhatsAppService {
           msgTrim,
         );
       } else {
+        if (!msgTrim.startsWith('/')) {
+          const nlTaskResult = await this.taskInventoryNl.tryHandleFreeText(
+            body.from,
+            msgTrim,
+          );
+          if (nlTaskResult !== null) {
+            return finish(nlTaskResult);
+          }
+        }
+
+        const directSlash = parseDirectSlashCommand(msgTrim);
+        if (directSlash) {
+          result = await this.processCommand({
+            ...body,
+            message: msgTrim,
+            command: directSlash,
+          });
+        } else {
         const ml_url = process.env.ML_URL || `http://localhost:8000`;
 
         const response = await axios.post(
@@ -503,6 +536,7 @@ export class WhatsAppService {
             depart_slug: ml.depart_slug ?? undefined,
             reject_reason: ml.reject_reason ?? undefined,
           });
+        }
         }
       }
 
@@ -582,10 +616,14 @@ export class WhatsAppService {
 
     if (command === COMMANDS.HELP) {
       if (this.isOwnerOrManagerRole(role)) {
-        await this.ownerHomeService.sendOwnerHome(phone, (to, o) =>
-          this.sendOutbound(to, o),
-        );
-        return WA_OUTBOUND_ALREADY_SENT;
+        try {
+          await this.ownerHomeService.sendOwnerHome(phone, (to, o) =>
+            this.sendOutbound(to, o),
+          );
+          return WA_OUTBOUND_ALREADY_SENT;
+        } catch {
+          return waHelpText(user?.name || 'User');
+        }
       }
       return waHelpText(user?.name || 'User');
     }
