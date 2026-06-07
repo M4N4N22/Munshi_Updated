@@ -90,7 +90,9 @@ cd Munshi_Updated
 ```bash
 curl -sSL https://raw.githubusercontent.com/ShantanuGarg2004/Munshi_Updated/main/scripts/install-gcp-prod-stack.sh | bash
 cd /home/ubuntu/munshi-dada
+cp .env.example .env && cp ml.env.example ml.env
 nano .env    # Supabase, Olli, MUNSHI_PUBLIC_API_HOST
+nano ml.env  # OPENAI_API_KEY
 docker compose pull && docker compose up -d
 ```
 
