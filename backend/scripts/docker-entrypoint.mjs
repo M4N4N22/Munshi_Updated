@@ -24,7 +24,7 @@ if (migrate.status !== 0) {
   process.exit(migrate.status ?? 1);
 }
 
-const child = spawn(process.execPath, ['dist/main.js'], {
+const child = spawn(process.execPath, ['dist/src/main.js'], {
   stdio: 'inherit',
   env: { ...process.env, SKIP_MIGRATION_BOOTSTRAP: '1' },
 });
