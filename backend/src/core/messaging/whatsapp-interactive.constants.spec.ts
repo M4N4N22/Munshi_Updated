@@ -1,8 +1,11 @@
 import {
+  isLowStockPurchaseCtaTitle,
   isOwnerHomeTrigger,
+  isPurchaseRequestWorkflowCommand,
   resolveInteractiveActionId,
   WA_INTERACTIVE_ID,
 } from './whatsapp-interactive.constants';
+import { WA_LOW_STOCK_PURCHASE_BUTTON_TITLE } from './inventory-low-stock-outbound';
 import { isChatHomeTrigger } from './chat-home-triggers';
 
 describe('resolveInteractiveActionId', () => {
@@ -49,6 +52,29 @@ describe('isOwnerHomeTrigger', () => {
 
   it('does not match random chat', () => {
     expect(isOwnerHomeTrigger('present')).toBe(false);
+  });
+});
+
+describe('isLowStockPurchaseCtaTitle', () => {
+  it('matches low-stock CTA titles', () => {
+    expect(isLowStockPurchaseCtaTitle(WA_LOW_STOCK_PURCHASE_BUTTON_TITLE)).toBe(
+      true,
+    );
+    expect(isLowStockPurchaseCtaTitle('Create Order')).toBe(true);
+    expect(isLowStockPurchaseCtaTitle('purchase')).toBe(true);
+    expect(isLowStockPurchaseCtaTitle('hello')).toBe(false);
+  });
+});
+
+describe('isPurchaseRequestWorkflowCommand', () => {
+  it('matches purchase request slash commands', () => {
+    expect(isPurchaseRequestWorkflowCommand('/purchase_request_create')).toBe(
+      true,
+    );
+    expect(
+      isPurchaseRequestWorkflowCommand('/purchase_request_create?itemId=42'),
+    ).toBe(true);
+    expect(isPurchaseRequestWorkflowCommand('/tasks')).toBe(false);
   });
 });
 

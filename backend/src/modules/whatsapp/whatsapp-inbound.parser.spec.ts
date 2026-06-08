@@ -1,5 +1,7 @@
 import { parseWhatsAppInbound } from './whatsapp-inbound.parser';
 import { WA_INTERACTIVE_ID } from 'src/core/messaging/whatsapp-interactive.constants';
+import { buildPurchaseRequestCreateCommand } from 'src/services/purchase-requests/purchase-request-prefill.helper';
+import { WA_LOW_STOCK_PURCHASE_BUTTON_TITLE } from 'src/core/messaging/inventory-low-stock-outbound';
 
 describe('parseWhatsAppInbound', () => {
   it('parses text messages', () => {
@@ -47,6 +49,54 @@ describe('parseWhatsAppInbound', () => {
       kind: 'text',
       from: '919999999999',
       message: WA_INTERACTIVE_ID.TEAM_ONBOARD_WA,
+    });
+  });
+
+  it('prefers button_reply.id over data.text for low-stock purchase CTA (scenario C)', () => {
+    const command = buildPurchaseRequestCreateCommand(42);
+    expect(
+      parseWhatsAppInbound({
+        event: 'message',
+        data: {
+          type: 'interactive',
+          from: '918604856137',
+          text: WA_LOW_STOCK_PURCHASE_BUTTON_TITLE,
+          interactive: {
+            type: 'button_reply',
+            button_reply: {
+              id: command,
+              title: WA_LOW_STOCK_PURCHASE_BUTTON_TITLE,
+            },
+          },
+        },
+      }),
+    ).toEqual({
+      kind: 'text',
+      from: '918604856137',
+      message: command,
+    });
+  });
+
+  it('parses low-stock purchase button_reply.id only (scenario A)', () => {
+    const command = buildPurchaseRequestCreateCommand(99);
+    expect(
+      parseWhatsAppInbound({
+        data: {
+          type: 'interactive',
+          from: '919456157007',
+          interactive: {
+            type: 'button_reply',
+            button_reply: {
+              id: command,
+              title: WA_LOW_STOCK_PURCHASE_BUTTON_TITLE,
+            },
+          },
+        },
+      }),
+    ).toEqual({
+      kind: 'text',
+      from: '919456157007',
+      message: command,
     });
   });
 

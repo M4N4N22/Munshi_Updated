@@ -9,6 +9,7 @@ import {
   resolveLowStockAlertRecipientPhones,
   type LowStockAlertDb,
 } from './inventory-low-stock-alert.recipients';
+import { LowStockAlertContextService } from './low-stock-alert-context.service';
 
 @Injectable()
 export class InventoryLowStockAlertHandler {
@@ -17,6 +18,7 @@ export class InventoryLowStockAlertHandler {
   constructor(
     private readonly dbService: DbService,
     private readonly messagingService: MessagingService,
+    private readonly lowStockAlertContext: LowStockAlertContextService,
   ) {}
 
   async handle(event: DomainEvent): Promise<void> {
@@ -54,13 +56,22 @@ export class InventoryLowStockAlertHandler {
       inventoryItemId: Number.isFinite(inventoryItemId) ? inventoryItemId : 0,
     });
 
-    await this.sendAlertIndependently(recipients, outbound, event.id);
+    await this.sendAlertIndependently(recipients, outbound, event.id, {
+      factoryId,
+      inventoryItemId: Number.isFinite(inventoryItemId) ? inventoryItemId : 0,
+      itemName,
+    });
   }
 
   private async sendAlertIndependently(
     recipients: string[],
     outbound: ReturnType<typeof buildInventoryLowStockAlertOutbound>,
     eventId: number,
+    context: {
+      factoryId: number;
+      inventoryItemId: number;
+      itemName: string;
+    },
   ): Promise<void> {
     for (const phone of recipients) {
       try {
@@ -72,6 +83,14 @@ export class InventoryLowStockAlertHandler {
           );
         } else {
           await this.messagingService.sendText(phone, outbound.body);
+        }
+        if (context.inventoryItemId > 0) {
+          await this.lowStockAlertContext.recordAlertContext({
+            phone,
+            factoryId: context.factoryId,
+            inventoryItemId: context.inventoryItemId,
+            inventoryItemName: context.itemName,
+          });
         }
       } catch (err) {
         const message = err instanceof Error ? err.message : String(err);

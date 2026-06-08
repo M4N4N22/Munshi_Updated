@@ -68,16 +68,6 @@ export function parseWhatsAppInbound(
   }
 
   if (data.type === 'interactive') {
-    const olliText = data.text;
-    if (typeof olliText === 'string' && olliText.trim()) {
-      const actionId = resolveInteractiveActionId(olliText);
-      return {
-        from,
-        kind: 'text',
-        message: actionId ?? olliText.trim(),
-      };
-    }
-
     const interactive = data.interactive as Record<string, unknown> | undefined;
     if (interactive) {
       const buttonReply = interactive.button_reply as
@@ -98,6 +88,16 @@ export function parseWhatsAppInbound(
           return { from, kind: 'text', message: id.trim() };
         }
       }
+    }
+
+    const olliText = data.text;
+    if (typeof olliText === 'string' && olliText.trim()) {
+      const actionId = resolveInteractiveActionId(olliText);
+      return {
+        from,
+        kind: 'text',
+        message: actionId ?? olliText.trim(),
+      };
     }
   }
 

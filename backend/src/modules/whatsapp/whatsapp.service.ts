@@ -33,9 +33,12 @@ import {
 } from 'src/core/messaging/owner-home-outbound';
 import { waUnrecognizedChatWorker } from 'src/core/messaging/owner-home.templates';
 import {
+  isLowStockPurchaseCtaTitle,
+  isPurchaseRequestWorkflowCommand,
   resolveInteractiveActionId,
   WA_INTERACTIVE_ID,
 } from 'src/core/messaging/whatsapp-interactive.constants';
+import { LowStockAlertContextService } from 'src/services/inventory/low-stock-alert-context.service';
 import {
   waDashboardComingSoon,
   waGoogleFormRetired,
@@ -106,6 +109,7 @@ export class WhatsAppService {
     private readonly inventoryBulkImport: InventoryBulkImportService,
     private readonly olliMedia: OlliMediaService,
     private readonly taskInventoryNl: TaskInventoryNlOrchestratorService,
+    private readonly lowStockAlertContext: LowStockAlertContextService,
   ) {}
 
   async handleIncomingDocument(
@@ -486,13 +490,35 @@ export class WhatsAppService {
           id: undefined,
           date: undefined,
         });
-      } else if (workflowStartCmd) {
+      } else if (workflowStartCmd || isPurchaseRequestWorkflowCommand(msgTrim)) {
         result = await this.workflowRouter.startWorkflowFromCommand(
           body.from,
           msgTrim,
         );
+      } else if (isLowStockPurchaseCtaTitle(msgTrim)) {
+        const ctaResolution =
+          await this.lowStockAlertContext.resolveCtaTitle(body.from);
+        if (ctaResolution.kind === 'command') {
+          result = await this.workflowRouter.startWorkflowFromCommand(
+            body.from,
+            ctaResolution.command,
+          );
+        } else {
+          return finish(ctaResolution.message);
+        }
       } else {
-        if (!msgTrim.startsWith('/')) {
+        const disambiguationCommand = /^\d+$/.test(msgTrim)
+          ? await this.lowStockAlertContext.tryResolveDisambiguationSelection(
+              body.from,
+              parseInt(msgTrim, 10),
+            )
+          : null;
+        if (disambiguationCommand) {
+          result = await this.workflowRouter.startWorkflowFromCommand(
+            body.from,
+            disambiguationCommand,
+          );
+        } else if (!msgTrim.startsWith('/')) {
           const nlTaskResult = await this.taskInventoryNl.tryHandleFreeText(
             body.from,
             msgTrim,
@@ -500,70 +526,32 @@ export class WhatsAppService {
           if (nlTaskResult !== null) {
             return finish(nlTaskResult);
           }
-        }
-
-        const directSlash = parseDirectSlashCommand(msgTrim);
-        if (directSlash) {
-          result = await this.processCommand({
-            ...body,
-            message: msgTrim,
-            command: directSlash,
-          });
+          const directSlash = parseDirectSlashCommand(msgTrim);
+          if (directSlash) {
+            result = await this.processCommand({
+              ...body,
+              message: msgTrim,
+              command: directSlash,
+            });
+          } else {
+            result = await this.routeMlFallback(body, msgTrim);
+          }
         } else {
-        const ml_url = process.env.ML_URL || `http://localhost:8000`;
-
-        const response = await axios.post(
-          `${ml_url}/classify?message=${encodeURIComponent(body.message)}`,
-        );
-
-        const ml = this.parseMlClassifyResponse(response.data);
-        console.log('ml-classify', ml);
-
-        const intentLc = (ml.intent || '').toLowerCase();
-        if (intentLc === 'general_chat') {
-          await this.routeGeneralChat(body.from, ml.message);
-          return 'ok';
+          const directSlash = parseDirectSlashCommand(msgTrim);
+          if (directSlash) {
+            result = await this.processCommand({
+              ...body,
+              message: msgTrim,
+              command: directSlash,
+            });
+          } else {
+            result = await this.routeMlFallback(body, msgTrim);
+          }
         }
+      }
 
-        const rawId = ml.id;
-        const id =
-          rawId != null &&
-          rawId !== '' &&
-          Number.isFinite(Number(rawId))
-            ? Number(rawId)
-            : undefined;
-
-        const command = this.normalizeIntentCommand(ml.intent);
-
-        const workflowStarted =
-          command &&
-          (await this.workflowRouter.startWorkflowIfRegistered(
-            body.from,
-            command,
-            {
-              taskDescription:
-                ml.task_description?.trim() || msgTrim,
-              deadline: ml.deadline ?? undefined,
-            },
-          ));
-
-        if (workflowStarted !== null) {
-          result = workflowStarted;
-        } else {
-          result = await this.processCommand({
-            ...body,
-            command: command ?? ml.intent,
-            id,
-            date: ml.date,
-            datetime: ml.datetime ?? undefined,
-            time: ml.time ?? undefined,
-            deadline: ml.deadline ?? undefined,
-            worker_slug: ml.worker_slug ?? undefined,
-            depart_slug: ml.depart_slug ?? undefined,
-            reject_reason: ml.reject_reason ?? undefined,
-          });
-        }
-        }
+      if (result === WA_OUTBOUND_ALREADY_SENT) {
+        return 'ok';
       }
 
       console.log({ result });
@@ -1127,6 +1115,60 @@ export class WhatsAppService {
   private isOwnerOrManagerRole(role: string | undefined): boolean {
     const r = (role || '').toUpperCase();
     return r === USER_ROLE.OWNER || r === USER_ROLE.MANAGER;
+  }
+
+  private async routeMlFallback(
+    body: WhatsAppIncomingDto,
+    msgTrim: string,
+  ): Promise<unknown> {
+    const ml_url = process.env.ML_URL || `http://localhost:8000`;
+
+    const response = await axios.post(
+      `${ml_url}/classify?message=${encodeURIComponent(body.message)}`,
+    );
+
+    const ml = this.parseMlClassifyResponse(response.data);
+    console.log('ml-classify', ml);
+
+    const intentLc = (ml.intent || '').toLowerCase();
+    if (intentLc === 'general_chat') {
+      await this.routeGeneralChat(body.from, ml.message);
+      return WA_OUTBOUND_ALREADY_SENT;
+    }
+
+    const rawId = ml.id;
+    const id =
+      rawId != null &&
+      rawId !== '' &&
+      Number.isFinite(Number(rawId))
+        ? Number(rawId)
+        : undefined;
+
+    const command = this.normalizeIntentCommand(ml.intent);
+
+    const workflowStarted =
+      command &&
+      (await this.workflowRouter.startWorkflowIfRegistered(body.from, command, {
+        taskDescription: ml.task_description?.trim() || msgTrim,
+        deadline: ml.deadline ?? undefined,
+      }));
+
+    if (workflowStarted !== null) {
+      return workflowStarted;
+    }
+
+    return this.processCommand({
+      ...body,
+      command: command ?? ml.intent,
+      id,
+      date: ml.date,
+      datetime: ml.datetime ?? undefined,
+      time: ml.time ?? undefined,
+      deadline: ml.deadline ?? undefined,
+      worker_slug: ml.worker_slug ?? undefined,
+      depart_slug: ml.depart_slug ?? undefined,
+      reject_reason: ml.reject_reason ?? undefined,
+    });
   }
 
   /** general_chat: owners → home menu; workers → short Hindi hints. Returns true if handled. */

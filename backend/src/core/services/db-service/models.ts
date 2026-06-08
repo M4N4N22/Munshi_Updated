@@ -11,6 +11,7 @@ import {
   InventoryLocation,
   InventoryTransaction,
 } from 'src/services/inventory/inventory.schema';
+import { LowStockAlertContext } from 'src/services/inventory/low-stock-alert-context.schema';
 import {
   Document,
   DocumentExtraction,
@@ -82,6 +83,7 @@ export const SQL_MODELS = {
   InventoryItem: InventoryItem.setup,
   InventoryLocation: InventoryLocation.setup,
   InventoryTransaction: InventoryTransaction.setup,
+  LowStockAlertContext: LowStockAlertContext.setup,
   IntegrationConnection: IntegrationConnection.setup,
   IntegrationItemMapping: IntegrationItemMapping.setup,
   IntegrationPushDelivery: IntegrationPushDelivery.setup,

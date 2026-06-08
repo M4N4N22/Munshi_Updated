@@ -44,6 +44,23 @@ const TITLE_TO_ACTION_ID = new Map<string, WaInteractiveId>(
   ].map(([id, title]) => [title.toLowerCase(), id as WaInteractiveId] as const),
 );
 
+const LOW_STOCK_PURCHASE_CTA_TITLES = new Set(
+  [
+    WA_LOW_STOCK_PURCHASE_BUTTON_TITLE,
+    'Create Order',
+    'Purchase',
+  ].map((s) => s.toLowerCase()),
+);
+
+/** Title-only low-stock CTA taps (Olli echoes button label without reply id). */
+export function isLowStockPurchaseCtaTitle(message: string): boolean {
+  const trimmed = message.trim();
+  if (!trimmed) {
+    return false;
+  }
+  return LOW_STOCK_PURCHASE_CTA_TITLES.has(trimmed.toLowerCase());
+}
+
 /** Purchase-request commands from low-stock button reply ids pass through as-is. */
 export function isPurchaseRequestWorkflowCommand(message: string): boolean {
   const trimmed = message.trim().toLowerCase();

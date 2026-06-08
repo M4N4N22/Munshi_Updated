@@ -1,0 +1,101 @@
+{
+  "investigation_meta": {
+    "date": "2026-06-08",
+    "backend_url": "https://backend-production-41504.up.railway.app",
+    "log_source": "Railway MCP get_logs (deploy + http)",
+    "search_window": "2026-06-08T19:32:00Z to 2026-06-08T19:34:00Z and 30d keyword searches",
+    "finding": "NO live webhook captured with message 'Purchase karein' or type interactive + purchase CTA in retained Railway logs",
+    "note": "Payloads below are evidence-backed: one LIVE captured Olli text message envelope, plus SYNTHETIC shapes validated by parser unit tests and dist parser-trace run"
+  },
+  "captured_live_olli_text_message": {
+    "source": "Railway deploy log — POST /webhook 2026-06-08T19:32:21Z",
+    "request_received": true,
+    "http_status": 201,
+    "timestamp_utc": "2026-06-08T19:32:20.733Z",
+    "headers_summary": {
+      "user-agent": "GetOlli-Webhook/1.0",
+      "content-type": "application/json",
+      "x-getolli-signature": "[present — redacted]",
+      "x-forwarded-for": "35.154.59.237"
+    },
+    "phone_masked": "917452897444",
+    "full_json": {
+      "event": "message",
+      "timestamp": "2026-06-08T19:32:20.733Z",
+      "data": {
+        "message_id": "wamid.HBgMOTE3NDUyODk3NDQ0FQIAEhgWM0VCMDU0RUFDMTI1QTYzMjYyMkIzMwA=",
+        "from": "917452897444",
+        "type": "text",
+        "text": "/assign_delivery @Shantanu2 SKU001 2000",
+        "media": null,
+        "conversation_id": 45995,
+        "timestamp": "1780947139"
+      }
+    },
+    "parsed_message_reaching_handler": "/assign_delivery @Shantanu2 SKU001 2000"
+  },
+  "synthetic_option_a_meta_button_reply_id": {
+    "source": "whatsapp-inbound.parser.spec.ts — Meta button_reply shape (works in parser trace)",
+    "label": "Option A — button_reply.id only",
+    "full_json": {
+      "event": "message",
+      "data": {
+        "type": "interactive",
+        "from": "918604856137",
+        "interactive": {
+          "type": "button_reply",
+          "button_reply": {
+            "id": "/purchase_request_create?itemId=42",
+            "title": "Purchase karein"
+          }
+        }
+      }
+    },
+    "parsed_message_reaching_handler": "/purchase_request_create?itemId=42",
+    "parser_trace_router_branch": "workflow_start_command:/purchase_request_create"
+  },
+  "synthetic_option_b_olli_title_only": {
+    "source": "whatsapp-inbound.parser.spec.ts — documented GetOlli interactive tap (title in data.text); adapted for Purchase karein",
+    "label": "Option B — Olli echoes button title only",
+    "full_json": {
+      "event": "message",
+      "data": {
+        "type": "interactive",
+        "from": "918604856137",
+        "text": "Purchase karein"
+      }
+    },
+    "parsed_message_reaching_handler": "Purchase karein",
+    "parser_trace_router_branch": "ml_fallback_or_nl_task"
+  },
+  "synthetic_option_c_olli_text_plus_button_reply": {
+    "source": "Parser precedence analysis — if Olli sends BOTH data.text and button_reply.id",
+    "label": "Option C — text field takes precedence; button_reply.id ignored",
+    "full_json": {
+      "event": "message",
+      "data": {
+        "type": "interactive",
+        "from": "918604856137",
+        "text": "Purchase karein",
+        "interactive": {
+          "button_reply": {
+            "id": "/purchase_request_create?itemId=42",
+            "title": "Purchase karein"
+          }
+        }
+      }
+    },
+    "parsed_message_reaching_handler": "Purchase karein",
+    "parser_trace_router_branch": "ml_fallback_or_nl_task",
+    "critical_note": "button_reply.id is present in payload but NEVER read because data.text branch returns first"
+  },
+  "outbound_button_sent_by_munshi": {
+    "source": "inventory-low-stock-outbound.ts + integration tests",
+    "interactive_buttons": [
+      {
+        "title": "Purchase karein",
+        "id": "/purchase_request_create?itemId={inventoryItemId}"
+      }
+    ]
+  }
+}

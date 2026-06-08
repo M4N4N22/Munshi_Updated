@@ -8,6 +8,7 @@ import { InventoryTransactionService } from './inventory-transaction.service';
 import { InventoryImportService } from './inventory-import.service';
 import { InventoryImportUploadService } from './inventory-import-upload.service';
 import { InventoryLowStockAlertHandler } from './inventory-low-stock-alert.handler';
+import { LowStockAlertContextService } from './low-stock-alert-context.service';
 
 @Module({
   imports: [MessagingModule, forwardRef(() => DomainEventsModule)],
@@ -19,6 +20,7 @@ import { InventoryLowStockAlertHandler } from './inventory-low-stock-alert.handl
     InventoryImportService,
     InventoryImportUploadService,
     InventoryLowStockAlertHandler,
+    LowStockAlertContextService,
   ],
   exports: [
     InventoryService,
@@ -27,6 +29,7 @@ import { InventoryLowStockAlertHandler } from './inventory-low-stock-alert.handl
     InventoryImportService,
     InventoryImportUploadService,
     InventoryLowStockAlertHandler,
+    LowStockAlertContextService,
   ],
 })
 export class InventoryModule {}
