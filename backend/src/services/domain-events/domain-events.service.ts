@@ -46,6 +46,15 @@ export class DomainEventsService {
     } as any);
   }
 
+  /** Dispatch a single outbox row (used by cron and immediate alert processing). */
+  async processEventById(eventId: number): Promise<boolean> {
+    const row = await this.model.findByPk(eventId);
+    if (!row || row.status !== DOMAIN_EVENT_STATUS.PENDING) {
+      return false;
+    }
+    return this.processEventRecord(row);
+  }
+
   /**
    * Process pending events (outbox worker). Handlers are registered incrementally in P1+.
    */
@@ -62,32 +71,43 @@ export class DomainEventsService {
 
     let processed = 0;
     for (const row of rows) {
-      await row.update({ status: DOMAIN_EVENT_STATUS.PROCESSING });
-      try {
-        await this.dispatch(row);
-        await row.update({
-          status: DOMAIN_EVENT_STATUS.COMPLETED,
-          processed_at: new Date(),
-          last_error: null,
-        });
+      const ok = await this.processEventRecord(row);
+      if (ok) {
         processed += 1;
-      } catch (err) {
-        const message = err instanceof Error ? err.message : String(err);
-        const attempts = row.attempts + 1;
-        const failed = attempts >= MAX_ATTEMPTS;
-        await row.update({
-          status: failed
-            ? DOMAIN_EVENT_STATUS.FAILED
-            : DOMAIN_EVENT_STATUS.PENDING,
-          attempts,
-          last_error: message.slice(0, 2000),
-        });
-        this.logger.warn(
-          `Domain event ${row.id} (${row.event_type}) attempt ${attempts}: ${message}`,
-        );
       }
     }
     return processed;
+  }
+
+  private async processEventRecord(row: DomainEvent): Promise<boolean> {
+    if (row.status !== DOMAIN_EVENT_STATUS.PENDING) {
+      return false;
+    }
+    await row.update({ status: DOMAIN_EVENT_STATUS.PROCESSING });
+    try {
+      await this.dispatch(row);
+      await row.update({
+        status: DOMAIN_EVENT_STATUS.COMPLETED,
+        processed_at: new Date(),
+        last_error: null,
+      });
+      return true;
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      const attempts = row.attempts + 1;
+      const failed = attempts >= MAX_ATTEMPTS;
+      await row.update({
+        status: failed
+          ? DOMAIN_EVENT_STATUS.FAILED
+          : DOMAIN_EVENT_STATUS.PENDING,
+        attempts,
+        last_error: message.slice(0, 2000),
+      });
+      this.logger.warn(
+        `Domain event ${row.id} (${row.event_type}) attempt ${attempts}: ${message}`,
+      );
+      return false;
+    }
   }
 
   private async dispatch(event: DomainEvent): Promise<void> {

@@ -1683,31 +1683,49 @@ export class WhatsAppService {
       return this.formatInventoryStatusMessage(status);
     }
 
-    const lowStock = await this.inventoryService.listLowStockItems(factoryId);
-    if (lowStock.length === 0) {
+    const WHATSAPP_INVENTORY_LIST_LIMIT = 12;
+    const { data, meta } = await this.inventoryService.listItems(factoryId, {
+      activeOnly: true,
+      page_size: WHATSAPP_INVENTORY_LIST_LIMIT,
+    });
+
+    if (data.length === 0) {
       return waSection(
         'Inventory status',
-        'No low-stock items detected.\n\n' +
-          'Send */inventory_status SKU* to check a specific item (e.g. `/inventory_status CEM001`).',
+        'No inventory items yet.\n\n' +
+          'Use */inventory_import_csv* or */inventory_create* to add stock.',
       );
     }
 
-    const lines = lowStock
-      .slice(0, 8)
-      .map(
-        (s) =>
-          `• *${s.sku}* — ${s.name}\n  Qty: ${s.current_quantity} ${s.unit} · Threshold: ${s.reorder_threshold ?? '—'} · 📍 ${s.location_name}`,
-      )
+    const lowStock = await this.inventoryService.listLowStockItems(factoryId);
+    const lowSummary =
+      lowStock.length > 0
+        ? `🔔 *${lowStock.length} low-stock* item(s)\n\n`
+        : '✅ No low-stock items\n\n';
+
+    const lines = data
+      .map((item) => {
+        const low = this.inventoryService.isLowStock(item);
+        const flag = low ? ' ⚠️' : '';
+        const threshold =
+          item.reorder_threshold != null && item.reorder_threshold !== ''
+            ? ` · Threshold: ${item.reorder_threshold}`
+            : '';
+        return (
+          `• *${item.sku}* — ${item.name}${flag}\n` +
+          `  Qty: ${item.current_quantity} ${item.unit}${threshold} · 📍 ${item.location?.name ?? '—'}`
+        );
+      })
       .join('\n\n');
 
     const more =
-      lowStock.length > 8
-        ? `\n\n_+ ${lowStock.length - 8} more low-stock items — use /inventory_status SKU for details._`
+      meta.total > data.length
+        ? `\n\n_+ ${meta.total - data.length} more items — use /inventory_status SKU for one item._`
         : '';
 
     return waSection(
-      'Low stock items',
-      `${lines}${more}\n\nSend */inventory_status SKU* for full details on one item.`,
+      'Inventory status',
+      `*${meta.total} item(s)* in stock\n${lowSummary}${lines}${more}\n\nSend */inventory_status SKU* for full details on one item.`,
     );
   }
 

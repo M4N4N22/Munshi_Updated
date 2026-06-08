@@ -15,7 +15,6 @@ import { MessagingService } from 'src/core/messaging/messaging.service';
 import { InventoryService } from 'src/services/inventory/inventory.service';
 import { InventoryTransactionService } from 'src/services/inventory/inventory-transaction.service';
 import { DOMAIN_EVENT_TYPE } from 'src/services/domain-events/domain-events.constants';
-import { InventoryLowStockAlertHandler } from 'src/services/inventory/inventory-low-stock-alert.handler';
 import {
   createInventoryItemWithStock,
   seedPhase0Fixture,
@@ -50,8 +49,6 @@ describe('Phase 3.1 inventory low stock alert', () => {
   let inventoryTransactionService: InventoryTransactionService;
   let domainEventsService: DomainEventsService;
   let messagingService: MessagingService;
-  let alertHandler: InventoryLowStockAlertHandler;
-
   beforeAll(async () => {
     dbUp = await probePostgres();
     if (!dbUp) return;
@@ -76,7 +73,6 @@ describe('Phase 3.1 inventory low stock alert', () => {
     inventoryTransactionService = module.get(InventoryTransactionService);
     domainEventsService = module.get(DomainEventsService);
     messagingService = module.get(MessagingService);
-    alertHandler = module.get(InventoryLowStockAlertHandler);
   });
 
   afterAll(async () => {
@@ -208,6 +204,8 @@ describe('Phase 3.1 inventory low stock alert', () => {
       created_by: fx.ownerId,
     });
 
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
     const event = await dbService.sqlService.DomainEvent.findOne({
       where: {
         event_type: DOMAIN_EVENT_TYPE.INVENTORY_LOW_STOCK,
@@ -217,7 +215,7 @@ describe('Phase 3.1 inventory low stock alert', () => {
       order: [['id', 'DESC']],
     });
     expect(event).toBeTruthy();
-    await alertHandler.handle(event!);
+    expect(event!.status).toBe('COMPLETED');
 
     expect(sendSpy).toHaveBeenCalledTimes(1);
     const [phone, message] = sendSpy.mock.calls[0];

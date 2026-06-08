@@ -1,9 +1,11 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   Logger,
   NotFoundException,
   Optional,
+  forwardRef,
 } from '@nestjs/common';
 import { Transaction } from 'sequelize';
 import { DomainEventsService } from 'src/services/domain-events/domain-events.service';
@@ -43,7 +45,9 @@ export class InventoryTransactionService {
 
   constructor(
     private readonly repository: InventoryRepository,
-    @Optional() private readonly domainEventsService?: DomainEventsService,
+    @Optional()
+    @Inject(forwardRef(() => DomainEventsService))
+    private readonly domainEventsService?: DomainEventsService,
   ) {}
 
   async recordStockIn(
@@ -257,13 +261,14 @@ export class InventoryTransactionService {
 
     transaction.afterCommit(async () => {
       try {
-        await this.domainEventsService!.publish({
+        const event = await this.domainEventsService!.publish({
           factory_id: ctx.factoryId,
           event_type: DOMAIN_EVENT_TYPE.INVENTORY_LOW_STOCK,
           aggregate_type: LOW_STOCK_AGGREGATE_TYPE,
           aggregate_id: String(ctx.inventoryItemId),
           payload,
         });
+        await this.domainEventsService!.processEventById(event.id);
       } catch (err) {
         const message = err instanceof Error ? err.message : String(err);
         this.logger.warn(
