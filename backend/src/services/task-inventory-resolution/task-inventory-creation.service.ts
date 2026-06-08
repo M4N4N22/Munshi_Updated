@@ -123,13 +123,17 @@ export class TaskInventoryCreationService {
     );
 
     const taskId = this.extractTaskIdFromAssignResult(result);
-    const message = this.confirmationService.buildTaskCreatedMessage({
+    let message = this.confirmationService.buildTaskCreatedMessage({
       taskId,
       workerName,
       itemName: item.name,
       quantity: quantityStr,
       taskKind,
     });
+
+    if (typeof result === 'string' && result.includes('⚠️')) {
+      message += `\n\n${result.slice(result.indexOf('⚠️'))}`;
+    }
 
     return { taskId, message };
   }

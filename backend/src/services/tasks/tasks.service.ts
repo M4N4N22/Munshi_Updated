@@ -43,6 +43,13 @@ import { publishZohoStockPushRequestedEvents } from './tasks.stock-push-events.h
 import { DomainEventsService } from '../domain-events/domain-events.service';
 import { loadInventoryCompletionNotifyLines } from './tasks.inventory-notification.helper';
 import { InventoryItem } from '../inventory/inventory.schema';
+import {
+  buildInventoryStockWarning,
+  buildInsufficientStockCompletionMessage,
+  listPendingDeliveryTasksForItem,
+  type StockWarningLineInput,
+} from './tasks.inventory-stock-warning.helper';
+import { TASK_INVENTORY_MOVEMENT_TYPE } from './tasks.inventory.constants';
 
 type ResolvedMention =
   | { kind: 'all' }
@@ -409,6 +416,11 @@ export class TasksService {
 
     const deadline = this.normalizeDeadline(options?.deadline);
 
+    const stockWarning = await this.buildStockWarningForInventoryLines(
+      factory_id,
+      options?.inventory_lines,
+    );
+
     const task = await this.taskModel.create({
       assigned_to: assigneeUserId,
       assigned_by,
@@ -428,27 +440,38 @@ export class TasksService {
       options?.inventory_lines,
     );
 
-    if (routing_status === TASK_ROUTING_STATUS.AWAITING_MANAGER_ACTION) {
-      this.messagingService.fireAndForget(
-        this.notifyManagerRoutingPrompt(task.id),
-        'mgr-route-prompt',
-      );
-    } else {
-      this.messagingService.fireAndForget(
-        this.notifyWorkerTaskAssigned(task.id),
-        'task-assigned',
-      );
-    }
+    await this.dispatchNewTaskNotification(task.id, routing_status);
 
     const assignee = await this.userModel.findByPk(assigneeUserId, {
       attributes: ['name'],
     });
     const assigneeName = assignee?.name || `User #${assigneeUserId}`;
 
+    let message: string;
     if (routing_status === TASK_ROUTING_STATUS.AWAITING_MANAGER_ACTION) {
-      return `Task #${task.id} routed to *${assigneeName}* (department manager). They have been notified on WhatsApp.`;
+      message = `Task #${task.id} routed to *${assigneeName}* (department manager). They have been notified on WhatsApp.`;
+    } else {
+      message = `Task #${task.id} assigned to *${assigneeName}*. They have been notified on WhatsApp.`;
     }
-    return `Task #${task.id} assigned to *${assigneeName}*. They have been notified on WhatsApp.`;
+    if (stockWarning) {
+      message += `\n\n${stockWarning}`;
+    }
+    return message;
+  }
+
+  /** Non-blocking low-stock warning for delivery/issue task lines. */
+  async buildStockWarningForInventoryLines(
+    factoryId: number,
+    lines?: StockWarningLineInput[],
+  ): Promise<string | null> {
+    if (!lines?.length) return null;
+    return buildInventoryStockWarning(
+      factoryId,
+      lines,
+      this.taskInventoryLineModel,
+      this.taskModel,
+      this.inventoryItemModel,
+    );
   }
 
   // 👥 Assign to ALL
@@ -539,9 +562,9 @@ export class TasksService {
         factory_id,
         options?.inventory_lines,
       );
-      this.messagingService.fireAndForget(
-        this.notifyWorkerTaskAssigned(row.id),
-        'task-assigned',
+      await this.dispatchNewTaskNotification(
+        row.id,
+        TASK_ROUTING_STATUS.DIRECT,
       );
     }
 
@@ -642,9 +665,9 @@ export class TasksService {
       department_id: dept?.id ?? null,
     } as any);
 
-    this.messagingService.fireAndForget(
-      this.notifyWorkerTaskAssigned(task.id),
-      'task-assigned',
+    await this.dispatchNewTaskNotification(
+      task.id,
+      TASK_ROUTING_STATUS.DELEGATED_TO_WORKER,
     );
 
     const assigneeLabel =
@@ -970,9 +993,15 @@ export class TasksService {
       );
     }
 
-    await this.completeTaskWithAtomicInventory(task, user_id, {
-      completed_by: user_id,
-    });
+    try {
+      await this.completeTaskWithAtomicInventory(task, user_id, {
+        completed_by: user_id,
+      });
+    } catch (error: any) {
+      const enriched = await this.enrichInsufficientStockError(task, error);
+      if (enriched) throw enriched;
+      throw error;
+    }
 
     this.messagingService.fireAndForget(
       this.notifyTaskCompleted(task.id, user_id),
@@ -1237,17 +1266,7 @@ export class TasksService {
       dto.inventory_lines,
     );
 
-    if (routing_status === TASK_ROUTING_STATUS.AWAITING_MANAGER_ACTION) {
-      this.messagingService.fireAndForget(
-        this.notifyManagerRoutingPrompt(task.id),
-        'mgr-route-prompt',
-      );
-    } else {
-      this.messagingService.fireAndForget(
-        this.notifyWorkerTaskAssigned(task.id),
-        'task-assigned',
-      );
-    }
+    await this.dispatchNewTaskNotification(task.id, routing_status);
     return task;
   }
 
@@ -1517,6 +1536,61 @@ export class TasksService {
     }
   }
 
+  private async dispatchNewTaskNotification(
+    taskId: number,
+    routingStatus: string,
+  ): Promise<void> {
+    try {
+      if (routingStatus === TASK_ROUTING_STATUS.AWAITING_MANAGER_ACTION) {
+        await this.notifyManagerRoutingPrompt(taskId);
+      } else {
+        await this.notifyWorkerTaskAssigned(taskId);
+      }
+    } catch (error: any) {
+      this.log.warn(
+        `Task assign notification failed for #${taskId}: ${error?.message ?? error}`,
+      );
+    }
+  }
+
+  private async enrichInsufficientStockError(
+    task: Task,
+    error: unknown,
+  ): Promise<BadRequestException | null> {
+    if (!(error instanceof BadRequestException)) return null;
+    const payload = error.getResponse();
+    const message =
+      typeof payload === 'string'
+        ? payload
+        : Array.isArray((payload as { message?: unknown }).message)
+          ? (payload as { message: string[] }).message.join('\n')
+          : (payload as { message?: string }).message || error.message;
+    if (!/insufficient stock/i.test(String(message))) return null;
+
+    const lines = await this.taskInventoryLineModel.findAll({
+      where: {
+        task_id: task.id,
+        factory_id: task.factory_id,
+        movement_type: TASK_INVENTORY_MOVEMENT_TYPE.STOCK_OUT,
+      },
+      attributes: ['inventory_item_id'],
+      limit: 1,
+    });
+    if (!lines.length) return null;
+
+    const pending = await listPendingDeliveryTasksForItem(
+      task.factory_id,
+      lines[0].inventory_item_id,
+      this.taskInventoryLineModel,
+      this.taskModel,
+      task.id,
+    );
+
+    return new BadRequestException(
+      buildInsufficientStockCompletionMessage(String(message), pending),
+    );
+  }
+
   private async notifyWorkerTaskAssigned(taskId: number) {
     const task = await this.taskModel.findByPk(taskId, {
       attributes: [
@@ -1544,7 +1618,12 @@ export class TasksService {
     const assigner = await this.userModel.findByPk(task.assigned_by, {
       attributes: ['name'],
     });
-    if (!assignee?.phone_number) return;
+    if (!assignee?.phone_number) {
+      this.log.warn(
+        `Task #${taskId}: assignee #${task.assigned_to} has no phone — skipping WhatsApp notification`,
+      );
+      return;
+    }
 
     const factoryName = await this.messagingService.getFactoryName(
       task.factory_id,
@@ -1703,7 +1782,12 @@ export class TasksService {
     const mgr = await this.userModel.findByPk(task.assigned_to, {
       attributes: ['phone_number', 'name'],
     });
-    if (!mgr?.phone_number) return;
+    if (!mgr?.phone_number) {
+      this.log.warn(
+        `Task #${taskId}: manager #${task.assigned_to} has no phone — skipping routing prompt`,
+      );
+      return;
+    }
 
     const factoryName = await this.messagingService.getFactoryName(
       task.factory_id,

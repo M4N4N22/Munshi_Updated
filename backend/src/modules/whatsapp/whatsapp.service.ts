@@ -583,7 +583,12 @@ export class WhatsAppService {
                 error.message ||
                 'Ye abhi process nahi ho paya. Dubara try karein ya *Home par jayein* button dabayein.';
         try {
-          const sent = await this.sendFriendlyErrorReply(body.from);
+          const useGenericReply =
+            status < 500 &&
+            !/insufficient stock/i.test(String(errText));
+          const sent = useGenericReply
+            ? await this.sendFriendlyErrorReply(body.from)
+            : false;
           if (!sent) {
             await this.sendTextMessage(body.from, errText);
           }
@@ -1851,7 +1856,7 @@ export class WhatsAppService {
     const itemLabel = item.unit ? `${item.name} ${item.unit}` : item.name;
     const description = `[DELIVERY] ${itemLabel} (${item.sku}) x${quantityStr}`;
 
-    await this.tasksService.assignToUser(
+    const assignResult = await this.tasksService.assignToUser(
       resolved.user.id,
       assignedBy,
       factoryId,
@@ -1867,11 +1872,18 @@ export class WhatsAppService {
       },
     );
 
-    return buildAssignDeliverySuccessText({
+    const stockWarning =
+      typeof assignResult === 'string' && assignResult.includes('⚠️')
+        ? assignResult.slice(assignResult.indexOf('⚠️'))
+        : '';
+
+    const successText = buildAssignDeliverySuccessText({
       workerName: resolved.user.name || `User #${resolved.user.id}`,
       itemName: item.name,
       quantity: quantityStr,
     });
+
+    return stockWarning ? `${successText}\n\n${stockWarning}` : successText;
   }
 
   private parseAssignCommand(message: string) {
