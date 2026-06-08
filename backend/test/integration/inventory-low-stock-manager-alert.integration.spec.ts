@@ -173,7 +173,7 @@ describe('Phase 3.3A low stock manager notification', () => {
     requireDb(dbUp);
     const { fx, item, ownerPhone } = await seedItemWithThreshold('mgr-owner-only');
     const sendSpy = jest
-      .spyOn(messagingService, 'sendText')
+      .spyOn(messagingService, 'sendInteractiveButtons')
       .mockResolvedValue(undefined);
 
     await publishLowStockEvent(fx, item, { type: 'INTEGRATION_TEST', id: item.id });
@@ -182,6 +182,9 @@ describe('Phase 3.3A low stock manager notification', () => {
     expect(sendSpy).toHaveBeenCalledWith(
       ownerPhone,
       expect.stringContaining('Low Stock Alert'),
+      expect.arrayContaining([
+        expect.objectContaining({ title: 'Purchase karein' }),
+      ]),
     );
   });
 
@@ -192,7 +195,7 @@ describe('Phase 3.3A low stock manager notification', () => {
     const dept = await createDepartment(fx, manager.id, 'ops-both');
     const task = await createTask(fx, dept.id, 'both');
     const sendSpy = jest
-      .spyOn(messagingService, 'sendText')
+      .spyOn(messagingService, 'sendInteractiveButtons')
       .mockResolvedValue(undefined);
 
     await publishLowStockEvent(fx, item, {
@@ -201,8 +204,16 @@ describe('Phase 3.3A low stock manager notification', () => {
     });
 
     expect(sendSpy).toHaveBeenCalledTimes(2);
-    expect(sendSpy).toHaveBeenCalledWith(ownerPhone, expect.any(String));
-    expect(sendSpy).toHaveBeenCalledWith(manager.phone_number, expect.any(String));
+    expect(sendSpy).toHaveBeenCalledWith(
+      ownerPhone,
+      expect.any(String),
+      expect.any(Array),
+    );
+    expect(sendSpy).toHaveBeenCalledWith(
+      manager.phone_number,
+      expect.any(String),
+      expect.any(Array),
+    );
   });
 
   it('3 — owner == manager sends single WhatsApp', async () => {
@@ -211,7 +222,7 @@ describe('Phase 3.3A low stock manager notification', () => {
     const dept = await createDepartment(fx, fx.ownerId, 'ops-self');
     const task = await createTask(fx, dept.id, 'self');
     const sendSpy = jest
-      .spyOn(messagingService, 'sendText')
+      .spyOn(messagingService, 'sendInteractiveButtons')
       .mockResolvedValue(undefined);
 
     await publishLowStockEvent(fx, item, {
@@ -220,7 +231,11 @@ describe('Phase 3.3A low stock manager notification', () => {
     });
 
     expect(sendSpy).toHaveBeenCalledTimes(1);
-    expect(sendSpy).toHaveBeenCalledWith(ownerPhone, expect.any(String));
+    expect(sendSpy).toHaveBeenCalledWith(
+      ownerPhone,
+      expect.any(String),
+      expect.any(Array),
+    );
   });
 
   it('4 — missing manager resolves to owner only', async () => {
@@ -228,7 +243,7 @@ describe('Phase 3.3A low stock manager notification', () => {
     const { fx, item, ownerPhone } = await seedItemWithThreshold('mgr-miss');
     const task = await createTask(fx, null, 'miss');
     const sendSpy = jest
-      .spyOn(messagingService, 'sendText')
+      .spyOn(messagingService, 'sendInteractiveButtons')
       .mockResolvedValue(undefined);
 
     await publishLowStockEvent(fx, item, {
@@ -237,7 +252,11 @@ describe('Phase 3.3A low stock manager notification', () => {
     });
 
     expect(sendSpy).toHaveBeenCalledTimes(1);
-    expect(sendSpy).toHaveBeenCalledWith(ownerPhone, expect.any(String));
+    expect(sendSpy).toHaveBeenCalledWith(
+      ownerPhone,
+      expect.any(String),
+      expect.any(Array),
+    );
   });
 
   it('5 — manager notification failure still notifies owner', async () => {
@@ -247,7 +266,7 @@ describe('Phase 3.3A low stock manager notification', () => {
     const dept = await createDepartment(fx, manager.id, 'ops-mfail');
     const task = await createTask(fx, dept.id, 'mfail');
     const sendSpy = jest
-      .spyOn(messagingService, 'sendText')
+      .spyOn(messagingService, 'sendInteractiveButtons')
       .mockImplementation(async (phone: string) => {
         if (phone === manager.phone_number) {
           throw new Error('Manager channel down');
@@ -260,7 +279,11 @@ describe('Phase 3.3A low stock manager notification', () => {
     });
 
     expect(sendSpy).toHaveBeenCalledTimes(2);
-    expect(sendSpy).toHaveBeenCalledWith(ownerPhone, expect.any(String));
+    expect(sendSpy).toHaveBeenCalledWith(
+      ownerPhone,
+      expect.any(String),
+      expect.any(Array),
+    );
   });
 
   it('6 — owner notification failure still notifies manager', async () => {
@@ -270,7 +293,7 @@ describe('Phase 3.3A low stock manager notification', () => {
     const dept = await createDepartment(fx, manager.id, 'ops-ofail');
     const task = await createTask(fx, dept.id, 'ofail');
     const sendSpy = jest
-      .spyOn(messagingService, 'sendText')
+      .spyOn(messagingService, 'sendInteractiveButtons')
       .mockImplementation(async (phone: string) => {
         if (phone === ownerPhone) {
           throw new Error('Owner channel down');
@@ -283,6 +306,10 @@ describe('Phase 3.3A low stock manager notification', () => {
     });
 
     expect(sendSpy).toHaveBeenCalledTimes(2);
-    expect(sendSpy).toHaveBeenCalledWith(manager.phone_number, expect.any(String));
+    expect(sendSpy).toHaveBeenCalledWith(
+      manager.phone_number,
+      expect.any(String),
+      expect.any(Array),
+    );
   });
 });

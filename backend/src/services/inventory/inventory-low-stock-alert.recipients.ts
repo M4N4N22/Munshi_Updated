@@ -1,5 +1,27 @@
+import { USER_ROLE } from 'src/services/users/users.constants';
 import { TASK_INVENTORY_REFERENCE_TYPE } from 'src/services/tasks/tasks.inventory.constants';
 import { InventoryLowStockEventPayload } from './inventory.low-stock.helper';
+
+export type LowStockAlertDb = {
+  FactoryUser: {
+    findAll: (opts: unknown) => Promise<
+      Array<{ user?: { phone_number?: string | null } | null }>
+    >;
+  };
+  User: {
+    findByPk: (
+      id: number,
+      opts: unknown,
+    ) => Promise<{ phone_number?: string | null } | null>;
+  };
+  Department: {
+    findAll: (opts: unknown) => Promise<Array<{ manager_user_id?: number }>>;
+    findOne: (opts: unknown) => Promise<{ manager_user_id?: number } | null>;
+  };
+  Task: {
+    findOne: (opts: unknown) => Promise<{ department_id?: number | null } | null>;
+  };
+};
 
 /** Deduplicated non-empty phone numbers preserving order (owner first). */
 export function uniqueAlertPhones(
@@ -28,21 +50,83 @@ export type LowStockAlertRecipientInput = {
  * Resolves department manager phone when low-stock movement is TASK-linked.
  * Inventory items have no direct department relation — TASK → department_id → manager.
  */
+/** All factory owners — not only the first linked row. */
+export async function resolveAllOwnerPhones(
+  db: LowStockAlertDb,
+  factoryId: number,
+): Promise<string[]> {
+  const links = await db.FactoryUser.findAll({
+    where: { factory_id: factoryId, role: USER_ROLE.OWNER },
+    order: [['id', 'ASC']],
+    include: [
+      {
+        model: db.User,
+        as: 'user',
+        attributes: ['phone_number'],
+      },
+    ],
+  });
+  const phones: string[] = [];
+  for (const link of links) {
+    const phone = link.user?.phone_number?.trim();
+    if (phone) {
+      phones.push(phone);
+    }
+  }
+  return phones;
+}
+
+/** Every department head in the factory (deduped later with owners). */
+export async function resolveAllDepartmentManagerPhones(
+  db: LowStockAlertDb,
+  factoryId: number,
+): Promise<string[]> {
+  const departments = await db.Department.findAll({
+    where: { factory_id: factoryId },
+    attributes: ['manager_user_id'],
+  });
+  const managerIds = [
+    ...new Set(
+      departments
+        .map((d) => d.manager_user_id)
+        .filter((id): id is number => id != null && Number.isFinite(id)),
+    ),
+  ];
+  const phones: string[] = [];
+  for (const managerId of managerIds) {
+    const manager = await db.User.findByPk(managerId, {
+      attributes: ['phone_number'],
+    });
+    const phone = manager?.phone_number?.trim();
+    if (phone) {
+      phones.push(phone);
+    }
+  }
+  return phones;
+}
+
+/**
+ * Owners + department managers for every low-stock alert.
+ * Order: owners first, then department managers (deduped).
+ */
+export async function resolveLowStockAlertRecipientPhones(
+  db: LowStockAlertDb,
+  factoryId: number,
+  payload?: Partial<InventoryLowStockEventPayload>,
+): Promise<string[]> {
+  const owners = await resolveAllOwnerPhones(db, factoryId);
+  const deptManagers = await resolveAllDepartmentManagerPhones(db, factoryId);
+  const taskManager = payload
+    ? await resolveDepartmentManagerPhoneForLowStockAlert(
+        db,
+        lowStockRecipientInputFromPayload(factoryId, payload),
+      )
+    : null;
+  return uniqueAlertPhones(...owners, ...deptManagers, taskManager);
+}
+
 export async function resolveDepartmentManagerPhoneForLowStockAlert(
-  db: {
-    Task: {
-      findOne: (opts: unknown) => Promise<{ department_id?: number | null } | null>;
-    };
-    Department: {
-      findOne: (opts: unknown) => Promise<{ manager_user_id?: number } | null>;
-    };
-    User: {
-      findByPk: (
-        id: number,
-        opts: unknown,
-      ) => Promise<{ phone_number?: string | null } | null>;
-    };
-  },
+  db: LowStockAlertDb,
   input: LowStockAlertRecipientInput,
 ): Promise<string | null> {
   if (

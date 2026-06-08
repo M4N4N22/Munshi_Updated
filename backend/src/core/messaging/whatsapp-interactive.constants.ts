@@ -1,3 +1,5 @@
+import { WA_LOW_STOCK_PURCHASE_BUTTON_TITLE } from './inventory-low-stock-outbound';
+
 /** Stable WhatsApp interactive reply button IDs (also used as inbound message text). */
 export const WA_INTERACTIVE_ID = {
   TEAM_GOOGLE_FORM: 'team_google_form',
@@ -30,12 +32,26 @@ export const WA_OWNER_HOME_BUTTON_TITLES = {
   [WA_INTERACTIVE_ID.HOME_GO_HOME]: 'Home par jayein',
 } as const;
 
+/** Low-stock alert button label (Olli may echo title instead of reply id). */
+export const WA_LOW_STOCK_BUTTON_TITLES = {
+  low_stock_purchase: WA_LOW_STOCK_PURCHASE_BUTTON_TITLE,
+} as const;
+
 const TITLE_TO_ACTION_ID = new Map<string, WaInteractiveId>(
   [
     ...Object.entries(WA_TEAM_SETUP_BUTTON_TITLES),
     ...Object.entries(WA_OWNER_HOME_BUTTON_TITLES),
   ].map(([id, title]) => [title.toLowerCase(), id as WaInteractiveId] as const),
 );
+
+/** Purchase-request commands from low-stock button reply ids pass through as-is. */
+export function isPurchaseRequestWorkflowCommand(message: string): boolean {
+  const trimmed = message.trim().toLowerCase();
+  return (
+    trimmed === '/purchase_request_create' ||
+    trimmed.startsWith('/purchase_request_create?')
+  );
+}
 
 const OWNER_HOME_TRIGGERS = new Set(
   [

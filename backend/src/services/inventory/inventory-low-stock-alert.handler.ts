@@ -2,14 +2,12 @@ import { Injectable, Logger } from '@nestjs/common';
 import { MessagingService } from 'src/core/messaging/messaging.service';
 import { DomainEvent } from 'src/services/domain-events/domain-events.schema';
 import { DbService } from 'src/core/services/db-service/db.service';
-import { USER_ROLE } from 'src/services/users/users.constants';
-import { buildInventoryLowStockAlertText } from 'src/modules/whatsapp/whatsapp.templates';
+import { buildInventoryLowStockAlertOutbound } from 'src/core/messaging/inventory-low-stock-outbound';
 import { InventoryLowStockEventPayload } from './inventory.low-stock.helper';
 import { formatQuantity } from './inventory.validation';
 import {
-  lowStockRecipientInputFromPayload,
-  resolveDepartmentManagerPhoneForLowStockAlert,
-  uniqueAlertPhones,
+  resolveLowStockAlertRecipientPhones,
+  type LowStockAlertDb,
 } from './inventory-low-stock-alert.recipients';
 
 @Injectable()
@@ -29,12 +27,11 @@ export class InventoryLowStockAlertHandler {
       return;
     }
 
-    const ownerPhone = await this.resolveOwnerPhone(factoryId);
-    const managerPhone = await this.resolveDepartmentManagerPhone(
+    const recipients = await resolveLowStockAlertRecipientPhones(
+      this.dbService.sqlService as unknown as LowStockAlertDb,
       factoryId,
       payload,
     );
-    const recipients = uniqueAlertPhones(ownerPhone, managerPhone);
 
     if (recipients.length === 0) {
       this.logger.warn(
@@ -49,7 +46,7 @@ export class InventoryLowStockAlertHandler {
     const threshold = formatQuantity(Number(payload.reorder_threshold ?? 0));
 
     const inventoryItemId = Number(payload.inventory_item_id);
-    const text = buildInventoryLowStockAlertText({
+    const outbound = buildInventoryLowStockAlertOutbound({
       itemName,
       sku,
       currentQuantity: currentQty,
@@ -57,17 +54,25 @@ export class InventoryLowStockAlertHandler {
       inventoryItemId: Number.isFinite(inventoryItemId) ? inventoryItemId : 0,
     });
 
-    await this.sendAlertIndependently(recipients, text, event.id);
+    await this.sendAlertIndependently(recipients, outbound, event.id);
   }
 
   private async sendAlertIndependently(
     recipients: string[],
-    text: string,
+    outbound: ReturnType<typeof buildInventoryLowStockAlertOutbound>,
     eventId: number,
   ): Promise<void> {
     for (const phone of recipients) {
       try {
-        await this.messagingService.sendText(phone, text);
+        if (outbound.type === 'interactive_buttons') {
+          await this.messagingService.sendInteractiveButtons(
+            phone,
+            outbound.body,
+            outbound.buttons,
+          );
+        } else {
+          await this.messagingService.sendText(phone, outbound.body);
+        }
       } catch (err) {
         const message = err instanceof Error ? err.message : String(err);
         this.logger.warn(
@@ -75,31 +80,5 @@ export class InventoryLowStockAlertHandler {
         );
       }
     }
-  }
-
-  private async resolveOwnerPhone(factoryId: number): Promise<string | null> {
-    const ownerLink = await this.dbService.sqlService.FactoryUser.findOne({
-      where: { factory_id: factoryId, role: USER_ROLE.OWNER },
-      order: [['id', 'ASC']],
-      include: [
-        {
-          model: this.dbService.sqlService.User,
-          as: 'user',
-          attributes: ['phone_number'],
-        },
-      ],
-    });
-    const phone = (ownerLink as any)?.user?.phone_number as string | undefined;
-    return phone?.trim() ? phone.trim() : null;
-  }
-
-  private async resolveDepartmentManagerPhone(
-    factoryId: number,
-    payload: Partial<InventoryLowStockEventPayload>,
-  ): Promise<string | null> {
-    return resolveDepartmentManagerPhoneForLowStockAlert(
-      this.dbService.sqlService,
-      lowStockRecipientInputFromPayload(factoryId, payload),
-    );
   }
 }

@@ -194,7 +194,7 @@ describe('Phase 3.1 inventory low stock alert', () => {
     requireDb(dbUp);
     const { fx, item } = await seedItemWithThreshold('ls-wa', '10', '10');
     const sendSpy = jest
-      .spyOn(messagingService, 'sendText')
+      .spyOn(messagingService, 'sendInteractiveButtons')
       .mockResolvedValue(undefined);
 
     await inventoryTransactionService.recordStockOut({
@@ -218,10 +218,11 @@ describe('Phase 3.1 inventory low stock alert', () => {
     expect(event!.status).toBe('COMPLETED');
 
     expect(sendSpy).toHaveBeenCalledTimes(1);
-    const [phone, message] = sendSpy.mock.calls[0];
+    const [phone, body, buttons] = sendSpy.mock.calls[0];
     expect(String(phone)).toMatch(/^\+91/);
-    expect(message).toContain('Low Stock Alert');
-    expect(message).toContain(`/purchase_request_create?itemId=${item.id}`);
-    expect(message).toContain('Inventory low ho gaya hai');
+    expect(body).toContain('Low Stock Alert');
+    expect(body).toContain('Inventory low ho gaya hai');
+    expect(buttons[0].id).toBe(`/purchase_request_create?itemId=${item.id}`);
+    expect(buttons[0].title).toBe('Purchase karein');
   });
 });

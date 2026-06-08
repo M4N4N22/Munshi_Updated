@@ -176,30 +176,6 @@ export function buildTaskInventoryCompletionOwnerText(params: {
   );
 }
 
-/** Owner WhatsApp alert when inventory crosses below reorder threshold. */
-export function buildInventoryLowStockAlertText(params: {
-  itemName: string;
-  sku: string;
-  currentQuantity: string;
-  reorderThreshold: string;
-  inventoryItemId: number;
-}): string {
-  const skuLine = params.sku ? `\n*SKU:* ${params.sku}` : '';
-  const cta = `/purchase_request_create?itemId=${params.inventoryItemId}`;
-  return (
-    `${WA_DIVIDER_WIDE}\n` +
-    `⚠️ *Low Stock Alert*\n` +
-    `${WA_DIVIDER_WIDE}\n\n` +
-    `*Item:*\n${params.itemName}${skuLine}\n\n` +
-    `*Current:*\n${params.currentQuantity}\n\n` +
-    `*Threshold:*\n${params.reorderThreshold}\n\n` +
-    `Inventory low ho gaya hai.\n\n` +
-    `Purchase request create karne ke liye:\n` +
-    `${cta}\n\n` +
-    `${WA_DIVIDER_WIDE}`
-  );
-}
-
 /** Owner WhatsApp alert when integration pull/push sync fails terminally. */
 export function buildIntegrationSyncFailedAlertText(params: {
   provider: string;
