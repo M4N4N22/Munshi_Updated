@@ -7,7 +7,9 @@ import { extname } from 'path';
 import { parseInventoryCsvText } from 'src/modules/whatsapp/inventory-csv.parse';
 import { INVENTORY_CSV_MAX_BYTES } from 'src/modules/whatsapp/inventory-csv.constants';
 import { ImportInventoryCsvDto } from './inventory.dto';
+import type { InventoryCsvRow } from 'src/modules/whatsapp/inventory-csv.parse';
 import {
+  InventoryImportReview,
   InventoryImportService,
   InventoryImportSummary,
 } from './inventory-import.service';
@@ -36,25 +38,70 @@ const REJECTED_EXTENSIONS = new Set([
 export class InventoryImportUploadService {
   constructor(private readonly importService: InventoryImportService) {}
 
-  async uploadCsv(
-    file: InventoryCsvUploadFile | undefined,
-    dto: ImportInventoryCsvDto,
-  ): Promise<InventoryImportSummary> {
+  parseCsvFile(file: InventoryCsvUploadFile | undefined): InventoryCsvRow[] {
     this.assertCsvFile(file);
-
     const text = file!.buffer.toString('utf8');
     const parsed = parseInventoryCsvText(text);
     if (!parsed.ok) {
       throw new BadRequestException(parsed.error);
     }
+    return parsed.rows;
+  }
 
+  async buildImportReview(
+    factoryId: number,
+    rows: InventoryCsvRow[],
+  ): Promise<InventoryImportReview> {
+    return this.importService.buildImportReview(factoryId, rows);
+  }
+
+  async processImportWithProvisioning(
+    dto: ImportInventoryCsvDto,
+    rows: InventoryCsvRow[],
+    review: InventoryImportReview,
+  ): Promise<InventoryImportSummary> {
+    const batchId = dto.batch_id ?? this.generateBatchId();
+
+    try {
+      const provision = await this.importService.ensureMasterData(
+        dto.factory_id,
+        review.newCategories,
+        review.newLocations,
+      );
+
+      const summary = await this.importService.processImport(
+        dto.factory_id,
+        dto.created_by,
+        rows,
+        batchId,
+      );
+
+      return {
+        ...summary,
+        categoriesCreatedCount: provision.categoriesCreated,
+        locationsCreatedCount: provision.locationsCreated,
+      };
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      if (msg.includes('not found')) {
+        throw new NotFoundException(msg);
+      }
+      throw err;
+    }
+  }
+
+  async uploadCsv(
+    file: InventoryCsvUploadFile | undefined,
+    dto: ImportInventoryCsvDto,
+  ): Promise<InventoryImportSummary> {
+    const rows = this.parseCsvFile(file);
     const batchId = dto.batch_id ?? this.generateBatchId();
 
     try {
       return await this.importService.processImport(
         dto.factory_id,
         dto.created_by,
-        parsed.rows,
+        rows,
         batchId,
       );
     } catch (err: unknown) {

@@ -27,6 +27,22 @@ export type InventoryImportSummary = {
   failedCount: number;
   skippedCount: number;
   rowResults: InventoryImportRowResult[];
+  categoriesCreatedCount?: number;
+  locationsCreatedCount?: number;
+};
+
+export type InventoryImportReview = {
+  newCategories: string[];
+  existingCategories: string[];
+  newLocations: string[];
+  existingLocations: string[];
+  newItems: Array<{ sku: string; name: string }>;
+  existingItems: Array<{ sku: string; name: string }>;
+};
+
+export type MasterDataProvisionResult = {
+  categoriesCreated: number;
+  locationsCreated: number;
 };
 
 @Injectable()
@@ -35,6 +51,132 @@ export class InventoryImportService {
     private readonly repository: InventoryRepository,
     private readonly transactionService: InventoryTransactionService,
   ) {}
+
+  async buildImportReview(
+    factoryId: number,
+    rows: InventoryCsvRow[],
+  ): Promise<InventoryImportReview> {
+    assertFactoryId(factoryId);
+
+    const categoryStatus = new Map<string, 'new' | 'existing'>();
+    const locationStatus = new Map<string, 'new' | 'existing'>();
+    const newItems: Array<{ sku: string; name: string }> = [];
+    const existingItems: Array<{ sku: string; name: string }> = [];
+
+    for (const row of rows) {
+      const categoryName = row.category.trim();
+      if (categoryName && !categoryStatus.has(categoryName)) {
+        const found = await this.repository.findCategoryByName(
+          factoryId,
+          categoryName,
+        );
+        categoryStatus.set(categoryName, found ? 'existing' : 'new');
+      }
+
+      const locationName = row.location.trim();
+      if (locationName && !locationStatus.has(locationName)) {
+        const found = await this.repository.findLocationByName(
+          factoryId,
+          locationName,
+        );
+        locationStatus.set(locationName, found ? 'existing' : 'new');
+      }
+
+      try {
+        const sku = normalizeSku(row.sku);
+        const name = normalizeInventoryName(row.name, 'Item name');
+        const existing = await this.repository.findItemBySku(factoryId, sku);
+        const entry = { sku, name };
+        if (existing) {
+          if (!existingItems.some((i) => i.sku === sku)) {
+            existingItems.push(entry);
+          }
+        } else if (!newItems.some((i) => i.sku === sku)) {
+          newItems.push(entry);
+        }
+      } catch {
+        // Invalid SKU rows remain subject to per-row validation at import time.
+      }
+    }
+
+    const newCategories: string[] = [];
+    const existingCategories: string[] = [];
+    for (const [name, status] of categoryStatus) {
+      (status === 'new' ? newCategories : existingCategories).push(name);
+    }
+
+    const newLocations: string[] = [];
+    const existingLocations: string[] = [];
+    for (const [name, status] of locationStatus) {
+      (status === 'new' ? newLocations : existingLocations).push(name);
+    }
+
+    newCategories.sort();
+    existingCategories.sort();
+    newLocations.sort();
+    existingLocations.sort();
+
+    return {
+      newCategories,
+      existingCategories,
+      newLocations,
+      existingLocations,
+      newItems,
+      existingItems,
+    };
+  }
+
+  async ensureMasterData(
+    factoryId: number,
+    categoryNames: string[],
+    locationNames: string[],
+  ): Promise<MasterDataProvisionResult> {
+    assertFactoryId(factoryId);
+    let categoriesCreated = 0;
+    let locationsCreated = 0;
+
+    await this.repository.sequelize.transaction(async (transaction) => {
+      for (const rawName of categoryNames) {
+        const name = normalizeInventoryName(rawName, 'Category');
+        const existing = await this.repository.findCategoryByName(
+          factoryId,
+          name,
+        );
+        if (!existing) {
+          await this.repository.createCategory(
+            {
+              factory_id: factoryId,
+              name,
+              is_active: true,
+            },
+            transaction,
+          );
+          categoriesCreated++;
+        }
+      }
+
+      for (const rawName of locationNames) {
+        const name = normalizeInventoryName(rawName, 'Location');
+        const existing = await this.repository.findLocationByName(
+          factoryId,
+          name,
+        );
+        if (!existing) {
+          await this.repository.createLocation(
+            {
+              factory_id: factoryId,
+              name,
+              is_active: true,
+            },
+            transaction,
+          );
+          locationsCreated++;
+        }
+      }
+    });
+
+    return { categoriesCreated, locationsCreated };
+  }
 
   async processImport(
     factoryId: number,

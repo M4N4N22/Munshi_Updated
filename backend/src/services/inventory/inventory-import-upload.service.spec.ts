@@ -5,6 +5,8 @@ import type { InventoryImportService } from './inventory-import.service';
 describe('InventoryImportUploadService', () => {
   const importService = {
     processImport: jest.fn(),
+    buildImportReview: jest.fn(),
+    ensureMasterData: jest.fn(),
   } as unknown as InventoryImportService;
 
   const service = new InventoryImportUploadService(importService);

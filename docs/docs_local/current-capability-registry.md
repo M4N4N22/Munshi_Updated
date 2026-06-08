@@ -1,12 +1,48 @@
 # Munshi Current Capability Registry
 
-**Document date:** 2026-06-06  
-**Version:** 1.0  
-**Last verified build:** `0e78ae9` (2026-06-06) — `npm run build` PASS  
+**Document date:** 2026-06-08  
+**Version:** 2.0  
+**Last verified build:** `95bab96` (branch `Shantanu`) — backend 340/340, ML 56/56, contract drift 39/39, web build PASS  
 **Last verified UAT:** Phase 0–3 UAT (`49-uat-signoff.md`, 2026-06-06); Document Parsing UAT 7A (`50-document-uat-signoff.md`, 2026-06-06)  
-**Integration test baseline:** 115/115 PASS (`npm run test:integration -- --runInBand`)
+**Last staging verification:** 2026-06-08 — Railway `munshi-staging` live; pilot factory Munshi; Olli webhook + ML classify smoke (see Section 0, Section 6)  
+**Integration test baseline:** 115/115 PASS (`npm run test:integration -- --runInBand`)  
+**Staging deployment:** `munshi-staging` on Railway — **LIVE** (see Section 0)
 
 This document describes **what Munshi can do today**. It does not describe planned work, roadmaps, or enhancements.
+
+---
+
+## Section 0 — Deployment Topology (Current)
+
+| Service | Host | Status | Notes |
+|---------|------|--------|-------|
+| **Backend** | https://backend-production-41504.up.railway.app | **LIVE** | Postgres up; 15/15 migrations; Olli webhook at `POST /webhook` |
+| **ML** | `ml.railway.internal:8080` (private) | **LIVE** | `OPENAI_API_KEY` configured; `/classify` used by backend |
+| **PostgreSQL** | `postgres.railway.internal:5432` | **LIVE** | Railway managed plugin |
+| **Web** | https://munshi-dada.vercel.app | **LIVE** | Onboarding, integrations UI, CSV templates |
+| **GitHub source** | `ShantanuGarg2004/Munshi_Updated` @ `Shantanu` | **CONNECTED** | Railway autodeploy from `Shantanu` branch (backend root `backend/`, ml root `ml/`) |
+
+### Staging data (pilot factory)
+
+| Item | Value |
+|------|-------|
+| Factory | **Munshi** (ID `1`) |
+| Users | 7 — 3 owners, 2 managers (IT, Sales), 2 workers |
+| Departments | IT (head: Shantanu2), Sales (head: Debapratim Dey) |
+| Inventory / tasks | **Not seeded** on staging |
+| MSG91 OTP / Zoho OAuth | **Not configured** on staging |
+
+### Staging secrets configured
+
+| Variable | Service | Status |
+|----------|---------|--------|
+| `OLLI_KEY`, `WHATSAPP_VERIFY_TOKEN` | backend | Configured |
+| `OPENAI_API_KEY` | ml | Configured |
+| `ONBOARDING_MSG91_*` | backend | Not set |
+| `ZOHO_*` | backend | Not set |
+| `ENABLE_WEBHOOK_TEST_ROUTE` | backend | `true` (staging only) |
+
+Evidence: `docs/docs_local/deployment/36-staging-signoff.md`, `docs/docs_local/pilot/36-onboarding-signoff.md`, `docs/docs_local/pilot/23-live-webhook-readiness.md`.
 
 ---
 
@@ -32,9 +68,9 @@ Each feature in Section 2 includes:
 
 | Feature Name | Category | Description | Current State | Availability | Dependencies | Notes |
 |--------------|----------|-------------|---------------|--------------|--------------|-------|
-| Health Check | Platform | Liveness probe with Postgres status | PRODUCTION READY | REST API | PostgreSQL | UAT 48: `/health` 200 |
-| Migration Health | Platform | Reports applied migration status | PRODUCTION READY | REST API | PostgreSQL | UAT 48: `/health/migrations` 200 |
-| Database Migrations | Platform | SQL migrations applied on startup | PRODUCTION READY | Internal Service | PostgreSQL | 15 migrations applied; pending 0 |
+| Health Check | Platform | Liveness probe with Postgres status | PRODUCTION READY | REST API | PostgreSQL | Staging 2026-06-08: `/health` 200, Postgres `up` |
+| Migration Health | Platform | Reports applied migration status | PRODUCTION READY | REST API | PostgreSQL | Staging: `/health/migrations` 200, 15/15 |
+| Database Migrations | Platform | SQL migrations applied on startup | PRODUCTION READY | Internal Service | PostgreSQL | 15 migrations applied; `up_to_date: true` on staging |
 
 ---
 
@@ -42,13 +78,13 @@ Each feature in Section 2 includes:
 
 | Feature Name | Category | Description | Current State | Availability | Dependencies | Notes |
 |--------------|----------|-------------|---------------|--------------|--------------|-------|
-| Owner Onboarding (OTP) | Onboarding | Phone OTP send/verify and owner registration with factory | READY WITH KNOWN ISSUES | REST API | PostgreSQL, OTP pepper, SMS (MSG91 optional) | UAT 49 PASS; dev OTP exposed when not production |
-| Factory Management | Organization | Create/list/update factories; assign members by phone | READY WITH KNOWN ISSUES | REST API | PostgreSQL | UAT 49 PASS |
-| Department Management | Organization | Create departments with slug and manager | READY WITH KNOWN ISSUES | REST API | PostgreSQL | UAT 49 PASS — 4 departments created |
-| Team Member Assignment | Organization | Add owner/manager/worker to factory by phone | READY WITH KNOWN ISSUES | REST API | PostgreSQL | Roles: OWNER, MANAGER, WORKER only |
+| Owner Onboarding (OTP) | Onboarding | Phone OTP send/verify and owner registration with factory | READY WITH KNOWN ISSUES | REST API, Web | PostgreSQL, OTP pepper, SMS (MSG91 optional) | UAT 49 PASS; **MSG91 not set on staging** — web OTP path blocked in prod mode |
+| Factory Management | Organization | Create/list/update factories; assign members by phone | READY WITH KNOWN ISSUES | REST API | PostgreSQL | Staging pilot: factory **Munshi** (ID 1) created via API |
+| Department Management | Organization | Create departments with slug and manager | READY WITH KNOWN ISSUES | REST API | PostgreSQL | Staging: IT + Sales departments on factory Munshi |
+| Team Member Assignment | Organization | Add owner/manager/worker to factory by phone | READY WITH KNOWN ISSUES | REST API | PostgreSQL | Staging: 7 users linked; triggers Olli onboarding template + owner/manager broadcast |
 | Team Bulk CSV Import | Organization | Import workers from CSV via WhatsApp after menu selection | CONDITIONAL | WhatsApp | PostgreSQL, WhatsApp Provider, Workflow Engine | Implemented; not in Phase 0–3 UAT scope |
-| User Management | Organization | CRUD and lookup users by phone | READY WITH KNOWN ISSUES | REST API | PostgreSQL | Functional; UAT used for test data setup |
-| Owner Home Menu | Organization | Readiness snapshot and interactive owner menu on WhatsApp | READY WITH KNOWN ISSUES | WhatsApp | PostgreSQL, WhatsApp Provider, Inventory Module, Task Module | UAT 49 PASS for owner greeting |
+| User Management | Organization | CRUD and lookup users by phone | READY WITH KNOWN ISSUES | REST API | PostgreSQL | Lookup: `GET /users/by-phone?phone=` (E.164 `91…`); staging: 7 users on factory Munshi |
+| Owner Home Menu | Organization | Readiness snapshot and interactive owner menu on WhatsApp | READY WITH KNOWN ISSUES | WhatsApp | PostgreSQL, WhatsApp Provider, Inventory Module, Task Module | Staging: shown when ML classifies `general_chat` (e.g. bare word `members`) |
 | Business Discovery | Organization | Progressive profiling workflow and REST readiness APIs | NOT VERIFIED | Multiple | PostgreSQL, Workflow Engine, WhatsApp Provider | Implemented; not exercised in UAT 49/50 |
 
 ---
@@ -90,7 +126,7 @@ Each feature in Section 2 includes:
 | Manager Task Reject | Tasks | `/mgrreject` — reject misrouted task with reason | NOT VERIFIED | WhatsApp | Task Module, WhatsApp Provider | Command registered |
 | Task Completion | Tasks | Mark task complete; triggers notifications | READY WITH KNOWN ISSUES | Multiple | Task Module, PostgreSQL, WhatsApp Provider | UAT 49 PASS |
 | Task Updates | Tasks | Progress updates on tasks via `/update` | NOT VERIFIED | WhatsApp | Task Module | Command registered |
-| Task Listing | Tasks | Worker/owner views tasks via `/tasks` | READY WITH KNOWN ISSUES | WhatsApp | Task Module, WhatsApp Provider | UAT 49 PASS (worker) |
+| Task Listing | Tasks | Worker/owner views tasks via `/tasks` | READY WITH KNOWN ISSUES | WhatsApp | Task Module, WhatsApp Provider | UAT 49 PASS (worker); **staging: no tasks seeded** |
 | Task + Inventory Consumption | Tasks | STOCK_OUT on task complete when inventory lines attached | READY WITH KNOWN ISSUES | Multiple | Task Module, Inventory Module, PostgreSQL | Integration + UAT 49; REST qty fields use string type |
 | Negative Stock Protection | Tasks | Blocks task completion when insufficient stock | PRODUCTION READY | Multiple | Task Module, Inventory Module | UAT 49 PASS — 400 on over-delivery |
 | Duplicate Completion Handling | Tasks | Idempotent handling when task already completed | PRODUCTION READY | Multiple | Task Module | UAT 49 PASS |
@@ -108,7 +144,7 @@ Each feature in Section 2 includes:
 | Inventory Ledger | Inventory | Stock in, stock out, adjustment with reference types | PRODUCTION READY | REST API | PostgreSQL, Inventory Module | Row locking; TASK and CSV_IMPORT references |
 | Inventory Listing & Search | Inventory | Paginated item list, by-SKU lookup, quantity endpoints | READY WITH KNOWN ISSUES | REST API | PostgreSQL, Inventory Module | UAT 49 PASS |
 | Low Stock Detection (API) | Inventory | List items below reorder threshold | PRODUCTION READY | REST API | PostgreSQL, Inventory Module | UAT 7A + integration |
-| Inventory Status Command | Inventory | `/inventory_status [SKU]` — stock summary on WhatsApp | READY WITH KNOWN ISSUES | WhatsApp | Inventory Module, WhatsApp Provider | UAT 49 / 7A transcript |
+| Inventory Status Command | Inventory | `/inventory_status [SKU]` — stock summary on WhatsApp | READY WITH KNOWN ISSUES | WhatsApp | Inventory Module, WhatsApp Provider | UAT 49 / 7A transcript; **staging: no inventory seeded** |
 | Inventory Create (Workflow) | Inventory | Stepwise single-item create via WhatsApp | NOT VERIFIED | WhatsApp | Workflow Engine, Inventory Module | `/inventory_create` registered |
 
 ---
@@ -176,11 +212,12 @@ Each feature in Section 2 includes:
 
 | Feature Name | Category | Description | Current State | Availability | Dependencies | Notes |
 |--------------|----------|-------------|---------------|--------------|--------------|-------|
-| WhatsApp Production Webhook | WhatsApp | Meta webhook verify + inbound messages/documents | CONDITIONAL | WhatsApp | WhatsApp Provider, WHATSAPP_VERIFY_TOKEN | Requires Meta + OLLI/messaging credentials |
-| WhatsApp Test Webhook | WhatsApp | `POST /webhook/test` for structured message injection | READY WITH KNOWN ISSUES | REST API | WhatsApp Service | Used for all UAT; open endpoint |
-| Structured Command Router | WhatsApp | Slash commands bypass ML (`/help`, `/tasks`, etc.) | READY WITH KNOWN ISSUES | WhatsApp | WhatsApp Service, Workflow Engine | UAT 49 PASS — 5/5 commands |
-| Command Help | WhatsApp | `/help` — lists available commands | READY WITH KNOWN ISSUES | WhatsApp | WhatsApp Provider | UAT 49 PASS |
-| Members List | WhatsApp | `/members` — active factory members | READY WITH KNOWN ISSUES | WhatsApp | User Module, WhatsApp Provider | UAT 49 |
+| WhatsApp Production Webhook | WhatsApp | Olli/GetOlli inbound at `POST /webhook`; verify at `GET /webhook` | READY WITH KNOWN ISSUES | WhatsApp | OLLI, WHATSAPP_VERIFY_TOKEN | **Staging LIVE** — test webhook + inbound reply confirmed; **no `X-GetOlli-Signature` verification** |
+| WhatsApp Test Webhook | WhatsApp | `POST /webhook/test` for structured message injection | READY WITH KNOWN ISSUES | REST API | WhatsApp Service | **Enabled on staging** (`ENABLE_WEBHOOK_TEST_ROUTE=true`); disable before prod |
+| Structured Command Router | WhatsApp | Slash commands bypass ML (`/help`, `/tasks`, etc.) | READY WITH KNOWN ISSUES | WhatsApp | WhatsApp Service, Workflow Engine | Staging: `/members` via `team members dikhao` confirmed for factory Munshi |
+| Command Help | WhatsApp | `/help` — lists available commands | READY WITH KNOWN ISSUES | WhatsApp | WhatsApp Provider | UAT 49 PASS; staging smoke PASS |
+| Members List | WhatsApp | `/members` — team overview (departments, owners, managers, workers) | READY WITH KNOWN ISSUES | WhatsApp | User Module, Departments Module, WhatsApp Provider | Owners/managers only; use `/members` or *team members dikhao* — bare `members` → home menu |
+| WhatsApp Outbound (Olli) | WhatsApp | Text, template, interactive buttons via Olli API | READY WITH KNOWN ISSUES | WhatsApp | OLLI_KEY, OLLI_URL | Staging: onboarding + `/members` outbound accepted; some `Re-engagement message` delivery failures |
 | Issues Commands | WhatsApp | `/issue`, `/issues`, `/resolve` | NOT VERIFIED | WhatsApp | Issues Module, WhatsApp Provider | Commands registered |
 | Reports Command | WhatsApp | `/report [date]` | NOT VERIFIED | WhatsApp | Reports Module, WhatsApp Provider | Command registered |
 
@@ -213,9 +250,9 @@ Each feature in Section 2 includes:
 
 | Feature Name | Category | Description | Current State | Availability | Dependencies | Notes |
 |--------------|----------|-------------|---------------|--------------|--------------|-------|
-| ML Document Parse | ML | `POST /parse` — tabular inventory extraction | CONDITIONAL | Internal Service | ML Service (port 8000) | Required for document parsing; UAT 7A with ML up |
-| ML Intent Classification | ML | `POST /classify` — free-text message routing | NOT VERIFIED | Internal Service | ML Service | Implemented; excluded from UAT 49 scope |
-| ML Message Convert | ML | `POST /convert` — WhatsApp to plain text | NOT VERIFIED | Internal Service | ML Service | Endpoint exists |
+| ML Document Parse | ML | `POST /parse` — tabular inventory extraction | CONDITIONAL | Internal Service | ML Service at `ML_URL` | Staging ML live; document path not re-run on staging |
+| ML Intent Classification | ML | `POST /classify` — free-text message routing | READY WITH KNOWN ISSUES | Internal Service | ML Service at `ML_URL` | **Staging verified** — `team members dikhao` → `/members`; bare `members` → `general_chat` |
+| ML Message Convert | ML | `POST /convert` — WhatsApp to plain text | NOT VERIFIED | Internal Service | ML Service | Endpoint exists; not exercised on staging |
 
 ---
 
@@ -252,7 +289,9 @@ Each feature in Section 2 includes:
 | Zoho Push Retry | Cron Jobs, integration_push_deliveries table | Yes |
 | Sync Failure Alerts | Domain Events, Integration Module | Yes |
 | Domain Event handlers | Domain Event Processor cron | Yes |
-| ML Intent Classification | ML Service running at ML_URL | Yes when using free-text (not UAT-verified) |
+| ML Intent Classification | ML Service running at ML_URL | Yes for free-text WhatsApp; **staging verified** with known NLP gaps (e.g. bare `members`) |
+| WhatsApp Production Webhook | OLLI inbound, WHATSAPP_VERIFY_TOKEN | Yes for live staging webhook at `POST /webhook` |
+| Olli webhook signature | Signing secret (not implemented) | No — `X-GetOlli-Signature` not verified today |
 
 ---
 
@@ -262,8 +301,10 @@ Each feature in Section 2 includes:
 |------------|---------|-----------|-------------------|
 | **PostgreSQL** | Primary data store | **Yes** | All features |
 | **WhatsApp Provider (OLLI)** | Send/receive WhatsApp messages and media | **Yes** for WhatsApp | Commands, workflows, alerts, CSV WA import, onboarding SMS alternative |
-| **WHATSAPP_VERIFY_TOKEN** | Meta webhook verification | **Yes** for production webhook | WhatsApp Production Webhook |
-| **OLLI_URL / OLLI_KEY** | Messaging API auth | **Yes** for outbound WhatsApp | All outbound notifications and workflow prompts |
+| **WHATSAPP_VERIFY_TOKEN** | Olli/Meta webhook verification (`GET /webhook`) | **Yes** for production webhook | WhatsApp Production Webhook — **configured on staging** |
+| **OLLI_URL / OLLI_KEY** | Messaging API auth (outbound + inbound routing) | **Yes** for outbound WhatsApp | All outbound notifications and workflow prompts — **configured on staging** |
+| **OPENAI_API_KEY** | ML `/classify` and `/parse` | **Yes** for NLP and document parse | ML Intent Classification, ML Document Parse — **configured on staging ML** |
+| **Olli Signing Secret** | Inbound webhook authenticity | **Not used** — verification not implemented | WhatsApp Production Webhook accepts unsigned POSTs |
 | **ML Service (`ML_URL`)** | Document parse; optional classify | **Yes** for document parsing; optional for NLP | Document Parsing, ML Intent Classification |
 | **OTP_PEPPER** | Hash onboarding OTP codes | **Yes** for onboarding | Owner Onboarding |
 | **MSG91** (optional) | Production OTP SMS | No | Owner Onboarding |
@@ -297,32 +338,39 @@ Each feature in Section 2 includes:
 9. **Zoho sync** requires an active stored connection; manual sync returns an error when none exists.
 10. **Purchase request REST approve** requires request in pending state (`submit: true` on create); DRAFT cannot be approved directly.
 11. **User roles** are OWNER, MANAGER, WORKER only — no separate Inventory Manager or Vendor Coordinator role types.
-12. **ML intent classification** (free-text WhatsApp) exists in code but was not validated in Phase 0–3 UAT.
-13. **WhatsApp test webhook** (`/webhook/test`) is enabled for development and UAT injection.
-14. **Inventory REST mutations** expect quantity as string in several DTOs (e.g. `"20"` not `20`).
-15. **Finance module** has database schema only — no user-facing capability.
+12. **ML intent classification** is live on staging but has NLP gaps — e.g. bare `members` maps to `general_chat` (owner home menu) instead of `/members`; use `/members` or phrases like *team members dikhao*.
+13. **Olli inbound webhook** does not verify `X-GetOlli-Signature`; signing secret is unused.
+14. **WhatsApp test webhook** (`/webhook/test`) is **enabled on staging** (`ENABLE_WEBHOOK_TEST_ROUTE=true`); disable before production.
+15. **Staging pilot data** — factory Munshi has users and departments but **no inventory or tasks seeded**; inventory/task WhatsApp commands need seed data.
+16. **MSG91 OTP** and **Zoho OAuth** are not configured on staging — web onboarding OTP and Zoho connect/sync paths are blocked there.
+17. **Olli outbound delivery** — some messages fail with `Re-engagement message` (provider policy); onboarding template and structured replies generally succeed.
+18. **Inventory REST mutations** expect quantity as string in several DTOs (e.g. `"20"` not `20`).
+19. **Finance module** has database schema only — no user-facing capability.
 
 ---
 
 ## Section 6 — Verified Status
 
-Legend: **Impl** = implementation reports (28–45); **IT** = integration tests; **UAT** = business UAT (49, 50)
+Legend: **Impl** = implementation reports (28–45); **IT** = integration tests; **UAT** = business UAT (49, 50); **Staging** = Railway `munshi-staging` live checks (2026-06-08)
 
-| Feature Area | Impl | IT | UAT |
-|--------------|------|-----|-----|
-| Phase 0 task-inventory | Yes (99-signoff) | 12/12 + later 115 suite | PASS (49) |
-| Phase 1 CSV import | Yes (27-signoff) | PASS | PASS (49, 7A baseline) |
-| Phase 2 Zoho | Yes (39-signoff) | PASS | PARTIAL (49 — no OAuth env) |
-| Phase 3 alerts | Yes (41–42-signoff) | PASS | PASS (integration + 49) |
-| Phase 3.3A manager alerts | Yes (44-signoff) | PASS | PASS (integration) |
-| Phase 3.4 PR prefill | Yes (45-signoff) | PASS | PARTIAL (49 stale route) |
-| Document parsing 7A | Yes (documents module) | Limited | CONDITIONAL (50) |
-| Onboarding & org | Yes | Partial | PASS (49) |
-| WhatsApp commands | Yes | Partial | PASS (49) |
-| Issues / Reports / Approvals | Yes | Not Verified | Not Verified |
-| Business Discovery | Yes | Partial | Not Verified |
-| ML classify (NLP) | Yes | Not Verified | Not Verified (out of UAT scope) |
-| Finance schema | Migration only | N/A | DISABLED |
+| Feature Area | Impl | IT | UAT | Staging |
+|--------------|------|-----|-----|---------|
+| Platform health / migrations | Yes | PASS | PASS (48) | **PASS** — `/health`, `/health/migrations` |
+| Phase 0 task-inventory | Yes (99-signoff) | 12/12 + later 115 suite | PASS (49) | **PARTIAL** — no inventory/tasks seeded |
+| Phase 1 CSV import | Yes (27-signoff) | PASS | PASS (49, 7A baseline) | Not re-run |
+| Phase 2 Zoho | Yes (39-signoff) | PASS | PARTIAL (49 — no OAuth env) | **BLOCKED** — `ZOHO_*` unset |
+| Phase 3 alerts | Yes (41–42-signoff) | PASS | PASS (integration + 49) | Not re-run (needs stock data) |
+| Phase 3.3A manager alerts | Yes (44-signoff) | PASS | PASS (integration) | Not re-run |
+| Phase 3.4 PR prefill | Yes (45-signoff) | PASS | PARTIAL (49 stale route) | Not re-run |
+| Document parsing 7A | Yes (documents module) | Limited | CONDITIONAL (50) | ML live; parse path not re-run |
+| Onboarding & org | Yes | Partial | PASS (49) | **PASS** — factory Munshi, 7 users, 2 departments via API |
+| WhatsApp webhook (Olli) | Yes | Partial | Not in UAT 49 | **PASS** — test webhook 201; inbound reply confirmed |
+| WhatsApp commands | Yes | Partial | PASS (49) | **PARTIAL** — `/members` via NLP phrase; bare `members` fails |
+| WhatsApp outbound (Olli) | Yes | Partial | UAT via test route | **PASS** — onboarding + team overview sent |
+| Issues / Reports / Approvals | Yes | Not Verified | Not Verified | Not exercised |
+| Business Discovery | Yes | Partial | Not Verified | Not exercised |
+| ML classify (NLP) | Yes | Not Verified | Out of UAT 49 scope | **PARTIAL** — classify live; known intent gaps |
+| Finance schema | Migration only | N/A | DISABLED | N/A |
 
 ---
 
@@ -332,30 +380,33 @@ Legend: **Impl** = implementation reports (28–45); **IT** = integration tests;
 
 | Current State | Count |
 |---------------|-------|
-| PRODUCTION READY | 12 |
-| READY WITH KNOWN ISSUES | 38 |
-| CONDITIONAL | 14 |
+| PRODUCTION READY | 17 |
+| READY WITH KNOWN ISSUES | 41 |
+| CONDITIONAL | 11 |
 | DEVELOPMENT ONLY | 0 |
 | DISABLED | 2 |
-| NOT VERIFIED | 22 |
-| **Total features catalogued** | **88** |
+| NOT VERIFIED | 24 |
+| **Total features catalogued** | **95** |
 
 ### Can they be used today?
 
 | Audience | Usable today? |
 |----------|----------------|
-| MSME owner on WhatsApp (structured commands) | **Yes** — onboarding, tasks, attendance, CSV import, inventory status, PR workflows |
-| MSME owner via REST (trusted network) | **Yes** — same domains plus admin CRUD |
-| MSME uploading supplier CSV for reviewed import | **Yes** — via REST + ML + YES approval (conditional) |
+| MSME owner on WhatsApp (structured commands) | **Yes** — UAT-verified; on **staging** needs inventory/task seed data for full E2E |
+| MSME owner on WhatsApp (live Olli staging) | **Partial** — webhook live, onboarding + `/members` work; NLP gaps and provider delivery limits apply |
+| MSME owner via REST (trusted network) | **Yes** — staging backend live; same domains plus admin CRUD |
+| MSME uploading supplier CSV for reviewed import | **Yes** — via REST + ML + YES approval (conditional); not re-run on staging |
 | MSME uploading invoice photos | **No** |
-| MSME requiring Zoho sync | **Only after** OAuth env + connection configured |
-| MSME using free-text WhatsApp (no slash commands) | **Not verified** in UAT |
+| MSME requiring Zoho sync | **Only after** OAuth env + connection configured — **blocked on staging** |
+| MSME using free-text WhatsApp (no slash commands) | **Partial** — ML classify live on staging; not full UAT coverage; use explicit slash commands when unsure |
 
 ### Overall product state (today)
 
-**Munshi today** is an operational **WhatsApp-first MSME backend** covering organization setup, task management with inventory linkage, inventory ledger and CSV import, tabular document import with human approval, purchase requests, low-stock and sync-failure alerting, and Zoho integration (when configured). Capabilities are **implemented and integration-tested** across Phase 0–3; **business UAT** confirms core journeys as **ready with known issues**, with **document parsing conditional** on structured files and REST path.
+**Munshi today** is an operational **WhatsApp-first MSME backend** covering organization setup, task management with inventory linkage, inventory ledger and CSV import, tabular document import with human approval, purchase requests, low-stock and sync-failure alerting, and Zoho integration (when configured). Capabilities are **implemented and integration-tested** across Phase 0–3; **business UAT** confirms core journeys as **ready with known issues**.
 
-This registry is the source of truth for **what exists today**. For validation evidence, see `docs/docs_local/inventory/49-uat-signoff.md`, `50-document-uat-signoff.md`, and phase signoff reports `27-*`, `39-*`, `99-*` without treating them as future plans.
+**Staging (`munshi-staging`)** is **live** on Railway with backend, ML, and PostgreSQL connected to GitHub autodeploy. Pilot factory **Munshi** validates org setup, Olli webhook in/out, and ML classification with documented gaps. Remaining staging blockers: seed inventory/tasks, configure MSG91/Zoho, implement webhook signature verification, disable test webhook route before prod.
+
+This registry is the source of truth for **what exists today**. For validation evidence, see `docs/docs_local/inventory/49-uat-signoff.md`, `50-document-uat-signoff.md`, `docs/docs_local/deployment/36-staging-signoff.md`, `docs/docs_local/pilot/23-live-webhook-readiness.md`, `docs/docs_local/pilot/36-onboarding-signoff.md`, and phase signoff reports `27-*`, `39-*`, `99-*` without treating them as future plans.
 
 ---
 

@@ -1,0 +1,2349 @@
+{
+  "overall_intent": 0.4699,
+  "overall_entity": 0.7765,
+  "full_pass": 0.4126,
+  "conf_top20": [
+    {
+      "expected": "/mgrtransfer",
+      "predicted": "general_chat",
+      "count": 10,
+      "pct_of_expected": 83.3,
+      "examples": [
+        "transfer task 15 to IT",
+        "15 send to it",
+        "transfer task 15",
+        "15 it ko",
+        "mgrtr 15"
+      ]
+    },
+    {
+      "expected": "/mgrreject",
+      "predicted": "general_chat",
+      "count": 10,
+      "pct_of_expected": 83.3,
+      "examples": [
+        "reject task 18",
+        "18 reject",
+        "reject task 18",
+        "18 reject",
+        "mgrre 18"
+      ]
+    },
+    {
+      "expected": "/mgrself",
+      "predicted": "general_chat",
+      "count": 10,
+      "pct_of_expected": 83.3,
+      "examples": [
+        "I will do task 12",
+        "task 12 main kar lunga",
+        "12 main sambhal lunga",
+        "i do task 12",
+        "12 main karunga"
+      ]
+    },
+    {
+      "expected": "/resolve",
+      "predicted": "general_chat",
+      "count": 8,
+      "pct_of_expected": 66.7,
+      "examples": [
+        "Issue 5 is fixed now",
+        "5 resolve kar do fix ho gaya",
+        "resolve 5 fixed",
+        "5 band nahi ab theek",
+        "resolv 5"
+      ]
+    },
+    {
+      "expected": "/inventory_status",
+      "predicted": "general_chat",
+      "count": 8,
+      "pct_of_expected": 40.0,
+      "examples": [
+        "how much cement",
+        "cement stock",
+        "stock cement",
+        "customer puch raha kitna cement hai batao",
+        "kya kya kam pad raha hai"
+      ]
+    },
+    {
+      "expected": "/purchase_request_create",
+      "predicted": "general_chat",
+      "count": 7,
+      "pct_of_expected": 43.8,
+      "examples": [
+        "order cement purchase",
+        "purchse request cement",
+        "order cement",
+        "stock kam hai cement ka purchase chahiye",
+        "cement order aur steel bhi"
+      ]
+    },
+    {
+      "expected": "/absent",
+      "predicted": "general_chat",
+      "count": 6,
+      "pct_of_expected": 50.0,
+      "examples": [
+        "I will not come today",
+        "today no come sick",
+        "absnt aaj",
+        "leave",
+        "doctor ne rest bola hai kal se aaunga"
+      ]
+    },
+    {
+      "expected": "/mgrassign",
+      "predicted": "general_chat",
+      "count": 6,
+      "pct_of_expected": 54.5,
+      "examples": [
+        "priya ko task 15 do",
+        "task 15 priya karegi",
+        "priya task 15 do",
+        "15 priya ko",
+        "prnya ko task 15"
+      ]
+    },
+    {
+      "expected": "/issues",
+      "predicted": "general_chat",
+      "count": 6,
+      "pct_of_expected": 50.0,
+      "examples": [
+        "show issues",
+        "isues dikhao",
+        "issues",
+        "kya kya problems open hain",
+        "kal wale issues abhi bhi open?"
+      ]
+    },
+    {
+      "expected": "/help",
+      "predicted": "general_chat",
+      "count": 6,
+      "pct_of_expected": 50.0,
+      "examples": [
+        "What can you do",
+        "commands batao",
+        "hlp",
+        "mujhe samajh nahi aa raha kya likhun",
+        "pehli baar use kar raha hun guide karo"
+      ]
+    },
+    {
+      "expected": "/report",
+      "predicted": "general_chat",
+      "count": 6,
+      "pct_of_expected": 50.0,
+      "examples": [
+        "daily report",
+        "reprot dikhao",
+        "report",
+        "kal wala report abhi bhejo",
+        "summary"
+      ]
+    },
+    {
+      "expected": "/present",
+      "predicted": "general_chat",
+      "count": 5,
+      "pct_of_expected": 38.5,
+      "examples": [
+        "present",
+        "present today i come",
+        "presnt hu aaj",
+        "present",
+        "aaj aa gaya"
+      ]
+    },
+    {
+      "expected": "/assign",
+      "predicted": "general_chat",
+      "count": 5,
+      "pct_of_expected": 38.5,
+      "examples": [
+        "Please ask Ram to clean the warehouse today",
+        "ram ko bolna godown saaf kare",
+        "ram se kehna store saaf kare aaj",
+        "ram clean warehouse today",
+        "ram safai karo"
+      ]
+    },
+    {
+      "expected": "/update",
+      "predicted": "general_chat",
+      "count": 5,
+      "pct_of_expected": 41.7,
+      "examples": [
+        "updat task 3",
+        "3 update",
+        "3 wala abhi 50 percent ho chuka",
+        "subah start kiya 3 abhi bhi chal raha",
+        "3 update aur 4 complete"
+      ]
+    },
+    {
+      "expected": "/issue",
+      "predicted": "general_chat",
+      "count": 5,
+      "pct_of_expected": 41.7,
+      "examples": [
+        "The forklift will not start",
+        "forklift start nahi ho rahi",
+        "mixer band",
+        "mchine kharab",
+        "subah se mixer chal nahi raha"
+      ]
+    },
+    {
+      "expected": "/members",
+      "predicted": "general_chat",
+      "count": 5,
+      "pct_of_expected": 45.5,
+      "examples": [
+        "Show team members",
+        "show team member",
+        "kaun kaun hai team mein",
+        "memebers list",
+        "team dikhao"
+      ]
+    },
+    {
+      "expected": "/assign_clarify",
+      "predicted": "general_chat",
+      "count": 5,
+      "pct_of_expected": 38.5,
+      "examples": [
+        "Finish the quarterly audit",
+        "audit karo",
+        "websit update",
+        "audit karo",
+        "owner ne bola tha audit kisko du"
+      ]
+    },
+    {
+      "expected": "extract:issue",
+      "predicted": "extract:null",
+      "count": 5,
+      "pct_of_expected": 45.5,
+      "examples": [
+        "5 pipe shyam give",
+        "shyam ko pipe do",
+        "5 pipe shyam",
+        "kal order tha shyam ko 5 pipe",
+        "shyam ko 5 pipe aur ram ko cement"
+      ]
+    },
+    {
+      "expected": "/depart_assign",
+      "predicted": "/assign_clarify",
+      "count": 4,
+      "pct_of_expected": 36.4,
+      "examples": [
+        "Ask sales team to send today figures",
+        "sales ko figures bhejo aaj ke",
+        "sales team figure today send",
+        "sales figures"
+      ]
+    },
+    {
+      "expected": "/depart_assign",
+      "predicted": "general_chat",
+      "count": 4,
+      "pct_of_expected": 36.4,
+      "examples": [
+        "sales team ko aaj ka data bhejne ko bolo",
+        "sales walo ko bolo",
+        "slaes ko data bhejo",
+        "sales department se kehna aaj closing bhejein"
+      ]
+    }
+  ],
+  "by_exp_conf": {
+    "/present": {
+      "general_chat": 5
+    },
+    "/absent": {
+      "general_chat": 6
+    },
+    "/assign": {
+      "/depart_assign": 1,
+      "general_chat": 5,
+      "/assign_clarify": 1
+    },
+    "/depart_assign": {
+      "/assign_clarify": 4,
+      "general_chat": 4,
+      "/report": 1
+    },
+    "/mgrassign": {
+      "general_chat": 6,
+      "/assign_clarify": 1,
+      "/assign": 1
+    },
+    "/mgrtransfer": {
+      "general_chat": 10
+    },
+    "/mgrreject": {
+      "general_chat": 10
+    },
+    "/mgrself": {
+      "general_chat": 10,
+      "/assign_clarify": 1
+    },
+    "/complete": {
+      "general_chat": 2
+    },
+    "/tasks": {
+      "/assign_clarify": 3,
+      "general_chat": 3,
+      "/present": 1
+    },
+    "/update": {
+      "/complete": 1,
+      "general_chat": 5
+    },
+    "/issue": {
+      "general_chat": 5,
+      "/assign_clarify": 3,
+      "/update": 1
+    },
+    "/issues": {
+      "general_chat": 6
+    },
+    "/resolve": {
+      "general_chat": 8,
+      "/complete": 3
+    },
+    "/members": {
+      "general_chat": 5,
+      "/assign_clarify": 1,
+      "/onboard_worker": 1
+    },
+    "/inventory_status": {
+      "general_chat": 8,
+      "/inventory_create": 1
+    },
+    "/purchase_request_create": {
+      "general_chat": 7,
+      "/inventory_status": 2,
+      "/depart_assign": 1,
+      "/assign_clarify": 1
+    },
+    "/help": {
+      "general_chat": 6
+    },
+    "/report": {
+      "general_chat": 6,
+      "/assign_clarify": 1
+    },
+    "/onboard_worker": {
+      "/assign_clarify": 1,
+      "general_chat": 3,
+      "/onboard_vendor": 1
+    },
+    "/onboard_vendor": {
+      "general_chat": 2
+    },
+    "/inventory_create": {
+      "/inventory_status": 2,
+      "/onboard_vendor": 1
+    },
+    "/business_discovery": {
+      "general_chat": 2,
+      "/assign_clarify": 1
+    },
+    "/assign_clarify": {
+      "general_chat": 5,
+      "/assign": 1,
+      "/report": 1
+    },
+    "extract:delivery": {
+      "extract:issue": 4,
+      "extract:null": 4
+    },
+    "extract:issue": {
+      "extract:null": 5
+    },
+    "extract:null": {
+      "extract:delivery": 1
+    },
+    "extract:inventory_count": {
+      "extract:null": 4
+    }
+  },
+  "llm": {
+    "total": 142,
+    "pass_rate": 0.0915,
+    "fail_rate": 0.9085,
+    "top_fail_intents": [
+      [
+        "/mgrtransfer",
+        10
+      ],
+      [
+        "/mgrreject",
+        10
+      ],
+      [
+        "/mgrself",
+        10
+      ],
+      [
+        "/resolve",
+        8
+      ],
+      [
+        "/inventory_status",
+        8
+      ],
+      [
+        "/purchase_request_create",
+        7
+      ],
+      [
+        "/absent",
+        6
+      ],
+      [
+        "/mgrassign",
+        6
+      ],
+      [
+        "/issues",
+        6
+      ],
+      [
+        "/help",
+        6
+      ],
+      [
+        "/report",
+        6
+      ],
+      [
+        "/present",
+        5
+      ],
+      [
+        "/assign",
+        5
+      ],
+      [
+        "/update",
+        5
+      ],
+      [
+        "/issue",
+        5
+      ]
+    ],
+    "top_fail_phrases": [
+      [
+        "18 reject",
+        3
+      ],
+      [
+        "present",
+        2
+      ],
+      [
+        "reject task 18",
+        2
+      ],
+      [
+        "audit karo",
+        2
+      ],
+      [
+        "present today i come",
+        1
+      ],
+      [
+        "presnt hu aaj",
+        1
+      ],
+      [
+        "aaj aa gaya",
+        1
+      ],
+      [
+        "I will not come today",
+        1
+      ],
+      [
+        "today no come sick",
+        1
+      ],
+      [
+        "absnt aaj",
+        1
+      ],
+      [
+        "leave",
+        1
+      ],
+      [
+        "doctor ne rest bola hai kal se aaunga",
+        1
+      ],
+      [
+        "aaj nahi",
+        1
+      ],
+      [
+        "Please ask Ram to clean the warehouse today",
+        1
+      ],
+      [
+        "ram ko bolna godown saaf kare",
+        1
+      ]
+    ],
+    "should_be_deterministic_sample": [
+      {
+        "message": "ram ko bolna godown saaf kare",
+        "expected": "/assign",
+        "got": "general_chat"
+      },
+      {
+        "message": "ram se kehna store saaf kare aaj",
+        "expected": "/assign",
+        "got": "general_chat"
+      },
+      {
+        "message": "ram safai karo",
+        "expected": "/assign",
+        "got": "general_chat"
+      },
+      {
+        "message": "sales team ko aaj ka data bhejne ko bolo",
+        "expected": "/depart_assign",
+        "got": "general_chat"
+      },
+      {
+        "message": "sales walo ko bolo",
+        "expected": "/depart_assign",
+        "got": "general_chat"
+      },
+      {
+        "message": "priya ko task 15 do",
+        "expected": "/mgrassign",
+        "got": "general_chat"
+      },
+      {
+        "message": "task 15 priya karegi",
+        "expected": "/mgrassign",
+        "got": "general_chat"
+      },
+      {
+        "message": "15 priya ko",
+        "expected": "/mgrassign",
+        "got": "general_chat"
+      },
+      {
+        "message": "15 send to it",
+        "expected": "/mgrtransfer",
+        "got": "general_chat"
+      },
+      {
+        "message": "15 it ko",
+        "expected": "/mgrtransfer",
+        "got": "general_chat"
+      },
+      {
+        "message": "18 reject",
+        "expected": "/mgrreject",
+        "got": "general_chat"
+      },
+      {
+        "message": "18 reject",
+        "expected": "/mgrreject",
+        "got": "general_chat"
+      },
+      {
+        "message": "task 12 main kar lunga",
+        "expected": "/mgrself",
+        "got": "general_chat"
+      },
+      {
+        "message": "12 main sambhal lunga",
+        "expected": "/mgrself",
+        "got": "general_chat"
+      },
+      {
+        "message": "12 main karunga",
+        "expected": "/mgrself",
+        "got": "general_chat"
+      }
+    ]
+  },
+  "det": {
+    "total": 152,
+    "pass_rate": 0.75,
+    "failures": [
+      {
+        "message": "@ram aaj warehouse saaf karo",
+        "expected": "/assign",
+        "got": "/depart_assign",
+        "workflow": "task_assignment"
+      },
+      {
+        "message": "ram free hai usko warehouse wala kaam de do",
+        "expected": "/assign",
+        "got": "/assign_clarify",
+        "workflow": "task_assignment"
+      },
+      {
+        "message": "Ask sales team to send today figures",
+        "expected": "/depart_assign",
+        "got": "/assign_clarify",
+        "workflow": "department_assignment"
+      },
+      {
+        "message": "sales ko figures bhejo aaj ke",
+        "expected": "/depart_assign",
+        "got": "/assign_clarify",
+        "workflow": "department_assignment"
+      },
+      {
+        "message": "sales team figure today send",
+        "expected": "/depart_assign",
+        "got": "/assign_clarify",
+        "workflow": "department_assignment"
+      },
+      {
+        "message": "sales figures",
+        "expected": "/depart_assign",
+        "got": "/assign_clarify",
+        "workflow": "department_assignment"
+      },
+      {
+        "message": "month end hai sales ko report chahiye",
+        "expected": "/depart_assign",
+        "got": "/report",
+        "workflow": "department_assignment"
+      },
+      {
+        "message": "priya free hai usko 15 wala kaam de do",
+        "expected": "/mgrassign",
+        "got": "/assign_clarify",
+        "workflow": "task_delegation"
+      },
+      {
+        "message": "priya ko 15 do aur ram ko 16",
+        "expected": "/mgrassign",
+        "got": "/assign",
+        "workflow": "task_delegation"
+      },
+      {
+        "message": "owner ne diya 12 mujhe khud karna hai",
+        "expected": "/mgrself",
+        "got": "/assign_clarify",
+        "workflow": "task_self_assign"
+      },
+      {
+        "message": "my task show",
+        "expected": "/tasks",
+        "got": "/assign_clarify",
+        "workflow": "task_listing"
+      },
+      {
+        "message": "aaj mujhe kya karna hai wo batao",
+        "expected": "/tasks",
+        "got": "/assign_clarify",
+        "workflow": "task_listing"
+      },
+      {
+        "message": "kya karna hai",
+        "expected": "/tasks",
+        "got": "/assign_clarify",
+        "workflow": "task_listing"
+      },
+      {
+        "message": "tasks dikhao aur present mark",
+        "expected": "/tasks",
+        "got": "/present",
+        "workflow": "task_listing"
+      },
+      {
+        "message": "3 half done",
+        "expected": "/update",
+        "got": "/complete",
+        "workflow": "task_update"
+      },
+      {
+        "message": "machine not work",
+        "expected": "/issue",
+        "got": "/assign_clarify",
+        "workflow": "issue_reporting"
+      },
+      {
+        "message": "machine down",
+        "expected": "/issue",
+        "got": "/assign_clarify",
+        "workflow": "issue_reporting"
+      },
+      {
+        "message": "kal se pending repair mixer abhi bhi band",
+        "expected": "/issue",
+        "got": "/assign_clarify",
+        "workflow": "issue_reporting"
+      },
+      {
+        "message": "mixer band aur task 5 update",
+        "expected": "/issue",
+        "got": "/update",
+        "workflow": "issue_reporting"
+      },
+      {
+        "message": "issue 5 theek ho gaya",
+        "expected": "/resolve",
+        "got": "/complete",
+        "workflow": "issue_resolve"
+      },
+      {
+        "message": "electrician ne mixer theek kar diya issue 5 close",
+        "expected": "/resolve",
+        "got": "/complete",
+        "workflow": "issue_resolve"
+      },
+      {
+        "message": "theek ho gaya",
+        "expected": "/resolve",
+        "got": "/complete",
+        "workflow": "issue_resolve"
+      },
+      {
+        "message": "mere factory mein kaun kaun kaam karta hai",
+        "expected": "/members",
+        "got": "/assign_clarify",
+        "workflow": "member_lookup"
+      },
+      {
+        "message": "naye worker aaye hain list dikhao",
+        "expected": "/members",
+        "got": "/onboard_worker",
+        "workflow": "member_lookup"
+      },
+      {
+        "message": "cement stock aur low items",
+        "expected": "/inventory_status",
+        "got": "/inventory_create",
+        "workflow": "inventory_status"
+      },
+      {
+        "message": "low stock alert aaya cement order karo",
+        "expected": "/purchase_request_create",
+        "got": "/inventory_status",
+        "workflow": "purchase_request"
+      },
+      {
+        "message": "order karo",
+        "expected": "/purchase_request_create",
+        "got": "/depart_assign",
+        "workflow": "purchase_request"
+      },
+      {
+        "message": "shift khatam report bana do",
+        "expected": "/report",
+        "got": "/assign_clarify",
+        "workflow": "report"
+      },
+      {
+        "message": "naya banda join karega",
+        "expected": "/onboard_worker",
+        "got": "/assign_clarify",
+        "workflow": "onboard_worker"
+      },
+      {
+        "message": "worker add aur vendor bhi",
+        "expected": "/onboard_worker",
+        "got": "/onboard_vendor",
+        "workflow": "onboard_worker"
+      },
+      {
+        "message": "inventry create",
+        "expected": "/inventory_create",
+        "got": "/inventory_status",
+        "workflow": "inventory_create"
+      },
+      {
+        "message": "supplier ne naya product diya add karo",
+        "expected": "/inventory_create",
+        "got": "/onboard_vendor",
+        "workflow": "inventory_create"
+      },
+      {
+        "message": "item add aur stock check",
+        "expected": "/inventory_create",
+        "got": "/inventory_status",
+        "workflow": "inventory_create"
+      },
+      {
+        "message": "naya factory hai profile complete karni hai",
+        "expected": "/business_discovery",
+        "got": "/assign_clarify",
+        "workflow": "business_discovery"
+      },
+      {
+        "message": "kisi ko assign karna hai par naam nahi pata website ka kaam",
+        "expected": "/assign_clarify",
+        "got": "/assign",
+        "workflow": "assign_clarify"
+      },
+      {
+        "message": "website banao aur report bhejo",
+        "expected": "/assign_clarify",
+        "got": "/report",
+        "workflow": "assign_clarify"
+      },
+      {
+        "message": "reorder kya karna chahiye batao",
+        "expected": "/purchase_request_create",
+        "got": "/assign_clarify",
+        "workflow": "low_stock_workflow"
+      },
+      {
+        "message": "low stock aur order cement",
+        "expected": "/purchase_request_create",
+        "got": "/inventory_status",
+        "workflow": "low_stock_workflow"
+      }
+    ]
+  },
+  "entity_fields": {
+    "worker_slug": [
+      0.2083,
+      24,
+      [
+        {
+          "message": "@ram aaj warehouse saaf karo",
+          "expected": "ram",
+          "got": "@ram"
+        },
+        {
+          "message": "Please ask Ram to clean the warehouse today",
+          "expected": "ram",
+          "got": null
+        },
+        {
+          "message": "ram ko bolna godown saaf kare",
+          "expected": "ram",
+          "got": null
+        },
+        {
+          "message": "ram se kehna store saaf kare aaj",
+          "expected": "ram",
+          "got": null
+        },
+        {
+          "message": "ram clean warehouse today",
+          "expected": "ram",
+          "got": null
+        }
+      ]
+    ],
+    "depart_slug": [
+      0.0,
+      11,
+      [
+        {
+          "message": "/depart_assign sales today figures",
+          "expected": "sales",
+          "got": null
+        },
+        {
+          "message": "Ask sales team to send today figures",
+          "expected": "sales",
+          "got": null
+        },
+        {
+          "message": "sales team ko aaj ka data bhejne ko bolo",
+          "expected": "sales",
+          "got": null
+        },
+        {
+          "message": "sales ko figures bhejo aaj ke",
+          "expected": "sales",
+          "got": null
+        },
+        {
+          "message": "sales team figure today send",
+          "expected": "sales",
+          "got": null
+        }
+      ]
+    ],
+    "id": [
+      0.2955,
+      44,
+      [
+        {
+          "message": "/mgrassign @priya 15",
+          "expected": 15,
+          "got": null
+        },
+        {
+          "message": "15 priya ko",
+          "expected": 15,
+          "got": null
+        },
+        {
+          "message": "@priya 15",
+          "expected": 15,
+          "got": null
+        },
+        {
+          "message": "priya free hai usko 15 wala kaam de do",
+          "expected": 15,
+          "got": null
+        },
+        {
+          "message": "owner ne diya tha 15 priya ko transfer karo",
+          "expected": 15,
+          "got": null
+        }
+      ]
+    ],
+    "reject_reason": [
+      null,
+      0,
+      []
+    ],
+    "task_description": [
+      null,
+      0,
+      []
+    ],
+    "extract_assignee_hint": [
+      0.7143,
+      21,
+      [
+        {
+          "message": "Please deliver 20 bags of cement to Ram",
+          "expected": "Ram",
+          "got": null
+        },
+        {
+          "message": "ram cement le jaaye",
+          "expected": "Ram",
+          "got": null
+        },
+        {
+          "message": "Kal jo Ram ne material manga tha 20 cement bhej do",
+          "expected": "Ram",
+          "got": null
+        },
+        {
+          "message": "Issue 5 steel rods to Shyam",
+          "expected": "Shyam",
+          "got": null
+        },
+        {
+          "message": "5 pipe shyam give",
+          "expected": "Shyam",
+          "got": null
+        }
+      ]
+    ],
+    "extract_quantity": [
+      1.0,
+      20,
+      []
+    ],
+    "extract_item_name_or_sku": [
+      0.4091,
+      22,
+      [
+        {
+          "message": "Please deliver 20 bags of cement to Ram",
+          "expected": "cement",
+          "got": "bags of cement to"
+        },
+        {
+          "message": "Ram ko 20 bag cement issue kar do",
+          "expected": "cement",
+          "got": "bag cement"
+        },
+        {
+          "message": "20 cement Ram give",
+          "expected": "cement",
+          "got": "cement ram give"
+        },
+        {
+          "message": "ram cement le jaaye",
+          "expected": "cement",
+          "got": null
+        },
+        {
+          "message": "ram ko 20 cemnt delo",
+          "expected": "cement",
+          "got": "cemnt delo"
+        }
+      ]
+    ],
+    "extract_task_kind": [
+      0.5143,
+      35,
+      [
+        {
+          "message": "Ram ko 20 cement de do",
+          "expected": "delivery",
+          "got": "issue"
+        },
+        {
+          "message": "Ram ko 20 bag cement issue kar do",
+          "expected": "delivery",
+          "got": "issue"
+        },
+        {
+          "message": "20 cement Ram give",
+          "expected": "delivery",
+          "got": null
+        },
+        {
+          "message": "ram cement le jaaye",
+          "expected": "delivery",
+          "got": null
+        },
+        {
+          "message": "ram ko 20 cemnt delo",
+          "expected": "delivery",
+          "got": null
+        }
+      ]
+    ]
+  },
+  "msme": [
+    {
+      "message": "shift mein present",
+      "workflow": "attendance_present",
+      "expected": "/present",
+      "predicted": "/present",
+      "ok": true
+    },
+    {
+      "message": "chutti chahiye",
+      "workflow": "attendance_absent",
+      "expected": "/absent",
+      "predicted": "/absent",
+      "ok": true
+    },
+    {
+      "message": "ram safai karo",
+      "workflow": "task_assignment",
+      "expected": "/assign",
+      "predicted": "general_chat",
+      "ok": false
+    },
+    {
+      "message": "sales walo ko bolo",
+      "workflow": "department_assignment",
+      "expected": "/depart_assign",
+      "predicted": "general_chat",
+      "ok": false
+    },
+    {
+      "message": "15 priya ko",
+      "workflow": "task_delegation",
+      "expected": "/mgrassign",
+      "predicted": "general_chat",
+      "ok": false
+    },
+    {
+      "message": "15 it ko",
+      "workflow": "task_transfer",
+      "expected": "/mgrtransfer",
+      "predicted": "general_chat",
+      "ok": false
+    },
+    {
+      "message": "18 reject",
+      "workflow": "task_rejection",
+      "expected": "/mgrreject",
+      "predicted": "general_chat",
+      "ok": false
+    },
+    {
+      "message": "12 main karunga",
+      "workflow": "task_self_assign",
+      "expected": "/mgrself",
+      "predicted": "general_chat",
+      "ok": false
+    },
+    {
+      "message": "kaam ho gaya 14",
+      "workflow": "task_completion",
+      "expected": "/complete",
+      "predicted": "/complete",
+      "ok": true
+    },
+    {
+      "message": "kaam dikhao",
+      "workflow": "task_listing",
+      "expected": "/tasks",
+      "predicted": "/tasks",
+      "ok": true
+    },
+    {
+      "message": "3 aadha ho gaya",
+      "workflow": "task_update",
+      "expected": "/update",
+      "predicted": "/update",
+      "ok": true
+    },
+    {
+      "message": "mixer band",
+      "workflow": "issue_reporting",
+      "expected": "/issue",
+      "predicted": "general_chat",
+      "ok": false
+    },
+    {
+      "message": "issues list",
+      "workflow": "issue_list",
+      "expected": "/issues",
+      "predicted": "/issues",
+      "ok": true
+    },
+    {
+      "message": "5 band nahi ab theek",
+      "workflow": "issue_resolve",
+      "expected": "/resolve",
+      "predicted": "general_chat",
+      "ok": false
+    },
+    {
+      "message": "kaun kaun hai team mein",
+      "workflow": "member_lookup",
+      "expected": "/members",
+      "predicted": "general_chat",
+      "ok": false
+    },
+    {
+      "message": "cement stock",
+      "workflow": "inventory_status",
+      "expected": "/inventory_status",
+      "predicted": "general_chat",
+      "ok": false
+    },
+    {
+      "message": "cement mangwana hai",
+      "workflow": "purchase_request",
+      "expected": "/purchase_request_create",
+      "predicted": "/purchase_request_create",
+      "ok": true
+    },
+    {
+      "message": "commands batao",
+      "workflow": "general_help",
+      "expected": "/help",
+      "predicted": "general_chat",
+      "ok": false
+    },
+    {
+      "message": "shuru karte hain",
+      "workflow": "home_menu",
+      "expected": "general_chat",
+      "predicted": "general_chat",
+      "ok": true
+    },
+    {
+      "message": "summary dikhao",
+      "workflow": "report",
+      "expected": "/report",
+      "predicted": "/report",
+      "ok": true
+    },
+    {
+      "message": "naya banda join karega",
+      "workflow": "onboard_worker",
+      "expected": "/onboard_worker",
+      "predicted": "/assign_clarify",
+      "ok": false
+    },
+    {
+      "message": "naya supplier",
+      "workflow": "onboard_vendor",
+      "expected": "/onboard_vendor",
+      "predicted": "/onboard_vendor",
+      "ok": true
+    },
+    {
+      "message": "naya maal add",
+      "workflow": "inventory_create",
+      "expected": "/inventory_create",
+      "predicted": "/inventory_create",
+      "ok": true
+    },
+    {
+      "message": "business profile",
+      "workflow": "business_discovery",
+      "expected": "/business_discovery",
+      "predicted": "/business_discovery",
+      "ok": true
+    },
+    {
+      "message": "audit karo",
+      "workflow": "assign_clarify",
+      "expected": "/assign_clarify",
+      "predicted": "general_chat",
+      "ok": false
+    },
+    {
+      "message": "ram cement le jaaye",
+      "workflow": "inventory_delivery",
+      "expected": "extract:delivery",
+      "predicted": "extract:null",
+      "ok": false
+    },
+    {
+      "message": "shyam ko pipe do",
+      "workflow": "inventory_issue",
+      "expected": "extract:issue",
+      "predicted": "extract:null",
+      "ok": false
+    },
+    {
+      "message": "ginati karo",
+      "workflow": "inventory_count",
+      "expected": "extract:inventory_count",
+      "predicted": "extract:inventory_count",
+      "ok": true
+    }
+  ],
+  "ambiguous": [
+    {
+      "message": "aaj aa gaya",
+      "workflow": "attendance_present",
+      "expected": "/present",
+      "predicted": "general_chat",
+      "outcome": "FAIL"
+    },
+    {
+      "message": "aaj nahi",
+      "workflow": "attendance_absent",
+      "expected": "/absent",
+      "predicted": "general_chat",
+      "outcome": "FAIL"
+    },
+    {
+      "message": "ram ko kaam do",
+      "workflow": "task_assignment",
+      "expected": "/assign",
+      "predicted": "/assign",
+      "outcome": "PASS"
+    },
+    {
+      "message": "figures bhejo",
+      "workflow": "department_assignment",
+      "expected": "/assign_clarify",
+      "predicted": "/assign_clarify",
+      "outcome": "PASS"
+    },
+    {
+      "message": "priya ko bhej do",
+      "workflow": "task_delegation",
+      "expected": "/assign",
+      "predicted": "/assign",
+      "outcome": "PASS"
+    },
+    {
+      "message": "transfer karo",
+      "workflow": "task_transfer",
+      "expected": "/mgrtransfer",
+      "predicted": "general_chat",
+      "outcome": "FAIL"
+    },
+    {
+      "message": "reject karo",
+      "workflow": "task_rejection",
+      "expected": "/mgrreject",
+      "predicted": "general_chat",
+      "outcome": "FAIL"
+    },
+    {
+      "message": "main kar lunga",
+      "workflow": "task_self_assign",
+      "expected": "/mgrself",
+      "predicted": "general_chat",
+      "outcome": "FAIL"
+    },
+    {
+      "message": "task complete",
+      "workflow": "task_completion",
+      "expected": "/complete",
+      "predicted": "/complete",
+      "outcome": "PASS"
+    },
+    {
+      "message": "kya karna hai",
+      "workflow": "task_listing",
+      "expected": "/tasks",
+      "predicted": "/assign_clarify",
+      "outcome": "FAIL"
+    },
+    {
+      "message": "kaam chal raha",
+      "workflow": "task_update",
+      "expected": "/update",
+      "predicted": "/update",
+      "outcome": "PASS"
+    },
+    {
+      "message": "problem hai",
+      "workflow": "issue_reporting",
+      "expected": "/issue",
+      "predicted": "/issue",
+      "outcome": "PASS"
+    },
+    {
+      "message": "problems",
+      "workflow": "issue_list",
+      "expected": "/issues",
+      "predicted": "general_chat",
+      "outcome": "FAIL"
+    },
+    {
+      "message": "theek ho gaya",
+      "workflow": "issue_resolve",
+      "expected": "/resolve",
+      "predicted": "/complete",
+      "outcome": "FAIL"
+    },
+    {
+      "message": "team dikhao",
+      "workflow": "member_lookup",
+      "expected": "/members",
+      "predicted": "general_chat",
+      "outcome": "FAIL"
+    },
+    {
+      "message": "kitna hai",
+      "workflow": "inventory_status",
+      "expected": "/inventory_status",
+      "predicted": "/inventory_status",
+      "outcome": "PASS"
+    },
+    {
+      "message": "order karo",
+      "workflow": "purchase_request",
+      "expected": "/purchase_request_create",
+      "predicted": "/depart_assign",
+      "outcome": "FAIL"
+    },
+    {
+      "message": "kya kar sakte ho",
+      "workflow": "general_help",
+      "expected": "/help",
+      "predicted": "general_chat",
+      "outcome": "FAIL"
+    },
+    {
+      "message": "ok",
+      "workflow": "home_menu",
+      "expected": "general_chat",
+      "predicted": "general_chat",
+      "outcome": "PASS"
+    },
+    {
+      "message": "summary",
+      "workflow": "report",
+      "expected": "/report",
+      "predicted": "general_chat",
+      "outcome": "FAIL"
+    },
+    {
+      "message": "naya banda",
+      "workflow": "onboard_worker",
+      "expected": "/onboard_worker",
+      "predicted": "general_chat",
+      "outcome": "FAIL"
+    },
+    {
+      "message": "supplier",
+      "workflow": "onboard_vendor",
+      "expected": "/onboard_vendor",
+      "predicted": "general_chat",
+      "outcome": "FAIL"
+    },
+    {
+      "message": "naya item",
+      "workflow": "inventory_create",
+      "expected": "/inventory_create",
+      "predicted": "/inventory_create",
+      "outcome": "PASS"
+    },
+    {
+      "message": "setup",
+      "workflow": "business_discovery",
+      "expected": "/business_discovery",
+      "predicted": "general_chat",
+      "outcome": "FAIL"
+    },
+    {
+      "message": "kaam hai",
+      "workflow": "assign_clarify",
+      "expected": "/assign_clarify",
+      "predicted": "/assign_clarify",
+      "outcome": "PASS"
+    },
+    {
+      "message": "Ram ko bhej do",
+      "workflow": "inventory_delivery",
+      "expected": "extract:delivery",
+      "predicted": "extract:delivery",
+      "outcome": "PASS"
+    },
+    {
+      "message": "material bhej do",
+      "workflow": "inventory_issue",
+      "expected": "extract:null",
+      "predicted": "extract:delivery",
+      "outcome": "FAIL"
+    },
+    {
+      "message": "ginati",
+      "workflow": "inventory_count",
+      "expected": "extract:inventory_count",
+      "predicted": "extract:inventory_count",
+      "outcome": "PASS"
+    },
+    {
+      "message": "kam hai stock",
+      "workflow": "low_stock_workflow",
+      "expected": "/inventory_status",
+      "predicted": "general_chat",
+      "outcome": "FAIL"
+    }
+  ],
+  "multi": [
+    {
+      "message": "present hu aur tasks dikhao",
+      "workflow": "attendance_present",
+      "expected": "/present",
+      "predicted": "/present",
+      "outcome": "PASS"
+    },
+    {
+      "message": "absent hu aur kal aaunga",
+      "workflow": "attendance_absent",
+      "expected": "/absent",
+      "predicted": "/absent",
+      "outcome": "PASS"
+    },
+    {
+      "message": "ram ko safai karo aur shyam ko loading",
+      "workflow": "task_assignment",
+      "expected": "/assign",
+      "predicted": "/assign",
+      "outcome": "PASS"
+    },
+    {
+      "message": "sales ko figures aur it ko server check",
+      "workflow": "department_assignment",
+      "expected": "/depart_assign",
+      "predicted": "/depart_assign",
+      "outcome": "PARTIAL PASS"
+    },
+    {
+      "message": "priya ko 15 do aur ram ko 16",
+      "workflow": "task_delegation",
+      "expected": "/mgrassign",
+      "predicted": "/assign",
+      "outcome": "FAIL"
+    },
+    {
+      "message": "15 handle aur next",
+      "workflow": "task_transfer",
+      "expected": "/mgrtransfer",
+      "predicted": "general_chat",
+      "outcome": "FAIL"
+    },
+    {
+      "message": "18 handle aur next",
+      "workflow": "task_rejection",
+      "expected": "/mgrreject",
+      "predicted": "general_chat",
+      "outcome": "FAIL"
+    },
+    {
+      "message": "12 handle aur next",
+      "workflow": "task_self_assign",
+      "expected": "/mgrself",
+      "predicted": "general_chat",
+      "outcome": "FAIL"
+    },
+    {
+      "message": "14 done aur 15 start",
+      "workflow": "task_completion",
+      "expected": "/complete",
+      "predicted": "/complete",
+      "outcome": "PARTIAL PASS"
+    },
+    {
+      "message": "tasks dikhao aur present mark",
+      "workflow": "task_listing",
+      "expected": "/tasks",
+      "predicted": "/present",
+      "outcome": "FAIL"
+    },
+    {
+      "message": "3 update aur 4 complete",
+      "workflow": "task_update",
+      "expected": "/update",
+      "predicted": "general_chat",
+      "outcome": "FAIL"
+    },
+    {
+      "message": "mixer band aur task 5 update",
+      "workflow": "issue_reporting",
+      "expected": "/issue",
+      "predicted": "/update",
+      "outcome": "FAIL"
+    },
+    {
+      "message": "issues dikhao aur report",
+      "workflow": "issue_list",
+      "expected": "/issues",
+      "predicted": "/issues",
+      "outcome": "PASS"
+    },
+    {
+      "message": "5 resolve aur 6 open",
+      "workflow": "issue_resolve",
+      "expected": "/resolve",
+      "predicted": "general_chat",
+      "outcome": "FAIL"
+    },
+    {
+      "message": "members dikhao aur tasks",
+      "workflow": "member_lookup",
+      "expected": "/members",
+      "predicted": "/members",
+      "outcome": "PASS"
+    },
+    {
+      "message": "cement stock aur low items",
+      "workflow": "inventory_status",
+      "expected": "/inventory_status",
+      "predicted": "/inventory_create",
+      "outcome": "FAIL"
+    },
+    {
+      "message": "cement order aur steel bhi",
+      "workflow": "purchase_request",
+      "expected": "/purchase_request_create",
+      "predicted": "general_chat",
+      "outcome": "FAIL"
+    },
+    {
+      "message": "help aur tasks",
+      "workflow": "general_help",
+      "expected": "/help",
+      "predicted": "/help",
+      "outcome": "PASS"
+    },
+    {
+      "message": "hi aur team dikhao",
+      "workflow": "home_menu",
+      "expected": "general_chat",
+      "predicted": "general_chat",
+      "outcome": "PASS"
+    },
+    {
+      "message": "report aur issues",
+      "workflow": "report",
+      "expected": "/report",
+      "predicted": "general_chat",
+      "outcome": "FAIL"
+    },
+    {
+      "message": "worker add aur vendor bhi",
+      "workflow": "onboard_worker",
+      "expected": "/onboard_worker",
+      "predicted": "/onboard_vendor",
+      "outcome": "FAIL"
+    },
+    {
+      "message": "vendor add aur PR",
+      "workflow": "onboard_vendor",
+      "expected": "/onboard_vendor",
+      "predicted": "/onboard_vendor",
+      "outcome": "PASS"
+    },
+    {
+      "message": "item add aur stock check",
+      "workflow": "inventory_create",
+      "expected": "/inventory_create",
+      "predicted": "/inventory_status",
+      "outcome": "FAIL"
+    },
+    {
+      "message": "business setup aur import inventory",
+      "workflow": "business_discovery",
+      "expected": "/business_discovery",
+      "predicted": "/business_discovery",
+      "outcome": "PASS"
+    },
+    {
+      "message": "website banao aur report bhejo",
+      "workflow": "assign_clarify",
+      "expected": "/assign_clarify",
+      "predicted": "/report",
+      "outcome": "FAIL"
+    },
+    {
+      "message": "Ram ko 20 cement de do aur Shyam ko kal site bhejna",
+      "workflow": "inventory_delivery",
+      "expected": "extract:delivery",
+      "predicted": "extract:issue",
+      "outcome": "FAIL"
+    },
+    {
+      "message": "shyam ko 5 pipe aur ram ko cement",
+      "workflow": "inventory_issue",
+      "expected": "extract:issue",
+      "predicted": "extract:null",
+      "outcome": "FAIL"
+    },
+    {
+      "message": "stock count aur report",
+      "workflow": "inventory_count",
+      "expected": "extract:inventory_count",
+      "predicted": "extract:inventory_count",
+      "outcome": "PASS"
+    },
+    {
+      "message": "low stock aur order cement",
+      "workflow": "low_stock_workflow",
+      "expected": "/purchase_request_create",
+      "predicted": "/inventory_status",
+      "outcome": "FAIL"
+    }
+  ],
+  "workflows": {
+    "attendance_present": {
+      "n": 13,
+      "intent_acc": 0.6154,
+      "pass_rate": 0.6154,
+      "fail_rate": 0.3846,
+      "entity_acc": 1.0,
+      "rank": "Acceptable",
+      "strong": [
+        "/present",
+        "I am here today",
+        "aaj main present hoon"
+      ],
+      "weak": [
+        "present",
+        "present today i come",
+        "presnt hu aaj"
+      ]
+    },
+    "attendance_absent": {
+      "n": 12,
+      "intent_acc": 0.5,
+      "pass_rate": 0.5,
+      "fail_rate": 0.5,
+      "entity_acc": 1.0,
+      "rank": "Acceptable",
+      "strong": [
+        "/absent",
+        "aaj nahi aa paunga bimar hu",
+        "not coming today leave"
+      ],
+      "weak": [
+        "I will not come today",
+        "today no come sick",
+        "absnt aaj"
+      ]
+    },
+    "task_assignment": {
+      "n": 12,
+      "intent_acc": 0.4167,
+      "pass_rate": 0.25,
+      "fail_rate": 0.5833,
+      "entity_acc": 0.25,
+      "rank": "Weak",
+      "strong": [
+        "@ram warehous safai",
+        "@ram safai",
+        "kal jo pending tha ram ko wahi safai karwa do"
+      ],
+      "weak": [
+        "@ram aaj warehouse saaf karo",
+        "Please ask Ram to clean the warehouse today",
+        "ram ko bolna godown saaf kare"
+      ]
+    },
+    "department_assignment": {
+      "n": 12,
+      "intent_acc": 0.25,
+      "pass_rate": 0.0833,
+      "fail_rate": 0.75,
+      "entity_acc": 0.0833,
+      "rank": "Critical",
+      "strong": [
+        "/depart_assign sales today figures",
+        "figures bhejo",
+        "sales ko figures aur it ko server check"
+      ],
+      "weak": [
+        "Ask sales team to send today figures",
+        "sales team ko aaj ka data bhejne ko bolo",
+        "sales ko figures bhejo aaj ke"
+      ]
+    },
+    "task_delegation": {
+      "n": 12,
+      "intent_acc": 0.3333,
+      "pass_rate": 0.0833,
+      "fail_rate": 0.6667,
+      "entity_acc": 0.0833,
+      "rank": "Weak",
+      "strong": [
+        "/mgrassign @priya 15",
+        "@priya will do task 15",
+        "@priya 15"
+      ],
+      "weak": [
+        "priya ko task 15 do",
+        "task 15 priya karegi",
+        "priya task 15 do"
+      ]
+    },
+    "task_transfer": {
+      "n": 12,
+      "intent_acc": 0.1667,
+      "pass_rate": 0.1667,
+      "fail_rate": 0.8333,
+      "entity_acc": 1.0,
+      "rank": "Critical",
+      "strong": [
+        "/mgrtransfer 15 it",
+        "task 15 IT ko bhejo"
+      ],
+      "weak": [
+        "transfer task 15 to IT",
+        "15 send to it",
+        "transfer task 15"
+      ]
+    },
+    "task_rejection": {
+      "n": 12,
+      "intent_acc": 0.1667,
+      "pass_rate": 0.1667,
+      "fail_rate": 0.8333,
+      "entity_acc": 1.0,
+      "rank": "Critical",
+      "strong": [
+        "/mgrreject 18 not our scope",
+        "task 18 reject karo"
+      ],
+      "weak": [
+        "reject task 18",
+        "18 reject",
+        "reject task 18"
+      ]
+    },
+    "task_self_assign": {
+      "n": 12,
+      "intent_acc": 0.0833,
+      "pass_rate": 0.0833,
+      "fail_rate": 0.9167,
+      "entity_acc": 1.0,
+      "rank": "Critical",
+      "strong": [
+        "/mgrself 12"
+      ],
+      "weak": [
+        "I will do task 12",
+        "task 12 main kar lunga",
+        "12 main sambhal lunga"
+      ]
+    },
+    "task_completion": {
+      "n": 12,
+      "intent_acc": 0.8333,
+      "pass_rate": 0.3333,
+      "fail_rate": 0.1667,
+      "entity_acc": 0.3333,
+      "rank": "Good",
+      "strong": [
+        "/complete 14",
+        "Task 14 is finished",
+        "task 14 ho gaya"
+      ],
+      "weak": [
+        "complte 14",
+        "warehouse safai kar di 14 wala"
+      ]
+    },
+    "task_listing": {
+      "n": 12,
+      "intent_acc": 0.4167,
+      "pass_rate": 0.4167,
+      "fail_rate": 0.5833,
+      "entity_acc": 1.0,
+      "rank": "Weak",
+      "strong": [
+        "/tasks",
+        "Show my tasks please",
+        "mere tasks dikhao"
+      ],
+      "weak": [
+        "my task show",
+        "taks dikhao",
+        "tasks"
+      ]
+    },
+    "task_update": {
+      "n": 12,
+      "intent_acc": 0.5,
+      "pass_rate": 0.3333,
+      "fail_rate": 0.5,
+      "entity_acc": 0.4167,
+      "rank": "Acceptable",
+      "strong": [
+        "/update 3 50 percent done",
+        "Task 3 is half complete",
+        "task 3 par kaam chal raha"
+      ],
+      "weak": [
+        "3 half done",
+        "updat task 3",
+        "3 update"
+      ]
+    },
+    "issue_reporting": {
+      "n": 12,
+      "intent_acc": 0.25,
+      "pass_rate": 0.25,
+      "fail_rate": 0.75,
+      "entity_acc": 1.0,
+      "rank": "Critical",
+      "strong": [
+        "/issue mixer not working",
+        "machine kharab hai",
+        "problem hai"
+      ],
+      "weak": [
+        "The forklift will not start",
+        "forklift start nahi ho rahi",
+        "machine not work"
+      ]
+    },
+    "issue_list": {
+      "n": 12,
+      "intent_acc": 0.5,
+      "pass_rate": 0.5,
+      "fail_rate": 0.5,
+      "entity_acc": 1.0,
+      "rank": "Acceptable",
+      "strong": [
+        "/issues",
+        "Show active issues",
+        "active issues dikhao"
+      ],
+      "weak": [
+        "show issues",
+        "isues dikhao",
+        "issues"
+      ]
+    },
+    "issue_resolve": {
+      "n": 12,
+      "intent_acc": 0.0833,
+      "pass_rate": 0.0833,
+      "fail_rate": 0.9167,
+      "entity_acc": 0.1667,
+      "rank": "Critical",
+      "strong": [
+        "/resolve 5"
+      ],
+      "weak": [
+        "Issue 5 is fixed now",
+        "issue 5 theek ho gaya",
+        "5 resolve kar do fix ho gaya"
+      ]
+    },
+    "member_lookup": {
+      "n": 12,
+      "intent_acc": 0.4167,
+      "pass_rate": 0.4167,
+      "fail_rate": 0.5833,
+      "entity_acc": 1.0,
+      "rank": "Weak",
+      "strong": [
+        "/members",
+        "team members batao",
+        "team members dikhao"
+      ],
+      "weak": [
+        "Show team members",
+        "show team member",
+        "kaun kaun hai team mein"
+      ]
+    },
+    "inventory_status": {
+      "n": 12,
+      "intent_acc": 0.5833,
+      "pass_rate": 0.5833,
+      "fail_rate": 0.4167,
+      "entity_acc": 1.0,
+      "rank": "Acceptable",
+      "strong": [
+        "/inventory_status CEMENT-50KG",
+        "How much cement stock do we have",
+        "cement kitna bacha hai"
+      ],
+      "weak": [
+        "how much cement",
+        "cement stock",
+        "stock cement"
+      ]
+    },
+    "purchase_request": {
+      "n": 12,
+      "intent_acc": 0.4167,
+      "pass_rate": 0.4167,
+      "fail_rate": 0.5833,
+      "entity_acc": 1.0,
+      "rank": "Weak",
+      "strong": [
+        "/purchase_request_create",
+        "Create purchase request for cement",
+        "cement ka order karna hai"
+      ],
+      "weak": [
+        "order cement purchase",
+        "purchse request cement",
+        "order cement"
+      ]
+    },
+    "general_help": {
+      "n": 12,
+      "intent_acc": 0.5,
+      "pass_rate": 0.5,
+      "fail_rate": 0.5,
+      "entity_acc": 1.0,
+      "rank": "Acceptable",
+      "strong": [
+        "/help",
+        "madad chahiye",
+        "help please munshi"
+      ],
+      "weak": [
+        "What can you do",
+        "commands batao",
+        "hlp"
+      ]
+    },
+    "home_menu": {
+      "n": 12,
+      "intent_acc": 1.0,
+      "pass_rate": 1.0,
+      "fail_rate": 0.0,
+      "entity_acc": 1.0,
+      "rank": "Excellent",
+      "strong": [
+        "hi",
+        "Hello Munshi",
+        "namaste"
+      ],
+      "weak": []
+    },
+    "report": {
+      "n": 12,
+      "intent_acc": 0.4167,
+      "pass_rate": 0.4167,
+      "fail_rate": 0.5833,
+      "entity_acc": 1.0,
+      "rank": "Weak",
+      "strong": [
+        "/report",
+        "Daily summary please",
+        "aaj ka report dikhao"
+      ],
+      "weak": [
+        "daily report",
+        "reprot dikhao",
+        "report"
+      ]
+    },
+    "onboard_worker": {
+      "n": 12,
+      "intent_acc": 0.5833,
+      "pass_rate": 0.5833,
+      "fail_rate": 0.4167,
+      "entity_acc": 1.0,
+      "rank": "Acceptable",
+      "strong": [
+        "/onboard_worker",
+        "Add new worker",
+        "naya worker add karo"
+      ],
+      "weak": [
+        "naya banda join karega",
+        "onbord worker",
+        "ek helper aaya hai usko system mein daalo"
+      ]
+    },
+    "onboard_vendor": {
+      "n": 12,
+      "intent_acc": 0.8333,
+      "pass_rate": 0.8333,
+      "fail_rate": 0.1667,
+      "entity_acc": 1.0,
+      "rank": "Good",
+      "strong": [
+        "/onboard_vendor",
+        "Register new vendor",
+        "naya vendor add karo"
+      ],
+      "weak": [
+        "onbord vendor",
+        "supplier"
+      ]
+    },
+    "inventory_create": {
+      "n": 12,
+      "intent_acc": 0.75,
+      "pass_rate": 0.75,
+      "fail_rate": 0.25,
+      "entity_acc": 1.0,
+      "rank": "Good",
+      "strong": [
+        "/inventory_create",
+        "Add new inventory item",
+        "naya item add karo stock mein"
+      ],
+      "weak": [
+        "inventry create",
+        "supplier ne naya product diya add karo",
+        "item add aur stock check"
+      ]
+    },
+    "business_discovery": {
+      "n": 12,
+      "intent_acc": 0.75,
+      "pass_rate": 0.75,
+      "fail_rate": 0.25,
+      "entity_acc": 1.0,
+      "rank": "Good",
+      "strong": [
+        "/business_discovery",
+        "Tell you about my business",
+        "apna business setup karna hai"
+      ],
+      "weak": [
+        "busines setup",
+        "naya factory hai profile complete karni hai",
+        "setup"
+      ]
+    },
+    "assign_clarify": {
+      "n": 12,
+      "intent_acc": 0.4167,
+      "pass_rate": 0.4167,
+      "fail_rate": 0.5833,
+      "entity_acc": 1.0,
+      "rank": "Weak",
+      "strong": [
+        "aaj website banegi",
+        "aaj website update karni hai",
+        "quarterly audit complete karna hai"
+      ],
+      "weak": [
+        "Finish the quarterly audit",
+        "audit karo",
+        "websit update"
+      ]
+    },
+    "inventory_delivery": {
+      "n": 12,
+      "intent_acc": 0.3333,
+      "pass_rate": 0.1667,
+      "fail_rate": 0.6667,
+      "entity_acc": 0.1667,
+      "rank": "Weak",
+      "strong": [
+        "Ram ko 20 cement bags deliver kar do",
+        "Please deliver 20 bags of cement to Ram",
+        "Kal jo Ram ne material manga tha 20 cement bhej do"
+      ],
+      "weak": [
+        "Ram ko 20 cement de do",
+        "Ram ko 20 bag cement issue kar do",
+        "20 cement Ram give"
+      ]
+    },
+    "inventory_issue": {
+      "n": 12,
+      "intent_acc": 0.5,
+      "pass_rate": 0.25,
+      "fail_rate": 0.5,
+      "entity_acc": 0.3333,
+      "rank": "Acceptable",
+      "strong": [
+        "Shyam ko 5 PVC pipes issue karo",
+        "Issue 5 steel rods to Shyam",
+        "Shyam ko 5 pipe de do"
+      ],
+      "weak": [
+        "5 pipe shyam give",
+        "shyam ko pipe do",
+        "5 pipe shyam"
+      ]
+    },
+    "inventory_count": {
+      "n": 12,
+      "intent_acc": 0.6667,
+      "pass_rate": 0.6667,
+      "fail_rate": 0.3333,
+      "entity_acc": 0.6667,
+      "rank": "Good",
+      "strong": [
+        "inventory count please",
+        "Start stock count",
+        "maal ki ginati karwa do"
+      ],
+      "weak": [
+        "count stock",
+        "inventry count",
+        "month end hai poora stock ginna hai"
+      ]
+    },
+    "low_stock_workflow": {
+      "n": 12,
+      "intent_acc": 0.3333,
+      "pass_rate": 0.3333,
+      "fail_rate": 0.6667,
+      "entity_acc": 1.0,
+      "rank": "Weak",
+      "strong": [
+        "low stock items",
+        "What is running low in stock",
+        "low stock dikhao"
+      ],
+      "weak": [
+        "kya kya kam pad raha hai",
+        "stock low show",
+        "kya khatam ho raha"
+      ]
+    }
+  },
+  "language": {
+    "English": {
+      "n": 53,
+      "accuracy": 0.7925,
+      "fail_rate": 0.2075,
+      "top_failure": [
+        [
+          "/absent",
+          "general_chat"
+        ],
+        1
+      ]
+    },
+    "Hindi": {
+      "n": 28,
+      "accuracy": 0.7857,
+      "fail_rate": 0.2143,
+      "top_failure": [
+        [
+          "/assign",
+          "general_chat"
+        ],
+        1
+      ]
+    },
+    "Hinglish": {
+      "n": 32,
+      "accuracy": 0.6562,
+      "fail_rate": 0.3438,
+      "top_failure": [
+        [
+          "/present",
+          "general_chat"
+        ],
+        1
+      ]
+    },
+    "Mixed": {
+      "n": 12,
+      "accuracy": 0.3333,
+      "fail_rate": 0.6667,
+      "top_failure": [
+        [
+          "/inventory_status",
+          "general_chat"
+        ],
+        4
+      ]
+    },
+    "Broken English": {
+      "n": 28,
+      "accuracy": 0.2857,
+      "fail_rate": 0.7143,
+      "top_failure": [
+        [
+          "/present",
+          "general_chat"
+        ],
+        1
+      ]
+    },
+    "MSME": {
+      "n": 28,
+      "accuracy": 0.4643,
+      "fail_rate": 0.5357,
+      "top_failure": [
+        [
+          "/assign",
+          "general_chat"
+        ],
+        1
+      ]
+    },
+    "Typos": {
+      "n": 28,
+      "accuracy": 0.1429,
+      "fail_rate": 0.8571,
+      "top_failure": [
+        [
+          "/present",
+          "general_chat"
+        ],
+        1
+      ]
+    },
+    "Short": {
+      "n": 28,
+      "accuracy": 0.3929,
+      "fail_rate": 0.6071,
+      "top_failure": [
+        [
+          "/present",
+          "general_chat"
+        ],
+        1
+      ]
+    },
+    "Conversational": {
+      "n": 28,
+      "accuracy": 0.2143,
+      "fail_rate": 0.7857,
+      "top_failure": [
+        [
+          "/assign",
+          "/assign_clarify"
+        ],
+        1
+      ]
+    },
+    "Contextual": {
+      "n": 28,
+      "accuracy": 0.3214,
+      "fail_rate": 0.6786,
+      "top_failure": [
+        [
+          "/absent",
+          "general_chat"
+        ],
+        1
+      ]
+    },
+    "Ambiguous": {
+      "n": 28,
+      "accuracy": 0.4286,
+      "fail_rate": 0.5714,
+      "top_failure": [
+        [
+          "/present",
+          "general_chat"
+        ],
+        1
+      ]
+    },
+    "Multi-intent": {
+      "n": 28,
+      "accuracy": 0.4286,
+      "fail_rate": 0.5714,
+      "top_failure": [
+        [
+          "/mgrassign",
+          "/assign"
+        ],
+        1
+      ]
+    }
+  },
+  "levels": {
+    "1": {
+      "name": "Canonical",
+      "n": 30,
+      "accuracy": 0.9333
+    },
+    "2": {
+      "name": "Natural English",
+      "n": 29,
+      "accuracy": 0.6207
+    },
+    "3": {
+      "name": "Hindi",
+      "n": 29,
+      "accuracy": 0.7586
+    },
+    "4": {
+      "name": "Hinglish",
+      "n": 29,
+      "accuracy": 0.6897
+    },
+    "5": {
+      "name": "Broken English",
+      "n": 29,
+      "accuracy": 0.2759
+    },
+    "6": {
+      "name": "MSME",
+      "n": 29,
+      "accuracy": 0.4483
+    },
+    "7": {
+      "name": "Typos",
+      "n": 29,
+      "accuracy": 0.1379
+    },
+    "8": {
+      "name": "Short",
+      "n": 29,
+      "accuracy": 0.4138
+    },
+    "9": {
+      "name": "Conversational",
+      "n": 29,
+      "accuracy": 0.2069
+    },
+    "10": {
+      "name": "Context",
+      "n": 29,
+      "accuracy": 0.3103
+    },
+    "11": {
+      "name": "Ambiguous",
+      "n": 29,
+      "accuracy": 0.4138
+    },
+    "12": {
+      "name": "Multi-intent",
+      "n": 29,
+      "accuracy": 0.4138
+    }
+  }
+}

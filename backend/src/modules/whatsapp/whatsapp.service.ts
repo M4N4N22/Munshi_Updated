@@ -113,7 +113,12 @@ export class WhatsAppService {
     media: InboundMediaRef,
   ): Promise<string> {
     try {
-      const inventoryPending = this.inventoryBulkImport.isAwaitingCsv(from);
+      const inventoryAwaitingUpload =
+        this.inventoryBulkImport.isAwaitingCsv(from);
+      const inventoryAwaitingConfirm =
+        this.inventoryBulkImport.isAwaitingImportConfirm(from);
+      const inventorySessionActive =
+        inventoryAwaitingUpload || inventoryAwaitingConfirm;
       const teamPending = this.teamBulkImport.isAwaitingCsv(from);
 
       if (!teamPending && this.inventoryBulkImport.isRejectedDocumentType(media)) {
@@ -122,7 +127,7 @@ export class WhatsAppService {
       }
 
       if (
-        !inventoryPending &&
+        !inventorySessionActive &&
         !teamPending &&
         !this.inventoryBulkImport.isCsvDocument(media)
       ) {
@@ -132,7 +137,17 @@ export class WhatsAppService {
 
       const buffer = await this.olliMedia.downloadMedia(media);
 
-      if (inventoryPending) {
+      if (inventoryAwaitingConfirm) {
+        await this.sendTextMessage(
+          from,
+          'Pehle import review complete karein.\n\n' +
+            'Reply *CONFIRM* to import.\n' +
+            'Reply *CANCEL* to abort.',
+        );
+        return 'ok';
+      }
+
+      if (inventoryAwaitingUpload) {
         const summary = await this.inventoryBulkImport.importFromCsvBuffer(
           from,
           buffer,
@@ -396,6 +411,17 @@ export class WhatsAppService {
         return finish(cancelResult);
       }
 
+      if (this.inventoryBulkImport.isAwaitingImportConfirm(body.from)) {
+        const reviewReply = await this.inventoryBulkImport.handleReviewReply(
+          body.from,
+          msgTrim,
+        );
+        if (reviewReply) {
+          await this.sendTextMessage(body.from, reviewReply);
+        }
+        return 'ok';
+      }
+
       if (this.inventoryBulkImport.isAwaitingCsv(body.from)) {
         await this.sendTextMessage(
           body.from,
@@ -643,6 +669,7 @@ export class WhatsAppService {
         'Inventory CSV import',
         'Ab *inventory CSV file* isi chat mein attach karke bhejein.\n\n' +
           'Columns: sku, name, category, location, unit, quantity\n\n' +
+          'Upload ke baad Munshi review bhejega — *CONFIRM* likh kar import complete karein.\n\n' +
           '*cancel* — band karna ho to likhein.',
       );
     }

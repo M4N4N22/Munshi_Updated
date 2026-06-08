@@ -16,7 +16,11 @@ STEEL_12MM,Steel 12mm,Building Materials,Main Warehouse,pcs,50,`;
 
 export const INVENTORY_CSV_MAX_ROWS = 200;
 export const INVENTORY_CSV_MAX_BYTES = 2 * 1024 * 1024;
-export const INVENTORY_CSV_PENDING_TTL_MS = 30 * 60 * 1000;
+/** Awaiting CSV upload after /inventory_import_csv */
+export const INVENTORY_CSV_PENDING_TTL_MS = 15 * 60 * 1000;
+
+/** Awaiting CONFIRM/CANCEL after CSV review */
+export const INVENTORY_CSV_REVIEW_TTL_MS = 15 * 60 * 1000;
 
 /** Static file in `web/public` — served from the Vercel web deploy. */
 export const INVENTORY_CSV_PUBLIC_TEMPLATE_PATH =

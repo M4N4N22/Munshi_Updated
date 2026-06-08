@@ -1,0 +1,4121 @@
+[
+  {
+    "case_id": "B-0001",
+    "workflow": "attendance_present",
+    "role": "WORKER",
+    "level": 1,
+    "language": "english",
+    "message": "/present",
+    "expected_intent": "/present",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0002",
+    "workflow": "attendance_present",
+    "role": "WORKER",
+    "level": 1,
+    "language": "hinglish",
+    "message": "present",
+    "expected_intent": "/present",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0003",
+    "workflow": "attendance_present",
+    "role": "WORKER",
+    "level": 2,
+    "language": "english",
+    "message": "I am here today",
+    "expected_intent": "/present",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0004",
+    "workflow": "attendance_present",
+    "role": "WORKER",
+    "level": 3,
+    "language": "hindi",
+    "message": "aaj main present hoon",
+    "expected_intent": "/present",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0005",
+    "workflow": "attendance_present",
+    "role": "WORKER",
+    "level": 4,
+    "language": "hinglish",
+    "message": "main aa gaya factory",
+    "expected_intent": "/present",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0006",
+    "workflow": "attendance_present",
+    "role": "WORKER",
+    "level": 5,
+    "language": "broken",
+    "message": "present today i come",
+    "expected_intent": "/present",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0007",
+    "workflow": "attendance_present",
+    "role": "WORKER",
+    "level": 6,
+    "language": "msme",
+    "message": "shift mein present",
+    "expected_intent": "/present",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0008",
+    "workflow": "attendance_present",
+    "role": "WORKER",
+    "level": 7,
+    "language": "typos",
+    "message": "presnt hu aaj",
+    "expected_intent": "/present",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0009",
+    "workflow": "attendance_present",
+    "role": "WORKER",
+    "level": 8,
+    "language": "short",
+    "message": "present",
+    "expected_intent": "/present",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0010",
+    "workflow": "attendance_present",
+    "role": "WORKER",
+    "level": 9,
+    "language": "conversational",
+    "message": "boss main pahunch gaya factory ab",
+    "expected_intent": "/present",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0011",
+    "workflow": "attendance_present",
+    "role": "WORKER",
+    "level": 10,
+    "language": "context",
+    "message": "kal bola tha aaj aaunga main aa gaya",
+    "expected_intent": "/present",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0012",
+    "workflow": "attendance_present",
+    "role": "WORKER",
+    "level": 11,
+    "language": "ambiguous",
+    "message": "aaj aa gaya",
+    "expected_intent": "/present",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0013",
+    "workflow": "attendance_present",
+    "role": "WORKER",
+    "level": 12,
+    "language": "multi",
+    "message": "present hu aur tasks dikhao",
+    "expected_intent": "/present",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0014",
+    "workflow": "attendance_absent",
+    "role": "WORKER",
+    "level": 1,
+    "language": "english",
+    "message": "/absent",
+    "expected_intent": "/absent",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0015",
+    "workflow": "attendance_absent",
+    "role": "WORKER",
+    "level": 2,
+    "language": "english",
+    "message": "I will not come today",
+    "expected_intent": "/absent",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0016",
+    "workflow": "attendance_absent",
+    "role": "WORKER",
+    "level": 3,
+    "language": "hindi",
+    "message": "aaj nahi aa paunga bimar hu",
+    "expected_intent": "/absent",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0017",
+    "workflow": "attendance_absent",
+    "role": "WORKER",
+    "level": 4,
+    "language": "hinglish",
+    "message": "not coming today leave",
+    "expected_intent": "/absent",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0018",
+    "workflow": "attendance_absent",
+    "role": "WORKER",
+    "level": 5,
+    "language": "broken",
+    "message": "today no come sick",
+    "expected_intent": "/absent",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0019",
+    "workflow": "attendance_absent",
+    "role": "WORKER",
+    "level": 6,
+    "language": "msme",
+    "message": "chutti chahiye",
+    "expected_intent": "/absent",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0020",
+    "workflow": "attendance_absent",
+    "role": "WORKER",
+    "level": 7,
+    "language": "typos",
+    "message": "absnt aaj",
+    "expected_intent": "/absent",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0021",
+    "workflow": "attendance_absent",
+    "role": "WORKER",
+    "level": 8,
+    "language": "short",
+    "message": "leave",
+    "expected_intent": "/absent",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0022",
+    "workflow": "attendance_absent",
+    "role": "WORKER",
+    "level": 9,
+    "language": "conversational",
+    "message": "bukhar hai aaj factory nahi aa sakta",
+    "expected_intent": "/absent",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0023",
+    "workflow": "attendance_absent",
+    "role": "WORKER",
+    "level": 10,
+    "language": "context",
+    "message": "doctor ne rest bola hai kal se aaunga",
+    "expected_intent": "/absent",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0024",
+    "workflow": "attendance_absent",
+    "role": "WORKER",
+    "level": 11,
+    "language": "ambiguous",
+    "message": "aaj nahi",
+    "expected_intent": "/absent",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0025",
+    "workflow": "attendance_absent",
+    "role": "WORKER",
+    "level": 12,
+    "language": "multi",
+    "message": "absent hu aur kal aaunga",
+    "expected_intent": "/absent",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0026",
+    "workflow": "task_assignment",
+    "role": "OWNER",
+    "level": 1,
+    "language": "hinglish",
+    "message": "@ram aaj warehouse saaf karo",
+    "expected_intent": "/assign",
+    "expected_entities": {
+      "worker_slug": "ram"
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0027",
+    "workflow": "task_assignment",
+    "role": "OWNER",
+    "level": 2,
+    "language": "english",
+    "message": "Please ask Ram to clean the warehouse today",
+    "expected_intent": "/assign",
+    "expected_entities": {
+      "worker_slug": "ram"
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0028",
+    "workflow": "task_assignment",
+    "role": "OWNER",
+    "level": 3,
+    "language": "hindi",
+    "message": "ram ko bolna godown saaf kare",
+    "expected_intent": "/assign",
+    "expected_entities": {
+      "worker_slug": "ram"
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0029",
+    "workflow": "task_assignment",
+    "role": "OWNER",
+    "level": 4,
+    "language": "hinglish",
+    "message": "ram se kehna store saaf kare aaj",
+    "expected_intent": "/assign",
+    "expected_entities": {
+      "worker_slug": "ram"
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0030",
+    "workflow": "task_assignment",
+    "role": "OWNER",
+    "level": 5,
+    "language": "broken",
+    "message": "ram clean warehouse today",
+    "expected_intent": "/assign",
+    "expected_entities": {
+      "worker_slug": "ram"
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0031",
+    "workflow": "task_assignment",
+    "role": "OWNER",
+    "level": 6,
+    "language": "msme",
+    "message": "ram safai karo",
+    "expected_intent": "/assign",
+    "expected_entities": {
+      "worker_slug": "ram"
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0032",
+    "workflow": "task_assignment",
+    "role": "OWNER",
+    "level": 7,
+    "language": "typos",
+    "message": "@ram warehous safai",
+    "expected_intent": "/assign",
+    "expected_entities": {
+      "worker_slug": "ram"
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0033",
+    "workflow": "task_assignment",
+    "role": "OWNER",
+    "level": 8,
+    "language": "short",
+    "message": "@ram safai",
+    "expected_intent": "/assign",
+    "expected_entities": {
+      "worker_slug": "ram"
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0034",
+    "workflow": "task_assignment",
+    "role": "OWNER",
+    "level": 9,
+    "language": "conversational",
+    "message": "ram free hai usko warehouse wala kaam de do",
+    "expected_intent": "/assign",
+    "expected_entities": {
+      "worker_slug": "ram"
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0035",
+    "workflow": "task_assignment",
+    "role": "OWNER",
+    "level": 10,
+    "language": "context",
+    "message": "kal jo pending tha ram ko wahi safai karwa do",
+    "expected_intent": "/assign",
+    "expected_entities": {
+      "worker_slug": "ram"
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0036",
+    "workflow": "task_assignment",
+    "role": "OWNER",
+    "level": 11,
+    "language": "ambiguous",
+    "message": "ram ko kaam do",
+    "expected_intent": "/assign",
+    "expected_entities": {
+      "worker_slug": "ram"
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0037",
+    "workflow": "task_assignment",
+    "role": "OWNER",
+    "level": 12,
+    "language": "multi",
+    "message": "ram ko safai karo aur shyam ko loading",
+    "expected_intent": "/assign",
+    "expected_entities": {
+      "worker_slug": "ram"
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0038",
+    "workflow": "department_assignment",
+    "role": "OWNER",
+    "level": 1,
+    "language": "english",
+    "message": "/depart_assign sales today figures",
+    "expected_intent": "/depart_assign",
+    "expected_entities": {
+      "depart_slug": "sales"
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0039",
+    "workflow": "department_assignment",
+    "role": "OWNER",
+    "level": 2,
+    "language": "english",
+    "message": "Ask sales team to send today figures",
+    "expected_intent": "/depart_assign",
+    "expected_entities": {
+      "depart_slug": "sales"
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0040",
+    "workflow": "department_assignment",
+    "role": "OWNER",
+    "level": 3,
+    "language": "hindi",
+    "message": "sales team ko aaj ka data bhejne ko bolo",
+    "expected_intent": "/depart_assign",
+    "expected_entities": {
+      "depart_slug": "sales"
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0041",
+    "workflow": "department_assignment",
+    "role": "OWNER",
+    "level": 4,
+    "language": "hinglish",
+    "message": "sales ko figures bhejo aaj ke",
+    "expected_intent": "/depart_assign",
+    "expected_entities": {
+      "depart_slug": "sales"
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0042",
+    "workflow": "department_assignment",
+    "role": "OWNER",
+    "level": 5,
+    "language": "broken",
+    "message": "sales team figure today send",
+    "expected_intent": "/depart_assign",
+    "expected_entities": {
+      "depart_slug": "sales"
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0043",
+    "workflow": "department_assignment",
+    "role": "OWNER",
+    "level": 6,
+    "language": "msme",
+    "message": "sales walo ko bolo",
+    "expected_intent": "/depart_assign",
+    "expected_entities": {
+      "depart_slug": "sales"
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0044",
+    "workflow": "department_assignment",
+    "role": "OWNER",
+    "level": 7,
+    "language": "typos",
+    "message": "slaes ko data bhejo",
+    "expected_intent": "/depart_assign",
+    "expected_entities": {
+      "depart_slug": "sales"
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0045",
+    "workflow": "department_assignment",
+    "role": "OWNER",
+    "level": 8,
+    "language": "short",
+    "message": "sales figures",
+    "expected_intent": "/depart_assign",
+    "expected_entities": {
+      "depart_slug": "sales"
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0046",
+    "workflow": "department_assignment",
+    "role": "OWNER",
+    "level": 9,
+    "language": "conversational",
+    "message": "sales department se kehna aaj closing bhejein",
+    "expected_intent": "/depart_assign",
+    "expected_entities": {
+      "depart_slug": "sales"
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0047",
+    "workflow": "department_assignment",
+    "role": "OWNER",
+    "level": 10,
+    "language": "context",
+    "message": "month end hai sales ko report chahiye",
+    "expected_intent": "/depart_assign",
+    "expected_entities": {
+      "depart_slug": "sales"
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0048",
+    "workflow": "department_assignment",
+    "role": "OWNER",
+    "level": 11,
+    "language": "ambiguous",
+    "message": "figures bhejo",
+    "expected_intent": "/assign_clarify",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0049",
+    "workflow": "department_assignment",
+    "role": "OWNER",
+    "level": 12,
+    "language": "multi",
+    "message": "sales ko figures aur it ko server check",
+    "expected_intent": "/depart_assign",
+    "expected_entities": {
+      "depart_slug": "sales"
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0050",
+    "workflow": "task_delegation",
+    "role": "MANAGER",
+    "level": 1,
+    "language": "english",
+    "message": "/mgrassign @priya 15",
+    "expected_intent": "/mgrassign",
+    "expected_entities": {
+      "worker_slug": "priya",
+      "id": 15
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0051",
+    "workflow": "task_delegation",
+    "role": "MANAGER",
+    "level": 2,
+    "language": "english",
+    "message": "@priya will do task 15",
+    "expected_intent": "/mgrassign",
+    "expected_entities": {
+      "worker_slug": "priya",
+      "id": 15
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0052",
+    "workflow": "task_delegation",
+    "role": "MANAGER",
+    "level": 3,
+    "language": "hindi",
+    "message": "priya ko task 15 do",
+    "expected_intent": "/mgrassign",
+    "expected_entities": {
+      "worker_slug": "priya",
+      "id": 15
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0053",
+    "workflow": "task_delegation",
+    "role": "MANAGER",
+    "level": 4,
+    "language": "hinglish",
+    "message": "task 15 priya karegi",
+    "expected_intent": "/mgrassign",
+    "expected_entities": {
+      "worker_slug": "priya",
+      "id": 15
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0054",
+    "workflow": "task_delegation",
+    "role": "MANAGER",
+    "level": 5,
+    "language": "broken",
+    "message": "priya task 15 do",
+    "expected_intent": "/mgrassign",
+    "expected_entities": {
+      "worker_slug": "priya",
+      "id": 15
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0055",
+    "workflow": "task_delegation",
+    "role": "MANAGER",
+    "level": 6,
+    "language": "msme",
+    "message": "15 priya ko",
+    "expected_intent": "/mgrassign",
+    "expected_entities": {
+      "worker_slug": "priya",
+      "id": 15
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0056",
+    "workflow": "task_delegation",
+    "role": "MANAGER",
+    "level": 7,
+    "language": "typos",
+    "message": "prnya ko task 15",
+    "expected_intent": "/mgrassign",
+    "expected_entities": {
+      "worker_slug": "priya",
+      "id": 15
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0057",
+    "workflow": "task_delegation",
+    "role": "MANAGER",
+    "level": 8,
+    "language": "short",
+    "message": "@priya 15",
+    "expected_intent": "/mgrassign",
+    "expected_entities": {
+      "worker_slug": "priya",
+      "id": 15
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0058",
+    "workflow": "task_delegation",
+    "role": "MANAGER",
+    "level": 9,
+    "language": "conversational",
+    "message": "priya free hai usko 15 wala kaam de do",
+    "expected_intent": "/mgrassign",
+    "expected_entities": {
+      "worker_slug": "priya",
+      "id": 15
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0059",
+    "workflow": "task_delegation",
+    "role": "MANAGER",
+    "level": 10,
+    "language": "context",
+    "message": "owner ne diya tha 15 priya ko transfer karo",
+    "expected_intent": "/mgrassign",
+    "expected_entities": {
+      "worker_slug": "priya",
+      "id": 15
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0060",
+    "workflow": "task_delegation",
+    "role": "MANAGER",
+    "level": 11,
+    "language": "ambiguous",
+    "message": "priya ko bhej do",
+    "expected_intent": "/assign",
+    "expected_entities": {
+      "worker_slug": "priya"
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0061",
+    "workflow": "task_delegation",
+    "role": "MANAGER",
+    "level": 12,
+    "language": "multi",
+    "message": "priya ko 15 do aur ram ko 16",
+    "expected_intent": "/mgrassign",
+    "expected_entities": {
+      "worker_slug": "priya",
+      "id": 15
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0062",
+    "workflow": "task_transfer",
+    "role": "MANAGER",
+    "level": 1,
+    "language": "english",
+    "message": "/mgrtransfer 15 it",
+    "expected_intent": "/mgrtransfer",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0063",
+    "workflow": "task_transfer",
+    "role": "MANAGER",
+    "level": 2,
+    "language": "english",
+    "message": "transfer task 15 to IT",
+    "expected_intent": "/mgrtransfer",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0064",
+    "workflow": "task_transfer",
+    "role": "MANAGER",
+    "level": 3,
+    "language": "hindi",
+    "message": "task 15 IT ko bhejo",
+    "expected_intent": "/mgrtransfer",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0065",
+    "workflow": "task_transfer",
+    "role": "MANAGER",
+    "level": 4,
+    "language": "hinglish",
+    "message": "15 send to it",
+    "expected_intent": "/mgrtransfer",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0066",
+    "workflow": "task_transfer",
+    "role": "MANAGER",
+    "level": 5,
+    "language": "broken",
+    "message": "transfer task 15",
+    "expected_intent": "/mgrtransfer",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0067",
+    "workflow": "task_transfer",
+    "role": "MANAGER",
+    "level": 6,
+    "language": "msme",
+    "message": "15 it ko",
+    "expected_intent": "/mgrtransfer",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0068",
+    "workflow": "task_transfer",
+    "role": "MANAGER",
+    "level": 7,
+    "language": "typos",
+    "message": "mgrtr 15",
+    "expected_intent": "/mgrtransfer",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0069",
+    "workflow": "task_transfer",
+    "role": "MANAGER",
+    "level": 8,
+    "language": "short",
+    "message": "15 it",
+    "expected_intent": "/mgrtransfer",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0070",
+    "workflow": "task_transfer",
+    "role": "MANAGER",
+    "level": 9,
+    "language": "conversational",
+    "message": "galat dept 15 IT ko",
+    "expected_intent": "/mgrtransfer",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0071",
+    "workflow": "task_transfer",
+    "role": "MANAGER",
+    "level": 10,
+    "language": "context",
+    "message": "pending 15 aaj handle",
+    "expected_intent": "/mgrtransfer",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0072",
+    "workflow": "task_transfer",
+    "role": "MANAGER",
+    "level": 11,
+    "language": "ambiguous",
+    "message": "transfer karo",
+    "expected_intent": "/mgrtransfer",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0073",
+    "workflow": "task_transfer",
+    "role": "MANAGER",
+    "level": 12,
+    "language": "multi",
+    "message": "15 handle aur next",
+    "expected_intent": "/mgrtransfer",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0074",
+    "workflow": "task_rejection",
+    "role": "MANAGER",
+    "level": 1,
+    "language": "english",
+    "message": "/mgrreject 18 not our scope",
+    "expected_intent": "/mgrreject",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0075",
+    "workflow": "task_rejection",
+    "role": "MANAGER",
+    "level": 2,
+    "language": "english",
+    "message": "reject task 18",
+    "expected_intent": "/mgrreject",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0076",
+    "workflow": "task_rejection",
+    "role": "MANAGER",
+    "level": 3,
+    "language": "hindi",
+    "message": "task 18 reject karo",
+    "expected_intent": "/mgrreject",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0077",
+    "workflow": "task_rejection",
+    "role": "MANAGER",
+    "level": 4,
+    "language": "hinglish",
+    "message": "18 reject",
+    "expected_intent": "/mgrreject",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0078",
+    "workflow": "task_rejection",
+    "role": "MANAGER",
+    "level": 5,
+    "language": "broken",
+    "message": "reject task 18",
+    "expected_intent": "/mgrreject",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0079",
+    "workflow": "task_rejection",
+    "role": "MANAGER",
+    "level": 6,
+    "language": "msme",
+    "message": "18 reject",
+    "expected_intent": "/mgrreject",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0080",
+    "workflow": "task_rejection",
+    "role": "MANAGER",
+    "level": 7,
+    "language": "typos",
+    "message": "mgrre 18",
+    "expected_intent": "/mgrreject",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0081",
+    "workflow": "task_rejection",
+    "role": "MANAGER",
+    "level": 8,
+    "language": "short",
+    "message": "18 reject",
+    "expected_intent": "/mgrreject",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0082",
+    "workflow": "task_rejection",
+    "role": "MANAGER",
+    "level": 9,
+    "language": "conversational",
+    "message": "scope nahi 18 reject",
+    "expected_intent": "/mgrreject",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0083",
+    "workflow": "task_rejection",
+    "role": "MANAGER",
+    "level": 10,
+    "language": "context",
+    "message": "pending 18 aaj handle",
+    "expected_intent": "/mgrreject",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0084",
+    "workflow": "task_rejection",
+    "role": "MANAGER",
+    "level": 11,
+    "language": "ambiguous",
+    "message": "reject karo",
+    "expected_intent": "/mgrreject",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0085",
+    "workflow": "task_rejection",
+    "role": "MANAGER",
+    "level": 12,
+    "language": "multi",
+    "message": "18 handle aur next",
+    "expected_intent": "/mgrreject",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0086",
+    "workflow": "task_self_assign",
+    "role": "MANAGER",
+    "level": 1,
+    "language": "english",
+    "message": "/mgrself 12",
+    "expected_intent": "/mgrself",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0087",
+    "workflow": "task_self_assign",
+    "role": "MANAGER",
+    "level": 2,
+    "language": "english",
+    "message": "I will do task 12",
+    "expected_intent": "/mgrself",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0088",
+    "workflow": "task_self_assign",
+    "role": "MANAGER",
+    "level": 3,
+    "language": "hindi",
+    "message": "task 12 main kar lunga",
+    "expected_intent": "/mgrself",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0089",
+    "workflow": "task_self_assign",
+    "role": "MANAGER",
+    "level": 4,
+    "language": "hinglish",
+    "message": "12 main sambhal lunga",
+    "expected_intent": "/mgrself",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0090",
+    "workflow": "task_self_assign",
+    "role": "MANAGER",
+    "level": 5,
+    "language": "broken",
+    "message": "i do task 12",
+    "expected_intent": "/mgrself",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0091",
+    "workflow": "task_self_assign",
+    "role": "MANAGER",
+    "level": 6,
+    "language": "msme",
+    "message": "12 main karunga",
+    "expected_intent": "/mgrself",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0092",
+    "workflow": "task_self_assign",
+    "role": "MANAGER",
+    "level": 7,
+    "language": "typos",
+    "message": "mgrse 12",
+    "expected_intent": "/mgrself",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0093",
+    "workflow": "task_self_assign",
+    "role": "MANAGER",
+    "level": 8,
+    "language": "short",
+    "message": "12 main",
+    "expected_intent": "/mgrself",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0094",
+    "workflow": "task_self_assign",
+    "role": "MANAGER",
+    "level": 9,
+    "language": "conversational",
+    "message": "owner ne diya 12 mujhe khud karna hai",
+    "expected_intent": "/mgrself",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0095",
+    "workflow": "task_self_assign",
+    "role": "MANAGER",
+    "level": 10,
+    "language": "context",
+    "message": "pending 12 aaj handle",
+    "expected_intent": "/mgrself",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0096",
+    "workflow": "task_self_assign",
+    "role": "MANAGER",
+    "level": 11,
+    "language": "ambiguous",
+    "message": "main kar lunga",
+    "expected_intent": "/mgrself",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0097",
+    "workflow": "task_self_assign",
+    "role": "MANAGER",
+    "level": 12,
+    "language": "multi",
+    "message": "12 handle aur next",
+    "expected_intent": "/mgrself",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0098",
+    "workflow": "task_completion",
+    "role": "WORKER",
+    "level": 1,
+    "language": "english",
+    "message": "/complete 14",
+    "expected_intent": "/complete",
+    "expected_entities": {
+      "id": 14
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0099",
+    "workflow": "task_completion",
+    "role": "WORKER",
+    "level": 2,
+    "language": "english",
+    "message": "Task 14 is finished",
+    "expected_intent": "/complete",
+    "expected_entities": {
+      "id": 14
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0100",
+    "workflow": "task_completion",
+    "role": "WORKER",
+    "level": 3,
+    "language": "hindi",
+    "message": "task 14 ho gaya",
+    "expected_intent": "/complete",
+    "expected_entities": {
+      "id": 14
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0101",
+    "workflow": "task_completion",
+    "role": "WORKER",
+    "level": 4,
+    "language": "hinglish",
+    "message": "14 complete ho gaya kaam",
+    "expected_intent": "/complete",
+    "expected_entities": {
+      "id": 14
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0102",
+    "workflow": "task_completion",
+    "role": "WORKER",
+    "level": 5,
+    "language": "broken",
+    "message": "14 done",
+    "expected_intent": "/complete",
+    "expected_entities": {
+      "id": 14
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0103",
+    "workflow": "task_completion",
+    "role": "WORKER",
+    "level": 6,
+    "language": "msme",
+    "message": "kaam ho gaya 14",
+    "expected_intent": "/complete",
+    "expected_entities": {
+      "id": 14
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0104",
+    "workflow": "task_completion",
+    "role": "WORKER",
+    "level": 7,
+    "language": "typos",
+    "message": "complte 14",
+    "expected_intent": "/complete",
+    "expected_entities": {
+      "id": 14
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0105",
+    "workflow": "task_completion",
+    "role": "WORKER",
+    "level": 8,
+    "language": "short",
+    "message": "14 done",
+    "expected_intent": "/complete",
+    "expected_entities": {
+      "id": 14
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0106",
+    "workflow": "task_completion",
+    "role": "WORKER",
+    "level": 9,
+    "language": "conversational",
+    "message": "warehouse safai kar di 14 wala",
+    "expected_intent": "/complete",
+    "expected_entities": {
+      "id": 14
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0107",
+    "workflow": "task_completion",
+    "role": "WORKER",
+    "level": 10,
+    "language": "context",
+    "message": "jo subah diya tha 14 poora ho gaya",
+    "expected_intent": "/complete",
+    "expected_entities": {
+      "id": 14
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0108",
+    "workflow": "task_completion",
+    "role": "WORKER",
+    "level": 11,
+    "language": "ambiguous",
+    "message": "task complete",
+    "expected_intent": "/complete",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0109",
+    "workflow": "task_completion",
+    "role": "WORKER",
+    "level": 12,
+    "language": "multi",
+    "message": "14 done aur 15 start",
+    "expected_intent": "/complete",
+    "expected_entities": {
+      "id": 14
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0110",
+    "workflow": "task_listing",
+    "role": "WORKER",
+    "level": 1,
+    "language": "english",
+    "message": "/tasks",
+    "expected_intent": "/tasks",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0111",
+    "workflow": "task_listing",
+    "role": "WORKER",
+    "level": 2,
+    "language": "english",
+    "message": "Show my tasks please",
+    "expected_intent": "/tasks",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0112",
+    "workflow": "task_listing",
+    "role": "WORKER",
+    "level": 3,
+    "language": "hindi",
+    "message": "mere tasks dikhao",
+    "expected_intent": "/tasks",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0113",
+    "workflow": "task_listing",
+    "role": "WORKER",
+    "level": 4,
+    "language": "hinglish",
+    "message": "aaj ke tasks batao",
+    "expected_intent": "/tasks",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0114",
+    "workflow": "task_listing",
+    "role": "WORKER",
+    "level": 5,
+    "language": "broken",
+    "message": "my task show",
+    "expected_intent": "/tasks",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0115",
+    "workflow": "task_listing",
+    "role": "WORKER",
+    "level": 6,
+    "language": "msme",
+    "message": "kaam dikhao",
+    "expected_intent": "/tasks",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0116",
+    "workflow": "task_listing",
+    "role": "WORKER",
+    "level": 7,
+    "language": "typos",
+    "message": "taks dikhao",
+    "expected_intent": "/tasks",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0117",
+    "workflow": "task_listing",
+    "role": "WORKER",
+    "level": 8,
+    "language": "short",
+    "message": "tasks",
+    "expected_intent": "/tasks",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0118",
+    "workflow": "task_listing",
+    "role": "WORKER",
+    "level": 9,
+    "language": "conversational",
+    "message": "aaj mujhe kya karna hai wo batao",
+    "expected_intent": "/tasks",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0119",
+    "workflow": "task_listing",
+    "role": "WORKER",
+    "level": 10,
+    "language": "context",
+    "message": "subah se pending kya hai mere",
+    "expected_intent": "/tasks",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0120",
+    "workflow": "task_listing",
+    "role": "WORKER",
+    "level": 11,
+    "language": "ambiguous",
+    "message": "kya karna hai",
+    "expected_intent": "/tasks",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0121",
+    "workflow": "task_listing",
+    "role": "WORKER",
+    "level": 12,
+    "language": "multi",
+    "message": "tasks dikhao aur present mark",
+    "expected_intent": "/tasks",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0122",
+    "workflow": "task_update",
+    "role": "WORKER",
+    "level": 1,
+    "language": "english",
+    "message": "/update 3 50 percent done",
+    "expected_intent": "/update",
+    "expected_entities": {
+      "id": 3
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0123",
+    "workflow": "task_update",
+    "role": "WORKER",
+    "level": 2,
+    "language": "english",
+    "message": "Task 3 is half complete",
+    "expected_intent": "/update",
+    "expected_entities": {
+      "id": 3
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0124",
+    "workflow": "task_update",
+    "role": "WORKER",
+    "level": 3,
+    "language": "hindi",
+    "message": "task 3 par kaam chal raha",
+    "expected_intent": "/update",
+    "expected_entities": {
+      "id": 3
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0125",
+    "workflow": "task_update",
+    "role": "WORKER",
+    "level": 4,
+    "language": "hinglish",
+    "message": "3 almost complete hai",
+    "expected_intent": "/update",
+    "expected_entities": {
+      "id": 3
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0126",
+    "workflow": "task_update",
+    "role": "WORKER",
+    "level": 5,
+    "language": "broken",
+    "message": "3 half done",
+    "expected_intent": "/update",
+    "expected_entities": {
+      "id": 3
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0127",
+    "workflow": "task_update",
+    "role": "WORKER",
+    "level": 6,
+    "language": "msme",
+    "message": "3 aadha ho gaya",
+    "expected_intent": "/update",
+    "expected_entities": {
+      "id": 3
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0128",
+    "workflow": "task_update",
+    "role": "WORKER",
+    "level": 7,
+    "language": "typos",
+    "message": "updat task 3",
+    "expected_intent": "/update",
+    "expected_entities": {
+      "id": 3
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0129",
+    "workflow": "task_update",
+    "role": "WORKER",
+    "level": 8,
+    "language": "short",
+    "message": "3 update",
+    "expected_intent": "/update",
+    "expected_entities": {
+      "id": 3
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0130",
+    "workflow": "task_update",
+    "role": "WORKER",
+    "level": 9,
+    "language": "conversational",
+    "message": "3 wala abhi 50 percent ho chuka",
+    "expected_intent": "/update",
+    "expected_entities": {
+      "id": 3
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0131",
+    "workflow": "task_update",
+    "role": "WORKER",
+    "level": 10,
+    "language": "context",
+    "message": "subah start kiya 3 abhi bhi chal raha",
+    "expected_intent": "/update",
+    "expected_entities": {
+      "id": 3
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0132",
+    "workflow": "task_update",
+    "role": "WORKER",
+    "level": 11,
+    "language": "ambiguous",
+    "message": "kaam chal raha",
+    "expected_intent": "/update",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0133",
+    "workflow": "task_update",
+    "role": "WORKER",
+    "level": 12,
+    "language": "multi",
+    "message": "3 update aur 4 complete",
+    "expected_intent": "/update",
+    "expected_entities": {
+      "id": 3
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0134",
+    "workflow": "issue_reporting",
+    "role": "WORKER",
+    "level": 1,
+    "language": "english",
+    "message": "/issue mixer not working",
+    "expected_intent": "/issue",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0135",
+    "workflow": "issue_reporting",
+    "role": "WORKER",
+    "level": 2,
+    "language": "english",
+    "message": "The forklift will not start",
+    "expected_intent": "/issue",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0136",
+    "workflow": "issue_reporting",
+    "role": "WORKER",
+    "level": 3,
+    "language": "hindi",
+    "message": "machine kharab hai",
+    "expected_intent": "/issue",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0137",
+    "workflow": "issue_reporting",
+    "role": "WORKER",
+    "level": 4,
+    "language": "hinglish",
+    "message": "forklift start nahi ho rahi",
+    "expected_intent": "/issue",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0138",
+    "workflow": "issue_reporting",
+    "role": "WORKER",
+    "level": 5,
+    "language": "broken",
+    "message": "machine not work",
+    "expected_intent": "/issue",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0139",
+    "workflow": "issue_reporting",
+    "role": "WORKER",
+    "level": 6,
+    "language": "msme",
+    "message": "mixer band",
+    "expected_intent": "/issue",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0140",
+    "workflow": "issue_reporting",
+    "role": "WORKER",
+    "level": 7,
+    "language": "typos",
+    "message": "mchine kharab",
+    "expected_intent": "/issue",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0141",
+    "workflow": "issue_reporting",
+    "role": "WORKER",
+    "level": 8,
+    "language": "short",
+    "message": "machine down",
+    "expected_intent": "/issue",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0142",
+    "workflow": "issue_reporting",
+    "role": "WORKER",
+    "level": 9,
+    "language": "conversational",
+    "message": "subah se mixer chal nahi raha",
+    "expected_intent": "/issue",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0143",
+    "workflow": "issue_reporting",
+    "role": "WORKER",
+    "level": 10,
+    "language": "context",
+    "message": "kal se pending repair mixer abhi bhi band",
+    "expected_intent": "/issue",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0144",
+    "workflow": "issue_reporting",
+    "role": "WORKER",
+    "level": 11,
+    "language": "ambiguous",
+    "message": "problem hai",
+    "expected_intent": "/issue",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0145",
+    "workflow": "issue_reporting",
+    "role": "WORKER",
+    "level": 12,
+    "language": "multi",
+    "message": "mixer band aur task 5 update",
+    "expected_intent": "/issue",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0146",
+    "workflow": "issue_list",
+    "role": "MANAGER",
+    "level": 1,
+    "language": "english",
+    "message": "/issues",
+    "expected_intent": "/issues",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0147",
+    "workflow": "issue_list",
+    "role": "MANAGER",
+    "level": 2,
+    "language": "english",
+    "message": "Show active issues",
+    "expected_intent": "/issues",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0148",
+    "workflow": "issue_list",
+    "role": "MANAGER",
+    "level": 3,
+    "language": "hindi",
+    "message": "active issues dikhao",
+    "expected_intent": "/issues",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0149",
+    "workflow": "issue_list",
+    "role": "MANAGER",
+    "level": 4,
+    "language": "hinglish",
+    "message": "open issues batao",
+    "expected_intent": "/issues",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0150",
+    "workflow": "issue_list",
+    "role": "MANAGER",
+    "level": 5,
+    "language": "broken",
+    "message": "show issues",
+    "expected_intent": "/issues",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0151",
+    "workflow": "issue_list",
+    "role": "MANAGER",
+    "level": 6,
+    "language": "msme",
+    "message": "issues list",
+    "expected_intent": "/issues",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0152",
+    "workflow": "issue_list",
+    "role": "MANAGER",
+    "level": 7,
+    "language": "typos",
+    "message": "isues dikhao",
+    "expected_intent": "/issues",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0153",
+    "workflow": "issue_list",
+    "role": "MANAGER",
+    "level": 8,
+    "language": "short",
+    "message": "issues",
+    "expected_intent": "/issues",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0154",
+    "workflow": "issue_list",
+    "role": "MANAGER",
+    "level": 9,
+    "language": "conversational",
+    "message": "kya kya problems open hain",
+    "expected_intent": "/issues",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0155",
+    "workflow": "issue_list",
+    "role": "MANAGER",
+    "level": 10,
+    "language": "context",
+    "message": "kal wale issues abhi bhi open?",
+    "expected_intent": "/issues",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0156",
+    "workflow": "issue_list",
+    "role": "MANAGER",
+    "level": 11,
+    "language": "ambiguous",
+    "message": "problems",
+    "expected_intent": "/issues",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0157",
+    "workflow": "issue_list",
+    "role": "MANAGER",
+    "level": 12,
+    "language": "multi",
+    "message": "issues dikhao aur report",
+    "expected_intent": "/issues",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0158",
+    "workflow": "issue_resolve",
+    "role": "WORKER",
+    "level": 1,
+    "language": "english",
+    "message": "/resolve 5",
+    "expected_intent": "/resolve",
+    "expected_entities": {
+      "id": 5
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0159",
+    "workflow": "issue_resolve",
+    "role": "WORKER",
+    "level": 2,
+    "language": "english",
+    "message": "Issue 5 is fixed now",
+    "expected_intent": "/resolve",
+    "expected_entities": {
+      "id": 5
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0160",
+    "workflow": "issue_resolve",
+    "role": "WORKER",
+    "level": 3,
+    "language": "hindi",
+    "message": "issue 5 theek ho gaya",
+    "expected_intent": "/resolve",
+    "expected_entities": {
+      "id": 5
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0161",
+    "workflow": "issue_resolve",
+    "role": "WORKER",
+    "level": 4,
+    "language": "hinglish",
+    "message": "5 resolve kar do fix ho gaya",
+    "expected_intent": "/resolve",
+    "expected_entities": {
+      "id": 5
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0162",
+    "workflow": "issue_resolve",
+    "role": "WORKER",
+    "level": 5,
+    "language": "broken",
+    "message": "resolve 5 fixed",
+    "expected_intent": "/resolve",
+    "expected_entities": {
+      "id": 5
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0163",
+    "workflow": "issue_resolve",
+    "role": "WORKER",
+    "level": 6,
+    "language": "msme",
+    "message": "5 band nahi ab theek",
+    "expected_intent": "/resolve",
+    "expected_entities": {
+      "id": 5
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0164",
+    "workflow": "issue_resolve",
+    "role": "WORKER",
+    "level": 7,
+    "language": "typos",
+    "message": "resolv 5",
+    "expected_intent": "/resolve",
+    "expected_entities": {
+      "id": 5
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0165",
+    "workflow": "issue_resolve",
+    "role": "WORKER",
+    "level": 8,
+    "language": "short",
+    "message": "resolve 5",
+    "expected_intent": "/resolve",
+    "expected_entities": {
+      "id": 5
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0166",
+    "workflow": "issue_resolve",
+    "role": "WORKER",
+    "level": 9,
+    "language": "conversational",
+    "message": "electrician ne mixer theek kar diya issue 5 close",
+    "expected_intent": "/resolve",
+    "expected_entities": {
+      "id": 5
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0167",
+    "workflow": "issue_resolve",
+    "role": "WORKER",
+    "level": 10,
+    "language": "context",
+    "message": "kal report kiya tha 5 ab resolve",
+    "expected_intent": "/resolve",
+    "expected_entities": {
+      "id": 5
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0168",
+    "workflow": "issue_resolve",
+    "role": "WORKER",
+    "level": 11,
+    "language": "ambiguous",
+    "message": "theek ho gaya",
+    "expected_intent": "/resolve",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0169",
+    "workflow": "issue_resolve",
+    "role": "WORKER",
+    "level": 12,
+    "language": "multi",
+    "message": "5 resolve aur 6 open",
+    "expected_intent": "/resolve",
+    "expected_entities": {
+      "id": 5
+    },
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0170",
+    "workflow": "member_lookup",
+    "role": "OWNER",
+    "level": 1,
+    "language": "english",
+    "message": "/members",
+    "expected_intent": "/members",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0171",
+    "workflow": "member_lookup",
+    "role": "OWNER",
+    "level": 2,
+    "language": "english",
+    "message": "Show team members",
+    "expected_intent": "/members",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0172",
+    "workflow": "member_lookup",
+    "role": "OWNER",
+    "level": 3,
+    "language": "hindi",
+    "message": "team members batao",
+    "expected_intent": "/members",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0173",
+    "workflow": "member_lookup",
+    "role": "OWNER",
+    "level": 4,
+    "language": "hinglish",
+    "message": "team members dikhao",
+    "expected_intent": "/members",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0174",
+    "workflow": "member_lookup",
+    "role": "OWNER",
+    "level": 5,
+    "language": "broken",
+    "message": "show team member",
+    "expected_intent": "/members",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0175",
+    "workflow": "member_lookup",
+    "role": "OWNER",
+    "level": 6,
+    "language": "msme",
+    "message": "kaun kaun hai team mein",
+    "expected_intent": "/members",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0176",
+    "workflow": "member_lookup",
+    "role": "OWNER",
+    "level": 7,
+    "language": "typos",
+    "message": "memebers list",
+    "expected_intent": "/members",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0177",
+    "workflow": "member_lookup",
+    "role": "OWNER",
+    "level": 8,
+    "language": "short",
+    "message": "members",
+    "expected_intent": "general_chat",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0178",
+    "workflow": "member_lookup",
+    "role": "OWNER",
+    "level": 9,
+    "language": "conversational",
+    "message": "mere factory mein kaun kaun kaam karta hai",
+    "expected_intent": "/members",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0179",
+    "workflow": "member_lookup",
+    "role": "OWNER",
+    "level": 10,
+    "language": "context",
+    "message": "naye worker aaye hain list dikhao",
+    "expected_intent": "/members",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0180",
+    "workflow": "member_lookup",
+    "role": "OWNER",
+    "level": 11,
+    "language": "ambiguous",
+    "message": "team dikhao",
+    "expected_intent": "/members",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0181",
+    "workflow": "member_lookup",
+    "role": "OWNER",
+    "level": 12,
+    "language": "multi",
+    "message": "members dikhao aur tasks",
+    "expected_intent": "/members",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0182",
+    "workflow": "inventory_status",
+    "role": "OWNER",
+    "level": 1,
+    "language": "english",
+    "message": "/inventory_status CEMENT-50KG",
+    "expected_intent": "/inventory_status",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0183",
+    "workflow": "inventory_status",
+    "role": "OWNER",
+    "level": 2,
+    "language": "english",
+    "message": "How much cement stock do we have",
+    "expected_intent": "/inventory_status",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0184",
+    "workflow": "inventory_status",
+    "role": "OWNER",
+    "level": 3,
+    "language": "hindi",
+    "message": "cement kitna bacha hai",
+    "expected_intent": "/inventory_status",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0185",
+    "workflow": "inventory_status",
+    "role": "OWNER",
+    "level": 4,
+    "language": "hinglish",
+    "message": "stock dikhao cement ka",
+    "expected_intent": "/inventory_status",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0186",
+    "workflow": "inventory_status",
+    "role": "OWNER",
+    "level": 5,
+    "language": "broken",
+    "message": "how much cement",
+    "expected_intent": "/inventory_status",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0187",
+    "workflow": "inventory_status",
+    "role": "OWNER",
+    "level": 6,
+    "language": "msme",
+    "message": "cement stock",
+    "expected_intent": "/inventory_status",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0188",
+    "workflow": "inventory_status",
+    "role": "OWNER",
+    "level": 7,
+    "language": "typos",
+    "message": "inventry status cement",
+    "expected_intent": "/inventory_status",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0189",
+    "workflow": "inventory_status",
+    "role": "OWNER",
+    "level": 8,
+    "language": "short",
+    "message": "stock cement",
+    "expected_intent": "/inventory_status",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0190",
+    "workflow": "inventory_status",
+    "role": "OWNER",
+    "level": 9,
+    "language": "conversational",
+    "message": "customer puch raha kitna cement hai batao",
+    "expected_intent": "/inventory_status",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0191",
+    "workflow": "inventory_status",
+    "role": "OWNER",
+    "level": 10,
+    "language": "context",
+    "message": "kal delivery ke baad kitna bacha",
+    "expected_intent": "/inventory_status",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0192",
+    "workflow": "inventory_status",
+    "role": "OWNER",
+    "level": 11,
+    "language": "ambiguous",
+    "message": "kitna hai",
+    "expected_intent": "/inventory_status",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0193",
+    "workflow": "inventory_status",
+    "role": "OWNER",
+    "level": 12,
+    "language": "multi",
+    "message": "cement stock aur low items",
+    "expected_intent": "/inventory_status",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0194",
+    "workflow": "purchase_request",
+    "role": "OWNER",
+    "level": 1,
+    "language": "english",
+    "message": "/purchase_request_create",
+    "expected_intent": "/purchase_request_create",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0195",
+    "workflow": "purchase_request",
+    "role": "OWNER",
+    "level": 2,
+    "language": "english",
+    "message": "Create purchase request for cement",
+    "expected_intent": "/purchase_request_create",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0196",
+    "workflow": "purchase_request",
+    "role": "OWNER",
+    "level": 3,
+    "language": "hindi",
+    "message": "cement ka order karna hai",
+    "expected_intent": "/purchase_request_create",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0197",
+    "workflow": "purchase_request",
+    "role": "OWNER",
+    "level": 4,
+    "language": "hinglish",
+    "message": "purchase request banao cement ke liye",
+    "expected_intent": "/purchase_request_create",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0198",
+    "workflow": "purchase_request",
+    "role": "OWNER",
+    "level": 5,
+    "language": "broken",
+    "message": "order cement purchase",
+    "expected_intent": "/purchase_request_create",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0199",
+    "workflow": "purchase_request",
+    "role": "OWNER",
+    "level": 6,
+    "language": "msme",
+    "message": "cement mangwana hai",
+    "expected_intent": "/purchase_request_create",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0200",
+    "workflow": "purchase_request",
+    "role": "OWNER",
+    "level": 7,
+    "language": "typos",
+    "message": "purchse request cement",
+    "expected_intent": "/purchase_request_create",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0201",
+    "workflow": "purchase_request",
+    "role": "OWNER",
+    "level": 8,
+    "language": "short",
+    "message": "order cement",
+    "expected_intent": "/purchase_request_create",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0202",
+    "workflow": "purchase_request",
+    "role": "OWNER",
+    "level": 9,
+    "language": "conversational",
+    "message": "stock kam hai cement ka purchase chahiye",
+    "expected_intent": "/purchase_request_create",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0203",
+    "workflow": "purchase_request",
+    "role": "OWNER",
+    "level": 10,
+    "language": "context",
+    "message": "low stock alert aaya cement order karo",
+    "expected_intent": "/purchase_request_create",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0204",
+    "workflow": "purchase_request",
+    "role": "OWNER",
+    "level": 11,
+    "language": "ambiguous",
+    "message": "order karo",
+    "expected_intent": "/purchase_request_create",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0205",
+    "workflow": "purchase_request",
+    "role": "OWNER",
+    "level": 12,
+    "language": "multi",
+    "message": "cement order aur steel bhi",
+    "expected_intent": "/purchase_request_create",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0206",
+    "workflow": "general_help",
+    "role": "OWNER",
+    "level": 1,
+    "language": "english",
+    "message": "/help",
+    "expected_intent": "/help",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0207",
+    "workflow": "general_help",
+    "role": "OWNER",
+    "level": 2,
+    "language": "english",
+    "message": "What can you do",
+    "expected_intent": "/help",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0208",
+    "workflow": "general_help",
+    "role": "OWNER",
+    "level": 3,
+    "language": "hindi",
+    "message": "madad chahiye",
+    "expected_intent": "/help",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0209",
+    "workflow": "general_help",
+    "role": "OWNER",
+    "level": 4,
+    "language": "hinglish",
+    "message": "help please munshi",
+    "expected_intent": "/help",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0210",
+    "workflow": "general_help",
+    "role": "OWNER",
+    "level": 5,
+    "language": "broken",
+    "message": "help me",
+    "expected_intent": "/help",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0211",
+    "workflow": "general_help",
+    "role": "OWNER",
+    "level": 6,
+    "language": "msme",
+    "message": "commands batao",
+    "expected_intent": "/help",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0212",
+    "workflow": "general_help",
+    "role": "OWNER",
+    "level": 7,
+    "language": "typos",
+    "message": "hlp",
+    "expected_intent": "/help",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0213",
+    "workflow": "general_help",
+    "role": "OWNER",
+    "level": 8,
+    "language": "short",
+    "message": "help",
+    "expected_intent": "/help",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0214",
+    "workflow": "general_help",
+    "role": "OWNER",
+    "level": 9,
+    "language": "conversational",
+    "message": "mujhe samajh nahi aa raha kya likhun",
+    "expected_intent": "/help",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0215",
+    "workflow": "general_help",
+    "role": "OWNER",
+    "level": 10,
+    "language": "context",
+    "message": "pehli baar use kar raha hun guide karo",
+    "expected_intent": "/help",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0216",
+    "workflow": "general_help",
+    "role": "OWNER",
+    "level": 11,
+    "language": "ambiguous",
+    "message": "kya kar sakte ho",
+    "expected_intent": "/help",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0217",
+    "workflow": "general_help",
+    "role": "OWNER",
+    "level": 12,
+    "language": "multi",
+    "message": "help aur tasks",
+    "expected_intent": "/help",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0218",
+    "workflow": "home_menu",
+    "role": "OWNER",
+    "level": 1,
+    "language": "english",
+    "message": "hi",
+    "expected_intent": "general_chat",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0219",
+    "workflow": "home_menu",
+    "role": "OWNER",
+    "level": 2,
+    "language": "english",
+    "message": "Hello Munshi",
+    "expected_intent": "general_chat",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0220",
+    "workflow": "home_menu",
+    "role": "OWNER",
+    "level": 3,
+    "language": "hindi",
+    "message": "namaste",
+    "expected_intent": "general_chat",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0221",
+    "workflow": "home_menu",
+    "role": "OWNER",
+    "level": 4,
+    "language": "hinglish",
+    "message": "hi munshi good morning",
+    "expected_intent": "general_chat",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0222",
+    "workflow": "home_menu",
+    "role": "OWNER",
+    "level": 5,
+    "language": "broken",
+    "message": "hey",
+    "expected_intent": "general_chat",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0223",
+    "workflow": "home_menu",
+    "role": "OWNER",
+    "level": 6,
+    "language": "msme",
+    "message": "shuru karte hain",
+    "expected_intent": "general_chat",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0224",
+    "workflow": "home_menu",
+    "role": "OWNER",
+    "level": 7,
+    "language": "typos",
+    "message": "hii",
+    "expected_intent": "general_chat",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0225",
+    "workflow": "home_menu",
+    "role": "OWNER",
+    "level": 8,
+    "language": "short",
+    "message": "hi",
+    "expected_intent": "general_chat",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0226",
+    "workflow": "home_menu",
+    "role": "OWNER",
+    "level": 9,
+    "language": "conversational",
+    "message": "aaj kya scene hai munshi",
+    "expected_intent": "general_chat",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0227",
+    "workflow": "home_menu",
+    "role": "OWNER",
+    "level": 10,
+    "language": "context",
+    "message": "kal baat hui thi aaj continue",
+    "expected_intent": "general_chat",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0228",
+    "workflow": "home_menu",
+    "role": "OWNER",
+    "level": 11,
+    "language": "ambiguous",
+    "message": "ok",
+    "expected_intent": "general_chat",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0229",
+    "workflow": "home_menu",
+    "role": "OWNER",
+    "level": 12,
+    "language": "multi",
+    "message": "hi aur team dikhao",
+    "expected_intent": "general_chat",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0230",
+    "workflow": "report",
+    "role": "MANAGER",
+    "level": 1,
+    "language": "english",
+    "message": "/report",
+    "expected_intent": "/report",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0231",
+    "workflow": "report",
+    "role": "MANAGER",
+    "level": 2,
+    "language": "english",
+    "message": "Daily summary please",
+    "expected_intent": "/report",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0232",
+    "workflow": "report",
+    "role": "MANAGER",
+    "level": 3,
+    "language": "hindi",
+    "message": "aaj ka report dikhao",
+    "expected_intent": "/report",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0233",
+    "workflow": "report",
+    "role": "MANAGER",
+    "level": 4,
+    "language": "hinglish",
+    "message": "report chahiye aaj ka",
+    "expected_intent": "/report",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0234",
+    "workflow": "report",
+    "role": "MANAGER",
+    "level": 5,
+    "language": "broken",
+    "message": "daily report",
+    "expected_intent": "/report",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0235",
+    "workflow": "report",
+    "role": "MANAGER",
+    "level": 6,
+    "language": "msme",
+    "message": "summary dikhao",
+    "expected_intent": "/report",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0236",
+    "workflow": "report",
+    "role": "MANAGER",
+    "level": 7,
+    "language": "typos",
+    "message": "reprot dikhao",
+    "expected_intent": "/report",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0237",
+    "workflow": "report",
+    "role": "MANAGER",
+    "level": 8,
+    "language": "short",
+    "message": "report",
+    "expected_intent": "/report",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0238",
+    "workflow": "report",
+    "role": "MANAGER",
+    "level": 9,
+    "language": "conversational",
+    "message": "shift khatam report bana do",
+    "expected_intent": "/report",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0239",
+    "workflow": "report",
+    "role": "MANAGER",
+    "level": 10,
+    "language": "context",
+    "message": "kal wala report abhi bhejo",
+    "expected_intent": "/report",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0240",
+    "workflow": "report",
+    "role": "MANAGER",
+    "level": 11,
+    "language": "ambiguous",
+    "message": "summary",
+    "expected_intent": "/report",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0241",
+    "workflow": "report",
+    "role": "MANAGER",
+    "level": 12,
+    "language": "multi",
+    "message": "report aur issues",
+    "expected_intent": "/report",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0242",
+    "workflow": "onboard_worker",
+    "role": "OWNER",
+    "level": 1,
+    "language": "english",
+    "message": "/onboard_worker",
+    "expected_intent": "/onboard_worker",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0243",
+    "workflow": "onboard_worker",
+    "role": "OWNER",
+    "level": 2,
+    "language": "english",
+    "message": "Add new worker",
+    "expected_intent": "/onboard_worker",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0244",
+    "workflow": "onboard_worker",
+    "role": "OWNER",
+    "level": 3,
+    "language": "hindi",
+    "message": "naya worker add karo",
+    "expected_intent": "/onboard_worker",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0245",
+    "workflow": "onboard_worker",
+    "role": "OWNER",
+    "level": 4,
+    "language": "hinglish",
+    "message": "worker onboard karna hai",
+    "expected_intent": "/onboard_worker",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0246",
+    "workflow": "onboard_worker",
+    "role": "OWNER",
+    "level": 5,
+    "language": "broken",
+    "message": "add worker",
+    "expected_intent": "/onboard_worker",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0247",
+    "workflow": "onboard_worker",
+    "role": "OWNER",
+    "level": 6,
+    "language": "msme",
+    "message": "naya banda join karega",
+    "expected_intent": "/onboard_worker",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0248",
+    "workflow": "onboard_worker",
+    "role": "OWNER",
+    "level": 7,
+    "language": "typos",
+    "message": "onbord worker",
+    "expected_intent": "/onboard_worker",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0249",
+    "workflow": "onboard_worker",
+    "role": "OWNER",
+    "level": 8,
+    "language": "short",
+    "message": "onboard worker",
+    "expected_intent": "/onboard_worker",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0250",
+    "workflow": "onboard_worker",
+    "role": "OWNER",
+    "level": 9,
+    "language": "conversational",
+    "message": "ek helper aaya hai usko system mein daalo",
+    "expected_intent": "/onboard_worker",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0251",
+    "workflow": "onboard_worker",
+    "role": "OWNER",
+    "level": 10,
+    "language": "context",
+    "message": "monday join karega naya worker add",
+    "expected_intent": "/onboard_worker",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0252",
+    "workflow": "onboard_worker",
+    "role": "OWNER",
+    "level": 11,
+    "language": "ambiguous",
+    "message": "naya banda",
+    "expected_intent": "/onboard_worker",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0253",
+    "workflow": "onboard_worker",
+    "role": "OWNER",
+    "level": 12,
+    "language": "multi",
+    "message": "worker add aur vendor bhi",
+    "expected_intent": "/onboard_worker",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0254",
+    "workflow": "onboard_vendor",
+    "role": "OWNER",
+    "level": 1,
+    "language": "english",
+    "message": "/onboard_vendor",
+    "expected_intent": "/onboard_vendor",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0255",
+    "workflow": "onboard_vendor",
+    "role": "OWNER",
+    "level": 2,
+    "language": "english",
+    "message": "Register new vendor",
+    "expected_intent": "/onboard_vendor",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0256",
+    "workflow": "onboard_vendor",
+    "role": "OWNER",
+    "level": 3,
+    "language": "hindi",
+    "message": "naya vendor add karo",
+    "expected_intent": "/onboard_vendor",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0257",
+    "workflow": "onboard_vendor",
+    "role": "OWNER",
+    "level": 4,
+    "language": "hinglish",
+    "message": "supplier register karo",
+    "expected_intent": "/onboard_vendor",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0258",
+    "workflow": "onboard_vendor",
+    "role": "OWNER",
+    "level": 5,
+    "language": "broken",
+    "message": "add vendor",
+    "expected_intent": "/onboard_vendor",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0259",
+    "workflow": "onboard_vendor",
+    "role": "OWNER",
+    "level": 6,
+    "language": "msme",
+    "message": "naya supplier",
+    "expected_intent": "/onboard_vendor",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0260",
+    "workflow": "onboard_vendor",
+    "role": "OWNER",
+    "level": 7,
+    "language": "typos",
+    "message": "onbord vendor",
+    "expected_intent": "/onboard_vendor",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0261",
+    "workflow": "onboard_vendor",
+    "role": "OWNER",
+    "level": 8,
+    "language": "short",
+    "message": "vendor add",
+    "expected_intent": "/onboard_vendor",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0262",
+    "workflow": "onboard_vendor",
+    "role": "OWNER",
+    "level": 9,
+    "language": "conversational",
+    "message": "cement wale naye supplier aaye register karo",
+    "expected_intent": "/onboard_vendor",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0263",
+    "workflow": "onboard_vendor",
+    "role": "OWNER",
+    "level": 10,
+    "language": "context",
+    "message": "kal meeting thi vendor onboard karna hai",
+    "expected_intent": "/onboard_vendor",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0264",
+    "workflow": "onboard_vendor",
+    "role": "OWNER",
+    "level": 11,
+    "language": "ambiguous",
+    "message": "supplier",
+    "expected_intent": "/onboard_vendor",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0265",
+    "workflow": "onboard_vendor",
+    "role": "OWNER",
+    "level": 12,
+    "language": "multi",
+    "message": "vendor add aur PR",
+    "expected_intent": "/onboard_vendor",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0266",
+    "workflow": "inventory_create",
+    "role": "OWNER",
+    "level": 1,
+    "language": "english",
+    "message": "/inventory_create",
+    "expected_intent": "/inventory_create",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0267",
+    "workflow": "inventory_create",
+    "role": "OWNER",
+    "level": 2,
+    "language": "english",
+    "message": "Add new inventory item",
+    "expected_intent": "/inventory_create",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0268",
+    "workflow": "inventory_create",
+    "role": "OWNER",
+    "level": 3,
+    "language": "hindi",
+    "message": "naya item add karo stock mein",
+    "expected_intent": "/inventory_create",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0269",
+    "workflow": "inventory_create",
+    "role": "OWNER",
+    "level": 4,
+    "language": "hinglish",
+    "message": "inventory item banao",
+    "expected_intent": "/inventory_create",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0270",
+    "workflow": "inventory_create",
+    "role": "OWNER",
+    "level": 5,
+    "language": "broken",
+    "message": "new stock item",
+    "expected_intent": "/inventory_create",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0271",
+    "workflow": "inventory_create",
+    "role": "OWNER",
+    "level": 6,
+    "language": "msme",
+    "message": "naya maal add",
+    "expected_intent": "/inventory_create",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0272",
+    "workflow": "inventory_create",
+    "role": "OWNER",
+    "level": 7,
+    "language": "typos",
+    "message": "inventry create",
+    "expected_intent": "/inventory_create",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0273",
+    "workflow": "inventory_create",
+    "role": "OWNER",
+    "level": 8,
+    "language": "short",
+    "message": "add item",
+    "expected_intent": "/inventory_create",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0274",
+    "workflow": "inventory_create",
+    "role": "OWNER",
+    "level": 9,
+    "language": "conversational",
+    "message": "nails ka naya SKU banana hai",
+    "expected_intent": "/inventory_create",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0275",
+    "workflow": "inventory_create",
+    "role": "OWNER",
+    "level": 10,
+    "language": "context",
+    "message": "supplier ne naya product diya add karo",
+    "expected_intent": "/inventory_create",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0276",
+    "workflow": "inventory_create",
+    "role": "OWNER",
+    "level": 11,
+    "language": "ambiguous",
+    "message": "naya item",
+    "expected_intent": "/inventory_create",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0277",
+    "workflow": "inventory_create",
+    "role": "OWNER",
+    "level": 12,
+    "language": "multi",
+    "message": "item add aur stock check",
+    "expected_intent": "/inventory_create",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0278",
+    "workflow": "business_discovery",
+    "role": "OWNER",
+    "level": 1,
+    "language": "english",
+    "message": "/business_discovery",
+    "expected_intent": "/business_discovery",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0279",
+    "workflow": "business_discovery",
+    "role": "OWNER",
+    "level": 2,
+    "language": "english",
+    "message": "Tell you about my business",
+    "expected_intent": "/business_discovery",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0280",
+    "workflow": "business_discovery",
+    "role": "OWNER",
+    "level": 3,
+    "language": "hindi",
+    "message": "apna business setup karna hai",
+    "expected_intent": "/business_discovery",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0281",
+    "workflow": "business_discovery",
+    "role": "OWNER",
+    "level": 4,
+    "language": "hinglish",
+    "message": "setup my business munshi",
+    "expected_intent": "/business_discovery",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0282",
+    "workflow": "business_discovery",
+    "role": "OWNER",
+    "level": 5,
+    "language": "broken",
+    "message": "register company",
+    "expected_intent": "/business_discovery",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0283",
+    "workflow": "business_discovery",
+    "role": "OWNER",
+    "level": 6,
+    "language": "msme",
+    "message": "business profile",
+    "expected_intent": "/business_discovery",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0284",
+    "workflow": "business_discovery",
+    "role": "OWNER",
+    "level": 7,
+    "language": "typos",
+    "message": "busines setup",
+    "expected_intent": "/business_discovery",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0285",
+    "workflow": "business_discovery",
+    "role": "OWNER",
+    "level": 8,
+    "language": "short",
+    "message": "setup business",
+    "expected_intent": "/business_discovery",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0286",
+    "workflow": "business_discovery",
+    "role": "OWNER",
+    "level": 9,
+    "language": "conversational",
+    "message": "naya factory hai profile complete karni hai",
+    "expected_intent": "/business_discovery",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0287",
+    "workflow": "business_discovery",
+    "role": "OWNER",
+    "level": 10,
+    "language": "context",
+    "message": "continue onboarding setup",
+    "expected_intent": "/continue_discovery",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0288",
+    "workflow": "business_discovery",
+    "role": "OWNER",
+    "level": 11,
+    "language": "ambiguous",
+    "message": "setup",
+    "expected_intent": "/business_discovery",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0289",
+    "workflow": "business_discovery",
+    "role": "OWNER",
+    "level": 12,
+    "language": "multi",
+    "message": "business setup aur import inventory",
+    "expected_intent": "/business_discovery",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0290",
+    "workflow": "assign_clarify",
+    "role": "OWNER",
+    "level": 1,
+    "language": "english",
+    "message": "aaj website banegi",
+    "expected_intent": "/assign_clarify",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0291",
+    "workflow": "assign_clarify",
+    "role": "OWNER",
+    "level": 2,
+    "language": "english",
+    "message": "Finish the quarterly audit",
+    "expected_intent": "/assign_clarify",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0292",
+    "workflow": "assign_clarify",
+    "role": "OWNER",
+    "level": 3,
+    "language": "hindi",
+    "message": "aaj website update karni hai",
+    "expected_intent": "/assign_clarify",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0293",
+    "workflow": "assign_clarify",
+    "role": "OWNER",
+    "level": 4,
+    "language": "hinglish",
+    "message": "quarterly audit complete karna hai",
+    "expected_intent": "/assign_clarify",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0294",
+    "workflow": "assign_clarify",
+    "role": "OWNER",
+    "level": 5,
+    "language": "broken",
+    "message": "website update today",
+    "expected_intent": "/assign_clarify",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0295",
+    "workflow": "assign_clarify",
+    "role": "OWNER",
+    "level": 6,
+    "language": "msme",
+    "message": "audit karo",
+    "expected_intent": "/assign_clarify",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0296",
+    "workflow": "assign_clarify",
+    "role": "OWNER",
+    "level": 7,
+    "language": "typos",
+    "message": "websit update",
+    "expected_intent": "/assign_clarify",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0297",
+    "workflow": "assign_clarify",
+    "role": "OWNER",
+    "level": 8,
+    "language": "short",
+    "message": "audit karo",
+    "expected_intent": "/assign_clarify",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0298",
+    "workflow": "assign_clarify",
+    "role": "OWNER",
+    "level": 9,
+    "language": "conversational",
+    "message": "kisi ko assign karna hai par naam nahi pata website ka kaam",
+    "expected_intent": "/assign_clarify",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0299",
+    "workflow": "assign_clarify",
+    "role": "OWNER",
+    "level": 10,
+    "language": "context",
+    "message": "owner ne bola tha audit kisko du",
+    "expected_intent": "/assign_clarify",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0300",
+    "workflow": "assign_clarify",
+    "role": "OWNER",
+    "level": 11,
+    "language": "ambiguous",
+    "message": "kaam hai",
+    "expected_intent": "/assign_clarify",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0301",
+    "workflow": "assign_clarify",
+    "role": "OWNER",
+    "level": 12,
+    "language": "multi",
+    "message": "website banao aur report bhejo",
+    "expected_intent": "/assign_clarify",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0302",
+    "workflow": "inventory_delivery",
+    "role": "OWNER",
+    "level": 1,
+    "language": "hinglish",
+    "message": "Ram ko 20 cement bags deliver kar do",
+    "expected_intent": "extract:delivery",
+    "expected_entities": {
+      "assignee_hint": "Ram",
+      "quantity": 20,
+      "item_name_or_sku": "cement",
+      "task_kind": "delivery"
+    },
+    "eval_type": "extract"
+  },
+  {
+    "case_id": "B-0303",
+    "workflow": "inventory_delivery",
+    "role": "OWNER",
+    "level": 2,
+    "language": "english",
+    "message": "Please deliver 20 bags of cement to Ram",
+    "expected_intent": "extract:delivery",
+    "expected_entities": {
+      "assignee_hint": "Ram",
+      "quantity": 20,
+      "item_name_or_sku": "cement",
+      "task_kind": "delivery"
+    },
+    "eval_type": "extract"
+  },
+  {
+    "case_id": "B-0304",
+    "workflow": "inventory_delivery",
+    "role": "OWNER",
+    "level": 3,
+    "language": "hindi",
+    "message": "Ram ko 20 cement de do",
+    "expected_intent": "extract:delivery",
+    "expected_entities": {
+      "assignee_hint": "Ram",
+      "quantity": 20,
+      "item_name_or_sku": "cement",
+      "task_kind": "delivery"
+    },
+    "eval_type": "extract"
+  },
+  {
+    "case_id": "B-0305",
+    "workflow": "inventory_delivery",
+    "role": "OWNER",
+    "level": 4,
+    "language": "hinglish",
+    "message": "Ram ko 20 bag cement issue kar do",
+    "expected_intent": "extract:delivery",
+    "expected_entities": {
+      "assignee_hint": "Ram",
+      "quantity": 20,
+      "item_name_or_sku": "cement",
+      "task_kind": "delivery"
+    },
+    "eval_type": "extract"
+  },
+  {
+    "case_id": "B-0306",
+    "workflow": "inventory_delivery",
+    "role": "OWNER",
+    "level": 5,
+    "language": "broken",
+    "message": "20 cement Ram give",
+    "expected_intent": "extract:delivery",
+    "expected_entities": {
+      "quantity": 20,
+      "item_name_or_sku": "cement",
+      "task_kind": "delivery"
+    },
+    "eval_type": "extract"
+  },
+  {
+    "case_id": "B-0307",
+    "workflow": "inventory_delivery",
+    "role": "OWNER",
+    "level": 6,
+    "language": "msme",
+    "message": "ram cement le jaaye",
+    "expected_intent": "extract:delivery",
+    "expected_entities": {
+      "assignee_hint": "Ram",
+      "item_name_or_sku": "cement",
+      "task_kind": "delivery"
+    },
+    "eval_type": "extract"
+  },
+  {
+    "case_id": "B-0308",
+    "workflow": "inventory_delivery",
+    "role": "OWNER",
+    "level": 7,
+    "language": "typos",
+    "message": "ram ko 20 cemnt delo",
+    "expected_intent": "extract:delivery",
+    "expected_entities": {
+      "assignee_hint": "Ram",
+      "quantity": 20,
+      "item_name_or_sku": "cement",
+      "task_kind": "delivery"
+    },
+    "eval_type": "extract"
+  },
+  {
+    "case_id": "B-0309",
+    "workflow": "inventory_delivery",
+    "role": "OWNER",
+    "level": 8,
+    "language": "short",
+    "message": "20 cement ram",
+    "expected_intent": "extract:delivery",
+    "expected_entities": {
+      "quantity": 20,
+      "item_name_or_sku": "cement",
+      "task_kind": "delivery"
+    },
+    "eval_type": "extract"
+  },
+  {
+    "case_id": "B-0310",
+    "workflow": "inventory_delivery",
+    "role": "OWNER",
+    "level": 9,
+    "language": "conversational",
+    "message": "Ram ko material chahiye tha usko 20 cement de do",
+    "expected_intent": "extract:delivery",
+    "expected_entities": {
+      "assignee_hint": "Ram",
+      "quantity": 20,
+      "item_name_or_sku": "cement",
+      "task_kind": "delivery"
+    },
+    "eval_type": "extract"
+  },
+  {
+    "case_id": "B-0311",
+    "workflow": "inventory_delivery",
+    "role": "OWNER",
+    "level": 10,
+    "language": "context",
+    "message": "Kal jo Ram ne material manga tha 20 cement bhej do",
+    "expected_intent": "extract:delivery",
+    "expected_entities": {
+      "assignee_hint": "Ram",
+      "quantity": 20,
+      "item_name_or_sku": "cement",
+      "task_kind": "delivery"
+    },
+    "eval_type": "extract"
+  },
+  {
+    "case_id": "B-0312",
+    "workflow": "inventory_delivery",
+    "role": "OWNER",
+    "level": 11,
+    "language": "ambiguous",
+    "message": "Ram ko bhej do",
+    "expected_intent": "extract:delivery",
+    "expected_entities": {
+      "assignee_hint": "Ram",
+      "task_kind": "delivery"
+    },
+    "eval_type": "extract"
+  },
+  {
+    "case_id": "B-0313",
+    "workflow": "inventory_delivery",
+    "role": "OWNER",
+    "level": 12,
+    "language": "multi",
+    "message": "Ram ko 20 cement de do aur Shyam ko kal site bhejna",
+    "expected_intent": "extract:delivery",
+    "expected_entities": {
+      "assignee_hint": "Ram",
+      "quantity": 20,
+      "item_name_or_sku": "cement",
+      "task_kind": "delivery"
+    },
+    "eval_type": "extract"
+  },
+  {
+    "case_id": "B-0314",
+    "workflow": "inventory_issue",
+    "role": "MANAGER",
+    "level": 1,
+    "language": "hinglish",
+    "message": "Shyam ko 5 PVC pipes issue karo",
+    "expected_intent": "extract:issue",
+    "expected_entities": {
+      "assignee_hint": "Shyam",
+      "quantity": 5,
+      "item_name_or_sku": "PVC pipe",
+      "task_kind": "issue"
+    },
+    "eval_type": "extract"
+  },
+  {
+    "case_id": "B-0315",
+    "workflow": "inventory_issue",
+    "role": "MANAGER",
+    "level": 2,
+    "language": "english",
+    "message": "Issue 5 steel rods to Shyam",
+    "expected_intent": "extract:issue",
+    "expected_entities": {
+      "assignee_hint": "Shyam",
+      "quantity": 5,
+      "item_name_or_sku": "steel rod",
+      "task_kind": "issue"
+    },
+    "eval_type": "extract"
+  },
+  {
+    "case_id": "B-0316",
+    "workflow": "inventory_issue",
+    "role": "MANAGER",
+    "level": 3,
+    "language": "hindi",
+    "message": "Shyam ko 5 pipe de do",
+    "expected_intent": "extract:issue",
+    "expected_entities": {
+      "assignee_hint": "Shyam",
+      "quantity": 5,
+      "item_name_or_sku": "pipe",
+      "task_kind": "issue"
+    },
+    "eval_type": "extract"
+  },
+  {
+    "case_id": "B-0317",
+    "workflow": "inventory_issue",
+    "role": "MANAGER",
+    "level": 4,
+    "language": "hinglish",
+    "message": "5 rod shyam ko issue",
+    "expected_intent": "extract:issue",
+    "expected_entities": {
+      "assignee_hint": "Shyam",
+      "quantity": 5,
+      "item_name_or_sku": "rod",
+      "task_kind": "issue"
+    },
+    "eval_type": "extract"
+  },
+  {
+    "case_id": "B-0318",
+    "workflow": "inventory_issue",
+    "role": "MANAGER",
+    "level": 5,
+    "language": "broken",
+    "message": "5 pipe shyam give",
+    "expected_intent": "extract:issue",
+    "expected_entities": {
+      "assignee_hint": "Shyam",
+      "quantity": 5,
+      "item_name_or_sku": "pipe",
+      "task_kind": "issue"
+    },
+    "eval_type": "extract"
+  },
+  {
+    "case_id": "B-0319",
+    "workflow": "inventory_issue",
+    "role": "MANAGER",
+    "level": 6,
+    "language": "msme",
+    "message": "shyam ko pipe do",
+    "expected_intent": "extract:issue",
+    "expected_entities": {
+      "assignee_hint": "Shyam",
+      "item_name_or_sku": "pipe",
+      "task_kind": "issue"
+    },
+    "eval_type": "extract"
+  },
+  {
+    "case_id": "B-0320",
+    "workflow": "inventory_issue",
+    "role": "MANAGER",
+    "level": 7,
+    "language": "typos",
+    "message": "shyam ko 5 pip issue",
+    "expected_intent": "extract:issue",
+    "expected_entities": {
+      "assignee_hint": "Shyam",
+      "quantity": 5,
+      "item_name_or_sku": "pipe",
+      "task_kind": "issue"
+    },
+    "eval_type": "extract"
+  },
+  {
+    "case_id": "B-0321",
+    "workflow": "inventory_issue",
+    "role": "MANAGER",
+    "level": 8,
+    "language": "short",
+    "message": "5 pipe shyam",
+    "expected_intent": "extract:issue",
+    "expected_entities": {
+      "assignee_hint": "Shyam",
+      "quantity": 5,
+      "item_name_or_sku": "pipe",
+      "task_kind": "issue"
+    },
+    "eval_type": "extract"
+  },
+  {
+    "case_id": "B-0322",
+    "workflow": "inventory_issue",
+    "role": "MANAGER",
+    "level": 9,
+    "language": "conversational",
+    "message": "site pe shyam ko 5 pipe chahiye issue karo",
+    "expected_intent": "extract:issue",
+    "expected_entities": {
+      "assignee_hint": "Shyam",
+      "quantity": 5,
+      "item_name_or_sku": "pipe",
+      "task_kind": "issue"
+    },
+    "eval_type": "extract"
+  },
+  {
+    "case_id": "B-0323",
+    "workflow": "inventory_issue",
+    "role": "MANAGER",
+    "level": 10,
+    "language": "context",
+    "message": "kal order tha shyam ko 5 pipe",
+    "expected_intent": "extract:issue",
+    "expected_entities": {
+      "assignee_hint": "Shyam",
+      "quantity": 5,
+      "item_name_or_sku": "pipe",
+      "task_kind": "issue"
+    },
+    "eval_type": "extract"
+  },
+  {
+    "case_id": "B-0324",
+    "workflow": "inventory_issue",
+    "role": "MANAGER",
+    "level": 11,
+    "language": "ambiguous",
+    "message": "material bhej do",
+    "expected_intent": "extract:null",
+    "expected_entities": null,
+    "eval_type": "extract"
+  },
+  {
+    "case_id": "B-0325",
+    "workflow": "inventory_issue",
+    "role": "MANAGER",
+    "level": 12,
+    "language": "multi",
+    "message": "shyam ko 5 pipe aur ram ko cement",
+    "expected_intent": "extract:issue",
+    "expected_entities": {
+      "assignee_hint": "Shyam",
+      "quantity": 5,
+      "item_name_or_sku": "pipe",
+      "task_kind": "issue"
+    },
+    "eval_type": "extract"
+  },
+  {
+    "case_id": "B-0326",
+    "workflow": "inventory_count",
+    "role": "OWNER",
+    "level": 1,
+    "language": "english",
+    "message": "inventory count please",
+    "expected_intent": "extract:inventory_count",
+    "expected_entities": {
+      "task_kind": "inventory_count"
+    },
+    "eval_type": "extract"
+  },
+  {
+    "case_id": "B-0327",
+    "workflow": "inventory_count",
+    "role": "OWNER",
+    "level": 2,
+    "language": "english",
+    "message": "Start stock count",
+    "expected_intent": "extract:inventory_count",
+    "expected_entities": {
+      "task_kind": "inventory_count"
+    },
+    "eval_type": "extract"
+  },
+  {
+    "case_id": "B-0328",
+    "workflow": "inventory_count",
+    "role": "OWNER",
+    "level": 3,
+    "language": "hindi",
+    "message": "maal ki ginati karwa do",
+    "expected_intent": "extract:inventory_count",
+    "expected_entities": {
+      "task_kind": "inventory_count"
+    },
+    "eval_type": "extract"
+  },
+  {
+    "case_id": "B-0329",
+    "workflow": "inventory_count",
+    "role": "OWNER",
+    "level": 4,
+    "language": "hinglish",
+    "message": "stock count karo",
+    "expected_intent": "extract:inventory_count",
+    "expected_entities": {
+      "task_kind": "inventory_count"
+    },
+    "eval_type": "extract"
+  },
+  {
+    "case_id": "B-0330",
+    "workflow": "inventory_count",
+    "role": "OWNER",
+    "level": 5,
+    "language": "broken",
+    "message": "count stock",
+    "expected_intent": "extract:inventory_count",
+    "expected_entities": {
+      "task_kind": "inventory_count"
+    },
+    "eval_type": "extract"
+  },
+  {
+    "case_id": "B-0331",
+    "workflow": "inventory_count",
+    "role": "OWNER",
+    "level": 6,
+    "language": "msme",
+    "message": "ginati karo",
+    "expected_intent": "extract:inventory_count",
+    "expected_entities": {
+      "task_kind": "inventory_count"
+    },
+    "eval_type": "extract"
+  },
+  {
+    "case_id": "B-0332",
+    "workflow": "inventory_count",
+    "role": "OWNER",
+    "level": 7,
+    "language": "typos",
+    "message": "inventry count",
+    "expected_intent": "extract:inventory_count",
+    "expected_entities": {
+      "task_kind": "inventory_count"
+    },
+    "eval_type": "extract"
+  },
+  {
+    "case_id": "B-0333",
+    "workflow": "inventory_count",
+    "role": "OWNER",
+    "level": 8,
+    "language": "short",
+    "message": "stock count",
+    "expected_intent": "extract:inventory_count",
+    "expected_entities": {
+      "task_kind": "inventory_count"
+    },
+    "eval_type": "extract"
+  },
+  {
+    "case_id": "B-0334",
+    "workflow": "inventory_count",
+    "role": "OWNER",
+    "level": 9,
+    "language": "conversational",
+    "message": "month end hai poora stock ginna hai",
+    "expected_intent": "extract:inventory_count",
+    "expected_entities": {
+      "task_kind": "inventory_count"
+    },
+    "eval_type": "extract"
+  },
+  {
+    "case_id": "B-0335",
+    "workflow": "inventory_count",
+    "role": "OWNER",
+    "level": 10,
+    "language": "context",
+    "message": "kal se pending count aaj karwa do",
+    "expected_intent": "extract:inventory_count",
+    "expected_entities": {
+      "task_kind": "inventory_count"
+    },
+    "eval_type": "extract"
+  },
+  {
+    "case_id": "B-0336",
+    "workflow": "inventory_count",
+    "role": "OWNER",
+    "level": 11,
+    "language": "ambiguous",
+    "message": "ginati",
+    "expected_intent": "extract:inventory_count",
+    "expected_entities": {
+      "task_kind": "inventory_count"
+    },
+    "eval_type": "extract"
+  },
+  {
+    "case_id": "B-0337",
+    "workflow": "inventory_count",
+    "role": "OWNER",
+    "level": 12,
+    "language": "multi",
+    "message": "stock count aur report",
+    "expected_intent": "extract:inventory_count",
+    "expected_entities": {
+      "task_kind": "inventory_count"
+    },
+    "eval_type": "extract"
+  },
+  {
+    "case_id": "B-0338",
+    "workflow": "low_stock_workflow",
+    "role": "OWNER",
+    "level": 1,
+    "language": "mixed",
+    "message": "low stock items",
+    "expected_intent": "/inventory_status",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0339",
+    "workflow": "low_stock_workflow",
+    "role": "OWNER",
+    "level": 2,
+    "language": "mixed",
+    "message": "What is running low in stock",
+    "expected_intent": "/inventory_status",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0340",
+    "workflow": "low_stock_workflow",
+    "role": "OWNER",
+    "level": 3,
+    "language": "mixed",
+    "message": "kya kya kam pad raha hai",
+    "expected_intent": "/inventory_status",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0341",
+    "workflow": "low_stock_workflow",
+    "role": "OWNER",
+    "level": 4,
+    "language": "mixed",
+    "message": "low stock dikhao",
+    "expected_intent": "/inventory_status",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0342",
+    "workflow": "low_stock_workflow",
+    "role": "OWNER",
+    "level": 5,
+    "language": "mixed",
+    "message": "stock low show",
+    "expected_intent": "/inventory_status",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0343",
+    "workflow": "low_stock_workflow",
+    "role": "OWNER",
+    "level": 6,
+    "language": "mixed",
+    "message": "kya khatam ho raha",
+    "expected_intent": "/purchase_request_create",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0344",
+    "workflow": "low_stock_workflow",
+    "role": "OWNER",
+    "level": 7,
+    "language": "mixed",
+    "message": "low stok",
+    "expected_intent": "/inventory_status",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0345",
+    "workflow": "low_stock_workflow",
+    "role": "OWNER",
+    "level": 8,
+    "language": "mixed",
+    "message": "low stock",
+    "expected_intent": "/inventory_status",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0346",
+    "workflow": "low_stock_workflow",
+    "role": "OWNER",
+    "level": 9,
+    "language": "mixed",
+    "message": "reorder kya karna chahiye batao",
+    "expected_intent": "/purchase_request_create",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0347",
+    "workflow": "low_stock_workflow",
+    "role": "OWNER",
+    "level": 10,
+    "language": "mixed",
+    "message": "alert aaya tha cement low ab kya karein",
+    "expected_intent": "/purchase_request_create",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0348",
+    "workflow": "low_stock_workflow",
+    "role": "OWNER",
+    "level": 11,
+    "language": "mixed",
+    "message": "kam hai stock",
+    "expected_intent": "/inventory_status",
+    "expected_entities": null,
+    "eval_type": "classify"
+  },
+  {
+    "case_id": "B-0349",
+    "workflow": "low_stock_workflow",
+    "role": "OWNER",
+    "level": 12,
+    "language": "mixed",
+    "message": "low stock aur order cement",
+    "expected_intent": "/purchase_request_create",
+    "expected_entities": null,
+    "eval_type": "classify"
+  }
+]

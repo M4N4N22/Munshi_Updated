@@ -5,6 +5,8 @@ import {
 } from '@nestjs/common';
 import { extname } from 'path';
 import type { InboundMediaRef } from 'src/core/messaging/olli-media.service';
+import type { InventoryCsvRow } from 'src/modules/whatsapp/inventory-csv.parse';
+import type { InventoryImportReview } from 'src/services/inventory/inventory-import.service';
 import { InventoryImportUploadService } from 'src/services/inventory/inventory-import-upload.service';
 import type { InventoryImportSummary } from 'src/services/inventory/inventory-import.service';
 import { USER_ROLE } from 'src/services/users/users.constants';
@@ -12,12 +14,19 @@ import { UserService } from 'src/services/users/users.service';
 import {
   INVENTORY_CSV_MAX_BYTES,
   INVENTORY_CSV_PENDING_TTL_MS,
+  INVENTORY_CSV_REVIEW_TTL_MS,
 } from './inventory-csv.constants';
 
+type PendingPhase = 'awaiting_upload' | 'awaiting_confirm';
+
 type PendingCsv = {
+  phase: PendingPhase;
   factoryId: number;
   ownerUserId: number;
   expiresAt: number;
+  rows?: InventoryCsvRow[];
+  review?: InventoryImportReview;
+  batchId?: number;
 };
 
 type ImportContext = {
@@ -48,6 +57,9 @@ const REJECTED_MIME_PREFIXES = ['image/', 'video/', 'audio/'];
 export const WA_INVENTORY_CSV_UNSUPPORTED =
   '❌ Sirf CSV inventory files supported hain.';
 
+export const WA_INVENTORY_IMPORT_REVIEW_EXPIRED =
+  'Import review session expired.\n\nPlease upload the CSV again.';
+
 @Injectable()
 export class InventoryBulkImportService {
   private readonly logger = new Logger(InventoryBulkImportService.name);
@@ -60,6 +72,7 @@ export class InventoryBulkImportService {
 
   startAwaitingCsv(phone: string, factoryId: number, ownerUserId: number): void {
     this.pendingByPhone.set(phone, {
+      phase: 'awaiting_upload',
       factoryId,
       ownerUserId,
       expiresAt: Date.now() + INVENTORY_CSV_PENDING_TTL_MS,
@@ -70,16 +83,26 @@ export class InventoryBulkImportService {
     return this.pendingByPhone.delete(phone);
   }
 
-  isAwaitingCsv(phone: string): boolean {
+  private getPending(phone: string): PendingCsv | null {
     const pending = this.pendingByPhone.get(phone);
     if (!pending) {
-      return false;
+      return null;
     }
     if (Date.now() > pending.expiresAt) {
       this.pendingByPhone.delete(phone);
-      return false;
+      return null;
     }
-    return true;
+    return pending;
+  }
+
+  isAwaitingCsv(phone: string): boolean {
+    const pending = this.getPending(phone);
+    return pending?.phase === 'awaiting_upload';
+  }
+
+  isAwaitingImportConfirm(phone: string): boolean {
+    const pending = this.getPending(phone);
+    return pending?.phase === 'awaiting_confirm';
   }
 
   isRejectedDocumentType(media: InboundMediaRef): boolean {
@@ -123,9 +146,23 @@ export class InventoryBulkImportService {
     buffer: Buffer,
     filename?: string,
     mimeType?: string,
+    options?: { skipReview?: boolean },
   ): Promise<string> {
-    const ctx = this.resolvePendingContext(phone) ??
-      (await this.resolveOwnerManagerContext(phone));
+    const pending = this.getPending(phone);
+    if (pending?.phase === 'awaiting_confirm') {
+      return (
+        'Pehle import review complete karein.\n\n' +
+        'Reply *CONFIRM* to import.\n' +
+        'Reply *CANCEL* to abort.'
+      );
+    }
+
+    const ctx = pending
+      ? {
+          factoryId: pending.factoryId,
+          userId: pending.ownerUserId,
+        }
+      : (await this.resolveOwnerManagerContext(phone));
 
     if (!ctx) {
       return (
@@ -164,6 +201,44 @@ export class InventoryBulkImportService {
     }
 
     try {
+      const rows = this.uploadService.parseCsvFile({
+        originalname: name,
+        buffer,
+        mimetype: mimeType,
+      });
+
+      const useReview = pending != null && !options?.skipReview;
+
+      if (useReview) {
+        const review = await this.uploadService.buildImportReview(
+          ctx.factoryId,
+          rows,
+        );
+
+        this.pendingByPhone.set(phone, {
+          phase: 'awaiting_confirm',
+          factoryId: ctx.factoryId,
+          ownerUserId: ctx.userId,
+          expiresAt: Date.now() + INVENTORY_CSV_REVIEW_TTL_MS,
+          rows,
+          review,
+          batchId,
+        });
+
+        this.logger.log({
+          event: 'inventory_csv_import_review_ready',
+          batchId,
+          phone,
+          factoryId: ctx.factoryId,
+          userId: ctx.userId,
+          newCategories: review.newCategories.length,
+          newLocations: review.newLocations.length,
+          newItems: review.newItems.length,
+        });
+
+        return this.formatReviewMessage(review);
+      }
+
       const summary = await this.uploadService.uploadCsv(
         { originalname: name, buffer, mimetype: mimeType },
         {
@@ -202,18 +277,133 @@ export class InventoryBulkImportService {
     }
   }
 
-  private resolvePendingContext(phone: string): ImportContext | null {
-    if (!this.isAwaitingCsv(phone)) {
+  async handleReviewReply(phone: string, message: string): Promise<string | null> {
+    const pending = this.getPending(phone);
+    if (!pending || pending.phase !== 'awaiting_confirm') {
       return null;
     }
-    const pending = this.pendingByPhone.get(phone);
-    if (!pending) {
-      return null;
+
+    const normalized = message.trim().toLowerCase();
+
+    if (normalized === 'confirm') {
+      return this.confirmImport(phone);
     }
-    return {
-      factoryId: pending.factoryId,
-      userId: pending.ownerUserId,
-    };
+
+    if (normalized === 'cancel') {
+      this.pendingByPhone.delete(phone);
+      return 'Import cancelled.\n\nNo inventory changes were made.';
+    }
+
+    return (
+      'Reply *CONFIRM* to create missing records and continue import.\n' +
+      'Reply *CANCEL* to abort.'
+    );
+  }
+
+  async confirmImport(phone: string): Promise<string> {
+    const pending = this.getPending(phone);
+    if (!pending || pending.phase !== 'awaiting_confirm') {
+      return WA_INVENTORY_IMPORT_REVIEW_EXPIRED;
+    }
+
+    if (!pending.rows || !pending.review || !pending.batchId) {
+      this.pendingByPhone.delete(phone);
+      return WA_INVENTORY_IMPORT_REVIEW_EXPIRED;
+    }
+
+    const startedAt = new Date().toISOString();
+    const batchId = pending.batchId;
+
+    try {
+      const summary = await this.uploadService.processImportWithProvisioning(
+        {
+          factory_id: pending.factoryId,
+          created_by: pending.ownerUserId,
+          batch_id: batchId,
+        },
+        pending.rows,
+        pending.review,
+      );
+
+      this.pendingByPhone.delete(phone);
+      this.logAudit({
+        batchId,
+        phone,
+        factoryId: pending.factoryId,
+        userId: pending.ownerUserId,
+        startedAt,
+        summary,
+      });
+
+      return this.formatSummary(summary, {
+        categoriesCreated: summary.categoriesCreatedCount ?? 0,
+        locationsCreated: summary.locationsCreatedCount ?? 0,
+      });
+    } catch (err: unknown) {
+      if (err instanceof BadRequestException) {
+        return this.formatParserError(this.extractErrorMessage(err));
+      }
+      throw err;
+    }
+  }
+
+  private formatReviewMessage(review: InventoryImportReview): string {
+    const lines: string[] = ['*Inventory Import Review*', '', 'I found:'];
+
+    if (review.newCategories.length) {
+      lines.push('', '*New Categories:*');
+      for (const name of review.newCategories) {
+        lines.push(`• ${name}`);
+      }
+    }
+
+    if (review.existingCategories.length) {
+      lines.push('', '*Existing Categories:*');
+      for (const name of review.existingCategories) {
+        lines.push(`• ${name}`);
+      }
+    }
+
+    if (review.newLocations.length) {
+      lines.push('', '*New Locations:*');
+      for (const name of review.newLocations) {
+        lines.push(`• ${name}`);
+      }
+    }
+
+    if (review.existingLocations.length) {
+      lines.push('', '*Existing Locations:*');
+      for (const name of review.existingLocations) {
+        lines.push(`• ${name}`);
+      }
+    }
+
+    if (review.newItems.length) {
+      lines.push('', '*New Inventory Items:*');
+      for (const item of review.newItems) {
+        lines.push(`• ${item.name}`);
+      }
+    }
+
+    if (review.existingItems.length) {
+      lines.push('', '*Existing Inventory Items:*');
+      for (const item of review.existingItems) {
+        lines.push(`• ${item.name}`);
+      }
+    }
+
+    lines.push(
+      '',
+      'Reply:',
+      '',
+      '*CONFIRM*',
+      'to create missing records and continue import.',
+      '',
+      '*CANCEL*',
+      'to abort.',
+    );
+
+    return lines.join('\n');
   }
 
   private async resolveOwnerManagerContext(
@@ -234,7 +424,10 @@ export class InventoryBulkImportService {
     return { factoryId, userId: user.id };
   }
 
-  private formatSummary(summary: InventoryImportSummary): string {
+  private formatSummary(
+    summary: InventoryImportSummary,
+    extras?: { categoriesCreated: number; locationsCreated: number },
+  ): string {
     const header =
       summary.failedCount > 0
         ? '⚠️ Inventory import complete.'
@@ -245,6 +438,13 @@ export class InventoryBulkImportService {
       `Updated: ${summary.updatedCount}\n` +
       `Failed: ${summary.failedCount}\n` +
       `Skipped: ${summary.skippedCount}`;
+
+    if (extras) {
+      body +=
+        `\n\nCategories Created: ${extras.categoriesCreated}\n` +
+        `Locations Created: ${extras.locationsCreated}\n` +
+        `Items Created: ${summary.addedCount}`;
+    }
 
     if (summary.failedCount > 0) {
       body += '\n\nKuch rows import nahi ho paayi.';
@@ -258,7 +458,7 @@ export class InventoryBulkImportService {
       if (failed.length > 8) {
         body += `\n• ...aur ${failed.length - 8} errors`;
       }
-    } else {
+    } else if (!extras) {
       body += '\n\nBatch imported successfully.';
     }
 
@@ -309,6 +509,8 @@ export class InventoryBulkImportService {
       updatedCount: params.summary.updatedCount,
       failedCount: params.summary.failedCount,
       skippedCount: params.summary.skippedCount,
+      categoriesCreatedCount: params.summary.categoriesCreatedCount ?? 0,
+      locationsCreatedCount: params.summary.locationsCreatedCount ?? 0,
     });
   }
 }

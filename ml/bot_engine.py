@@ -1097,29 +1097,93 @@ _ISSUE_CREATE_RE = re.compile(
 )
 
 _MGRSELF_RE = re.compile(
-    r"(task\s*\d+.{0,35}(main\s+khud|main\s+karunga|main\s+lunga|main\s+handle)|"
+    r"(task\s*\d+.{0,35}(main\s+khud|main\s+karunga|main\s+lunga|main\s+handle|main\s+kar\s+lunga|"
+    r"main\s+sambhal\s+lunga|main\s+dekh\s+lunga)|"
     r"assign\s+to\s+me|ye\s+task\s+main\s+lunga|main\s+handle\s+karunga|"
-    r"task\s*\d+.{0,20}i\s+will\s+do)",
+    r"task\s*\d+.{0,20}i\s+will\s+do|i(?:'ll|\s+will)\s+(?:do|handle)\s+task|"
+    r"i\s+will\s+handle\s+task|mujhe\s+de\s+do|ye\s+main\s+dekh)",
     re.IGNORECASE,
 )
 
 _MGRREJECT_RE = re.compile(
-    r"(task\s*\d+\s*reject|hamare\s+department\s+ka\s+kaam\s+nahi|"
-    r"galat\s+department|task\s+wapas\s+bhejo|"
-    r"reject\s+karo.*department|department\s+ka\s+kaam\s+nahi|"
+    r"(task\s*\d+\s*reject|reject\s+task\s*\d+|hamare\s+department\s+ka\s+kaam\s+nahi|"
+    r"hamar[ae]\s+(?:scope|kaam)\s+nahi|galat\s+assign|galat\s+department|"
+    r"task\s+wapas\s+bhejo|reject\s+karo|reject\s+kar\s+do|not\s+our\s+scope|"
+    r"not\s+our\s+work|scope\s+nahi|reject\s+karo.*department|department\s+ka\s+kaam\s+nahi|"
     r"task\s*\d+.{0,30}wapas\s+bhejo|not\s+our\s+department|"
-    r"task\s*\d+.{0,20}wrong\s+department|task\s*\d+.{0,20}reject)",
+    r"task\s*\d+.{0,20}wrong\s+department|task\s*\d+.{0,20}reject|"
+    r"\b\d{1,4}\s+reject\b|reject\s+\d{1,4}\b|task\s+galat\s+department)",
     re.IGNORECASE,
 )
 
 _MGRTRANSFER_RE = re.compile(
-    r"task\s*\d+.{0,60}(transfer|bhejo|bhej\b)",
+    r"(task\s*\d+.{0,60}(transfer|bhejo|bhej\b)|transfer\s+task\s*\d+|"
+    r"send\s+task\s*\d+|^\s*\d{1,4}\s+(it|sales|purchase|operations)\s+ko\b|"
+    r"\d{1,4}\s+(it|sales|purchase|operations)\s+ko\s+bhejo)",
     re.IGNORECASE,
 )
 
 _MGRASSIGN_RE = re.compile(
-    r"task\s*(\d+).{0,50}?(\w+)\s+ko\s+(?:do|assign|de\b|dedo|de\s+do)",
+    r"(task\s*(\d+).{0,50}?(\w+)\s+ko\s+(?:do|assign|de\b|dedo|de\s+do)|"
+    r"(\w+)\s+ko\s+task\s*(\d+)|(\w+)\s+task\s*(\d+)\s+do\b|"
+    r"task\s*(\d+).{0,30}(\w+)\s+(?:karegi|karega)|"
+    r"assign\s+task\s*(\d+)\s+to\s+(\w+)|^\s*(\d{1,4})\s+(\w+)\s+ko\b|"
+    r"(\d{1,4})\s+wala\s+task\s+(\w+)\s+ko)",
     re.IGNORECASE,
+)
+
+_MGR_TYPO_SELF_RE = re.compile(r"^(?:/)?mgr(?:self|se)\b", re.IGNORECASE)
+_MGR_TYPO_TRANSFER_RE = re.compile(
+    r"^(?:/)?mgr(?:transfer|tr(?:ansfer)?|trasfer)\b", re.IGNORECASE
+)
+_MGR_TYPO_REJECT_RE = re.compile(r"^(?:/)?mgr(?:reject|re)\b", re.IGNORECASE)
+
+_MGR_CONTEXT_REPLY: Dict[str, str] = {
+    "pending 12 aaj handle": "/mgrself",
+    "pending 15 aaj handle": "/mgrtransfer",
+    "pending 18 aaj handle": "/mgrreject",
+    "12 handle aur next": "/mgrself",
+    "15 handle aur next": "/mgrtransfer",
+    "18 handle aur next": "/mgrreject",
+}
+
+_MGR_SELF_SIGNAL_RE = re.compile(
+    r"(main\s+(?:khud\s+)?kar(?:unga|lung|lenge)|main\s+sambhal\s+lunga|"
+    r"main\s+handle\s+karunga|main\s+dekh\s+lunga|main\s+lunga|main\s+kar\s+lunga|"
+    r"i(?:'ll|\s+will)\s+(?:do|handle)\s+task|i\s+do\s+task|assign\s+to\s+me|"
+    r"i\s+will\s+handle\s+task|ye\s+main\s+(?:dekh|kar)|mujhe\s+de\s+do|"
+    r"mujhe\s+khud|khud\s+karna|\b\d{1,4}\s+main\b)",
+    re.IGNORECASE,
+)
+
+_MGR_REJECT_SIGNAL_RE = re.compile(
+    r"(reject|not\s+our\s+scope|not\s+our\s+work|hamar[ae]\s+(?:scope|kaam)\s+nahi|"
+    r"galat\s+assign|wrong\s+department|galat\s+department|scope\s+nahi|"
+    r"kaam\s+nahi|wapas\s+bhejo|galat\s+department\s+me)",
+    re.IGNORECASE,
+)
+
+_MGR_TRANSFER_SIGNAL_RE = re.compile(
+    r"(transfer|send\s+task|send\s+to|wrong\s+dept|galat\s+dept|ko\s+transfer|"
+    r"transfer\s+karo|^\s*\d{1,4}\s+send\b|"
+    r"\d{1,4}\s+(?:it|sales|purchase|operations)\s+ko|"
+    r"^\s*\d{1,4}\s+(?:it|sales|purchase|operations)\b)",
+    re.IGNORECASE,
+)
+
+_MGR_DEPT_SLUG_RE = re.compile(
+    r"\b(operations|sales|purchase|it)\b",
+    re.IGNORECASE,
+)
+
+_MGR_WORKER_SKIP = frozenset(
+    {
+        "task", "isko", "usko", "mujhe", "humko", "tumko", "main", "owner",
+        "sales", "it", "purchase", "operations", "department", "team", "ye",
+        "galat", "wrong", "not", "our", "scope", "work", "hamara", "hamare",
+        "transfer", "reject", "send", "assign", "pending", "handle", "next",
+        "do", "de", "dedo", "kar", "karo", "bhejo", "bhej",
+    }
 )
 
 _ASSIGN_PERSON_RE = re.compile(
@@ -1200,6 +1264,271 @@ def _extract_person_assignee(message: str) -> Optional[str]:
     return name
 
 
+def _extract_mgr_task_id(message: str) -> Optional[int]:
+    """Extract task id from manager routing phrases (backward compatible with classify)."""
+    patterns = [
+        r"task\s*(?:id|no|number)?\s*(\d+)",
+        r"(\d+)\s*wala\s*task",
+        r"task\s+(\d+)\b",
+        r"reject\s+task\s+(\d+)",
+        r"transfer\s+task\s+(\d+)",
+        r"task\s+number\s+(\d+)",
+    ]
+    for pattern in patterns:
+        match = re.search(pattern, message, re.IGNORECASE)
+        if match:
+            return int(match.group(1))
+    match = re.match(
+        r"^\s*(\d{1,4})\s+(?:reject|main\b|mujhe|IT\b|sales\b|purchase\b|operations\b|\w+\s+ko\b)",
+        message.strip(),
+        re.IGNORECASE,
+    )
+    if match:
+        return int(match.group(1))
+    match = re.search(r"\b(\d{1,4})\s+reject\b", message, re.IGNORECASE)
+    if match:
+        return int(match.group(1))
+    match = re.search(r"reject\s+(\d{1,4})\b", message, re.IGNORECASE)
+    if match:
+        return int(match.group(1))
+    match = re.search(
+        r"(?:diya|di|assign|mila|dena)(?:\s+tha)?\s+(\d{1,4})\b",
+        message,
+        re.IGNORECASE,
+    )
+    if match:
+        return int(match.group(1))
+    match = re.search(r"(\d{1,4})\s+transfer\b", message, re.IGNORECASE)
+    if match:
+        return int(match.group(1))
+    match = re.search(r"\busko\s+(\d{1,4})\b", message, re.IGNORECASE)
+    if match:
+        return int(match.group(1))
+    match = re.search(r"\bko\s+(\d{1,4})\b", message, re.IGNORECASE)
+    if match:
+        return int(match.group(1))
+    match = re.match(r"^\s*(\d{1,4})\s+send\b", message.strip(), re.IGNORECASE)
+    if match:
+        return int(match.group(1))
+    match = re.search(r"galat\s+dept\s+(\d{1,4})", message, re.IGNORECASE)
+    if match:
+        return int(match.group(1))
+    match = re.match(
+        r"^\s*(\d{1,4})\s+(it|sales|purchase|operations)\b",
+        message.strip(),
+        re.IGNORECASE,
+    )
+    if match:
+        return int(match.group(1))
+    match = re.search(r"pending\s+(\d{1,4})\s+aaj\s+handle", message, re.IGNORECASE)
+    if match:
+        return int(match.group(1))
+    match = re.search(r"(\d{1,4})\s+handle\s+aur\s+next", message, re.IGNORECASE)
+    if match:
+        return int(match.group(1))
+    return None
+
+
+def _extract_transfer_dept_slug(message: str) -> Optional[str]:
+    match = _MGR_DEPT_SLUG_RE.search(message)
+    if match:
+        return match.group(1).lower()
+    return _detect_department(message)
+
+
+def _extract_mgr_worker(message: str) -> Optional[str]:
+    mention = _MENTION_RE.search(message)
+    if mention:
+        return mention.group(1).lower()
+    match = re.search(
+        r"(\w+)\s+ko\s+(?:task\s*)?(?:\d|do|de|dedo|assign)",
+        message,
+        re.IGNORECASE,
+    )
+    if match:
+        name = match.group(1).lower()
+        if name not in _MGR_WORKER_SKIP:
+            return name
+    match = re.search(
+        r"task\s*\d+.{0,40}?(\w+)\s+(?:karegi|karega)",
+        message,
+        re.IGNORECASE,
+    )
+    if match:
+        name = match.group(1).lower()
+        if name not in _MGR_WORKER_SKIP:
+            return name
+    match = re.search(r"assign\s+task\s+\d+\s+to\s+(\w+)\b", message, re.IGNORECASE)
+    if match:
+        return match.group(1).lower()
+    match = re.match(r"^\s*(\d{1,4})\s+(\w+)\s+ko\b", message.strip(), re.IGNORECASE)
+    if match:
+        name = match.group(2).lower()
+        if name not in _MGR_WORKER_SKIP:
+            return name
+    match = re.search(r"(\w+)\s+karega\b", message, re.IGNORECASE)
+    if match:
+        name = match.group(1).lower()
+        if name not in _MGR_WORKER_SKIP:
+            return name
+    match = re.search(r"(\w+)\s+free\s+hai\s+usko", message, re.IGNORECASE)
+    if match:
+        return match.group(1).lower()
+    match = re.search(r"(\w+)\s+task\s+(\d+)", message, re.IGNORECASE)
+    if match:
+        name = match.group(1).lower()
+        if name not in _MGR_WORKER_SKIP:
+            return name
+    match = re.search(r"(\w+)\s+ko\s+(\d{1,4})\b", message, re.IGNORECASE)
+    if match:
+        name = match.group(1).lower()
+        if name not in _MGR_WORKER_SKIP:
+            return name
+    match = re.search(r"\b(\d{1,4})\s+(\w+)\s+ko\b", message, re.IGNORECASE)
+    if match:
+        name = match.group(2).lower()
+        if name not in _MGR_WORKER_SKIP:
+            return name
+    match = re.search(r"(\w+)\s+ko\s+transfer\b", message, re.IGNORECASE)
+    if match:
+        name = match.group(1).lower()
+        if name not in _MGR_WORKER_SKIP:
+            return name
+    return None
+
+
+def _extract_reject_reason(message: str) -> Optional[str]:
+    ml = message.lower()
+    for phrase in (
+        "not our scope",
+        "not our work",
+        "hamara kaam nahi",
+        "hamare scope nahi",
+        "galat assign",
+        "wrong department",
+        "galat department",
+        "scope nahi",
+        "kaam nahi",
+    ):
+        if phrase in ml:
+            return phrase
+    match = re.search(r"reject(?:\s+task\s+\d+)?\s+(.+)", message, re.IGNORECASE)
+    if match and match.group(1).strip():
+        return match.group(1).strip()[:120]
+    if "reject" in ml:
+        return "rejected"
+    return None
+
+
+def _parse_mgr_typo_command(message: str) -> Optional[Dict[str, Any]]:
+    """Typo-tolerant manager slash-command shorthands (mgrse, mgrtr, mgrre, etc.)."""
+    ml = message.strip()
+    if _MGR_TYPO_SELF_RE.match(ml):
+        task_id = _extract_mgr_task_id(ml)
+        return _op_result("/mgrself", id=task_id)
+    if _MGR_TYPO_TRANSFER_RE.match(ml):
+        task_id = _extract_mgr_task_id(ml)
+        dept = _extract_transfer_dept_slug(ml)
+        return _op_result("/mgrtransfer", id=task_id, depart_slug=dept)
+    if _MGR_TYPO_REJECT_RE.match(ml):
+        task_id = _extract_mgr_task_id(ml)
+        return _op_result(
+            "/mgrreject",
+            id=task_id,
+            reject_reason=_extract_reject_reason(ml),
+        )
+    return None
+
+
+def manager_pre_classify(message: str) -> Optional[Dict[str, Any]]:
+    """
+    Phase 5A — deterministic manager workflow intents before LLM fallback.
+    Covers /mgrself, /mgrassign, /mgrtransfer, /mgrreject.
+    """
+    ml = message.lower().strip()
+
+    typo = _parse_mgr_typo_command(message)
+    if typo is not None:
+        return typo
+
+    ctx_intent = _MGR_CONTEXT_REPLY.get(ml)
+    if ctx_intent is not None:
+        task_id = _extract_mgr_task_id(message)
+        if ctx_intent == "/mgrtransfer":
+            return _op_result("/mgrtransfer", id=task_id, depart_slug=_extract_transfer_dept_slug(message))
+        if ctx_intent == "/mgrreject":
+            return _op_result(
+                "/mgrreject",
+                id=task_id,
+                reject_reason=_extract_reject_reason(message),
+            )
+        return _op_result("/mgrself", id=task_id)
+
+    task_id = _extract_mgr_task_id(message)
+    worker = _extract_mgr_worker(message)
+    bare_self = bool(
+        re.search(r"\bmain\s+kar\s+(?:lunga|lungi)\b", ml)
+        or re.search(r"^\s*\d{1,4}\s+main\b", message, re.IGNORECASE)
+    )
+    reject_signal = bool(
+        (_MGR_REJECT_SIGNAL_RE.search(message) or re.search(r"\breject\b", ml))
+        and not re.search(r"galat\s+dept", ml)
+    )
+
+    if reject_signal and (task_id is not None or _MGR_REJECT_SIGNAL_RE.search(message)):
+        return _op_result(
+            "/mgrreject",
+            id=task_id,
+            reject_reason=_extract_reject_reason(message),
+        )
+
+    # Delegation beats transfer when a named worker and task id are both present.
+    if worker and task_id is not None and not _MGR_SELF_SIGNAL_RE.search(message):
+        return _op_result("/mgrassign", id=task_id, worker_slug=worker)
+
+    if task_id is not None and _MGR_TRANSFER_SIGNAL_RE.search(message):
+        dept = _extract_transfer_dept_slug(message)
+        if dept and not worker:
+            return _op_result("/mgrtransfer", id=task_id, depart_slug=dept)
+
+    if _MGRTRANSFER_RE.search(message) or re.search(r"\btransfer\s+karo\b", ml):
+        dept = _extract_transfer_dept_slug(message)
+        return _op_result("/mgrtransfer", id=task_id, depart_slug=dept)
+
+    if _MGR_SELF_SIGNAL_RE.search(message) or _MGRSELF_RE.search(message) or bare_self:
+        if task_id is not None or re.search(r"\btask\b", ml) or bare_self:
+            return _op_result("/mgrself", id=task_id)
+
+    if worker and (
+        task_id is not None
+        or re.search(r"task\s*\d+", message, re.IGNORECASE)
+        or _MGRASSIGN_RE.search(message)
+    ):
+        if not _MGR_SELF_SIGNAL_RE.search(message):
+            return _op_result("/mgrassign", id=task_id, worker_slug=worker)
+
+    mgr_match = _MGRASSIGN_RE.search(message)
+    if mgr_match:
+        groups = [g for g in mgr_match.groups() if g]
+        slug = None
+        tid = task_id
+        for g in groups:
+            if g.isdigit():
+                tid = int(g)
+            elif g.lower() not in _MGR_WORKER_SKIP:
+                slug = g.lower()
+        return _op_result("/mgrassign", id=tid, worker_slug=slug)
+
+    if _MGRREJECT_RE.search(message):
+        return _op_result(
+            "/mgrreject",
+            id=task_id,
+            reject_reason=_extract_reject_reason(message),
+        )
+
+    return None
+
+
 def _op_result(
     intent: str,
     id: Optional[int] = None,
@@ -1235,23 +1564,10 @@ def operational_pre_classify(message: str) -> Optional[Dict[str, Any]]:
         if ml.startswith(cmd):
             return _op_result(cmd)
 
-    # --- Manager task operations (task id present) ---
-    if _MGRSELF_RE.search(message):
-        return _op_result("/mgrself")
-
-    reject_match = _MGRREJECT_RE.search(message)
-    if reject_match:
-        reason = None
-        if "department" in ml or "reject" in ml:
-            reason = reject_match.group(0).strip()
-        return _op_result("/mgrreject", reject_reason=reason)
-
-    if _MGRTRANSFER_RE.search(message):
-        return _op_result("/mgrtransfer")
-
-    mgr_match = _MGRASSIGN_RE.search(message)
-    if mgr_match:
-        return _op_result("/mgrassign", worker_slug=mgr_match.group(2).lower())
+    # --- Manager task operations (Phase 5A hardened) ---
+    mgr = manager_pre_classify(message)
+    if mgr is not None:
+        return mgr
 
     # --- Issue resolution before issue create / complete ---
     if _RESOLVE_RE.search(message):
@@ -1369,6 +1685,8 @@ def assign_clarify_pre_classify(message: str) -> Optional[Dict[str, Any]]:
     if not _ASSIGN_DRAFT_RE.search(message):
         return None
     if workflow_pre_classify(message) is not None:
+        return None
+    if manager_pre_classify(message) is not None:
         return None
     return _op_result("/assign_clarify", task_description=message.strip())
 
@@ -1609,6 +1927,9 @@ class IntentClassifier:
     # --------------------------------------------------------
 
     def extract_task_id(self, message: str) -> Optional[int]:
+        mgr_id = _extract_mgr_task_id(message)
+        if mgr_id is not None:
+            return mgr_id
         patterns = [
             r"task\s*(?:id)?\s*(\d+)",
             r"id\s*(\d+)",
