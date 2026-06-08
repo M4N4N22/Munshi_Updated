@@ -28,6 +28,20 @@ Backend WhatsApp flow uses this URL by default (`MUNSHI_TEAM_CSV_TEMPLATE_URL` o
 
 ---
 
+## Inventory CSV template (WhatsApp / REST bulk import)
+
+- **File:** `public/inventory-import/munshi-inventory-template.csv`
+- **URL after Vercel deploy:** `${MUNSHI_WEB_URL}/inventory-import/munshi-inventory-template.csv`
+- **Example:** `https://munshi-dada.vercel.app/inventory-import/munshi-inventory-template.csv`
+
+Required columns: `sku`, `name`, `category`, `location`, `unit`, `quantity`. Optional: `reorder_threshold`.
+
+Owners/managers: send filled CSV via WhatsApp (`/inventory_import_csv`) or `POST /inventory/import/csv`.
+
+Optional override: `MUNSHI_INVENTORY_CSV_TEMPLATE_URL` (see `backend/.env.example`).
+
+---
+
 ## Vercel deploy (monorepo)
 
 1. Connect repo **`ShantanuGarg2004/Munshi_Updated`**

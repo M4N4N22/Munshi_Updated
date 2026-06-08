@@ -1,0 +1,4 @@
+sku,name,category,location,unit,quantity,reorder_threshold
+CEMENT_50KG,Cement 50kg Bag,Building Materials,Main Warehouse,bag,100,10
+SHIRT_MED,Medium Cotton Shirt,Apparel,Store Front,pcs,25,5
+BOLT_M10,M10 Hex Bolt,Fasteners,Assembly Line,pcs,500,100
