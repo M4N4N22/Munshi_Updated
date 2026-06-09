@@ -357,22 +357,11 @@ export default function AdminPage() {
   // ─────────────────────────────────────────────────────────────────────────
 
   return (
-    <div className="min-h-screen bg-[#0f1a14] text-white">
-
-      {/* Top bar */}
-      <div className="border-b border-white/10 px-4 sm:px-8 py-4">
-        <div className="max-w-7xl mx-auto flex items-center gap-3">
-          <div className="w-8 h-8 bg-[#25D366] rounded-lg flex items-center justify-center flex-shrink-0">
-            <Shield className="w-4 h-4 text-white" />
-          </div>
-          <div>
-            <h1 className="text-base sm:text-lg font-bold text-white leading-tight">Munshee Admin</h1>
-            <p className="text-gray-500 text-xs">Leads Dashboard</p>
-          </div>
+    <div className="max-w-7xl mx-auto px-4 sm:px-8 py-6 sm:py-10">
+        <div className="mb-6">
+          <h2 className="text-xl font-bold">Leads</h2>
+          <p className="text-gray-500 text-sm">Website demo / contact form submissions</p>
         </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 py-6 sm:py-10">
 
         {/* ── Login ── */}
         {!authed ? (
@@ -648,7 +637,6 @@ export default function AdminPage() {
             )}
           </>
         )}
-      </div>
 
       {/* ── Delete confirmation modal ── */}
       {confirmId && (
