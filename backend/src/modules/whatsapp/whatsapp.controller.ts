@@ -1,15 +1,24 @@
-import { Body, Controller, Get, NotFoundException, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  NotFoundException,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
+import { InternalCallGuard } from 'src/core/guards/guards';
 import { Public } from 'src/core/guards/public.decorator';
 import { WhatsAppService } from './whatsapp.service';
 import { WhatsAppIncomingDto } from './whatsapp.dto';
 import { parseWhatsAppInbound } from './whatsapp-inbound.parser';
 
-@Public()
 @Controller('webhook')
 export class WhatsAppController {
   constructor(private readonly whatsappService: WhatsAppService) {}
 
   // 🔐 Verification (Meta requirement)
+  @Public()
   @Get()
   verifyWebhook(
     @Query('hub.mode') mode: string,
@@ -24,6 +33,7 @@ export class WhatsAppController {
   }
 
   // 📩 Incoming messages
+  @Public()
   @Post()
   async receiveMessage(@Body() body: any) {
     console.log({ controller_body: body });
@@ -46,6 +56,8 @@ export class WhatsAppController {
     });
   }
 
+  /** Dev/staging injection — requires x-secret when ENABLE_WEBHOOK_TEST_ROUTE=true (FI-P04). */
+  @UseGuards(InternalCallGuard)
   @Post('test')
   async handleMessage(@Body() body: WhatsAppIncomingDto) {
     if (process.env.ENABLE_WEBHOOK_TEST_ROUTE !== 'true') {

@@ -327,9 +327,10 @@ async function classify(message) {
 }
 
 async function webhook(phone, message) {
+  const { webhookTestHeaders } = await import('./lib/dev-request-headers.mjs');
   const res = await fetch(`${BASE}/webhook/test`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: webhookTestHeaders(),
     body: JSON.stringify({ from: phone, message }),
   });
   return res.text();

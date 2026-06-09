@@ -1,15 +1,16 @@
 import pg from 'pg';
+import { webhookTestHeaders } from './lib/dev-request-headers.mjs';
 const c = new pg.Client({ connectionString: 'postgresql://munshi:munshi@65.1.128.181:5431/munshi_data' });
 await c.connect();
 await fetch('http://127.0.0.1:4001/webhook/test', {
   method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
+  headers: webhookTestHeaders(),
   body: JSON.stringify({ from: '918604856137', message: '/cancel' }),
 });
 await new Promise(r => setTimeout(r, 500));
 const w = await fetch('http://127.0.0.1:4001/webhook/test', {
   method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
+  headers: webhookTestHeaders(),
   body: JSON.stringify({ from: '918604856137', message: 'mera business setup karna hai' }),
 });
 console.log('webhook', await w.text());
