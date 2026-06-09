@@ -114,7 +114,14 @@ Backend image context: `./backend`. ML: `./ml`.
 
 ## CI/CD
 
-On push to **`main`**, [.github/workflows/cicd.yml](.github/workflows/cicd.yml) validates migrations and deploys the **backend** Docker image. ML and web deploy separately today (ML on EC2/DockerHub historically; web on Vercel).
+| Trigger | What runs |
+|---------|-----------|
+| Push / PR to **`main`** | CI only — migrations + backend build ([cicd.yml](.github/workflows/cicd.yml)) |
+| **Railway** | Production backend + ML — connect repo branch **`main`** in Railway dashboard |
+| **Vercel** | Production web from **`main`** / `web/` |
+| **GCP VM (legacy)** | Manual only — [deploy-gcp-vm.yml](.github/workflows/deploy-gcp-vm.yml) |
+
+See [docs/deployment-targets.md](docs/deployment-targets.md).
 
 ---
 
