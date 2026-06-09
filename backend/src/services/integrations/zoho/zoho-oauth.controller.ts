@@ -9,6 +9,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Public } from 'src/core/guards/public.decorator';
 import { Response } from 'express';
 import { ZohoOAuthService } from './zoho-oauth.service';
 import {
@@ -21,6 +22,7 @@ import {
 export class ZohoOAuthController {
   constructor(private readonly zohoOAuthService: ZohoOAuthService) {}
 
+  @Public()
   @Get('zoho/authorize')
   @ApiOperation({ summary: 'Start Zoho OAuth (owner/manager only)' })
   async authorize(
@@ -34,6 +36,7 @@ export class ZohoOAuthController {
     return res.redirect(url);
   }
 
+  @Public()
   @Get('zoho/callback')
   @ApiOperation({ summary: 'Zoho OAuth callback — validates state and stores tokens' })
   async callback(

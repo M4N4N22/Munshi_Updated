@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { Public } from 'src/core/guards/public.decorator';
 import { OnboardingService } from './onboarding.service';
 import {
   RegisterOnboardingDto,
@@ -8,6 +9,7 @@ import {
 } from './onboarding.dto';
 
 @ApiTags('Onboarding')
+@Public()
 @Controller('onboarding')
 export class OnboardingController {
   constructor(private readonly onboardingService: OnboardingService) {}

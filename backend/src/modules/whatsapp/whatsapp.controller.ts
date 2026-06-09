@@ -1,8 +1,10 @@
 import { Body, Controller, Get, NotFoundException, Post, Query } from '@nestjs/common';
+import { Public } from 'src/core/guards/public.decorator';
 import { WhatsAppService } from './whatsapp.service';
 import { WhatsAppIncomingDto } from './whatsapp.dto';
 import { parseWhatsAppInbound } from './whatsapp-inbound.parser';
 
+@Public()
 @Controller('webhook')
 export class WhatsAppController {
   constructor(private readonly whatsappService: WhatsAppService) {}
