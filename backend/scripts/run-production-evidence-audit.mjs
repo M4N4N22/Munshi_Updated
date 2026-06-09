@@ -6,6 +6,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import pg from 'pg';
+import { webhookTestHeaders } from './lib/dev-request-headers.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const BASE = 'http://127.0.0.1:4001';
@@ -34,7 +35,7 @@ const MIGRATION_FILES = [
 async function wh(phone, message) {
   const r = await fetch(`${BASE}/webhook/test`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: webhookTestHeaders(),
     body: JSON.stringify({ from: phone, message }),
   });
   return r.text();

@@ -1,12 +1,20 @@
+import { webhookTestHeaders } from './lib/dev-request-headers.mjs';
+
 const base = 'http://localhost:4001';
 const F = 3;
 
 async function call(method, path, body) {
   const hasBody = body != null;
   const start = performance.now();
+  const headers =
+    path === '/webhook/test' && hasBody
+      ? webhookTestHeaders()
+      : hasBody
+        ? { 'Content-Type': 'application/json' }
+        : {};
   const res = await fetch(`${base}${path}`, {
     method,
-    headers: hasBody ? { 'Content-Type': 'application/json' } : {},
+    headers,
     body: hasBody ? JSON.stringify(body) : undefined,
   });
   const text = await res.text();

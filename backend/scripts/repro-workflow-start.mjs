@@ -1,4 +1,5 @@
 import pg from 'pg';
+import { webhookTestHeaders } from './lib/dev-request-headers.mjs';
 
 const BASE = 'http://127.0.0.1:4001';
 const ML = 'http://127.0.0.1:8000';
@@ -12,7 +13,7 @@ await c.connect();
 
 await fetch(`${BASE}/webhook/test`, {
   method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
+  headers: webhookTestHeaders(),
   body: JSON.stringify({ from: phone, message: '/cancel' }),
 });
 await new Promise((r) => setTimeout(r, 500));
@@ -23,7 +24,7 @@ const ml = await fetch(`${ML}/classify?message=${encodeURIComponent(phrase)}`, {
 
 const wh = await fetch(`${BASE}/webhook/test`, {
   method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
+  headers: webhookTestHeaders(),
   body: JSON.stringify({ from: phone, message: phrase }),
 }).then((r) => r.text());
 
