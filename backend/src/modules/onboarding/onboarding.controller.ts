@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { OnboardingService } from './onboarding.service';
 import {
@@ -11,6 +11,11 @@ import {
 @Controller('onboarding')
 export class OnboardingController {
   constructor(private readonly onboardingService: OnboardingService) {}
+
+  @Get('config')
+  getConfig() {
+    return this.onboardingService.getConfig();
+  }
 
   @Post('otp/send')
   sendOtp(@Body() dto: SendOtpDto) {

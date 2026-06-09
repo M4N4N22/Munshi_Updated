@@ -18,6 +18,7 @@ import { FactoryService } from 'src/services/factories/factories.service';
 import { UserService } from 'src/services/users/users.service';
 import { USER_ROLE } from 'src/services/users/users.constants';
 import { DepartmentsService } from 'src/services/departments/departments.service';
+import { isOnboardingSkipOtpEnabled } from './onboarding.constants';
 
 @Injectable()
 export class OnboardingService {
@@ -73,6 +74,10 @@ export class OnboardingService {
     };
   }
 
+  getConfig(): { otp_required: boolean } {
+    return { otp_required: !isOnboardingSkipOtpEnabled() };
+  }
+
   async register(dto: RegisterOnboardingDto): Promise<{
     phone_number: string;
     user_id: number;
@@ -81,7 +86,7 @@ export class OnboardingService {
   }> {
     const phone = dto.phone_number;
 
-    if (!(await this.store.isVerified(phone))) {
+    if (!isOnboardingSkipOtpEnabled() && !(await this.store.isVerified(phone))) {
       throw new UnauthorizedException(
         'Complete phone verification before registering.',
       );

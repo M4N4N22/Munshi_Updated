@@ -4,6 +4,7 @@
 
 | Method | Path | Body |
 |--------|------|------|
+| GET | `/onboarding/config` | — returns `{ "otp_required": true \| false }` |
 | POST | `/onboarding/otp/send` | `{ "phone_number": "919876543210" }` |
 | POST | `/onboarding/otp/verify` | `{ "phone_number": "919876543210", "code": "482910" }` |
 | POST | `/onboarding/register` | `{ "phone_number": "919876543210", "name": "...", "factory_name": "..." }` (requires OTP verified) |
@@ -14,9 +15,12 @@
 |----------|---------|
 | `ONBOARDING_MSG91_AUTH_KEY` | MSG91 auth key (production SMS) |
 | `ONBOARDING_MSG91_TEMPLATE_ID` | MSG91 OTP template id |
+| `ONBOARDING_SKIP_OTP` | Set `true` to allow `/onboarding/register` without OTP (pilot) |
 | `ONBOARDING_OTP_EXPOSE_IN_RESPONSE` | Set `true` to return `dev_otp` in JSON even in production (avoid) |
 
 Without MSG91, OTP is logged to the API console. In non-production, `dev_otp` is included in the send response for local testing.
+
+When `ONBOARDING_SKIP_OTP=true`, the web form registers directly and sends users to WhatsApp (no SMS step).
 
 ## CORS
 
