@@ -104,7 +104,7 @@ Per task context: **"Olli Webhook URL: Updated"** after Railway secrets were set
 | `OLLI_KEY` valid for outbound replies | **Configured** — should work |
 | Signing Secret | **Not a functional blocker** (security gap only) |
 
-Unregistered senders still receive automated replies (e.g. "Pehle https://munshi.app par register karein…") if ML classifies as `general_chat`, so the pipe is live but **business workflows will not succeed** without seeded users.
+Unregistered senders still receive automated replies (e.g. "Pehle https://www.munshidada.com par register karein…") if ML classifies as `general_chat`, so the pipe is live but **business workflows will not succeed** without seeded users.
 
 ---
 

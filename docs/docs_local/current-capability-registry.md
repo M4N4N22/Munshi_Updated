@@ -19,7 +19,7 @@ This document describes **what Munshi can do today**. It does not describe plann
 | **Backend** | https://backend-production-41504.up.railway.app | **LIVE** | Postgres up; 15/15 migrations; Olli webhook at `POST /webhook` |
 | **ML** | `ml.railway.internal:8080` (private) | **LIVE** | `OPENAI_API_KEY` configured; `/classify` used by backend |
 | **PostgreSQL** | `postgres.railway.internal:5432` | **LIVE** | Railway managed plugin |
-| **Web** | https://munshi-dada.vercel.app | **LIVE** | Onboarding, integrations UI, CSV templates |
+| **Web** | https://www.munshidada.com | **LIVE** | Onboarding, integrations UI, CSV templates |
 | **GitHub source** | `ShantanuGarg2004/Munshi_Updated` @ `Shantanu` | **CONNECTED** | Railway autodeploy from `Shantanu` branch (backend root `backend/`, ml root `ml/`) |
 
 ### Staging data (pilot factory)

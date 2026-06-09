@@ -46,7 +46,7 @@ SETU_FIU_BASE_URL=https://fiu-sandbox.setu.co
 SETU_CLIENT_ID=
 SETU_CLIENT_SECRET=
 SETU_PRODUCT_INSTANCE_ID=
-SETU_REDIRECT_URL=https://munshi.app/bank/complete
+SETU_REDIRECT_URL=https://www.munshidada.com/bank/complete
 SETU_WEBHOOK_SECRET=   # if Setu provides signature verification
 ```
 
@@ -87,7 +87,7 @@ sequenceDiagram
   - `consentTypes`: `["TRANSACTIONS", "PROFILE", "SUMMARY"]` for statements + balances.
   - `dataRange.from` / `to`: up to **2 years** history (per your spec); must stay within range on each data session.
   - `fetchType`: `PERIODIC` if you want recurring statement pulls; `ONETIME` for one-shot.
-  - `redirectUrl`: `https://munshi.app/bank/complete?...` (mobile-friendly page, then deep link back to WhatsApp).
+  - `redirectUrl`: `https://www.munshidada.com/bank/complete?...` (mobile-friendly page, then deep link back to WhatsApp).
   - `context`: `accounttype` = `CURRENT` and/or `SAVINGS` for SME accounts.
 
 **Purpose code (Sahamati / ReBIT):** For owner bookkeeping and cashflow reporting, closest fit:

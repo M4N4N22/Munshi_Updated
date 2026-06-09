@@ -120,7 +120,7 @@
 |--------|---------|---------|
 | PostgreSQL | `POSTGRES_CONNECTION_STRING` | `${{Postgres.DATABASE_URL}}` |
 | ML (private) | `ML_URL` | `http://${{ML.RAILWAY_PRIVATE_DOMAIN}}:${{ML.PORT}}` |
-| Web (CORS/OAuth) | `CORS_ORIGIN`, `MUNSHI_WEB_URL` | `https://munshi.app` |
+| Web (CORS/OAuth) | `CORS_ORIGIN`, `MUNSHI_WEB_URL` | `https://www.munshidada.com` |
 
 Service name in Railway references (`${{ML.*}}`) must match the actual ML service slug after creation.
 

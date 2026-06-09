@@ -38,7 +38,7 @@ Assuming Railway MCP exposes project/service/env/deploy operations (standard Rai
 | **Push branch to origin** | Branch is ahead of remote — Railway needs GitHub access |
 | **Secret values** | OpenAI, Olli, MSG91, Turso — from external dashboards |
 | **OpenAI key rotation** | Key may exist in older git history |
-| **Custom domains** | `api.munshi.app`, DNS records |
+| **Custom domains** | `api.www.munshidada.com`, DNS records |
 | **CORS_ORIGIN list** | Must match actual Vercel preview/production URLs |
 | **Webhook registration** | GetOlli/Meta — point to Backend public URL |
 | **Zoho OAuth redirect URI** | Must match `ZOHO_REDIRECT_URI` + Zoho app config |

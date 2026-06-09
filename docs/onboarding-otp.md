@@ -20,7 +20,7 @@ Without MSG91, OTP is logged to the API console. In non-production, `dev_otp` is
 
 ## CORS
 
-Allow the web app origin, e.g. `CORS_ORIGIN=http://localhost:3000,https://munshi.app`
+Allow the web app origin, e.g. `CORS_ORIGIN=http://localhost:3000,https://www.munshidada.com`
 
 ## Notes
 

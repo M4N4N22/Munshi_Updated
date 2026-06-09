@@ -53,15 +53,15 @@ BOLT_M10,M10 Hex Bolt,Fasteners,Assembly Line,pcs,500,100
 |-----------|--------|
 | Static path | `/inventory-import/munshi-inventory-template.csv` |
 | Web file | `web/public/inventory-import/munshi-inventory-template.csv` |
-| Default host | `https://munshi-dada.vercel.app` |
-| Full default URL | `https://munshi-dada.vercel.app/inventory-import/munshi-inventory-template.csv` |
+| Default host | `https://www.munshidada.com` |
+| Full default URL | `https://www.munshidada.com/inventory-import/munshi-inventory-template.csv` |
 | Override env | `MUNSHI_INVENTORY_CSV_TEMPLATE_URL` (documented, optional) |
 | Base env | `MUNSHI_WEB_URL` |
 
 **`.env.example` documentation:**
 
 ```text
-MUNSHI_WEB_URL=https://munshi-dada.vercel.app
+MUNSHI_WEB_URL=https://www.munshidada.com
 # Default: ${MUNSHI_WEB_URL}/inventory-import/munshi-inventory-template.csv
 # MUNSHI_INVENTORY_CSV_TEMPLATE_URL=
 ```

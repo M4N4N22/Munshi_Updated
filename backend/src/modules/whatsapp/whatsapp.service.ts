@@ -26,6 +26,7 @@ import {
   type WaOutboundMessage,
 } from 'src/core/messaging/outbound-message.types';
 import { buildTeamSetupLinkReply } from 'src/core/messaging/team-setup-outbound';
+import { MUNSHI_ONBOARDING_URL } from 'src/core/config/munshi-public-urls.constants';
 import { isChatHomeTrigger } from 'src/core/messaging/chat-home-triggers';
 import {
   buildUnrecognizedChatOutbound,
@@ -1180,7 +1181,7 @@ export class WhatsAppService {
     if (!user?.id) {
       await this.sendTextMessage(
         phone,
-        'Pehle https://munshi.app par register karein, phir *START* ya *hello* bhejein.',
+        `Pehle ${MUNSHI_ONBOARDING_URL} par register karein, phir *START* ya *hello* bhejein.`,
       );
       return true;
     }

@@ -3,7 +3,7 @@
 **Target architecture:**
 
 ```
-Vercel ── Web (munshi.app)
+Vercel ── Web (www.munshidada.com)
 Railway ─┬─ Backend (public)
          ├─ ML (private)
          └─ PostgreSQL
