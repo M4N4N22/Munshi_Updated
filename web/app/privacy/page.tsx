@@ -23,7 +23,7 @@ export default function PrivacyPolicy() {
             Munshi Dada is committed to protecting your privacy. This Privacy
             Policy explains how we collect, use, disclose, and safeguard your
             information when you use our WhatsApp-based chatbot platform
-            designed to help manage factory workers and tasks.
+            designed to help manage your team, work, and day-to-day operations.
           </p>
         </Card>
 
@@ -103,8 +103,8 @@ export default function PrivacyPolicy() {
                 <p className="leading-relaxed">
                   We collect information about your attendance status, including
                   present/absent markings, timestamps, and dates. This data is
-                  used to maintain accurate attendance records for factory
-                  operations.
+                  used to maintain accurate attendance records for your
+                  business.
                 </p>
               </div>
               <div>
@@ -135,7 +135,7 @@ export default function PrivacyPolicy() {
                 <p className="leading-relaxed">
                   We collect WhatsApp phone numbers, worker names, employee IDs,
                   and other identifiers necessary to identify and manage workers
-                  within your factory.
+                  within your company.
                 </p>
               </div>
               <div>
@@ -174,11 +174,11 @@ export default function PrivacyPolicy() {
                 <li>
                   Managing attendance records and monitoring worker presence
                 </li>
-                <li>Assigning, tracking, and completing factory tasks</li>
+                <li>Assigning, tracking, and completing work tasks</li>
                 <li>Documenting and resolving workplace issues</li>
                 <li>Providing worker management and operational insights</li>
                 <li>
-                  Generating reports about factory operations and productivity
+                  Generating reports about business operations and productivity
                 </li>
                 <li>Improving and optimizing our platform functionality</li>
                 <li>
@@ -204,7 +204,7 @@ export default function PrivacyPolicy() {
                 </h3>
                 <p className="leading-relaxed">
                   Your attendance, task, and issue data may be shared with
-                  factory managers, supervisors, and administrators who need
+                  managers, supervisors, and administrators who need
                   access to manage operations and oversee workers.
                 </p>
               </div>

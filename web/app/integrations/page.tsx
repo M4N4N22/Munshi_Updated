@@ -26,7 +26,7 @@ function IntegrationsPageInner() {
     if (!Number.isFinite(userId) || userId <= 0) return;
     fetchIntegrationConnections(factoryId, userId)
       .then(setConnections)
-      .catch(() => setLoadError("Could not load integrations for this factory."));
+      .catch(() => setLoadError("Could not load integrations for your company."));
   }, [factoryId, userId]);
 
   const invalidContext =
@@ -54,10 +54,9 @@ function IntegrationsPageInner() {
       <div className="mx-auto max-w-3xl px-4 py-8 sm:px-8">
         {invalidContext ? (
           <div className="rounded-2xl border border-amber-500/20 bg-amber-500/10 px-4 py-6 text-sm text-amber-200">
-            Open this page with{" "}
-            <code className="rounded bg-black/30 px-1">factory_id</code> and{" "}
-            <code className="rounded bg-black/30 px-1">user_id</code> query
-            parameters (owner or manager).
+            Open this page from the link in WhatsApp (owner or manager account).
+            If you landed here directly, go back to Munshi on WhatsApp and use
+            the integrations option from your menu.
           </div>
         ) : loadError ? (
           <div className="rounded-2xl border border-red-500/20 bg-red-500/10 px-4 py-6 text-sm text-red-300">

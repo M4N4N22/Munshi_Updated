@@ -1,4 +1,10 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  UseGuards,
+} from '@nestjs/common';
 import { InternalCallGuard } from 'src/core/guards/guards';
 import { AdminOpsService } from './admin-ops.service';
 
@@ -11,5 +17,11 @@ export class AdminOpsController {
   @UseGuards(InternalCallGuard)
   getClientsOverview() {
     return this.adminOpsService.getClientsOverview();
+  }
+
+  @Get('clients/:factoryId')
+  @UseGuards(InternalCallGuard)
+  getClientDetail(@Param('factoryId', ParseIntPipe) factoryId: number) {
+    return this.adminOpsService.getClientDetail(factoryId);
   }
 }

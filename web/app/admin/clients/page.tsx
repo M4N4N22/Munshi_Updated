@@ -1,17 +1,12 @@
 "use client";
 
-import { useMemo, useState } from "react";
 import {
-  Building2,
-  Link2,
-  Package,
-  RefreshCw,
-  Search,
-  Shield,
-  Users,
-  Landmark,
-  X,
-} from "lucide-react";
+  ClientDetail,
+  ClientDetailPanel,
+} from "@/components/admin/client-detail-panel";
+import { formatPhoneDisplay } from "@/lib/phone";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { ChevronRight, RefreshCw, Search, X } from "lucide-react";
 
 interface ClientRow {
   id: number;
@@ -37,39 +32,12 @@ interface ClientsOverview {
   };
 }
 
-function StatusPill({
-  ok,
-  label,
-  warn,
-}: {
-  ok: boolean;
-  label: string;
-  warn?: boolean;
-}) {
-  const cls = ok
-    ? "bg-[#25D366]/15 text-[#25D366] border-[#25D366]/20"
-    : warn
-      ? "bg-amber-500/15 text-amber-300 border-amber-500/20"
-      : "bg-white/5 text-gray-400 border-white/10";
-  return (
-    <span
-      className={`inline-flex items-center border rounded-full px-2.5 py-1 text-[11px] font-semibold whitespace-nowrap ${cls}`}
-    >
-      {label}
-    </span>
-  );
-}
-
-function bankLabel(status: string | null): { ok: boolean; warn: boolean; label: string } {
-  if (!status) return { ok: false, warn: false, label: "Not linked" };
-  const s = status.toUpperCase();
-  if (["ACTIVE", "COMPLETED", "SUCCESS"].includes(s)) {
-    return { ok: true, warn: false, label: "Setu linked" };
-  }
-  if (["PENDING", "INITIATED"].includes(s)) {
-    return { ok: false, warn: true, label: status };
-  }
-  return { ok: false, warn: false, label: status };
+function fmtDate(d: string) {
+  return new Date(d).toLocaleDateString("en-IN", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
 }
 
 export default function AdminClientsPage() {
@@ -79,6 +47,10 @@ export default function AdminClientsPage() {
   const [error, setError] = useState("");
   const [data, setData] = useState<ClientsOverview | null>(null);
   const [search, setSearch] = useState("");
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [detail, setDetail] = useState<ClientDetail | null>(null);
+  const [detailLoading, setDetailLoading] = useState(false);
+  const [detailError, setDetailError] = useState("");
 
   const fetchClients = async (key: string = adminKey) => {
     setLoading(true);
@@ -89,6 +61,9 @@ export default function AdminClientsPage() {
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || "Failed to load clients");
+      if (!json?.totals || !Array.isArray(json?.clients)) {
+        throw new Error("Unexpected response from server");
+      }
       setData(json);
       setAuthed(true);
     } catch (err: unknown) {
@@ -97,6 +72,35 @@ export default function AdminClientsPage() {
       setLoading(false);
     }
   };
+
+  const fetchDetail = useCallback(
+    async (factoryId: number) => {
+      setDetailLoading(true);
+      setDetailError("");
+      setDetail(null);
+      try {
+        const res = await fetch(`/api/admin/clients/${factoryId}`, {
+          headers: { "x-admin-key": adminKey },
+        });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.error || "Failed to load details");
+        if (!json?.factory) throw new Error("Unexpected response from server");
+        setDetail(json);
+      } catch (err: unknown) {
+        setDetailError(
+          err instanceof Error ? err.message : "Failed to load details",
+        );
+      } finally {
+        setDetailLoading(false);
+      }
+    },
+    [adminKey],
+  );
+
+  useEffect(() => {
+    if (!selectedId || !authed) return;
+    fetchDetail(selectedId);
+  }, [selectedId, authed, fetchDetail]);
 
   const filtered = useMemo(() => {
     if (!data?.clients) return [];
@@ -110,219 +114,186 @@ export default function AdminClientsPage() {
     );
   }, [data, search]);
 
-  const fmt = (d: string) =>
-    new Date(d).toLocaleString("en-IN", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    });
+  const selectClient = (id: number) => {
+    setSelectedId(id);
+  };
 
-  return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-8 py-6 sm:py-10">
-      {!authed ? (
-        <div className="flex items-start justify-center pt-4 sm:pt-10">
-          <div className="bg-white/5 border border-white/10 rounded-2xl p-6 sm:p-8 w-full max-w-sm">
-            <div className="w-12 h-12 bg-[#25D366]/15 rounded-xl flex items-center justify-center mb-5">
-              <Shield className="w-5 h-5 text-[#25D366]" />
-            </div>
-            <h2 className="text-xl font-bold mb-1">Clients dashboard</h2>
-            <p className="text-gray-500 text-sm mb-5">
-              View onboarded businesses, team size, inventory, Zoho, and Setu
-              bank status.
-            </p>
+  if (!authed) {
+    return (
+      <div className="mx-auto flex w-full max-w-md flex-col gap-6">
+        <div>
+          <p className="text-sm font-medium text-emerald-700">Internal</p>
+          <h1 className="mt-1 text-2xl font-semibold text-zinc-900">
+            Clients dashboard
+          </h1>
+          <p className="mt-2 text-sm text-zinc-600">
+            Onboarded businesses — team, inventory, Zoho, and bank status.
+          </p>
+        </div>
+
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            fetchClients(adminKey);
+          }}
+          className="flex flex-col gap-4"
+        >
+          <label className="flex flex-col gap-2">
+            <span className="text-sm font-medium text-zinc-800">Admin key</span>
             <input
               type="password"
               value={adminKey}
               onChange={(e) => setAdminKey(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && fetchClients(adminKey)}
-              placeholder="Admin key"
-              className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder:text-gray-500 focus:outline-none focus:border-[#25D366] transition-colors mb-4 text-sm"
+              placeholder="Enter admin key"
+              className="min-h-12 rounded-xl border border-zinc-300 px-3 text-base text-zinc-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
             />
-            {error && <p className="text-red-400 text-sm mb-3">{error}</p>}
-            <button
-              onClick={() => fetchClients(adminKey)}
-              disabled={loading}
-              className="w-full bg-[#25D366] hover:bg-[#1fba5a] text-white rounded-xl py-3 text-sm font-bold transition-colors disabled:opacity-50"
-            >
-              {loading ? "Loading..." : "Open dashboard"}
-            </button>
-          </div>
-        </div>
-      ) : (
-        <>
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
-            <div>
-              <h2 className="text-xl font-bold">Onboarded clients</h2>
-              <p className="text-gray-500 text-sm">
-                Factories registered via onboarding + WhatsApp
-              </p>
-            </div>
-            <button
-              onClick={() => fetchClients()}
-              className="flex items-center gap-2 px-4 py-2.5 bg-white/10 hover:bg-white/15 rounded-xl text-sm font-medium transition-colors w-fit"
-            >
-              <RefreshCw className="w-4 h-4" />
-              Refresh
-            </button>
-          </div>
+          </label>
 
-          {data && (
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-6">
-              {[
-                {
-                  label: "Clients",
-                  value: data.totals.factories,
-                  icon: Building2,
-                },
-                {
-                  label: "Team members",
-                  value: data.totals.total_team_members,
-                  icon: Users,
-                },
-                {
-                  label: "Inventory SKUs",
-                  value: data.totals.total_inventory_items,
-                  icon: Package,
-                },
-                {
-                  label: "Zoho connected",
-                  value: data.totals.with_zoho,
-                  icon: Link2,
-                },
-                {
-                  label: "Bank linked",
-                  value: data.totals.with_bank_consent,
-                  icon: Landmark,
-                },
-              ].map((s) => (
-                <div
-                  key={s.label}
-                  className="bg-white/5 border border-white/10 rounded-2xl px-4 py-3.5"
-                >
-                  <div className="flex items-center gap-2 text-gray-500 mb-1">
-                    <s.icon className="w-3.5 h-3.5" />
-                    <p className="text-xs">{s.label}</p>
-                  </div>
-                  <p className="text-2xl font-bold">{s.value}</p>
-                </div>
-              ))}
-            </div>
+          {error && (
+            <p className="text-sm font-medium text-red-600" role="alert">
+              {error}
+            </p>
           )}
 
-          <div className="relative mb-5">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+          <button
+            type="submit"
+            disabled={loading || !adminKey}
+            className="flex h-12 items-center justify-center rounded-xl bg-zinc-900 px-6 text-base font-semibold text-white transition hover:bg-zinc-800 disabled:opacity-60"
+          >
+            {loading ? "Loading…" : "Open dashboard"}
+          </button>
+        </form>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="text-sm font-medium text-emerald-700">Clients</p>
+          <h1 className="mt-1 text-2xl font-semibold text-zinc-900">
+            Onboarded businesses
+          </h1>
+          <p className="mt-1 text-sm text-zinc-600">
+            {data?.totals.factories ?? 0} factories · select one to view team and
+            inventory
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => fetchClients()}
+          disabled={loading}
+          className="flex h-10 items-center justify-center gap-2 self-start rounded-xl border border-zinc-300 bg-white px-4 text-sm font-semibold text-zinc-800 transition hover:bg-zinc-50 disabled:opacity-60"
+        >
+          <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
+          Refresh
+        </button>
+      </div>
+
+      {data?.totals && (
+        <dl className="grid grid-cols-2 gap-3 sm:grid-cols-5">
+          {[
+            { label: "Clients", value: data.totals.factories },
+            { label: "Team", value: data.totals.total_team_members },
+            { label: "SKUs", value: data.totals.total_inventory_items },
+            { label: "Zoho", value: data.totals.with_zoho },
+            { label: "Bank", value: data.totals.with_bank_consent },
+          ].map((s) => (
+            <div
+              key={s.label}
+              className="rounded-xl border border-zinc-200 bg-white px-4 py-3"
+            >
+              <dt className="text-xs font-medium text-zinc-500">{s.label}</dt>
+              <dd className="mt-0.5 text-xl font-semibold tabular-nums text-zinc-900">
+                {s.value}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      )}
+
+      <div className="grid gap-6 lg:grid-cols-[minmax(280px,340px)_1fr] lg:items-start">
+        <div className="flex flex-col gap-3">
+          <label className="relative">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search business, owner, phone..."
-              className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-gray-600 text-sm focus:outline-none focus:border-[#25D366]/50 transition-colors"
+              placeholder="Search business, owner, phone…"
+              className="min-h-11 w-full rounded-xl border border-zinc-300 bg-white pl-9 pr-9 text-sm text-zinc-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
             />
             {search && (
               <button
+                type="button"
                 onClick={() => setSearch("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-700"
               >
-                <X className="w-3.5 h-3.5" />
+                <X className="h-4 w-4" />
               </button>
             )}
-          </div>
+          </label>
 
-          {loading ? (
-            <p className="text-center py-16 text-gray-500">Loading...</p>
-          ) : filtered.length === 0 ? (
-            <p className="text-center py-16 text-gray-500">No clients found.</p>
-          ) : (
-            <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-white/10 bg-white/5 text-gray-400">
-                      <th className="text-left px-5 py-4 font-semibold">
-                        Business
-                      </th>
-                      <th className="text-left px-5 py-4 font-semibold">
-                        Owner
-                      </th>
-                      <th className="text-left px-5 py-4 font-semibold">
-                        Team
-                      </th>
-                      <th className="text-left px-5 py-4 font-semibold">
-                        Inventory
-                      </th>
-                      <th className="text-left px-5 py-4 font-semibold">
-                        Zoho
-                      </th>
-                      <th className="text-left px-5 py-4 font-semibold">
-                        Setu bank
-                      </th>
-                      <th className="text-left px-5 py-4 font-semibold">
-                        Joined
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filtered.map((c) => {
-                      const bank = bankLabel(c.bank_consent_status);
-                      return (
-                        <tr
-                          key={c.id}
-                          className="border-b border-white/5 hover:bg-white/5 transition-colors"
-                        >
-                          <td className="px-5 py-4">
-                            <p className="font-medium text-white">{c.name}</p>
-                            {c.address && (
-                              <p className="text-xs text-gray-500 mt-0.5 line-clamp-1">
-                                {c.address}
-                              </p>
-                            )}
-                          </td>
-                          <td className="px-5 py-4">
-                            <p className="text-gray-200">
-                              {c.owner_name || "—"}
-                            </p>
-                            {c.owner_phone && (
-                              <a
-                                href={`tel:${c.owner_phone}`}
-                                className="text-[#25D366] text-xs font-mono hover:underline"
-                              >
-                                {c.owner_phone}
-                              </a>
-                            )}
-                          </td>
-                          <td className="px-5 py-4 text-gray-300">
-                            {c.team_members}
-                          </td>
-                          <td className="px-5 py-4 text-gray-300">
-                            {c.inventory_items}
-                          </td>
-                          <td className="px-5 py-4">
-                            <StatusPill
-                              ok={c.zoho_connected}
-                              label={
-                                c.zoho_connected ? "Connected" : "Not connected"
-                              }
-                            />
-                          </td>
-                          <td className="px-5 py-4">
-                            <StatusPill
-                              ok={bank.ok}
-                              warn={bank.warn}
-                              label={bank.label}
-                            />
-                          </td>
-                          <td className="px-5 py-4 text-gray-500 text-xs whitespace-nowrap">
-                            {fmt(c.created_at)}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
-        </>
-      )}
+          <div className="max-h-[min(70vh,640px)] overflow-y-auto rounded-2xl border border-zinc-200 bg-white">
+            {loading && !data ? (
+              <p className="px-4 py-12 text-center text-sm text-zinc-500">
+                Loading…
+              </p>
+            ) : filtered.length === 0 ? (
+              <p className="px-4 py-12 text-center text-sm text-zinc-500">
+                No clients found.
+              </p>
+            ) : (
+              <ul className="divide-y divide-zinc-100">
+                {filtered.map((c) => {
+                  const selected = selectedId === c.id;
+                  return (
+                    <li key={c.id}>
+                      <button
+                        type="button"
+                        onClick={() => selectClient(c.id)}
+                        className={`flex w-full items-start gap-2 px-4 py-3.5 text-left transition ${
+                          selected
+                            ? "bg-emerald-50/80"
+                            : "hover:bg-zinc-50"
+                        }`}
+                      >
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate text-sm font-semibold text-zinc-900">
+                            {c.name}
+                          </p>
+                          <p className="mt-0.5 truncate text-xs text-zinc-500">
+                            {c.owner_name || "No owner"}
+                            {c.owner_phone
+                              ? ` · ${formatPhoneDisplay(c.owner_phone)}`
+                              : ""}
+                          </p>
+                          <p className="mt-1 text-[11px] text-zinc-400">
+                            {c.team_members} team · {c.inventory_items} SKUs ·{" "}
+                            {fmtDate(c.created_at)}
+                          </p>
+                        </div>
+                        <ChevronRight
+                          className={`mt-1 h-4 w-4 shrink-0 ${selected ? "text-emerald-600" : "text-zinc-300"}`}
+                        />
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
+        </div>
+
+        <div className={selectedId ? "block" : "hidden lg:block"}>
+          <ClientDetailPanel
+            detail={detail}
+            loading={detailLoading}
+            error={detailError}
+            onClose={() => setSelectedId(null)}
+          />
+        </div>
+      </div>
     </div>
   );
 }

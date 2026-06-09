@@ -1,5 +1,5 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsString, Length, Matches } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsString, Length, Matches } from 'class-validator';
 
 const PHONE_PATTERN = /^91\d{10}$/;
 
@@ -35,13 +35,13 @@ export class RegisterOnboardingDto {
   })
   phone_number: string;
 
-  @ApiPropertyOptional({ example: 'Anmol Sharma' })
-  @IsOptional()
+  @ApiProperty({ example: 'Anmol Sharma' })
   @IsString()
-  name?: string;
+  @IsNotEmpty({ message: 'name is required' })
+  name: string;
 
-  @ApiPropertyOptional({ example: 'ABC Textiles' })
-  @IsOptional()
+  @ApiProperty({ example: 'ABC Textiles' })
   @IsString()
-  factory_name?: string;
+  @IsNotEmpty({ message: 'factory_name is required' })
+  factory_name: string;
 }

@@ -107,9 +107,17 @@ export class OnboardingService {
       };
     }
 
-    const factoryName = dto.factory_name?.trim() || 'My Factory';
+    const ownerName = dto.name.trim();
+    const companyName = dto.factory_name.trim();
+    if (!ownerName) {
+      throw new BadRequestException('Owner name is required.');
+    }
+    if (!companyName) {
+      throw new BadRequestException('Company name is required.');
+    }
+
     const factory = await this.factoryService.createFactory({
-      name: factoryName,
+      name: companyName,
     });
 
     if (existing?.id) {
@@ -135,7 +143,7 @@ export class OnboardingService {
     const link = await this.factoryService.assignMember({
       factory_id: String(factory.id),
       phone_number: phone,
-      name: dto.name?.trim() || undefined,
+      name: ownerName,
       role: USER_ROLE.OWNER,
     });
 

@@ -7,7 +7,10 @@ function isAuthed(req: NextRequest) {
   return req.headers.get("x-admin-key") === process.env.ADMIN_SECRET_KEY;
 }
 
-export async function GET(req: NextRequest) {
+export async function GET(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
   if (!isAuthed(req)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
@@ -20,8 +23,13 @@ export async function GET(req: NextRequest) {
     );
   }
 
+  const { id } = await params;
+  if (!/^\d+$/.test(id)) {
+    return NextResponse.json({ error: "Invalid client id" }, { status: 400 });
+  }
+
   try {
-    const res = await fetch(`${apiBaseUrl}/admin/clients`, {
+    const res = await fetch(`${apiBaseUrl}/admin/clients/${id}`, {
       headers: { "x-secret": apiSecret },
       cache: "no-store",
     });
@@ -38,11 +46,10 @@ export async function GET(req: NextRequest) {
         { status: res.status },
       );
     }
-    // Nest wraps payloads as { data, meta }
     const payload = body?.data !== undefined ? body.data : body;
     return NextResponse.json(payload, { status: 200 });
   } catch (err) {
-    console.error("GET /api/admin/clients error:", err);
+    console.error(`GET /api/admin/clients/${id} error:`, err);
     return NextResponse.json({ error: "Internal server error." }, { status: 500 });
   }
 }
