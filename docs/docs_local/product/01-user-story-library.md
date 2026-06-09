@@ -545,7 +545,7 @@ Accountant uses `POST /inventory/import/csv` with factory API.
 | Type | Variations |
 |------|------------|
 | Canonical | REST `POST /inventory/import/csv` |
-| Web | Download template from `munshi-dada.vercel.app` |
+| Web | Download template from `www.munshidada.com` |
 
 ---
 

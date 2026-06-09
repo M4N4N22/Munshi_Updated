@@ -1,6 +1,6 @@
 # Munshi Web
 
-Next.js frontend for **[munshi.app](https://munshi.app)** — landing page ([Munshi-Dada](https://github.com/ShantanuGarg2004/Munshi-Dada)) plus OTP onboarding and WhatsApp handoff.
+Next.js frontend for **[www.munshidada.com](https://www.munshidada.com)** — landing page ([Munshi-Dada](https://github.com/ShantanuGarg2004/Munshi-Dada)) plus OTP onboarding and WhatsApp handoff.
 
 **Monorepo root:** [../README.md](../README.md)  
 **Backend:** [../backend/README.md](../backend/README.md)
@@ -22,7 +22,7 @@ Next.js frontend for **[munshi.app](https://munshi.app)** — landing page ([Mun
 ## Team CSV template (WhatsApp bulk add)
 
 - **File:** `public/team-import/munshi-team-template.csv`
-- **URL after Vercel deploy:** `https://munshi-dada.vercel.app/team-import/munshi-team-template.csv`
+- **URL after deploy:** `https://www.munshidada.com/team-import/munshi-team-template.csv`
 
 Backend WhatsApp flow uses this URL by default (`MUNSHI_TEAM_CSV_TEMPLATE_URL` optional override).
 
@@ -32,7 +32,7 @@ Backend WhatsApp flow uses this URL by default (`MUNSHI_TEAM_CSV_TEMPLATE_URL` o
 
 - **File:** `public/inventory-import/munshi-inventory-template.csv`
 - **URL after Vercel deploy:** `${MUNSHI_WEB_URL}/inventory-import/munshi-inventory-template.csv`
-- **Example:** `https://munshi-dada.vercel.app/inventory-import/munshi-inventory-template.csv`
+- **Example:** `https://www.munshidada.com/inventory-import/munshi-inventory-template.csv`
 
 Required columns: `sku`, `name`, `category`, `location`, `unit`, `quantity`. Optional: `reorder_threshold`.
 
@@ -47,7 +47,7 @@ Optional override: `MUNSHI_INVENTORY_CSV_TEMPLATE_URL` (see `backend/.env.exampl
 1. Connect repo **`ShantanuGarg2004/Munshi_Updated`**
 2. **Root Directory:** `web`
 3. Env: see `.env.example`
-4. Domain: `munshi.app`
+4. Domain: `www.munshidada.com` (and `munshidada.com` redirect)
 
 Previously deployed from [Munshi-Dada](https://github.com/ShantanuGarg2004/Munshi-Dada) at repo root; this folder replaces that app.
 

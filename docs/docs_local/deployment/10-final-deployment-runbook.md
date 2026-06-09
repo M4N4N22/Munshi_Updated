@@ -11,7 +11,7 @@
 
 ```
 Vercel
-└── Web (munshi.app)
+└── Web (www.munshidada.com)
 
 Railway
 ├── Backend (public HTTPS)
@@ -116,7 +116,7 @@ Railway
    - `ML_URL=http://${{ML.RAILWAY_PRIVATE_DOMAIN}}:${{ML.PORT}}`
    - `NODE_ENV=production`
    - `CORS_ORIGIN=<vercel-domains>`
-   - `MUNSHI_WEB_URL=https://munshi.app`
+   - `MUNSHI_WEB_URL=https://www.munshidada.com`
    - All required secrets
 5. **Do not set** `ENABLE_WEBHOOK_TEST_ROUTE`.
 6. Deploy → wait for healthy.

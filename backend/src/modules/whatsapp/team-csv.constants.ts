@@ -1,3 +1,5 @@
+import { MUNSHI_PUBLIC_WEB_ORIGIN } from 'src/core/config/munshi-public-urls.constants';
+
 /** Canonical CSV headers for WhatsApp bulk employee import. */
 export const TEAM_CSV_HEADERS = [
   'name',
@@ -20,6 +22,6 @@ export const TEAM_CSV_PUBLIC_TEMPLATE_PATH =
   '/team-import/munshi-team-template.csv';
 
 /** Default production web host (override with MUNSHI_WEB_URL or MUNSHI_TEAM_CSV_TEMPLATE_URL). */
-export const TEAM_CSV_DEFAULT_WEB_HOST = 'https://munshi-dada.vercel.app';
+export const TEAM_CSV_DEFAULT_WEB_HOST = MUNSHI_PUBLIC_WEB_ORIGIN;
 
 export const TEAM_CSV_PUBLIC_TEMPLATE_URL = `${TEAM_CSV_DEFAULT_WEB_HOST}${TEAM_CSV_PUBLIC_TEMPLATE_PATH}`;

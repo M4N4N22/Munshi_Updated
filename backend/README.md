@@ -121,7 +121,7 @@ yarn dev            # uses .env.local if present
 | `OLLI_URL`, `OLLI_KEY` | WhatsApp send/receive via GetOlli |
 | `WHATSAPP_VERIFY_TOKEN` | Webhook verification |
 | `ONBOARD_WORKER_GOOGLE_FORM_URL` | Link for “Google Form se add” button |
-| `MUNSHI_TEAM_DASHBOARD_URL` | Link for “Dashboard par add” (default `https://munshi.app`) |
+| `MUNSHI_TEAM_DASHBOARD_URL` | Link for “Dashboard par add” (default `https://www.munshidada.com`) |
 | `CORS_ORIGIN` | Web origins (e.g. `http://localhost:3000`) |
 | `OTP_PEPPER` | OTP hashing (production) |
 

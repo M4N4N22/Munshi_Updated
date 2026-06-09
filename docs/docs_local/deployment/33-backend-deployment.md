@@ -45,8 +45,8 @@
 | `ML_URL` | `http://ml.railway.internal:8080` |
 | `NODE_ENV` | `production` |
 | `NIXPACKS_NODE_VERSION` | `20` |
-| `CORS_ORIGIN` | `https://munshi-dada.vercel.app` |
-| `MUNSHI_WEB_URL` | `https://munshi-dada.vercel.app` |
+| `CORS_ORIGIN` | `https://www.munshidada.com` |
+| `MUNSHI_WEB_URL` | `https://www.munshidada.com` |
 | `X_SECRET` | `secret` (staging) |
 | `OTP_PEPPER` | `test-pepper-123` (staging) |
 | `ENABLE_WEBHOOK_TEST_ROUTE` | `true` (staging smoke only — **disable before prod**) |

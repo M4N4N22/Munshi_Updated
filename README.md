@@ -14,7 +14,7 @@ Each package has its own README with setup, architecture, and current progress.
 |---------|--------|-------|----------------|
 | **Backend** | [backend/README.md](backend/README.md) | NestJS, PostgreSQL (Supabase) | `4001` |
 | **ML** | [ml/README.md](ml/README.md) | FastAPI, OpenAI (intent + parsers) | `8000` |
-| **Web** | [web/README.md](web/README.md) | Next.js (munshi.app onboarding) | `3000` |
+| **Web** | [web/README.md](web/README.md) | Next.js ([munshidada.com](https://www.munshidada.com) onboarding) | `3000` |
 
 ---
 
@@ -30,7 +30,7 @@ This layout replaces three standalone repos (backend, `munshi_intent_classifier`
 | **Business discovery** | Multi-step factory onboarding via WhatsApp + REST (`/business-discovery/*`) |
 | **Workflows** | Vendor/worker onboard, inventory create, purchase request, suggestion approval, business discovery, assign clarify |
 | **Contracts** | Shared intent/workflow schemas in `backend/contracts/`; ML copies under `ml/contracts/` |
-| **Web onboarding** | OTP → register → WhatsApp handoff at [munshi.app](https://munshi.app) |
+| **Web onboarding** | OTP → register → WhatsApp handoff at [www.munshidada.com/onboarding](https://www.munshidada.com/onboarding) |
 
 **After merge to `main`:** update EC2/Docker deploy paths to `backend/` and set `ML_URL` to the co-located ML service (see [docker-compose.example.yml](docker-compose.example.yml)).
 

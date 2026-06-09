@@ -22,8 +22,8 @@ Variables sourced from `backend/.env.example`, `ml/.env.example`, `web/.env.exam
 | `OLLI_KEY` | GetOlli API key | `oll_...` | GetOlli dashboard |
 | `OLLI_URL` | GetOlli API base | `https://api.getolliai.com/api/v1` | Static / docs |
 | `WHATSAPP_VERIFY_TOKEN` | Webhook subscription verify | `my-verify-token` | You define — register in Meta/Olli |
-| `CORS_ORIGIN` | Allowed browser origins | `https://munshi.app,https://munshi-dada.vercel.app` | Manual — match Vercel domains |
-| `MUNSHI_WEB_URL` | Web app URL (OAuth, links) | `https://munshi.app` | Vercel production URL |
+| `CORS_ORIGIN` | Allowed browser origins | `https://www.munshidada.com,https://www.munshidada.com` | Manual — match Vercel domains |
+| `MUNSHI_WEB_URL` | Web app URL (OAuth, links) | `https://www.munshidada.com` | Vercel production URL |
 | `ONBOARDING_MSG91_AUTH_KEY` | MSG91 auth for SMS OTP | `39xxxxxxxx...` | MSG91 dashboard |
 | `ONBOARDING_MSG91_TEMPLATE_ID` | MSG91 OTP template | `6789xxxxxxxx...` | MSG91 dashboard |
 | `ONBOARDING_OTP_EXPOSE_IN_RESPONSE` | Return OTP in API JSON | `false` | Manual — **must be false in prod** |
@@ -32,9 +32,9 @@ Variables sourced from `backend/.env.example`, `ml/.env.example`, `web/.env.exam
 
 | Variable | Purpose | Example value | Where it comes from |
 |----------|---------|---------------|---------------------|
-| `MUNSHI_TEAM_DASHBOARD_URL` | Team dashboard link in WA messages | `https://munshi-dada.vercel.app` | Manual |
-| `MUNSHI_TEAM_CSV_TEMPLATE_URL` | CSV template override | `https://munshi.app/templates/team.csv` | Manual |
-| `MUNSHI_INVENTORY_CSV_TEMPLATE_URL` | Inventory CSV template | `https://munshi.app/templates/inventory.csv` | Manual |
+| `MUNSHI_TEAM_DASHBOARD_URL` | Team dashboard link in WA messages | `https://www.munshidada.com` | Manual |
+| `MUNSHI_TEAM_CSV_TEMPLATE_URL` | CSV template override | `https://www.munshidada.com/templates/team.csv` | Manual |
+| `MUNSHI_INVENTORY_CSV_TEMPLATE_URL` | Inventory CSV template | `https://www.munshidada.com/templates/inventory.csv` | Manual |
 | `ONBOARD_WORKER_GOOGLE_FORM_URL` | Legacy Google Form link | `https://forms.google.com/...` | Manual |
 | `MUNSHI_BOOK_DEMO_URL` | Demo booking link (owner home) | `https://cal.com/...` | Manual |
 | `MUNSHI_DEMO_YOUTUBE_URL` | Demo video link | `https://youtube.com/watch?v=...` | Manual |

@@ -1,3 +1,5 @@
+import { MUNSHI_PUBLIC_WEB_ORIGIN } from 'src/core/config/munshi-public-urls.constants';
+
 /** Canonical CSV headers for WhatsApp / REST inventory bulk import. */
 export const INVENTORY_CSV_HEADERS = [
   'sku',
@@ -27,6 +29,6 @@ export const INVENTORY_CSV_PUBLIC_TEMPLATE_PATH =
   '/inventory-import/munshi-inventory-template.csv';
 
 /** Default production web host (override with MUNSHI_WEB_URL or MUNSHI_INVENTORY_CSV_TEMPLATE_URL). */
-export const INVENTORY_CSV_DEFAULT_WEB_HOST = 'https://munshi-dada.vercel.app';
+export const INVENTORY_CSV_DEFAULT_WEB_HOST = MUNSHI_PUBLIC_WEB_ORIGIN;
 
 export const INVENTORY_CSV_PUBLIC_TEMPLATE_URL = `${INVENTORY_CSV_DEFAULT_WEB_HOST}${INVENTORY_CSV_PUBLIC_TEMPLATE_PATH}`;

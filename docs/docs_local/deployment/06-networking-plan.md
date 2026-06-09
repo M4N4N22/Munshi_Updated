@@ -90,12 +90,12 @@ flowchart TB
 | **Direction** | Browser / Next.js server → Backend |
 | **Protocol** | HTTPS (public) |
 | **Env var (Web)** | `NEXT_PUBLIC_API_URL=https://<backend>.up.railway.app` |
-| **Env var (Backend)** | `CORS_ORIGIN=https://munshi.app,...` |
+| **Env var (Backend)** | `CORS_ORIGIN=https://www.munshidada.com,...` |
 | **Auth** | Route-specific (`x-admin-key` on web admin APIs; `x-secret` on internal backend routes) |
 
 ### Recommendations
 
-- Assign a stable Railway public domain or custom domain (`api.munshi.app`) before updating Vercel.
+- Assign a stable Railway public domain or custom domain (`api.www.munshidada.com`) before updating Vercel.
 - Set `CORS_ORIGIN` to exact Vercel production + preview origins as needed.
 - Set `MUNSHI_WEB_URL` to Vercel canonical URL for Zoho OAuth redirects.
 
@@ -150,8 +150,8 @@ No private networking option — standard OpenAI API access.
 
 | Host | Suggested target |
 |------|------------------|
-| `munshi.app` | Vercel (Web) |
-| `api.munshi.app` | Railway Backend (custom domain) |
+| `www.munshidada.com` | Vercel (Web) |
+| `api.www.munshidada.com` | Railway Backend (custom domain) |
 | ML | No custom public domain |
 
 ---

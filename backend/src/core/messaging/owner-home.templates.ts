@@ -1,3 +1,5 @@
+import { MUNSHI_ONBOARDING_URL } from 'src/core/config/munshi-public-urls.constants';
+
 const WA_DIVIDER = '━━━━━━━━━━━━━━━';
 
 export function waOwnerWelcomeIntro(params: {
@@ -115,7 +117,7 @@ export function waWorkerWelcome(userName: string): string {
 export function waNotRegistered(): string {
   return (
     `Aap abhi register nahi hain.\n\n` +
-    `Pehle https://munshi.app par mobile verify karein, phir yahan *START* bhejein.`
+    `Pehle ${MUNSHI_ONBOARDING_URL} par mobile verify karein, phir yahan *START* bhejein.`
   );
 }
 

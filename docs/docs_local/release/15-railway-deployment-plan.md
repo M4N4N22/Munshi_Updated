@@ -10,7 +10,7 @@
 ```
                     ┌─────────────────┐
                     │  Vercel (Web)   │
-                    │  munshi.app     │
+                    │  www.munshidada.com     │
                     └────────┬────────┘
                              │ HTTPS
                              ▼
@@ -88,13 +88,13 @@ Migrations run automatically on backend start (`AUTO_MIGRATE=1`).
 | `PORT` | Railway auto-injects |
 | `POSTGRES_CONNECTION_STRING` | `${{Postgres.DATABASE_URL}}` |
 | `ML_URL` | `http://${{ml.RAILWAY_PRIVATE_DOMAIN}}:${{ml.PORT}}` |
-| `CORS_ORIGIN` | `https://munshi.app,https://munshi-dada.vercel.app` |
+| `CORS_ORIGIN` | `https://www.munshidada.com,https://www.munshidada.com` |
 | `X_SECRET` | Generate strong random |
 | `OTP_PEPPER` | Generate strong random |
 | `OLLI_KEY` | From GetOlli dashboard |
 | `OLLI_URL` | `https://api.getolliai.com/api/v1` |
 | `WHATSAPP_VERIFY_TOKEN` | Meta/Olli webhook token |
-| `MUNSHI_WEB_URL` | `https://munshi.app` |
+| `MUNSHI_WEB_URL` | `https://www.munshidada.com` |
 | `ONBOARDING_MSG91_AUTH_KEY` | MSG91 dashboard |
 | `ONBOARDING_MSG91_TEMPLATE_ID` | MSG91 template |
 | `NODE_ENV` | `production` |
@@ -124,7 +124,7 @@ Web → Backend: NEXT_PUBLIC_API_URL (public Railway URL)
 |---------|-------|
 | Root directory | `web` |
 | Build | `npm run build` |
-| Domain | `munshi.app` |
+| Domain | `www.munshidada.com` |
 
 ### Required env vars
 
