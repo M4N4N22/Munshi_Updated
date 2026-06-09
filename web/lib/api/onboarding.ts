@@ -31,8 +31,8 @@ export function verifyOtp(phone_number: string, code: string) {
 
 export function registerOnboarding(payload: {
   phone_number: string;
-  name?: string;
-  factory_name?: string;
+  name: string;
+  factory_name: string;
 }) {
   return apiPost<RegisterOnboardingResponse>("/onboarding/register", payload);
 }

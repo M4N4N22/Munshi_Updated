@@ -25,6 +25,7 @@ import { OnboardingModule } from 'src/modules/onboarding/onboarding.module';
 import { DomainEventsModule } from 'src/services/domain-events/domain-events.module';
 import { IntegrationModule } from 'src/services/integrations/integration.module';
 import { TaskInventoryResolutionModule } from 'src/services/task-inventory-resolution/task-inventory-resolution.module';
+import { AdminOpsModule } from 'src/modules/admin-ops/admin-ops.module';
 
 @Module({
   imports: [
@@ -56,6 +57,7 @@ import { TaskInventoryResolutionModule } from 'src/services/task-inventory-resol
     DomainEventsModule,
     IntegrationModule,
     TaskInventoryResolutionModule,
+    AdminOpsModule,
   ],
   providers: [
     {

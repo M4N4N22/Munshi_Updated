@@ -25,7 +25,7 @@ export function OnboardingForm({
 }: OnboardingFormProps) {
   const [phone, setPhone] = useState("");
   const [name, setName] = useState("");
-  const [factoryName, setFactoryName] = useState("");
+  const [companyName, setCompanyName] = useState("");
   const [otp, setOtp] = useState("");
   const [step, setStep] = useState<Step>("phone");
   const [normalized, setNormalized] = useState<string | null>(null);
@@ -93,13 +93,27 @@ export function OnboardingForm({
     }
   }, []);
 
+  function validateProfileFields(): boolean {
+    if (!name.trim()) {
+      setError("Enter your name as the business owner.");
+      return false;
+    }
+    if (!companyName.trim()) {
+      setError("Enter your company name.");
+      return false;
+    }
+    return true;
+  }
+
   async function handleSendOtp(e: React.FormEvent) {
     e.preventDefault();
+    setError(null);
     const normalizedPhone = normalizeIndianPhone(phone);
     if (!normalizedPhone) {
       setError("Enter a valid 10-digit Indian mobile number.");
       return;
     }
+    if (!validateProfileFields()) return;
     const ok = await requestOtp(normalizedPhone);
     if (ok) {
       setNormalized(normalizedPhone);
@@ -119,13 +133,15 @@ export function OnboardingForm({
       return;
     }
 
+    if (!validateProfileFields()) return;
+
     setSubmitting(true);
     try {
       await verifyOtp(normalized, code);
       await registerOnboarding({
         phone_number: normalized,
-        name: name.trim() || undefined,
-        factory_name: factoryName.trim() || undefined,
+        name: name.trim(),
+        factory_name: companyName.trim(),
       });
       setStep("ready");
     } catch (err) {
@@ -148,7 +164,7 @@ export function OnboardingForm({
     setOtp("");
     setPhone("");
     setName("");
-    setFactoryName("");
+    setCompanyName("");
     setError(null);
     setDevOtpHint(null);
     setResendCooldown(0);
@@ -175,9 +191,8 @@ export function OnboardingForm({
           <p className="mt-2 text-sm leading-relaxed text-emerald-900/90">
             <span className="font-medium">{formatPhoneDisplay(normalized)}</span>{" "}
             is verified. Open Munshi on WhatsApp and send{" "}
-            <span className="font-mono font-medium">START</span> — bot aapka
-            menu dikhayega (employee, maal, kaam)
-            employees, attendance, and tasks.
+            <span className="font-mono font-medium">START</span> to manage your
+            team, inventory, and tasks.
           </p>
         </div>
 
@@ -231,6 +246,14 @@ export function OnboardingForm({
             We sent a 6-digit code to{" "}
             <span className="font-medium text-zinc-800">
               {formatPhoneDisplay(normalized)}
+            </span>
+            .
+          </p>
+          <p className="mt-2 text-sm text-zinc-500">
+            Registering{" "}
+            <span className="font-medium text-zinc-700">{name.trim()}</span> for{" "}
+            <span className="font-medium text-zinc-700">
+              {companyName.trim()}
             </span>
             .
           </p>
@@ -306,15 +329,13 @@ export function OnboardingForm({
   return (
     <div className="flex w-full max-w-md flex-col gap-8">
       <div>
-        <p className="text-sm font-medium uppercase tracking-wide text-emerald-700">
-          Munshi
-        </p>
-        <h1 className="mt-2 text-3xl font-semibold tracking-tight text-zinc-900">
+        <p className="text-sm font-medium text-emerald-700">Step 1 of 2</p>
+        <h1 className="mt-1 text-3xl font-semibold tracking-tight text-zinc-900">
           Run your business on WhatsApp
         </h1>
         <p className="mt-3 text-base leading-relaxed text-zinc-600">
-          Register your mobile. We&apos;ll verify it by SMS, then connect you to
-          Munshi on WhatsApp for employee management, attendance, and tasks.
+          Add your details and mobile number. We&apos;ll verify by SMS, then
+          connect you to Munshi on WhatsApp for your team, inventory, and tasks.
         </p>
       </div>
 
@@ -341,29 +362,27 @@ export function OnboardingForm({
         </label>
 
         <label className="flex flex-col gap-2">
-          <span className="text-sm font-medium text-zinc-800">
-            Your name <span className="font-normal text-zinc-500">(optional)</span>
-          </span>
+          <span className="text-sm font-medium text-zinc-800">Owner name</span>
           <input
             type="text"
             autoComplete="name"
             placeholder="Anmol Sharma"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            required
             className="min-h-12 rounded-xl border border-zinc-300 px-3 text-base text-zinc-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
           />
         </label>
 
         <label className="flex flex-col gap-2">
-          <span className="text-sm font-medium text-zinc-800">
-            Factory / company name{" "}
-            <span className="font-normal text-zinc-500">(optional)</span>
-          </span>
+          <span className="text-sm font-medium text-zinc-800">Company name</span>
           <input
             type="text"
+            autoComplete="organization"
             placeholder="ABC Textiles"
-            value={factoryName}
-            onChange={(e) => setFactoryName(e.target.value)}
+            value={companyName}
+            onChange={(e) => setCompanyName(e.target.value)}
+            required
             className="min-h-12 rounded-xl border border-zinc-300 px-3 text-base text-zinc-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
           />
         </label>
@@ -376,7 +395,12 @@ export function OnboardingForm({
 
         <button
           type="submit"
-          disabled={submitting}
+          disabled={
+            submitting ||
+            !phone.trim() ||
+            !name.trim() ||
+            !companyName.trim()
+          }
           className="flex h-12 items-center justify-center rounded-xl bg-zinc-900 px-6 text-base font-semibold text-white transition hover:bg-zinc-800 disabled:opacity-60"
         >
           {submitting ? "Sending code…" : "Send verification code"}
