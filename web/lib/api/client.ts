@@ -21,6 +21,41 @@ export class ApiError extends Error {
   }
 }
 
+export async function apiGet<T>(path: string): Promise<T> {
+  const url = `${apiBaseUrl}${path}`;
+  let res: Response;
+
+  try {
+    res = await fetch(url, { method: "GET", cache: "no-store" });
+  } catch {
+    throw new ApiError(
+      `Cannot reach the API at ${apiBaseUrl}. Start Munshi_Updated (port 4001) and check CORS allows http://localhost:3000.`,
+      0,
+    );
+  }
+
+  let json: ApiEnvelope<T>;
+  try {
+    json = (await res.json()) as ApiEnvelope<T>;
+  } catch {
+    throw new ApiError(
+      `API returned a non-JSON response (${res.status}). Is ${apiBaseUrl} the Nest server?`,
+      res.status,
+    );
+  }
+
+  if (!res.ok) {
+    const envelope = json as ApiEnvelope<T>;
+    const msg =
+      envelope.meta?.failures?.message ||
+      envelope.meta?.message ||
+      "Something went wrong";
+    throw new ApiError(msg, res.status);
+  }
+
+  return unwrapApiData<T>(json);
+}
+
 export async function apiPost<T>(path: string, body: unknown): Promise<T> {
   const url = `${apiBaseUrl}${path}`;
   let res: Response;

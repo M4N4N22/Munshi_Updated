@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { ApiError } from "@/lib/api/client";
 import {
+  fetchOnboardingConfig,
   registerOnboarding,
   sendOtp,
   verifyOtp,
@@ -33,6 +34,7 @@ export function OnboardingForm({
   const [submitting, setSubmitting] = useState(false);
   const [devOtpHint, setDevOtpHint] = useState<string | null>(null);
   const [resendCooldown, setResendCooldown] = useState(0);
+  const [otpRequired, setOtpRequired] = useState<boolean | null>(null);
   const publicWa = process.env.NEXT_PUBLIC_WHATSAPP_BUSINESS_NUMBER?.replace(
     /\D/g,
     "",
@@ -40,6 +42,12 @@ export function OnboardingForm({
   const [whatsappReady, setWhatsappReady] = useState(
     whatsappConfigured || !!publicWa,
   );
+
+  useEffect(() => {
+    fetchOnboardingConfig()
+      .then((cfg) => setOtpRequired(cfg.otp_required))
+      .catch(() => setOtpRequired(true));
+  }, []);
 
   useEffect(() => {
     setWhatsappReady(whatsappConfigured || !!publicWa);
@@ -105,7 +113,27 @@ export function OnboardingForm({
     return true;
   }
 
-  async function handleSendOtp(e: React.FormEvent) {
+  async function registerAndContinue(phoneE164: string) {
+    setSubmitting(true);
+    setError(null);
+    try {
+      await registerOnboarding({
+        phone_number: phoneE164,
+        name: name.trim(),
+        factory_name: companyName.trim(),
+      });
+      setNormalized(phoneE164);
+      setStep("ready");
+    } catch (err) {
+      setError(
+        err instanceof ApiError ? err.message : "Could not complete signup.",
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  async function handleContinue(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
     const normalizedPhone = normalizeIndianPhone(phone);
@@ -114,6 +142,12 @@ export function OnboardingForm({
       return;
     }
     if (!validateProfileFields()) return;
+
+    if (otpRequired === false) {
+      await registerAndContinue(normalizedPhone);
+      return;
+    }
+
     const ok = await requestOtp(normalizedPhone);
     if (ok) {
       setNormalized(normalizedPhone);
@@ -170,6 +204,14 @@ export function OnboardingForm({
     setResendCooldown(0);
   }
 
+  if (otpRequired === null) {
+    return (
+      <div className="flex w-full max-w-md flex-col gap-4 py-8">
+        <p className="text-sm text-zinc-500">Loading…</p>
+      </div>
+    );
+  }
+
   if (step === "ready" && normalized) {
     return (
       <div className="flex w-full max-w-md flex-col gap-6">
@@ -183,14 +225,19 @@ export function OnboardingForm({
         )}
         <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-6 text-emerald-950">
           <p className="text-sm font-medium uppercase tracking-wide text-emerald-700">
-            Verified
+            {otpRequired ? "Verified" : "You're set"}
           </p>
           <h2 className="mt-2 text-xl font-semibold">
             Continue on WhatsApp
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-emerald-900/90">
-            <span className="font-medium">{formatPhoneDisplay(normalized)}</span>{" "}
-            is verified. Open Munshi on WhatsApp and send{" "}
+            <span className="font-medium">{formatPhoneDisplay(normalized)}</span>
+            {otpRequired ? " is verified. " : " is registered for "}
+            {!otpRequired && (
+              <span className="font-medium">{companyName.trim()}</span>
+            )}
+            {!otpRequired && ". "}
+            Open Munshi on WhatsApp and send{" "}
             <span className="font-mono font-medium">START</span> to manage your
             team, inventory, and tasks.
           </p>
@@ -326,20 +373,25 @@ export function OnboardingForm({
     );
   }
 
+  const skipOtp = otpRequired === false;
+
   return (
     <div className="flex w-full max-w-md flex-col gap-8">
       <div>
-        <p className="text-sm font-medium text-emerald-700">Step 1 of 2</p>
+        {!skipOtp && (
+          <p className="text-sm font-medium text-emerald-700">Step 1 of 2</p>
+        )}
         <h1 className="mt-1 text-3xl font-semibold tracking-tight text-zinc-900">
           Run your business on WhatsApp
         </h1>
         <p className="mt-3 text-base leading-relaxed text-zinc-600">
-          Add your details and mobile number. We&apos;ll verify by SMS, then
-          connect you to Munshi on WhatsApp for your team, inventory, and tasks.
+          {skipOtp
+            ? "Add your details and we'll set up your account, then connect you to Munshi on WhatsApp for your team, inventory, and tasks."
+            : "Add your details and mobile number. We'll verify by SMS, then connect you to Munshi on WhatsApp for your team, inventory, and tasks."}
         </p>
       </div>
 
-      <form onSubmit={handleSendOtp} className="flex flex-col gap-4">
+      <form onSubmit={handleContinue} className="flex flex-col gap-4">
         <label className="flex flex-col gap-2">
           <span className="text-sm font-medium text-zinc-800">
             Mobile number
@@ -403,7 +455,11 @@ export function OnboardingForm({
           }
           className="flex h-12 items-center justify-center rounded-xl bg-zinc-900 px-6 text-base font-semibold text-white transition hover:bg-zinc-800 disabled:opacity-60"
         >
-          {submitting ? "Sending code…" : "Send verification code"}
+          {submitting
+            ? "Setting up…"
+            : skipOtp
+              ? "Continue to WhatsApp"
+              : "Send verification code"}
         </button>
       </form>
 

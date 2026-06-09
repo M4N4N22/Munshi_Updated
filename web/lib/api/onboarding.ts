@@ -1,4 +1,8 @@
-import { apiPost } from "@/lib/api/client";
+import { apiGet, apiPost } from "@/lib/api/client";
+
+export type OnboardingConfig = {
+  otp_required: boolean;
+};
 
 export type SendOtpResponse = {
   phone_number: string;
@@ -17,6 +21,10 @@ export type RegisterOnboardingResponse = {
   factory_id: number;
   already_registered: boolean;
 };
+
+export function fetchOnboardingConfig() {
+  return apiGet<OnboardingConfig>("/onboarding/config");
+}
 
 export function sendOtp(phone_number: string) {
   return apiPost<SendOtpResponse>("/onboarding/otp/send", { phone_number });
