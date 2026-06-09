@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { GlobalApiAuthGuard } from 'src/core/guards/global-api-auth.guard';
 import { DbModule } from 'src/core/services/db-service/db.module';
 import { HealthCheckModule } from 'src/core/health-check/health.module';
 import { MigrationHealthModule } from 'src/core/migrations/migration-health.module';
@@ -60,6 +61,10 @@ import { AdminOpsModule } from 'src/modules/admin-ops/admin-ops.module';
     AdminOpsModule,
   ],
   providers: [
+    {
+      provide: APP_GUARD,
+      useClass: GlobalApiAuthGuard,
+    },
     {
       provide: APP_FILTER,
       useClass: HttpExceptionFilter,
