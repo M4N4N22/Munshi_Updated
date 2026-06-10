@@ -1,40 +1,33 @@
 import { USER_ROLE } from 'src/services/users/users.constants';
-import { COMMANDS } from './whatsapp.constants';
-import { buildHelpMessages, formatCommandHints } from './whatsapp-help';
-import { COMMAND_HINTS } from './whatsapp.constants';
+import { buildHelpMessages } from './whatsapp-help';
 
 describe('whatsapp-help', () => {
-  describe('formatCommandHints', () => {
-    it('lists commands and omits /help', () => {
-      const text = formatCommandHints(COMMAND_HINTS);
-      expect(text).toContain(`*${COMMANDS.PRESENT}*`);
-      expect(text).not.toContain(COMMANDS.HELP);
-    });
-  });
-
   describe('buildHelpMessages', () => {
-    it('returns one message for workers with daily commands only', () => {
+    it('returns one chat-first message for workers without slash catalog', () => {
       const messages = buildHelpMessages('Ramesh', USER_ROLE.WORKER);
       expect(messages).toHaveLength(1);
-      expect(messages[0]).toContain('Rozmarra');
-      expect(messages[0]).toContain(COMMANDS.PRESENT);
-      expect(messages[0]).not.toContain(COMMANDS.INVENTORY_STATUS);
+      expect(messages[0]).toContain('present');
+      expect(messages[0]).toContain('show my tasks');
+      expect(messages[0]).not.toContain('/assign');
+      expect(messages[0]).not.toContain('ML returns');
     });
 
-    it('returns two messages for owners with inventory section', () => {
+    it('returns two user-facing messages for owners', () => {
       const messages = buildHelpMessages('Priya', USER_ROLE.OWNER);
       expect(messages).toHaveLength(2);
-      expect(messages[0]).toContain('Rozmarra');
-      expect(messages[0]).toContain(COMMANDS.ASSIGN);
+      expect(messages[0]).toContain('hello');
+      expect(messages[0]).toContain('@ram aaj store saaf karega');
+      expect(messages[0]).not.toContain('/depart_assign');
       expect(messages[1]).toContain('Maal aur kharidi');
-      expect(messages[1]).toContain(COMMANDS.INVENTORY_IMPORT_CSV);
-      expect(messages[1]).toContain(COMMANDS.PURCHASE_REQUEST_CREATE);
+      expect(messages[1]).toContain('ink kitna hai');
+      expect(messages[1]).toContain('Employee jodiyein');
     });
 
-    it('returns two messages for managers', () => {
+    it('returns two messages for managers with manager section', () => {
       const messages = buildHelpMessages('Anil', USER_ROLE.MANAGER);
       expect(messages).toHaveLength(2);
-      expect(messages[1]).toContain(COMMANDS.ONBOARD_WORKER);
+      expect(messages[0]).toContain('I will do task 12');
+      expect(messages[1]).toContain('cancel');
     });
   });
 });

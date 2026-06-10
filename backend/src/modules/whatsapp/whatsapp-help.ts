@@ -1,62 +1,5 @@
 import { USER_ROLE } from 'src/services/users/users.constants';
-import { COMMAND_HINTS, COMMANDS } from './whatsapp.constants';
 import { WA_DIVIDER } from './whatsapp.templates';
-
-type CommandHint = (typeof COMMAND_HINTS)[number];
-
-/** All workers can use these. */
-export const WORKER_HELP_COMMANDS = new Set<string>([
-  COMMANDS.PRESENT,
-  COMMANDS.ABSENT,
-  COMMANDS.TASKS,
-  COMMANDS.COMPLETE,
-  COMMANDS.CANCEL,
-  COMMANDS.ISSUE,
-  COMMANDS.ISSUES,
-  COMMANDS.RESOLVE,
-  COMMANDS.MEMEBERS,
-]);
-
-/** Owners / managers — tasks, team, reports (message 1). */
-export const MANAGER_DAILY_EXTRA_COMMANDS = new Set<string>([
-  COMMANDS.ASSIGN,
-  COMMANDS.ASSIGN_DELIVERY,
-  COMMANDS.DEPART_ASSIGN,
-  COMMANDS.MGR_SELF,
-  COMMANDS.MGR_ASSIGN,
-  COMMANDS.MGR_TRANSFER,
-  COMMANDS.MGR_REJECT,
-  COMMANDS.UPDATE,
-  COMMANDS.REPORT,
-]);
-
-/** Owners / managers — inventory & procurement (message 2). */
-export const INVENTORY_PROCUREMENT_COMMANDS = new Set<string>([
-  COMMANDS.INVENTORY_STATUS,
-  COMMANDS.INVENTORY_CREATE,
-  COMMANDS.INVENTORY_IMPORT_CSV,
-  COMMANDS.PURCHASE_REQUEST_CREATE,
-  COMMANDS.ONBOARD_VENDOR,
-  COMMANDS.ONBOARD_WORKER,
-]);
-
-export function formatCommandHints(hints: readonly CommandHint[]): string {
-  return hints
-    .filter((h) => h.command !== COMMANDS.HELP)
-    .map((h) => `• *${h.command}* — ${h.hint}`)
-    .join('\n');
-}
-
-function hintsForCommands(allowed: Set<string>): CommandHint[] {
-  return COMMAND_HINTS.filter((h) => allowed.has(h.command));
-}
-
-function buildHelpSection(title: string, hints: CommandHint[]): string {
-  if (hints.length === 0) {
-    return '';
-  }
-  return `${WA_DIVIDER}\n*${title}*\n${formatCommandHints(hints)}`;
-}
 
 function isManagerOrOwner(role: string | undefined): boolean {
   const r = (role || '').toUpperCase();
@@ -64,41 +7,75 @@ function isManagerOrOwner(role: string | undefined): boolean {
 }
 
 const HELP_FOOTER =
-  'Home menu ke liye *hello*, *namaste*, ya *Home par jayein* likhein.\n' +
-  'Dobara commands: */help* ya *help*.';
+  'Menu: *hello* ya *namaste*\n' + 'Dobara guide: *help*';
 
-/** One message for workers; two for owners/managers (daily + inventory). */
+function buildWorkerHelp(userName: string): string {
+  const name = userName?.trim() || 'ji';
+  return (
+    `👋 Namaste *${name}*,\n\n` +
+    `Main *Munshi* — attendance aur kaam yahin se. Slash likhne ki zaroorat nahi.\n\n` +
+    `${WA_DIVIDER}\n` +
+    `*Rozmarra*\n` +
+    `• Attendance: *present* ya *absent*\n` +
+    `• Apne kaam: *show my tasks*\n` +
+    `• Kaam poora: *complete task 4*\n` +
+    `• Issue batana: *machine band hai*\n` +
+    `• Issues list: *show active issues*\n` +
+    `• Team: *show team*\n\n` +
+    `${WA_DIVIDER}\n` +
+    HELP_FOOTER
+  );
+}
+
+function buildOwnerDailyHelp(userName: string): string {
+  const name = userName?.trim() || 'ji';
+  return (
+    `👋 Namaste *${name}*,\n\n` +
+    `*Munshi* — seedha likh kar kaam karein. Neeche examples hain (slash optional).\n\n` +
+    `${WA_DIVIDER}\n` +
+    `*Shuru*\n` +
+    `• *hello* / *namaste* — home menu (employee, maal, kaam)\n` +
+    `• *help* — ye guide\n\n` +
+    `*Rozmarra*\n` +
+    `• Attendance: *present* / *absent*\n` +
+    `• Apne kaam: *show my tasks*\n` +
+    `• Kaam assign: *@ram aaj store saaf karega*\n` +
+    `• Dept ko kaam: *sales ko aaj figures bhejo*\n` +
+    `• Team: *show team* · *who is absent today*\n` +
+    `• Issue: *machine not working* · *resolve issue 5*\n\n` +
+    `*Manager ke liye* (jab owner ne task bheja ho)\n` +
+    `• *I will do task 12* — khud karunga\n` +
+    `• *@anil will do task 12* — worker ko\n` +
+    `• Galat department: */mgrtransfer 12 purchase*\n` +
+    `• Reject: */mgrreject 12 not our scope*`
+  );
+}
+
+function buildOwnerInventoryHelp(): string {
+  return (
+    `${WA_DIVIDER}\n` +
+    `*Maal aur kharidi*\n` +
+    `• Stock puchho: *ink kitna hai* · *low stock dikhao*\n` +
+    `• Maal jodna: *hello* → *Maal / stock jodein* (ya CSV file bhejein)\n` +
+    `• Employee jodna: *hello* → *Employee jodiyein*\n` +
+    `• Purchase order: *packaging tape order karo* (ya low-stock alert)\n` +
+    `• Vendor / worker onboarding: *hello* se menu\n` +
+    `• Chal raha workflow band: *cancel*\n\n` +
+    `*Advanced (zaroorat ho to)*\n` +
+    `• */report* — attendance report\n` +
+    `• */inventory_import_csv* — phir CSV attach\n\n` +
+    `${WA_DIVIDER}\n` +
+    HELP_FOOTER
+  );
+}
+
+/** One message for workers; two for owners/managers (daily + maal/kharidi). */
 export function buildHelpMessages(
   userName: string,
   role: string | undefined,
 ): string[] {
-  const name = userName?.trim() || 'there';
-  const intro =
-    `👋 Namaste *${name}*,\n\n` +
-    `*Munshi* — neeche registered commands (slash ya natural language).`;
-
   if (!isManagerOrOwner(role)) {
-    const body = buildHelpSection(
-      'Rozmarra — attendance, kaam, issues',
-      hintsForCommands(WORKER_HELP_COMMANDS),
-    );
-    return [`${intro}\n\n${body}\n\n${WA_DIVIDER}\n${HELP_FOOTER}`];
+    return [buildWorkerHelp(userName)];
   }
-
-  const dailyAllowed = new Set([
-    ...WORKER_HELP_COMMANDS,
-    ...MANAGER_DAILY_EXTRA_COMMANDS,
-  ]);
-
-  const message1 = `${intro}\n\n${buildHelpSection(
-    'Rozmarra — attendance, tasks, team',
-    hintsForCommands(dailyAllowed),
-  )}`;
-
-  const message2 = `${buildHelpSection(
-    'Maal aur kharidi — inventory & procurement',
-    hintsForCommands(INVENTORY_PROCUREMENT_COMMANDS),
-  )}\n\n${WA_DIVIDER}\n${HELP_FOOTER}`;
-
-  return [message1, message2];
+  return [buildOwnerDailyHelp(userName), buildOwnerInventoryHelp()];
 }
