@@ -110,7 +110,7 @@ export function waWorkerWelcome(userName: string): string {
     `Main *Munshi* — aapke business ka WhatsApp bot.\n\n` +
     `• Attendance: *present* ya *absent* likhein\n` +
     `• Apne kaam: *show my tasks*\n` +
-    `• Madad: */help*`
+    `• Commands: */help* ya *help*`
   );
 }
 
@@ -124,6 +124,6 @@ export function waNotRegistered(): string {
 export function waOwnerOnlyHome(): string {
   return (
     `Ye menu business malik / manager ke liye hai.\n\n` +
-    `Attendance ke liye *present* ya *absent* likhein. Madad: */help*`
+    `Attendance: *present* ya *absent*. Commands: */help*`
   );
 }

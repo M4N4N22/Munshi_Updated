@@ -14,7 +14,12 @@ import {
 import { IssueService } from 'src/services/issues/issues.service';
 import { USER_ROLE } from 'src/services/users/users.constants';
 import { TasksService } from 'src/services/tasks/tasks.service';
-import { COMMAND_HINTS, COMMANDS, parseDirectSlashCommand } from './whatsapp.constants';
+import {
+  COMMANDS,
+  isHelpRequest,
+  parseDirectSlashCommand,
+} from './whatsapp.constants';
+import { buildHelpMessages } from './whatsapp-help';
 import { FactoryService } from 'src/services/factories/factories.service';
 import axios from 'axios';
 import { Cron, CronExpression } from '@nestjs/schedule';
@@ -43,6 +48,7 @@ import { LowStockAlertContextService } from 'src/services/inventory/low-stock-al
 import {
   waDashboardComingSoon,
   waGoogleFormRetired,
+  waNotRegistered,
 } from 'src/core/messaging/owner-home.templates';
 import { OlliMediaService, type InboundMediaRef } from 'src/core/messaging/olli-media.service';
 import { OwnerHomeService } from './owner-home.service';
@@ -73,7 +79,6 @@ import {
   waErrorOwnersOnlyDepartment,
   waErrorTaskIdRequired,
   waErrorWorkerRequired,
-  waHelpText,
   waSection,
   waIssueReported,
   waIssueResolved,
@@ -313,12 +318,6 @@ export class WhatsAppService {
         return;
     }
   }
-  // export function formatCommandHints(commands: typeof COMMAND_HINTS) {
-  //   return commands
-  //     .map((c) => `${c.command} - ${c.hint}`)
-  //     .join('\n');
-  // }
-
   async sendTemplate(
     to: string,
     templateName: string,
@@ -405,6 +404,10 @@ export class WhatsAppService {
           );
         }
         return 'ok';
+      }
+
+      if (isHelpRequest(msgTrim)) {
+        return finish(await this.deliverHelpCommand(body.from));
       }
 
       if (this.workflowRouter.isCancelCommand(msgTrim)) {
@@ -635,17 +638,7 @@ export class WhatsAppService {
     }
 
     if (command === COMMANDS.HELP) {
-      if (this.isOwnerOrManagerRole(role)) {
-        try {
-          await this.ownerHomeService.sendOwnerHome(phone, (to, o) =>
-            this.sendOutbound(to, o),
-          );
-          return WA_OUTBOUND_ALREADY_SENT;
-        } catch {
-          return waHelpText(user?.name || 'User');
-        }
-      }
-      return waHelpText(user?.name || 'User');
+      return this.deliverHelpCommand(phone, user?.name || 'User', role);
     }
 
     const cmdLc = (command || '').toLowerCase();
@@ -1116,6 +1109,28 @@ export class WhatsAppService {
   private isOwnerOrManagerRole(role: string | undefined): boolean {
     const r = (role || '').toUpperCase();
     return r === USER_ROLE.OWNER || r === USER_ROLE.MANAGER;
+  }
+
+  private async deliverHelpCommand(
+    phone: string,
+    userName?: string,
+    role?: string,
+  ): Promise<typeof WA_OUTBOUND_ALREADY_SENT> {
+    if (userName === undefined || role === undefined) {
+      const user = await this.usersService.findByPhone(phone);
+      if (!user?.id) {
+        await this.sendTextMessage(phone, waNotRegistered());
+        return WA_OUTBOUND_ALREADY_SENT;
+      }
+      userName = user.name || 'User';
+      role = user.factory_links?.role;
+    }
+
+    const messages = buildHelpMessages(userName, role);
+    for (const text of messages) {
+      await this.sendTextMessage(phone, text);
+    }
+    return WA_OUTBOUND_ALREADY_SENT;
   }
 
   private async routeMlFallback(

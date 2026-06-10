@@ -1,4 +1,9 @@
-import { COMMANDS, parseDirectSlashCommand } from './whatsapp.constants';
+import {
+  COMMANDS,
+  isHelpPhrase,
+  isHelpRequest,
+  parseDirectSlashCommand,
+} from './whatsapp.constants';
 
 describe('parseDirectSlashCommand', () => {
   it('recognizes registered slash commands', () => {
@@ -14,5 +19,25 @@ describe('parseDirectSlashCommand', () => {
 
   it('parses command with trailing arguments', () => {
     expect(parseDirectSlashCommand('/complete 42')).toBe(COMMANDS.COMPLETE);
+  });
+});
+
+describe('isHelpPhrase', () => {
+  it('matches plain help and madad phrases', () => {
+    expect(isHelpPhrase('help')).toBe(true);
+    expect(isHelpPhrase('HELP')).toBe(true);
+    expect(isHelpPhrase('madad')).toBe(true);
+    expect(isHelpPhrase('help chahiye')).toBe(true);
+    expect(isHelpPhrase('commands dikhao')).toBe(true);
+    expect(isHelpPhrase('hello')).toBe(false);
+  });
+});
+
+describe('isHelpRequest', () => {
+  it('matches slash and plain help', () => {
+    expect(isHelpRequest('/help')).toBe(true);
+    expect(isHelpRequest('help')).toBe(true);
+    expect(isHelpRequest('madad chahiye')).toBe(true);
+    expect(isHelpRequest('/tasks')).toBe(false);
   });
 });
