@@ -108,3 +108,33 @@ export function parseDirectSlashCommand(message: string): string | null {
   const token = match[1].toLowerCase();
   return KNOWN_SLASH_COMMANDS.has(token) ? token : null;
 }
+
+/** Plain-text help (no slash) — aligned with ML _HELP_RE in bot_engine.py. */
+export function isHelpPhrase(message: string): boolean {
+  const t = message.trim();
+  if (!t || t.length > 80) {
+    return false;
+  }
+  if (/^(help|madad)$/i.test(t)) {
+    return true;
+  }
+  if (/^(help|madad)\s+chahiye$/i.test(t)) {
+    return true;
+  }
+  if (/^commands?\s+dikhao$/i.test(t)) {
+    return true;
+  }
+  if (/^munshi\s+help$/i.test(t)) {
+    return true;
+  }
+  return false;
+}
+
+/** `/help` or natural-language help request. */
+export function isHelpRequest(message: string): boolean {
+  const t = message.trim();
+  if (!t) {
+    return false;
+  }
+  return parseDirectSlashCommand(t) === COMMANDS.HELP || isHelpPhrase(t);
+}

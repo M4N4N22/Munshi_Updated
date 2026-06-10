@@ -10,42 +10,6 @@ export function waSection(title: string, body: string, footer?: string): string 
   return msg;
 }
 
-export function waHelpText(userName: string): string {
-  return (
-    `👋 Hello *${userName || 'there'}*,\n\n` +
-    `Welcome to *Munshi* — attendance, kaam aur issues WhatsApp se.\n\n` +
-    `${WA_DIVIDER}\n` +
-    `*Attendance*\n` +
-    `• "present"\n` +
-    `• "absent"\n\n` +
-    `*Tasks*\n` +
-    `• "show my tasks"\n` +
-    `• "complete task 4"\n` +
-    `• "@anand finish machine repair"\n` +
-    `• "@3 finish machine repair"\n` +
-    `• "@all clean warehouse today"\n` +
-    `• "update task 3 work completed"\n\n` +
-    `*Managers* (after an owner assigns you a task)\n` +
-    `• "I will do task 12" — you handle it\n` +
-    `• "@anil will do task 12" — delegate to a worker\n` +
-    `• "/mgrtransfer 12 sales" — wrong department, send elsewhere\n` +
-    `• "/mgrreject 12 not our scope" — reject with reason (owner notified)\n` +
-    `• Managers can also mark any task in their department done\n\n` +
-    `*Issues*\n` +
-    `• "machine not working"\n` +
-    `• "show active issues"\n` +
-    `• "resolve issue 5"\n\n` +
-    `*Team*\n` +
-    `• "show team"\n` +
-    `• "who is absent today"\n\n` +
-    `${WA_DIVIDER}\n` +
-    `*Owners:* assign to a department with natural language (e.g. assign to sales: today's figures). You can also use @name, @id, or @phone.\n\n` +
-    `💡 Examples:\n` +
-    `• @anand aaj khana bna lena\n` +
-    `• @3 aaj khana bna lena`
-  );
-}
-
 export function waErrorInvalidFormat(
   command: string,
   usage: string,
