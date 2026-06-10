@@ -454,7 +454,7 @@ export class MessagingService {
       `Try:\n` +
       `• "present" — mark attendance\n` +
       `• "show my tasks" — view your tasks\n` +
-      `• /help — full command list\n\n` +
+      `• help — usage guide (what to type)\n\n` +
       `━━━━━━━━━━━━━━━━`
     );
   }
