@@ -12,10 +12,15 @@ import { Public } from 'src/core/guards/public.decorator';
 import { WhatsAppService } from './whatsapp.service';
 import { WhatsAppIncomingDto } from './whatsapp.dto';
 import { parseWhatsAppInbound } from './whatsapp-inbound.parser';
+import { extractWebhookDedupeKey } from './whatsapp-webhook-dedup.extract';
+import { WhatsAppWebhookDedupService } from './whatsapp-webhook-dedup.service';
 
 @Controller('webhook')
 export class WhatsAppController {
-  constructor(private readonly whatsappService: WhatsAppService) {}
+  constructor(
+    private readonly whatsappService: WhatsAppService,
+    private readonly webhookDedup: WhatsAppWebhookDedupService,
+  ) {}
 
   // 🔐 Verification (Meta requirement)
   @Public()
@@ -37,6 +42,27 @@ export class WhatsAppController {
   @Post()
   async receiveMessage(@Body() body: any) {
     console.log({ controller_body: body });
+
+    const dedupeKey = extractWebhookDedupeKey(body);
+    if (dedupeKey) {
+      const data = body?.data as Record<string, unknown> | undefined;
+      const msgType = String(data?.type ?? '').toLowerCase();
+      const eventKind =
+        msgType === 'text'
+          ? 'text'
+          : msgType === 'document' || msgType === 'file' || data?.document || data?.file
+            ? 'document'
+            : 'unknown';
+
+      const shouldProcess = await this.webhookDedup.tryClaim({
+        providerMessageId: dedupeKey,
+        eventKind,
+        fromPhone: typeof data?.from === 'string' ? data.from : undefined,
+      });
+      if (!shouldProcess) {
+        return 'ok';
+      }
+    }
 
     const inbound = parseWhatsAppInbound(body);
     if (!inbound) {

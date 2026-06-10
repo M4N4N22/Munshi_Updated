@@ -55,6 +55,7 @@ import { OwnerHomeService } from './owner-home.service';
 import { TeamBulkImportService } from './team-bulk-import.service';
 import {
   InventoryBulkImportService,
+  WA_INVENTORY_CSV_NO_SESSION,
   WA_INVENTORY_CSV_UNSUPPORTED,
 } from './inventory-bulk-import.service';
 import { WORKFLOW_START_COMMANDS } from 'src/services/workflow/workflow.constants';
@@ -178,14 +179,11 @@ export class WhatsAppService {
         return 'ok';
       }
 
-      if (await this.inventoryBulkImport.canAutoImport(from)) {
-        const summary = await this.inventoryBulkImport.importFromCsvBuffer(
+      if (this.inventoryBulkImport.isCsvDocument(media)) {
+        await this.sendTextMessage(
           from,
-          buffer,
-          media.filename,
-          media.mimeType,
+          waSection('Inventory CSV', WA_INVENTORY_CSV_NO_SESSION),
         );
-        await this.sendTextMessage(from, summary);
         return 'ok';
       }
 
@@ -193,8 +191,7 @@ export class WhatsAppService {
         from,
         waSection(
           'File received',
-          'Inventory CSV import ke liye owner/manager account se *CSV file* bhejein.\n\n' +
-            'Ya pehle */inventory_import_csv* likhein, phir file attach karein.\n\n' +
+          'Inventory CSV import ke liye pehle */inventory_import_csv* likhein, phir file attach karein.\n\n' +
             'Team employee CSV ke liye *Employee jodiyein* → *CSV se bulk add* chuno.',
         ),
       );

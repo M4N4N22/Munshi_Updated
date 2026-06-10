@@ -102,11 +102,15 @@ describe('Phase 1.4 WhatsApp inventory CSV import', () => {
         { sku, name: 'WhatsApp Item', quantity: '3.0000' },
       ]);
 
-      const msg = await bulkImport.importFromCsvBuffer(
+      const reviewMsg = await bulkImport.importFromCsvBuffer(
         fx.ownerPhone,
         Buffer.from(csv, 'utf8'),
         'inventory.csv',
       );
+
+      expect(reviewMsg).toContain('Inventory Import Review');
+
+      const msg = await bulkImport.handleReviewReply(fx.ownerPhone, 'CONFIRM');
 
       expect(msg).toContain('✅ Inventory import complete');
       expect(msg).toContain('Added: 1');
@@ -159,11 +163,13 @@ describe('Phase 1.4 WhatsApp inventory CSV import', () => {
         ]) +
         `\nBAD_${randomUUID().slice(0, 6).toUpperCase()},Bad,Missing Cat,${fx.locationName},pcs,1.0000`;
 
-      const msg = await bulkImport.importFromCsvBuffer(
+      await bulkImport.importFromCsvBuffer(
         fx.ownerPhone,
         Buffer.from(csv, 'utf8'),
         'inventory.csv',
       );
+
+      const msg = await bulkImport.handleReviewReply(fx.ownerPhone, 'CONFIRM');
 
       expect(msg).toContain('Failed: 1');
       expect(msg).toContain('Added: 1');
