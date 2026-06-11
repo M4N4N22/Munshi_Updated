@@ -1,4 +1,4 @@
-export const CONTRACT_VERSION = 'v1';
+export const CONTRACT_VERSION = 'v1.1';
 
 export const DOCUMENT_TYPES = [
   'PURCHASE_INVOICE',
@@ -35,6 +35,7 @@ export const WORKFLOW_TYPES = [
 export const INTENT_TYPES = [
   '/tasks',
   '/assign',
+  '/assign_delivery',
   '/depart_assign',
   '/mgrassign',
   '/mgrself',
@@ -54,10 +55,14 @@ export const INTENT_TYPES = [
   '/onboard_worker',
   '/inventory_create',
   '/inventory_status',
+  '/inventory_import_csv',
   '/purchase_request_create',
+  '/cancel',
+  '/suggestion_approve',
   '/business_discovery',
   '/continue_discovery',
   '/assign_clarify',
+  '/task_inventory_nl',
   'general_chat',
 ] as const;
 

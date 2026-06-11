@@ -8,9 +8,11 @@ import {
 } from 'src/services/workflow/workflow.constants';
 import {
   DOCUMENT_TYPES,
+  INTENT_TYPES,
   SUGGESTION_TYPES,
   WORKFLOW_TYPES,
 } from '../../contracts/typescript/index';
+import { COMMANDS } from 'src/modules/whatsapp/whatsapp.constants';
 
 describe('Shared contract drift detection', () => {
   const contractsRoot = path.join(process.cwd(), 'contracts');
@@ -84,5 +86,40 @@ describe('Shared contract drift detection', () => {
     const intents = readJson('intent-types.json').intents as string[];
     const required = ['/onboard_vendor', '/inventory_status'];
     required.forEach((intent) => expect(intents).toContain(intent));
+  });
+
+  it('intent-types.json is v1.1 with 30 slash intents plus general_chat', () => {
+    const contract = readJson('intent-types.json') as {
+      version: string;
+      intents: string[];
+    };
+    expect(contract.version).toBe('v1.1');
+    const slashIntents = contract.intents.filter((i) => i.startsWith('/'));
+    expect(slashIntents).toHaveLength(30);
+    expect(contract.intents).toContain('general_chat');
+    expect(INTENT_TYPES).toEqual(contract.intents);
+  });
+
+  it('v1.1 gap intents are present in contract', () => {
+    const intents = readJson('intent-types.json').intents as string[];
+    [
+      '/assign_delivery',
+      '/task_inventory_nl',
+      '/inventory_import_csv',
+      '/suggestion_approve',
+      '/cancel',
+    ].forEach((intent) => expect(intents).toContain(intent));
+  });
+
+  it('COMMANDS slash strings are represented in intent contract', () => {
+    const intents = new Set(readJson('intent-types.json').intents as string[]);
+    Object.values(COMMANDS).forEach((command) => {
+      expect(intents.has(command)).toBe(true);
+    });
+  });
+
+  it('discovery_phrases do not include import inventory collision', () => {
+    const phrases = readJson('intent-types.json').discovery_phrases as string[];
+    expect(phrases).not.toContain('import inventory');
   });
 });
