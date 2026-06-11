@@ -259,16 +259,16 @@ describe('Procurement CTA bridge integration', () => {
 
   it('scenario E — expired context returns expiry message', async () => {
     requireDb(dbUp);
-    const { ownerPhone } = await seedLowStockItem('cta-e');
+    const { fx, item, ownerPhone } = await seedLowStockItem('cta-e');
     const expiredAt = new Date(Date.now() - 1000);
     const alertSentAt = new Date(
       expiredAt.getTime() - LOW_STOCK_ALERT_CONTEXT_TTL_MS,
     );
     await dbService.sqlService.LowStockAlertContext.create({
       phone_number: ownerPhone,
-      factory_id: 1,
-      inventory_item_id: 999001,
-      inventory_item_name: 'Expired',
+      factory_id: fx.factoryId,
+      inventory_item_id: item.id,
+      inventory_item_name: item.name,
       alert_sent_at: alertSentAt,
       expires_at: expiredAt,
     });

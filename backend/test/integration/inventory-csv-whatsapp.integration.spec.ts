@@ -94,7 +94,7 @@ describe('Phase 1.4 WhatsApp inventory CSV import', () => {
   }
 
   describe('Scenario 1 — valid CSV document', () => {
-    it('imports items and returns success summary', async () => {
+    it('review then CONFIRM imports items and returns success summary', async () => {
       requireDb(dbUp);
       const fx = await seedFx('wa1');
       const sku = `WA_${randomUUID().slice(0, 8).toUpperCase()}`;
@@ -149,30 +149,37 @@ describe('Phase 1.4 WhatsApp inventory CSV import', () => {
     });
   });
 
-  describe('Scenario 4 — mixed success file', () => {
-    it('returns partial success summary', async () => {
+  describe('Scenario 4 — new category provisioned on CONFIRM', () => {
+    it('imports all rows after auto-creating missing category', async () => {
       requireDb(dbUp);
       const fx = await seedFx('wa4');
+      const okSku = `OK_${randomUUID().slice(0, 6).toUpperCase()}`;
+      const badSku = `BAD_${randomUUID().slice(0, 6).toUpperCase()}`;
       const csv =
         buildCsv(fx.categoryName, fx.locationName, [
           {
-            sku: `OK_${randomUUID().slice(0, 6).toUpperCase()}`,
+            sku: okSku,
             name: 'Good',
             quantity: '1.0000',
           },
         ]) +
-        `\nBAD_${randomUUID().slice(0, 6).toUpperCase()},Bad,Missing Cat,${fx.locationName},pcs,1.0000`;
+        `\n${badSku},Bad,Missing Cat,${fx.locationName},pcs,1.0000`;
 
-      await bulkImport.importFromCsvBuffer(
+      const reviewMsg = await bulkImport.importFromCsvBuffer(
         fx.ownerPhone,
         Buffer.from(csv, 'utf8'),
         'inventory.csv',
       );
 
+      expect(reviewMsg).toContain('Inventory Import Review');
+      expect(reviewMsg).toContain('Missing Cat');
+
       const msg = await bulkImport.handleReviewReply(fx.ownerPhone, 'CONFIRM');
 
-      expect(msg).toContain('Failed: 1');
-      expect(msg).toContain('Added: 1');
+      expect(msg).toContain('Added: 2');
+      expect(msg).toContain('Failed: 0');
+      await inventoryService.findItemBySku(fx.factoryId, okSku);
+      await inventoryService.findItemBySku(fx.factoryId, badSku);
     });
   });
 

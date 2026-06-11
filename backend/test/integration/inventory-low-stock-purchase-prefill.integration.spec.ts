@@ -9,10 +9,8 @@ import { DbService } from 'src/core/services/db-service/db.service';
 import { UserModule } from 'src/services/users/users.module';
 import { InventoryModule } from 'src/services/inventory/inventory.module';
 import { DomainEventsModule } from 'src/services/domain-events/domain-events.module';
-import { DomainEventsService } from 'src/services/domain-events/domain-events.service';
-import { DOMAIN_EVENT_TYPE } from 'src/services/domain-events/domain-events.constants';
-import { InventoryLowStockAlertHandler } from 'src/services/inventory/inventory-low-stock-alert.handler';
 import { MessagingModule } from 'src/core/messaging/messaging.module';
+import { WA_LOW_STOCK_PURCHASE_BUTTON_TITLE } from 'src/core/messaging/inventory-low-stock-outbound';
 import { MessagingService } from 'src/core/messaging/messaging.service';
 import { InventoryService } from 'src/services/inventory/inventory.service';
 import { InventoryTransactionService } from 'src/services/inventory/inventory-transaction.service';
@@ -40,9 +38,7 @@ describe('Phase 3.4 purchase request prefill from low stock', () => {
   let dbService: DbService;
   let inventoryService: InventoryService;
   let inventoryTransactionService: InventoryTransactionService;
-  let domainEventsService: DomainEventsService;
   let messagingService: MessagingService;
-  let alertHandler: InventoryLowStockAlertHandler;
   let workflowRouter: WorkflowRouterService;
   let workflowSessionService: WorkflowSessionService;
   let prefillService: PurchaseRequestPrefillService;
@@ -74,9 +70,7 @@ describe('Phase 3.4 purchase request prefill from low stock', () => {
     dbService = module.get(DbService);
     inventoryService = module.get(InventoryService);
     inventoryTransactionService = module.get(InventoryTransactionService);
-    domainEventsService = module.get(DomainEventsService);
     messagingService = module.get(MessagingService);
-    alertHandler = module.get(InventoryLowStockAlertHandler);
     workflowRouter = module.get(WorkflowRouterService);
     workflowSessionService = module.get(WorkflowSessionService);
     prefillService = module.get(PurchaseRequestPrefillService);
@@ -129,7 +123,7 @@ describe('Phase 3.4 purchase request prefill from low stock', () => {
     requireDb(dbUp);
     const { fx, item } = await seedLowStockItem('pr-prefill-cta');
     const sendSpy = jest
-      .spyOn(messagingService, 'sendText')
+      .spyOn(messagingService, 'sendInteractiveButtons')
       .mockResolvedValue(undefined);
 
     await inventoryTransactionService.recordStockOut({
@@ -139,24 +133,14 @@ describe('Phase 3.4 purchase request prefill from low stock', () => {
       created_by: fx.ownerId,
     });
 
-    const event = await dbService.sqlService.DomainEvent.findOne({
-      where: {
-        event_type: DOMAIN_EVENT_TYPE.INVENTORY_LOW_STOCK,
-        factory_id: fx.factoryId,
-        aggregate_id: String(item.id),
-      },
-      order: [['id', 'DESC']],
-    });
-    expect(event).toBeTruthy();
-    await alertHandler.handle(event!);
+    await new Promise((resolve) => setTimeout(resolve, 100));
 
     expect(sendSpy).toHaveBeenCalled();
-    const alertCall = sendSpy.mock.calls.find(([, msg]) =>
-      String(msg).includes(item.name),
-    );
-    expect(alertCall).toBeDefined();
-    const message = String(alertCall![1]);
-    expect(message).toContain(buildPurchaseRequestCreateCommand(item.id));
+    const [, body, buttons] = sendSpy.mock.calls[0];
+    expect(body).toContain(item.name);
+    expect(body).toContain('Low Stock Alert');
+    expect(buttons[0].id).toBe(buildPurchaseRequestCreateCommand(item.id));
+    expect(buttons[0].title).toBe(WA_LOW_STOCK_PURCHASE_BUTTON_TITLE);
   });
 
   it('2 — prefill item loaded into workflow session', async () => {
