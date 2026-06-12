@@ -20,6 +20,22 @@ export type RegisterOnboardingResponse = {
   user_id: number;
   factory_id: number;
   already_registered: boolean;
+  setup_token: string;
+};
+
+export type OnboardingSetupStatus = {
+  factory_id: number;
+  user_id: number;
+  company_name: string;
+  inventory_status: string;
+  team_status: string;
+  completed: boolean;
+  stock_item_count: number;
+  employee_count: number;
+  zoho_connected: boolean;
+  inventory_template_url: string;
+  team_template_url: string;
+  pending_welcome_count: number;
 };
 
 export function fetchOnboardingConfig() {

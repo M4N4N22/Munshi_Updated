@@ -10,10 +10,16 @@ import {
 } from "@/lib/api/onboarding";
 import { bookDemoUrl, youtubeUrl } from "@/lib/config";
 import { formatPhoneDisplay, normalizeIndianPhone } from "@/lib/phone";
+import {
+  OnboardingInventoryStep,
+  OnboardingReadyStep,
+  OnboardingTeamStep,
+  loadOnboardingSetupSession,
+  saveOnboardingSetupSession,
+  clearOnboardingSetupSession,
+} from "@/components/onboarding/onboarding-setup-steps";
 
-type Step = "phone" | "otp" | "ready";
-
-const WHATSAPP_HREF = "/api/whatsapp?text=START";
+type Step = "phone" | "otp" | "inventory" | "team" | "ready";
 
 type OnboardingFormProps = {
   whatsappConfigured?: boolean;
@@ -35,6 +41,9 @@ export function OnboardingForm({
   const [devOtpHint, setDevOtpHint] = useState<string | null>(null);
   const [resendCooldown, setResendCooldown] = useState(0);
   const [otpRequired, setOtpRequired] = useState<boolean | null>(null);
+  const [setupToken, setSetupToken] = useState<string | null>(null);
+  const [factoryId, setFactoryId] = useState<number | null>(null);
+  const [userId, setUserId] = useState<number | null>(null);
   const publicWa = process.env.NEXT_PUBLIC_WHATSAPP_BUSINESS_NUMBER?.replace(
     /\D/g,
     "",
@@ -47,6 +56,17 @@ export function OnboardingForm({
     fetchOnboardingConfig()
       .then((cfg) => setOtpRequired(cfg.otp_required))
       .catch(() => setOtpRequired(true));
+  }, []);
+
+  useEffect(() => {
+    const saved = loadOnboardingSetupSession();
+    if (!saved?.setupToken) return;
+    setSetupToken(saved.setupToken);
+    setFactoryId(saved.factoryId);
+    setUserId(saved.userId);
+    setNormalized(saved.phone);
+    setCompanyName(saved.companyName);
+    setStep(saved.step);
   }, []);
 
   useEffect(() => {
@@ -113,17 +133,39 @@ export function OnboardingForm({
     return true;
   }
 
+  function beginSetupWizard(
+    phoneE164: string,
+    reg: {
+      setup_token: string;
+      factory_id: number;
+      user_id: number;
+    },
+  ) {
+    setNormalized(phoneE164);
+    setSetupToken(reg.setup_token);
+    setFactoryId(reg.factory_id);
+    setUserId(reg.user_id);
+    setStep("inventory");
+    saveOnboardingSetupSession({
+      setupToken: reg.setup_token,
+      factoryId: reg.factory_id,
+      userId: reg.user_id,
+      phone: phoneE164,
+      companyName: companyName.trim(),
+      step: "inventory",
+    });
+  }
+
   async function registerAndContinue(phoneE164: string) {
     setSubmitting(true);
     setError(null);
     try {
-      await registerOnboarding({
+      const reg = await registerOnboarding({
         phone_number: phoneE164,
         name: name.trim(),
         factory_name: companyName.trim(),
       });
-      setNormalized(phoneE164);
-      setStep("ready");
+      beginSetupWizard(phoneE164, reg);
     } catch (err) {
       setError(
         err instanceof ApiError ? err.message : "Could not complete signup.",
@@ -172,12 +214,12 @@ export function OnboardingForm({
     setSubmitting(true);
     try {
       await verifyOtp(normalized, code);
-      await registerOnboarding({
+      const reg = await registerOnboarding({
         phone_number: normalized,
         name: name.trim(),
         factory_name: companyName.trim(),
       });
-      setStep("ready");
+      beginSetupWizard(normalized, reg);
     } catch (err) {
       setError(
         err instanceof ApiError ? err.message : "Verification failed.",
@@ -193,8 +235,12 @@ export function OnboardingForm({
   }
 
   function resetAll() {
+    clearOnboardingSetupSession();
     setStep("phone");
     setNormalized(null);
+    setSetupToken(null);
+    setFactoryId(null);
+    setUserId(null);
     setOtp("");
     setPhone("");
     setName("");
@@ -204,6 +250,45 @@ export function OnboardingForm({
     setResendCooldown(0);
   }
 
+  function goToTeam() {
+    setStep("team");
+    if (setupToken && factoryId && userId && normalized) {
+      saveOnboardingSetupSession({
+        setupToken,
+        factoryId,
+        userId,
+        phone: normalized,
+        companyName: companyName.trim(),
+        step: "team",
+      });
+    }
+  }
+
+  function goToReady() {
+    setStep("ready");
+    if (setupToken && factoryId && userId && normalized) {
+      saveOnboardingSetupSession({
+        setupToken,
+        factoryId,
+        userId,
+        phone: normalized,
+        companyName: companyName.trim(),
+        step: "ready",
+      });
+    }
+  }
+
+  const setupCtx =
+    setupToken && factoryId && userId && normalized
+      ? {
+          setupToken,
+          factoryId,
+          userId,
+          phone: normalized,
+          companyName: companyName.trim(),
+        }
+      : null;
+
   if (otpRequired === null) {
     return (
       <div className="flex w-full max-w-md flex-col gap-4 py-8">
@@ -212,72 +297,34 @@ export function OnboardingForm({
     );
   }
 
-  if (step === "ready" && normalized) {
+  if (step === "inventory" && setupCtx) {
     return (
-      <div className="flex w-full max-w-md flex-col gap-6">
-        {whatsappConfigMissing && (
-          <p className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
-            WhatsApp link is not configured yet. Add{" "}
-            <code className="font-mono text-xs">WHATSAPP_BUSINESS_NUMBER</code>{" "}
-            to <code className="font-mono text-xs">munshi-web/.env.local</code>{" "}
-            and restart <code className="font-mono text-xs">npm run dev</code>.
-          </p>
-        )}
-        <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-6 text-emerald-950">
-          <p className="text-sm font-medium uppercase tracking-wide text-emerald-700">
-            {otpRequired ? "Verified" : "You're set"}
-          </p>
-          <h2 className="mt-2 text-xl font-semibold">
-            Continue on WhatsApp
-          </h2>
-          <p className="mt-2 text-sm leading-relaxed text-emerald-900/90">
-            <span className="font-medium">{formatPhoneDisplay(normalized)}</span>
-            {otpRequired ? " is verified. " : " is registered for "}
-            {!otpRequired && (
-              <span className="font-medium">{companyName.trim()}</span>
-            )}
-            {!otpRequired && ". "}
-            Open Munshi on WhatsApp and send{" "}
-            <span className="font-mono font-medium">START</span> to manage your
-            team, inventory, and tasks.
-          </p>
-        </div>
+      <OnboardingInventoryStep
+        ctx={setupCtx}
+        onBack={resetAll}
+        onContinue={goToTeam}
+      />
+    );
+  }
 
-        {whatsappReady ? (
-          <a
-            href={WHATSAPP_HREF}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex h-12 items-center justify-center rounded-xl bg-[#25D366] px-6 text-base font-semibold text-white shadow-sm transition hover:bg-[#1da851]"
-          >
-            Open WhatsApp
-          </a>
-        ) : (
-          <div className="flex flex-col gap-3">
-            <p className="rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm text-zinc-700">
-              WhatsApp link not detected. Confirm{" "}
-              <code className="font-mono text-xs">WHATSAPP_BUSINESS_NUMBER</code>{" "}
-              in <code className="font-mono text-xs">.env.local</code>, restart{" "}
-              <code className="font-mono text-xs">npm run dev</code>, then refresh
-              this page.
-            </p>
-            <a
-              href={WHATSAPP_HREF}
-              className="text-center text-sm font-medium text-emerald-700 underline-offset-2 hover:underline"
-            >
-              Try Open WhatsApp anyway
-            </a>
-          </div>
-        )}
+  if (step === "team" && setupCtx) {
+    return (
+      <OnboardingTeamStep
+        ctx={setupCtx}
+        onBack={() => setStep("inventory")}
+        onContinue={goToReady}
+      />
+    );
+  }
 
-        <button
-          type="button"
-          onClick={resetAll}
-          className="text-sm font-medium text-zinc-600 underline-offset-2 hover:text-zinc-900 hover:underline"
-        >
-          Use a different number
-        </button>
-      </div>
+  if (step === "ready" && setupCtx) {
+    return (
+      <OnboardingReadyStep
+        ctx={setupCtx}
+        whatsappReady={whatsappReady}
+        whatsappConfigMissing={whatsappConfigMissing}
+        onReset={resetAll}
+      />
     );
   }
 
@@ -285,7 +332,7 @@ export function OnboardingForm({
     return (
       <div className="flex w-full max-w-md flex-col gap-6">
         <div>
-          <p className="text-sm font-medium text-emerald-700">Step 2 of 2</p>
+          <p className="text-sm font-medium text-emerald-700">Step 1 of 4</p>
           <h2 className="mt-1 text-2xl font-semibold text-zinc-900">
             Enter verification code
           </h2>
@@ -379,15 +426,15 @@ export function OnboardingForm({
     <div className="flex w-full max-w-md flex-col gap-8">
       <div>
         {!skipOtp && (
-          <p className="text-sm font-medium text-emerald-700">Step 1 of 2</p>
+          <p className="text-sm font-medium text-emerald-700">Step 1 of 4</p>
         )}
         <h1 className="mt-1 text-3xl font-semibold tracking-tight text-zinc-900">
           Run your business on WhatsApp
         </h1>
         <p className="mt-3 text-base leading-relaxed text-zinc-600">
           {skipOtp
-            ? "Add your details and we'll set up your account, then connect you to Munshi on WhatsApp for your team, inventory, and tasks."
-            : "Add your details and mobile number. We'll verify by SMS, then connect you to Munshi on WhatsApp for your team, inventory, and tasks."}
+            ? "Add your details, import inventory and team (optional), then open Munshi on WhatsApp."
+            : "Add your details and mobile number. We'll verify by SMS, then help you import data before WhatsApp."}
         </p>
       </div>
 
@@ -458,7 +505,7 @@ export function OnboardingForm({
           {submitting
             ? "Setting up…"
             : skipOtp
-              ? "Continue to WhatsApp"
+              ? "Continue"
               : "Send verification code"}
         </button>
       </form>

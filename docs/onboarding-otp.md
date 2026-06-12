@@ -7,7 +7,14 @@
 | GET | `/onboarding/config` | — returns `{ "otp_required": true \| false }` |
 | POST | `/onboarding/otp/send` | `{ "phone_number": "919876543210" }` |
 | POST | `/onboarding/otp/verify` | `{ "phone_number": "919876543210", "code": "482910" }` |
-| POST | `/onboarding/register` | `{ "phone_number": "919876543210", "name": "...", "factory_name": "..." }` (requires OTP verified) |
+| POST | `/onboarding/register` | `{ "phone_number": "919876543210", "name": "...", "factory_name": "..." }` → returns `setup_token` |
+| GET | `/onboarding/setup/status?setup_token=...` | Setup wizard progress |
+| POST | `/onboarding/setup/inventory/import` | `multipart`: `file`, `setup_token` |
+| POST | `/onboarding/setup/inventory/skip` | `{ "setup_token": "..." }` |
+| POST | `/onboarding/setup/inventory/zoho-complete` | `{ "setup_token": "..." }` (after Zoho OAuth) |
+| POST | `/onboarding/setup/team/import` | `multipart`: `file`, `setup_token` |
+| POST | `/onboarding/setup/team/skip` | `{ "setup_token": "..." }` |
+| POST | `/onboarding/setup/complete` | `{ "setup_token": "...", "notify_employees": true }` — batch WhatsApp welcomes |
 
 ## Environment (API)
 

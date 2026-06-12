@@ -19,6 +19,7 @@ import { UserService } from 'src/services/users/users.service';
 import { USER_ROLE } from 'src/services/users/users.constants';
 import { DepartmentsService } from 'src/services/departments/departments.service';
 import { isOnboardingSkipOtpEnabled } from './onboarding.constants';
+import { OnboardingSetupService } from './onboarding-setup.service';
 
 @Injectable()
 export class OnboardingService {
@@ -29,6 +30,7 @@ export class OnboardingService {
     private readonly usersService: UserService,
     private readonly domainEvents: DomainEventsService,
     private readonly departmentsService: DepartmentsService,
+    private readonly onboardingSetup: OnboardingSetupService,
   ) {}
 
   async sendOtp(dto: SendOtpDto) {
@@ -83,6 +85,7 @@ export class OnboardingService {
     user_id: number;
     factory_id: number;
     already_registered: boolean;
+    setup_token: string;
   }> {
     const phone = dto.phone_number;
 
@@ -109,6 +112,11 @@ export class OnboardingService {
         user_id: existing.id,
         factory_id: factoryLink.factory_id,
         already_registered: true,
+        setup_token: this.onboardingSetup.createSetupToken({
+          factory_id: factoryLink.factory_id,
+          user_id: existing.id,
+          phone,
+        }),
       };
     }
 
@@ -142,7 +150,14 @@ export class OnboardingService {
         link.user_id,
       );
       await this.publishRegisteredEvent(factory.id, link.user_id, phone, false);
-      return result;
+      return {
+        ...result,
+        setup_token: this.onboardingSetup.createSetupToken({
+          factory_id: factory.id,
+          user_id: link.user_id,
+          phone,
+        }),
+      };
     }
 
     const link = await this.factoryService.assignMember({
@@ -163,7 +178,14 @@ export class OnboardingService {
       link.user_id,
     );
     await this.publishRegisteredEvent(factory.id, link.user_id, phone, false);
-    return result;
+    return {
+      ...result,
+      setup_token: this.onboardingSetup.createSetupToken({
+        factory_id: factory.id,
+        user_id: link.user_id,
+        phone,
+      }),
+    };
   }
 
   private async publishRegisteredEvent(
