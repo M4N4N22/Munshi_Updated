@@ -15,6 +15,10 @@ export class Factory extends Model<
   declare id: CreationOptional<number>;
   declare name: string;
   declare address?: string;
+  declare onboarding_inventory_status: CreationOptional<string>;
+  declare onboarding_team_status: CreationOptional<string>;
+  declare onboarding_completed_at?: Date | null;
+  declare onboarding_pending_welcomes: CreationOptional<unknown>;
 
   static setup(sequelize: Sequelize) {
     Factory.init(
@@ -29,6 +33,22 @@ export class Factory extends Model<
           allowNull: false,
         },
         address: DataTypes.STRING,
+        onboarding_inventory_status: {
+          type: DataTypes.STRING(32),
+          allowNull: false,
+          defaultValue: 'pending',
+        },
+        onboarding_team_status: {
+          type: DataTypes.STRING(32),
+          allowNull: false,
+          defaultValue: 'pending',
+        },
+        onboarding_completed_at: DataTypes.DATE,
+        onboarding_pending_welcomes: {
+          type: DataTypes.JSONB,
+          allowNull: false,
+          defaultValue: [],
+        },
       },
       {
         sequelize,

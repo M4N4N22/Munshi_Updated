@@ -105,6 +105,44 @@ export async function apiPost<T>(path: string, body: unknown): Promise<T> {
   return unwrapApiData<T>(json);
 }
 
+export async function apiPostForm<T>(
+  path: string,
+  form: FormData,
+): Promise<T> {
+  const url = `${apiBaseUrl}${path}`;
+  let res: Response;
+
+  try {
+    res = await fetch(url, { method: "POST", body: form });
+  } catch {
+    throw new ApiError(
+      `Cannot reach the API at ${apiBaseUrl}. Start Munshi_Updated (port 4001) and check CORS allows http://localhost:3000.`,
+      0,
+    );
+  }
+
+  let json: ApiEnvelope<T>;
+  try {
+    json = (await res.json()) as ApiEnvelope<T>;
+  } catch {
+    throw new ApiError(
+      `API returned a non-JSON response (${res.status}). Is ${apiBaseUrl} the Nest server?`,
+      res.status,
+    );
+  }
+
+  if (!res.ok) {
+    const envelope = json as ApiEnvelope<T>;
+    const msg =
+      envelope.meta?.failures?.message ||
+      envelope.meta?.message ||
+      "Something went wrong";
+    throw new ApiError(msg, res.status);
+  }
+
+  return unwrapApiData<T>(json);
+}
+
 /** Supports `{ data, meta }` (Nest interceptor) or a raw JSON body. */
 function unwrapApiData<T>(json: ApiEnvelope<T> | T): T {
   if (

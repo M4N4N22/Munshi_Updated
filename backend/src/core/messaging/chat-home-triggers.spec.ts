@@ -18,6 +18,18 @@ describe('isGreetingMessage', () => {
   it('does not match work instructions', () => {
     expect(isGreetingMessage('aaj 4 website banegi')).toBe(false);
     expect(isGreetingMessage('present')).toBe(false);
+    expect(isGreetingMessage('namaste ram ko kaam do')).toBe(false);
+    expect(isGreetingMessage('hello @ram aaj warehouse saaf karo')).toBe(false);
+    expect(isGreetingMessage('hi ram 5 cement deliver karo')).toBe(false);
+    expect(isGreetingMessage('good morning pista order karo')).toBe(false);
+    expect(isGreetingMessage('Pista ka order Jain Brothers ko karwa do, 8 kg')).toBe(
+      false,
+    );
+  });
+
+  it('still matches greeting with optional name', () => {
+    expect(isGreetingMessage('namaste rajesh')).toBe(true);
+    expect(isGreetingMessage('good morning rajesh ji')).toBe(true);
   });
 });
 

@@ -1,0 +1,13 @@
+# Railway config for the NestJS backend service.
+# Dashboard: same project as ML → New Service → Root Directory = backend
+
+[build]
+builder = "NIXPACKS"
+buildCommand = "yarn install --frozen-lockfile && yarn build"
+watchPatterns = ["backend/**"]
+
+[deploy]
+startCommand = "node scripts/docker-entrypoint.mjs"
+healthcheckPath = "/health"
+healthcheckTimeout = 120
+restartPolicyType = "ON_FAILURE"

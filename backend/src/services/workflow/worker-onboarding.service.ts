@@ -11,6 +11,8 @@ export interface OnboardWorkerInput {
   departmentId: number;
   role?: USER_ROLE.WORKER | USER_ROLE.MANAGER;
   doj?: Date | null;
+  /** When false, caller sends welcome later (e.g. web onboarding batch). */
+  sendWelcome?: boolean;
 }
 
 export interface OnboardWorkerResult {
@@ -65,15 +67,21 @@ export class WorkerOnboardingService {
       });
     }
 
-    const welcomeText = this.messagingService.buildWorkerWelcomeText({
-      userName: input.name,
-    });
-    await this.messagingService.sendText(input.phoneNumber, welcomeText);
+    if (input.sendWelcome !== false) {
+      await this.sendWelcome(input.phoneNumber, input.name);
+    }
 
     return {
       userId: link.user_id,
       factoryUserId: link.id,
       departmentId: input.departmentId,
     };
+  }
+
+  async sendWelcome(phoneNumber: string, name: string): Promise<void> {
+    const welcomeText = this.messagingService.buildWorkerWelcomeText({
+      userName: name,
+    });
+    await this.messagingService.sendText(phoneNumber, welcomeText);
   }
 }

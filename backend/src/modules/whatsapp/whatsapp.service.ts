@@ -1187,7 +1187,7 @@ export class WhatsAppService {
     });
   }
 
-  /** general_chat: owners → home menu; workers → short Hindi hints. Returns true if handled. */
+  /** general_chat: ML conversational reply or unrecognized nudge — not owner home menu. */
   private async routeGeneralChat(
     phone: string,
     mlMessage?: string | null,
@@ -1203,9 +1203,12 @@ export class WhatsAppService {
 
     const role = user.factory_links?.role;
     if (this.isOwnerOrManagerRole(role)) {
-      await this.ownerHomeService.sendOwnerHome(phone, (to, o) =>
-        this.sendOutbound(to, o),
-      );
+      const chatMsg = mlMessage?.trim();
+      if (chatMsg) {
+        await this.sendTextMessage(phone, chatMsg);
+      } else {
+        await this.sendOutbound(phone, buildUnrecognizedChatOutbound());
+      }
       return true;
     }
 
