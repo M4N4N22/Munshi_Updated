@@ -18,6 +18,7 @@ import { TeamBulkImportService } from './team-bulk-import.service';
 import { InventoryBulkImportService } from './inventory-bulk-import.service';
 import { OlliMediaService } from 'src/core/messaging/olli-media.service';
 import { WhatsAppWebhookDedupService } from './whatsapp-webhook-dedup.service';
+import { IntentObservabilityModule } from 'src/services/intent-observability/intent-observability.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { WhatsAppWebhookDedupService } from './whatsapp-webhook-dedup.service';
     WorkflowModule,
     InventoryModule,
     TaskInventoryResolutionModule,
+    IntentObservabilityModule,
   ],
   providers: [
     WhatsAppService,

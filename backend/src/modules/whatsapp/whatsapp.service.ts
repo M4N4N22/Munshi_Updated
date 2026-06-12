@@ -70,6 +70,8 @@ import {
 import { TaskInventoryNlOrchestratorService } from 'src/services/task-inventory-resolution/task-inventory-nl.orchestrator';
 import { TASK_INVENTORY_MOVEMENT_TYPE } from 'src/services/tasks/tasks.inventory.constants';
 import { getHourIST, INDIA_TIMEZONE } from 'src/core/time/india-defaults';
+import { IntentObservabilityService } from 'src/services/intent-observability/intent-observability.service';
+import { parseTelemetryBlock } from 'src/services/intent-observability/intent-observability.utils';
 import {
   WA_DIVIDER,
   waDepartmentAssignSent,
@@ -117,6 +119,7 @@ export class WhatsAppService {
     private readonly olliMedia: OlliMediaService,
     private readonly taskInventoryNl: TaskInventoryNlOrchestratorService,
     private readonly lowStockAlertContext: LowStockAlertContextService,
+    private readonly intentObservability: IntentObservabilityService,
   ) {}
 
   async handleIncomingDocument(
@@ -328,6 +331,42 @@ export class WhatsAppService {
   }
   async handleIncomingMessage(body: WhatsAppIncomingDto) {
     console.log({ body });
+    const msgTrimOuter = (body.message || '').trim();
+    const obsSession = this.intentObservability.createSession({
+      phone: body.from,
+      message: msgTrimOuter,
+    });
+
+    return this.intentObservability.runWithSession(obsSession, async () => {
+      try {
+        return await this.handleIncomingMessageInner(body);
+      } catch (error: unknown) {
+        if (error instanceof ForbiddenException) {
+          this.intentObservability.setOutcome(
+            IntentObservabilityService.OUTCOME.ROLE_BLOCK,
+            {
+              roleBlock: true,
+              outcomeDetail:
+                error instanceof Error ? error.message : String(error),
+            },
+          );
+        } else if (!(error instanceof HttpException)) {
+          this.intentObservability.setOutcome(
+            IntentObservabilityService.OUTCOME.HANDLER_ERROR,
+            {
+              outcomeDetail:
+                error instanceof Error ? error.message : String(error),
+            },
+          );
+        }
+        throw error;
+      } finally {
+        this.intentObservability.persistSession();
+      }
+    });
+  }
+
+  private async handleIncomingMessageInner(body: WhatsAppIncomingDto) {
     const finish = async (result: unknown) => {
       const outbound = this.resolveOutboundFromHandlerResult(result);
       if (outbound) {
@@ -345,6 +384,9 @@ export class WhatsAppService {
 
       const interactiveActionId = resolveInteractiveActionId(msgTrim);
       if (interactiveActionId) {
+        this.intentObservability.setInboundPath(
+          IntentObservabilityService.PATH.INTERACTIVE,
+        );
         try {
           if (
             interactiveActionId === WA_INTERACTIVE_ID.HOME_ADD_EMPLOYEE ||
@@ -383,6 +425,9 @@ export class WhatsAppService {
       }
 
       if (isChatHomeTrigger(msgTrim)) {
+        this.intentObservability.setInboundPath(
+          IntentObservabilityService.PATH.OWNER_HOME_TRIGGER,
+        );
         const resumeReminder =
           await this.workflowRouter.buildInProgressWorkerOnboardingReminder(
             body.from,
@@ -404,10 +449,16 @@ export class WhatsAppService {
       }
 
       if (isHelpRequest(msgTrim)) {
+        this.intentObservability.setInboundPath(
+          IntentObservabilityService.PATH.HELP,
+        );
         return finish(await this.deliverHelpCommand(body.from));
       }
 
       if (this.workflowRouter.isCancelCommand(msgTrim)) {
+        this.intentObservability.setInboundPath(
+          IntentObservabilityService.PATH.CANCEL,
+        );
         this.teamBulkImport.cancelAwaiting(body.from);
         this.inventoryBulkImport.cancelAwaiting(body.from);
         const cancelResult = await this.workflowRouter.cancelWorkflow(
@@ -417,6 +468,9 @@ export class WhatsAppService {
       }
 
       if (this.inventoryBulkImport.isAwaitingImportConfirm(body.from)) {
+        this.intentObservability.setInboundPath(
+          IntentObservabilityService.PATH.CSV_AWAITING,
+        );
         const reviewReply = await this.inventoryBulkImport.handleReviewReply(
           body.from,
           msgTrim,
@@ -428,6 +482,9 @@ export class WhatsAppService {
       }
 
       if (this.inventoryBulkImport.isAwaitingCsv(body.from)) {
+        this.intentObservability.setInboundPath(
+          IntentObservabilityService.PATH.CSV_AWAITING,
+        );
         await this.sendTextMessage(
           body.from,
           waSection(
@@ -440,6 +497,9 @@ export class WhatsAppService {
       }
 
       if (this.teamBulkImport.isAwaitingCsv(body.from)) {
+        this.intentObservability.setInboundPath(
+          IntentObservabilityService.PATH.CSV_AWAITING,
+        );
         await this.sendTextMessage(
           body.from,
           waSection(
@@ -457,8 +517,14 @@ export class WhatsAppService {
       if (sessionState.expiredJustNow) {
         return finish(this.workflowRouter.getExpiredSessionMessage());
       } else if (sessionState.session) {
+        this.intentObservability.setInboundPath(
+          IntentObservabilityService.PATH.WORKFLOW_SESSION,
+        );
         const directSlash = parseDirectSlashCommand(msgTrim);
         if (directSlash) {
+          this.intentObservability.setInboundPath(
+            IntentObservabilityService.PATH.DIRECT_SLASH,
+          );
           const slashResult = await this.processCommand({
             ...body,
             message: msgTrim,
@@ -483,6 +549,9 @@ export class WhatsAppService {
 
       let result: any;
       if (slashBypass) {
+        this.intentObservability.setInboundPath(
+          IntentObservabilityService.PATH.DIRECT_SLASH,
+        );
         const command = `/${slashBypass[1].toLowerCase()}`;
         result = await this.processCommand({
           ...body,
@@ -492,17 +561,34 @@ export class WhatsAppService {
           date: undefined,
         });
       } else if (workflowStartCmd || isPurchaseRequestWorkflowCommand(msgTrim)) {
+        this.intentObservability.setInboundPath(
+          IntentObservabilityService.PATH.WORKFLOW_START,
+        );
         result = await this.workflowRouter.startWorkflowFromCommand(
           body.from,
           msgTrim,
         );
+        this.intentObservability.setOutcome(
+          IntentObservabilityService.OUTCOME.WORKFLOW_STARTED,
+          { workflowStarted: true, commandExecuted: workflowStartCmd ?? msgTrim },
+        );
       } else if (isLowStockPurchaseCtaTitle(msgTrim)) {
+        this.intentObservability.setInboundPath(
+          IntentObservabilityService.PATH.LOW_STOCK_CTA,
+        );
         const ctaResolution =
           await this.lowStockAlertContext.resolveCtaTitle(body.from);
         if (ctaResolution.kind === 'command') {
           result = await this.workflowRouter.startWorkflowFromCommand(
             body.from,
             ctaResolution.command,
+          );
+          this.intentObservability.setOutcome(
+            IntentObservabilityService.OUTCOME.WORKFLOW_STARTED,
+            {
+              workflowStarted: true,
+              commandExecuted: ctaResolution.command,
+            },
           );
         } else {
           return finish(ctaResolution.message);
@@ -515,9 +601,16 @@ export class WhatsAppService {
             )
           : null;
         if (disambiguationCommand) {
+          this.intentObservability.setInboundPath(
+            IntentObservabilityService.PATH.DISAMBIGUATION_PICK,
+          );
           result = await this.workflowRouter.startWorkflowFromCommand(
             body.from,
             disambiguationCommand,
+          );
+          this.intentObservability.setOutcome(
+            IntentObservabilityService.OUTCOME.WORKFLOW_STARTED,
+            { workflowStarted: true, commandExecuted: disambiguationCommand },
           );
         } else if (!msgTrim.startsWith('/')) {
           const nlTaskResult = await this.taskInventoryNl.tryHandleFreeText(
@@ -525,10 +618,19 @@ export class WhatsAppService {
             msgTrim,
           );
           if (nlTaskResult !== null) {
+            this.intentObservability.setInboundPath(
+              IntentObservabilityService.PATH.NL_TASK_INVENTORY,
+            );
+            this.intentObservability.setOutcome(
+              IntentObservabilityService.OUTCOME.SUCCESS,
+            );
             return finish(nlTaskResult);
           }
           const directSlash = parseDirectSlashCommand(msgTrim);
           if (directSlash) {
+            this.intentObservability.setInboundPath(
+              IntentObservabilityService.PATH.DIRECT_SLASH,
+            );
             result = await this.processCommand({
               ...body,
               message: msgTrim,
@@ -540,6 +642,9 @@ export class WhatsAppService {
         } else {
           const directSlash = parseDirectSlashCommand(msgTrim);
           if (directSlash) {
+            this.intentObservability.setInboundPath(
+              IntentObservabilityService.PATH.DIRECT_SLASH,
+            );
             result = await this.processCommand({
               ...body,
               message: msgTrim,
@@ -623,6 +728,20 @@ export class WhatsAppService {
 
     if (!factoryId)
       throw new NotFoundException('User not assigned to any factory');
+
+    this.intentObservability.setUserContext({
+      factoryId,
+      userId: user.id,
+      userRole: role,
+    });
+    this.intentObservability.recordClassification({
+      commandExecuted: command,
+      predictedIntent: command,
+      workerSlug: body.worker_slug ?? null,
+      departSlug: body.depart_slug ?? null,
+      taskId: id ?? null,
+      deadline: body.deadline ?? null,
+    });
 
     // 🟢 Attendance
     //
@@ -1134,18 +1253,45 @@ export class WhatsAppService {
     body: WhatsAppIncomingDto,
     msgTrim: string,
   ): Promise<unknown> {
+    this.intentObservability.setInboundPath(
+      IntentObservabilityService.PATH.ML_FALLBACK,
+    );
     const ml_url = process.env.ML_URL || `http://localhost:8000`;
+    const classifyStart = Date.now();
 
     const response = await axios.post(
       `${ml_url}/classify?message=${encodeURIComponent(body.message)}`,
     );
 
     const ml = this.parseMlClassifyResponse(response.data);
+    const telemetry = parseTelemetryBlock(response.data);
+    const latencyMs = telemetry?.latency_ms ?? Date.now() - classifyStart;
     console.log('ml-classify', ml);
+
+    this.intentObservability.recordClassification({
+      predictedIntent: ml.intent ?? null,
+      classificationStage: telemetry?.classification_stage ?? null,
+      llmInvoked: telemetry?.llm_invoked ?? false,
+      llmRawIntent: telemetry?.llm_raw_intent ?? null,
+      postRuleApplied: telemetry?.post_rule_applied ?? [],
+      latencyMs,
+      workerSlug: ml.worker_slug ?? null,
+      departSlug: ml.depart_slug ?? null,
+      taskId: ml.id != null && Number.isFinite(Number(ml.id)) ? Number(ml.id) : null,
+      taskDescription: ml.task_description ?? null,
+      deadline: ml.deadline ?? null,
+    });
 
     const intentLc = (ml.intent || '').toLowerCase();
     if (intentLc === 'general_chat') {
       await this.routeGeneralChat(body.from, ml.message);
+      this.intentObservability.recordClassification({
+        predictedIntent: 'general_chat',
+      });
+      this.intentObservability.setOutcome(
+        IntentObservabilityService.OUTCOME.GENERAL_CHAT_ROUTED,
+        { isGeneralChat: true },
+      );
       return WA_OUTBOUND_ALREADY_SENT;
     }
 
@@ -1167,6 +1313,13 @@ export class WhatsAppService {
       }));
 
     if (workflowStarted !== null) {
+      this.intentObservability.setOutcome(
+        IntentObservabilityService.OUTCOME.WORKFLOW_STARTED,
+        {
+          workflowStarted: true,
+          commandExecuted: command ?? ml.intent ?? null,
+        },
+      );
       return workflowStarted;
     }
 

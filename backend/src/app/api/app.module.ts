@@ -27,6 +27,7 @@ import { DomainEventsModule } from 'src/services/domain-events/domain-events.mod
 import { IntegrationModule } from 'src/services/integrations/integration.module';
 import { TaskInventoryResolutionModule } from 'src/services/task-inventory-resolution/task-inventory-resolution.module';
 import { AdminOpsModule } from 'src/modules/admin-ops/admin-ops.module';
+import { IntentObservabilityModule } from 'src/services/intent-observability/intent-observability.module';
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { AdminOpsModule } from 'src/modules/admin-ops/admin-ops.module';
     IntegrationModule,
     TaskInventoryResolutionModule,
     AdminOpsModule,
+    IntentObservabilityModule,
   ],
   providers: [
     {
