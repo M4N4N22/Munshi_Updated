@@ -52,6 +52,10 @@ const GREETING_EXACT = new Set(
 const GREETING_START_RE =
   /^(hi+|hey+|hello+|namast[eey]?|namasye|namskar|namaskar|नमस्ते|नमस्कार|good\s+(morning|afternoon|evening|night)|ram\s+ram)\b/i;
 
+/** Verbs, entities, and quantities that indicate a work instruction — not a hello. */
+const WORK_INSTRUCTION_RE =
+  /(@\w+|\b(ko|karo|karega|karein|karwa|karwado|karna|karni|assign|deliver|order|stock|maal|inventory|task|kaam|website|warehouse|banegi|banani|banega|jodiyein|jodein|import|csv|purchase|vendor|bhejo|bolo|bolna|present|absent|attend|attendance|karwa\s*do|kar\s*do)\b|\d+\s*(kg|kgs|ltr|litre|liter|piece|pcs|unit)s?\b)/i;
+
 function normalizeGreetingInput(message: string): string {
   return message
     .trim()
@@ -60,6 +64,14 @@ function normalizeGreetingInput(message: string): string {
     .replace(/\s+/g, ' ')
     .replace(/[!.,?…🙏]+$/g, '')
     .trim();
+}
+
+function looksLikeWorkInstruction(normalized: string): boolean {
+  if (WORK_INSTRUCTION_RE.test(normalized)) {
+    return true;
+  }
+  const words = normalized.split(/\s+/).filter(Boolean);
+  return words.length > 5;
 }
 
 /**
@@ -77,12 +89,29 @@ export function isGreetingMessage(message: string): boolean {
     return false;
   }
 
+  if (looksLikeWorkInstruction(lower)) {
+    return false;
+  }
+
   if (GREETING_EXACT.has(lower)) {
     return true;
   }
 
   if (GREETING_START_RE.test(lower)) {
-    return true;
+    const withoutGreeting = lower
+      .replace(GREETING_START_RE, '')
+      .trim()
+      .replace(/^(ji|🙏)+\s*/i, '')
+      .trim();
+    if (!withoutGreeting) {
+      return true;
+    }
+    // "namaste rajesh" / "good morning ji" — still a hello, not a task.
+    const tailWords = withoutGreeting.split(/\s+/).filter(Boolean);
+    if (tailWords.length <= 2 && !WORK_INSTRUCTION_RE.test(withoutGreeting)) {
+      return true;
+    }
+    return false;
   }
 
   return false;
