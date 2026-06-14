@@ -14,7 +14,7 @@ function LoadingState({
   label,
   size = "md",
   className,
-  minHeight,
+  minHeight = "min-h-[10rem]",
   variant = "default",
 }: LoadingStateProps) {
   return (
@@ -23,16 +23,16 @@ function LoadingState({
       aria-live="polite"
       aria-busy="true"
       className={cn(
-        "flex w-full flex-col items-center justify-center gap-3",
+        "flex w-full flex-col items-center justify-center gap-3 text-center",
         minHeight,
         className,
       )}
     >
-      <Spinner size={size} variant={variant} />
+      <Spinner size={size} variant={variant} className="mx-auto" />
       {label ? (
         <p
           className={cn(
-            "text-sm",
+            "mx-auto text-sm",
             variant === "onDark" ? "text-zinc-400" : "text-zinc-500",
           )}
         >

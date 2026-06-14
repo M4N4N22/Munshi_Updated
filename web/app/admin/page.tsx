@@ -506,7 +506,7 @@ export default function AdminPage() {
             )}
 
             {loading ? (
-              <LoadingState className="py-20" variant="onDark" size="lg" />
+              <LoadingState className="py-20" variant="onDark" size="lg" minHeight="min-h-[12rem]" />
             ) : filtered.length === 0 ? (
               <div className="text-center py-20 text-gray-500">
                 {leads.length === 0

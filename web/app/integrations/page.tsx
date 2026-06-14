@@ -81,8 +81,8 @@ export default function IntegrationsPage() {
   return (
     <Suspense
       fallback={
-        <div className="flex min-h-screen items-center justify-center bg-[#0f1a14]">
-          <LoadingState variant="onDark" size="lg" />
+        <div className="flex min-h-screen w-full items-center justify-center bg-[#0f1a14]">
+          <LoadingState variant="onDark" size="lg" minHeight="min-h-0" />
         </div>
       }
     >

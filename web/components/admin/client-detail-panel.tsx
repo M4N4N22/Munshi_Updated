@@ -89,8 +89,7 @@ export function ClientDetailPanel({
   if (loading) {
     return (
       <LoadingState
-        className="min-h-[320px] rounded-2xl border border-zinc-200 bg-white p-8"
-        minHeight="min-h-[320px]"
+        className="min-h-[320px] w-full rounded-2xl border border-zinc-200 bg-white"
       />
     );
   }

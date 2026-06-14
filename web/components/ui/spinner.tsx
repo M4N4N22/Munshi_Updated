@@ -25,11 +25,11 @@ function Spinner({
       role="status"
       aria-label="Loading"
       className={cn(
-        "animate-spin rounded-full",
+        "box-border shrink-0 animate-spin rounded-full border-solid border-transparent",
         SPINNER_SIZES[size],
         variant === "onDark"
-          ? "border-white/15 border-t-emerald-400"
-          : "border-zinc-200 border-t-emerald-600",
+          ? "border-t-emerald-400"
+          : "border-t-emerald-600",
         className,
       )}
     />

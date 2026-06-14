@@ -245,7 +245,7 @@ export default function AdminClientsPage() {
 
           <div className="max-h-[min(70vh,640px)] overflow-y-auto rounded-2xl border border-zinc-200 bg-white">
             {loading && !data ? (
-              <LoadingState className="py-12" size="sm" />
+              <LoadingState className="py-12" size="sm" minHeight="min-h-[8rem]" />
             ) : filtered.length === 0 ? (
               <p className="px-4 py-12 text-center text-sm text-zinc-500">
                 No clients found.

@@ -293,7 +293,7 @@ export function OnboardingForm({
 
   if (otpRequired === null) {
     return (
-      <LoadingState className="max-w-md py-16" minHeight="min-h-[12rem]" />
+      <LoadingState className="min-h-[40vh] w-full" size="md" />
     );
   }
 

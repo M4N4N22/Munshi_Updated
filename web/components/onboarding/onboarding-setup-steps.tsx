@@ -193,7 +193,7 @@ export function OnboardingInventoryStep({
   if (!status && !error) {
     return (
       <StepShell step={2} total={4} title="Add your inventory" wide>
-        <LoadingState className="py-16" minHeight="min-h-[10rem]" />
+        <LoadingState className="min-h-[24vh] w-full" />
       </StepShell>
     );
   }
@@ -266,7 +266,11 @@ export function OnboardingInventoryStep({
             </label>
 
             {previewing && (
-              <LoadingState className="py-6" size="sm" label="Reading CSV…" />
+              <LoadingState
+                className="min-h-[8rem] w-full rounded-xl border border-zinc-100 bg-zinc-50/80"
+                size="sm"
+                label="Reading CSV…"
+              />
             )}
 
             {preview && !previewing && (
@@ -452,7 +456,7 @@ export function OnboardingTeamStep({
   if (!status && !error) {
     return (
       <StepShell step={3} total={4} title="Add your team">
-        <LoadingState className="py-16" minHeight="min-h-[10rem]" />
+        <LoadingState className="min-h-[24vh] w-full" />
       </StepShell>
     );
   }
