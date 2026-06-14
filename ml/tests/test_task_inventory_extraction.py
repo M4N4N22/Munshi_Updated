@@ -102,6 +102,22 @@ def test_mention_assignee_with_item_name():
     assert result["task_kind"] == "delivery"
 
 
+def test_name_before_item_without_ko():
+    result = _extract("vikram test item 1 bhejo")
+    assert result["assignee_hint"] == "Vikram"
+    assert result["item_name_or_sku"] == "test item 1"
+    assert result["quantity"] is None
+    assert result["task_kind"] == "delivery"
+
+
+def test_jana_hai_aaj_delivery():
+    result = _extract("vikram test item 1 jana hai aaj")
+    assert result["assignee_hint"] == "Vikram"
+    assert result["item_name_or_sku"] == "test item 1"
+    assert result["quantity"] is None
+    assert result["task_kind"] == "delivery"
+
+
 def test_contract_always_has_four_keys():
     result = _extract("")
     assert set(result.keys()) == {

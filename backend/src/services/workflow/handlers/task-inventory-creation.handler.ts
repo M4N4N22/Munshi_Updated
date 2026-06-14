@@ -17,6 +17,7 @@ import { TaskInventoryCreationService } from 'src/services/task-inventory-resolu
 import {
   isCancelReply,
   isConfirmReply,
+  parseQuantityReply,
   parseSelectionIndex,
   taskKindRequiresInventory,
 } from 'src/services/task-inventory-resolution/task-inventory-nl.helper';
@@ -54,6 +55,10 @@ export class TaskInventoryCreationWorkflowHandler implements IWorkflowHandler {
 
     if (step === TASK_INVENTORY_CREATION_STEP.WAITING_WORKER_SELECTION) {
       return this.handleWorkerSelection(session, message, data, context);
+    }
+
+    if (step === TASK_INVENTORY_CREATION_STEP.WAITING_QUANTITY) {
+      return this.handleQuantity(session, message, data, context);
     }
 
     if (isCancelReply(message)) {
@@ -129,6 +134,63 @@ export class TaskInventoryCreationWorkflowHandler implements IWorkflowHandler {
       };
     }
 
+    return this.promptAfterInventoryAndWorkerResolved(data);
+  }
+
+  private promptAfterInventoryAndWorkerResolved(
+    data: ITaskInventoryCreationSessionData,
+  ): WorkflowStepResult {
+    if (
+      taskKindRequiresInventory(data.task_kind ?? null) &&
+      data.quantity == null
+    ) {
+      return {
+        message: this.confirmationService.buildQuantityPrompt({
+          workerName: data.worker_name,
+          itemName: data.inventory_name,
+        }),
+        nextStep: TASK_INVENTORY_CREATION_STEP.WAITING_QUANTITY,
+        sessionData: data as Record<string, unknown>,
+      };
+    }
+
+    return {
+      message: this.confirmationService.buildConfirmationMessage(
+        this.toResolvedIntent(data),
+      ),
+      nextStep: TASK_INVENTORY_CREATION_STEP.WAITING_CONFIRMATION,
+      sessionData: data as Record<string, unknown>,
+    };
+  }
+
+  private async handleQuantity(
+    session: IWorkflowSessionRecord,
+    message: string,
+    data: ITaskInventoryCreationSessionData,
+    _context: WorkflowUserContext,
+  ): Promise<WorkflowStepResult> {
+    if (isCancelReply(message)) {
+      return {
+        message: waSection(
+          'Cancelled',
+          'Task creation cancelled. Send a new message anytime.',
+        ),
+        cancelled: true,
+        sessionData: data as Record<string, unknown>,
+      };
+    }
+
+    const quantity = parseQuantityReply(message);
+    if (quantity == null) {
+      return {
+        message: this.confirmationService.buildInvalidQuantityMessage(),
+        nextStep: TASK_INVENTORY_CREATION_STEP.WAITING_QUANTITY,
+        sessionData: data as Record<string, unknown>,
+      };
+    }
+
+    data.quantity = quantity;
+
     return {
       message: this.confirmationService.buildConfirmationMessage(
         this.toResolvedIntent(data),
@@ -185,13 +247,7 @@ export class TaskInventoryCreationWorkflowHandler implements IWorkflowHandler {
       };
     }
 
-    return {
-      message: this.confirmationService.buildConfirmationMessage(
-        this.toResolvedIntent(data),
-      ),
-      nextStep: TASK_INVENTORY_CREATION_STEP.WAITING_CONFIRMATION,
-      sessionData: data as Record<string, unknown>,
-    };
+    return this.promptAfterInventoryAndWorkerResolved(data);
   }
 
   private async handleConfirmation(

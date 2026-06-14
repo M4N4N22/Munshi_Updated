@@ -130,29 +130,4 @@ describe('TaskInventoryResolutionService', () => {
     expect(result.worker.status).toBe('not_found');
     expect(result.disambiguation).toEqual([]);
   });
-
-  it('defaults quantity to 1 when delivery has resolved worker and inventory', async () => {
-    inventoryResolver.resolve.mockResolvedValue({
-      status: 'resolved',
-      item_id: 123,
-      sku: 'TEST_ITEM_01',
-      name: 'Test item 1',
-      match_type: 'exact_sku',
-    });
-    workerResolver.resolve.mockResolvedValue({
-      status: 'resolved',
-      user_id: 456,
-      name: 'Vikram Shah',
-      match_type: 'partial',
-    });
-
-    const result = await service.resolveIntent(1, {
-      item_name_or_sku: 'TEST_ITEM_01',
-      quantity: null,
-      assignee_hint: 'Vikram',
-      task_kind: 'delivery',
-    });
-
-    expect(result.quantity).toBe(1);
-  });
 });

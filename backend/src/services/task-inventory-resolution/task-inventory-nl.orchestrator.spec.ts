@@ -202,4 +202,37 @@ describe('TaskInventoryNlOrchestratorService', () => {
     expect(bootstrap.sessionData.inventory_item_id).toBe(18);
     expect(bootstrap.sessionData.worker_candidates).toHaveLength(2);
   });
+
+  it('builds quantity prompt when worker and inventory resolve without quantity', () => {
+    const bootstrap = service.buildBootstrap(
+      {
+        task_kind: 'delivery',
+        quantity: null,
+        inventory: {
+          status: 'resolved',
+          item_id: 18,
+          sku: 'TEST_ITEM_01',
+          name: 'Test item 1',
+        },
+        worker: {
+          status: 'resolved',
+          user_id: 39,
+          name: 'Vikram Shah',
+        },
+        disambiguation: [],
+      },
+      'vikram test item 1 bhejo',
+      {
+        userId: 37,
+        factoryId: 5,
+        role: 'OWNER',
+        phone: '919900000001',
+      },
+    );
+
+    expect(bootstrap.step).toBe(
+      TASK_INVENTORY_CREATION_STEP.WAITING_QUANTITY,
+    );
+    expect(bootstrap.prompt).toContain('Quantity');
+  });
 });

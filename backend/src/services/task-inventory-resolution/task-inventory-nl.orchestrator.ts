@@ -145,6 +145,22 @@ export class TaskInventoryNlOrchestratorService {
       };
     }
 
+    if (
+      taskKindRequiresInventory(resolved.task_kind) &&
+      resolved.quantity == null &&
+      resolved.inventory.status === 'resolved' &&
+      resolved.worker.status === 'resolved'
+    ) {
+      return {
+        step: TASK_INVENTORY_CREATION_STEP.WAITING_QUANTITY,
+        sessionData,
+        prompt: this.confirmationService.buildQuantityPrompt({
+          workerName: resolved.worker.name,
+          itemName: resolved.inventory.name,
+        }),
+      };
+    }
+
     return {
       step: TASK_INVENTORY_CREATION_STEP.WAITING_CONFIRMATION,
       sessionData,
@@ -173,16 +189,6 @@ export class TaskInventoryNlOrchestratorService {
     ) {
       return this.confirmationService.buildUnresolvedWorkerMessage(
         extraction.assignee_hint,
-      );
-    }
-
-    if (
-      taskKindRequiresInventory(resolved.task_kind) &&
-      resolved.quantity == null
-    ) {
-      return this.confirmationService.buildRecoveryMessage(
-        'Quantity required',
-        'Quantity likhein, jaise: *Vikram ko 1 TEST_ITEM_01 bhejo* ya *Ram ko 20 cement deliver kar do*.',
       );
     }
 

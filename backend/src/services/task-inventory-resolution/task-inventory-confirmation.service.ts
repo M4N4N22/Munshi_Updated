@@ -98,6 +98,35 @@ export class TaskInventoryConfirmationService {
     );
   }
 
+  buildQuantityPrompt(params: {
+    workerName?: string | null;
+    itemName?: string | null;
+  }): string {
+    const bits: string[] = [];
+    if (params.workerName) {
+      bits.push(`*${params.workerName}* ko`);
+    }
+    if (params.itemName) {
+      bits.push(`*${params.itemName}*`);
+    }
+    const summary = bits.length ? bits.join(' ') + ' ke liye' : 'Is task ke liye';
+
+    return waSection(
+      'Quantity chahiye',
+      `${summary} kitni quantity bhejni hai?\n\n` +
+        'Number likhein — jaise *1*, *5*, ya *20*.\n' +
+        'Cancel ke liye *CANCEL* likhein.',
+    );
+  }
+
+  buildInvalidQuantityMessage(): string {
+    return waSection(
+      'Invalid quantity',
+      'Sahi positive number likhein — jaise *1* ya *10*.\n' +
+        'Cancel ke liye *CANCEL* likhein.',
+    );
+  }
+
   buildTaskCreatedMessage(params: {
     taskId: number;
     workerName: string;

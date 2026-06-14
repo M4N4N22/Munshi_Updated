@@ -25,6 +25,13 @@ _NAME_BEFORE_SKU_RE = re.compile(
 
 _ITEM_NUMBER_RE = re.compile(r"\bitem\s+(\d+)\b", re.IGNORECASE)
 
+_ITEM_LABEL_RE = re.compile(r"\b((?:test\s+)?item\s+\d+)\b", re.IGNORECASE)
+
+_NAME_LEADING_RE = re.compile(
+    r"^(?:@\s*)?(?P<name>[A-Za-z]+)\s+(?P<rest>.+)$",
+    re.IGNORECASE,
+)
+
 _ASSIGNEE_EXCLUDE = frozenset(
     {
         "aaj",
@@ -57,7 +64,9 @@ _INVENTORY_COUNT_RE = re.compile(
 )
 
 _DELIVERY_RE = re.compile(
-    r"\b(deliver|delivery|bhej|bhejo|bhejdo|dispatch|pahuncha|supply)\b",
+    r"\b(deliver|delivery|bhej|bhejo|bhejdo|dispatch|pahuncha|supply|"
+    r"jana\s+hai|jaana\s+hai|jan[ae]\s+hai|"
+    r"maal\s+jana|maal\s+jaana|maal\s+jaye)\b",
     re.IGNORECASE,
 )
 
@@ -73,7 +82,8 @@ _UNIT_SUFFIX_RE = re.compile(
 
 _ITEM_STOP_RE = re.compile(
     r"\b(deliver|delivery|bhej|bhejo|dispatch|issue|karo|kar\s+do|dedo|de\s+do|"
-    r"dena|dijiye|please|abhi|aaj|kal|ko)\b",
+    r"dena|dijiye|please|abhi|aaj|kal|ko|jana|jaana|"
+    r"jana\s+hai|jaana\s+hai|jan[ae]\s+hai|hai)\b",
     re.IGNORECASE,
 )
 
@@ -200,7 +210,23 @@ class TaskInventoryExtractor:
                 if name not in _ASSIGNEE_EXCLUDE:
                     return _title_name(name)
 
+        leading = _NAME_LEADING_RE.match(text.strip())
+        if leading:
+            rest = leading.group("rest")
+            name = leading.group("name").strip().lower()
+            first = name.split()[0]
+            if first not in _ASSIGNEE_EXCLUDE and self._rest_has_task_content(rest):
+                return _title_name(name)
+
         return None
+
+    def _rest_has_task_content(self, rest: str) -> bool:
+        return bool(
+            _DELIVERY_RE.search(rest)
+            or _ISSUE_RE.search(rest)
+            or _ITEM_LABEL_RE.search(rest)
+            or _SKU_RE.search(rest)
+        )
 
     def _extract_sku(self, text: str) -> Optional[str]:
         match = _SKU_RE.search(text)
@@ -236,6 +262,10 @@ class TaskInventoryExtractor:
     ) -> Optional[str]:
         if sku:
             return None
+
+        label = _ITEM_LABEL_RE.search(text)
+        if label:
+            return _normalize_item(label.group(1))
 
         working = self._strip_assignee_prefix(text, assignee)
 

@@ -26,6 +26,15 @@ export function parseSelectionIndex(message: string, max: number): number | null
   return index;
 }
 
+export function parseQuantityReply(message: string): number | null {
+  const trimmed = message.trim().replace(/,/g, '');
+  const match = trimmed.match(/^(\d+(?:\.\d+)?)$/);
+  if (!match) return null;
+  const value = Number(match[1]);
+  if (!Number.isFinite(value) || value <= 0) return null;
+  return value;
+}
+
 export function taskKindRequiresInventory(taskKind: string | null): boolean {
   return taskKind === 'delivery' || taskKind === 'issue';
 }

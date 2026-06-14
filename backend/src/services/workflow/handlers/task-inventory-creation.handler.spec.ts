@@ -195,6 +195,34 @@ describe('TaskInventoryCreationWorkflowHandler', () => {
     expect(workerPick.sessionData?.worker_user_id).toBe(40);
   });
 
+  it('asks for quantity then shows confirmation', async () => {
+    const qtyStep = await handler.handleStep(
+      {
+        id: 1,
+        factory_id: 1,
+        phone_number: context.phone,
+        workflow_type: 'TASK_INVENTORY_CREATION',
+        current_step: TASK_INVENTORY_CREATION_STEP.WAITING_QUANTITY,
+        session_data: {
+          task_kind: 'delivery',
+          worker_user_id: 39,
+          worker_name: 'Vikram Shah',
+          inventory_item_id: 18,
+          inventory_name: 'Test item 1',
+        },
+        status: 'ACTIVE',
+      },
+      '5',
+      context,
+    );
+
+    expect(qtyStep.nextStep).toBe(
+      TASK_INVENTORY_CREATION_STEP.WAITING_CONFIRMATION,
+    );
+    expect(qtyStep.sessionData?.quantity).toBe(5);
+    expect(qtyStep.message).toContain('Confirm task');
+  });
+
   it('creates delivery task on confirmation synonyms', async () => {
     creationService.createFromSession.mockResolvedValue({
       taskId: 200,
