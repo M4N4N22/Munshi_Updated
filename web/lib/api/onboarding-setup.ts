@@ -43,6 +43,41 @@ export function completeOnboardingSetup(
   });
 }
 
+export function previewOnboardingInventoryCsv(setupToken: string, file: File) {
+  const form = new FormData();
+  form.append("setup_token", setupToken);
+  form.append("file", file);
+  return apiPostForm<OnboardingInventoryPreview>(
+    "/onboarding/setup/inventory/preview",
+    form,
+  );
+}
+
+export type OnboardingInventoryPreviewRow = {
+  line: number;
+  sku: string;
+  name: string;
+  category: string;
+  location: string;
+  unit: string;
+  quantity: string;
+  reorder_threshold: string | null;
+};
+
+export type OnboardingInventoryPreview = {
+  row_count: number;
+  preview_rows: OnboardingInventoryPreviewRow[];
+  has_more_rows: boolean;
+  review: {
+    newCategories: string[];
+    existingCategories: string[];
+    newLocations: string[];
+    existingLocations: string[];
+    newItems: Array<{ sku: string; name: string }>;
+    existingItems: Array<{ sku: string; name: string }>;
+  };
+};
+
 export function uploadOnboardingInventoryCsv(setupToken: string, file: File) {
   const form = new FormData();
   form.append("setup_token", setupToken);

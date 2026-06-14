@@ -80,6 +80,28 @@ export class OnboardingController {
     });
   }
 
+  @Post('setup/inventory/preview')
+  @UseInterceptors(
+    FileInterceptor('file', { limits: { fileSize: INVENTORY_CSV_MAX_BYTES } }),
+  )
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['file', 'setup_token'],
+      properties: {
+        file: { type: 'string', format: 'binary' },
+        setup_token: { type: 'string' },
+      },
+    },
+  })
+  previewInventory(
+    @UploadedFile() file: InventoryCsvUploadFile,
+    @Body('setup_token') setupToken: string,
+  ) {
+    return this.onboardingSetup.previewInventory(setupToken, file);
+  }
+
   @Post('setup/inventory/import')
   @UseInterceptors(
     FileInterceptor('file', { limits: { fileSize: INVENTORY_CSV_MAX_BYTES } }),

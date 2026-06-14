@@ -99,6 +99,34 @@ export class OnboardingSetupService {
     };
   }
 
+  async previewInventory(
+    setupToken: string,
+    file: InventoryCsvUploadFile | undefined,
+  ) {
+    const ctx = await this.resolveContext(setupToken);
+    const rows = this.inventoryImportUpload.parseCsvFile(file);
+    const review = await this.inventoryImportUpload.buildImportReview(
+      ctx.factory_id,
+      rows,
+    );
+    const previewLimit = 8;
+    return {
+      row_count: rows.length,
+      preview_rows: rows.slice(0, previewLimit).map((row) => ({
+        line: row.line,
+        sku: row.sku,
+        name: row.name,
+        category: row.category,
+        location: row.location,
+        unit: row.unit,
+        quantity: row.quantity,
+        reorder_threshold: row.reorder_threshold,
+      })),
+      has_more_rows: rows.length > previewLimit,
+      review,
+    };
+  }
+
   async importInventory(
     setupToken: string,
     file: InventoryCsvUploadFile | undefined,

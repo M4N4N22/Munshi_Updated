@@ -6,14 +6,14 @@ import { LoadingState } from "@/components/ui/loading-state";
 import { Spinner } from "@/components/ui/spinner";
 import type { OnboardingSetupStatus } from "@/lib/api/onboarding";
 import {
-  buildOnboardingZohoAuthorizeUrl,
   completeOnboardingSetup,
   fetchOnboardingSetupStatus,
-  markOnboardingInventoryZoho,
+  previewOnboardingInventoryCsv,
   skipOnboardingInventory,
   skipOnboardingTeam,
   uploadOnboardingInventoryCsv,
   uploadOnboardingTeamCsv,
+  type OnboardingInventoryPreview,
 } from "@/lib/api/onboarding-setup";
 import { formatPhoneDisplay } from "@/lib/phone";
 
@@ -59,15 +59,19 @@ function StepShell({
   step,
   total,
   title,
+  wide = false,
   children,
 }: {
   step: number;
   total: number;
   title: string;
+  wide?: boolean;
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex w-full max-w-lg flex-col gap-6">
+    <div
+      className={`flex w-full flex-col gap-6 ${wide ? "max-w-4xl" : "max-w-lg"}`}
+    >
       <div>
         <p className="text-sm font-medium text-emerald-700">
           Step {step} of {total}
@@ -83,15 +87,17 @@ export function OnboardingInventoryStep({
   ctx,
   onContinue,
   onBack,
-  zohoReturn = false,
 }: {
   ctx: SetupContext;
   onContinue: () => void;
   onBack: () => void;
-  zohoReturn?: boolean;
 }) {
   const [status, setStatus] = useState<OnboardingSetupStatus | null>(null);
   const [file, setFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<OnboardingInventoryPreview | null>(
+    null,
+  );
+  const [previewing, setPreviewing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -107,7 +113,6 @@ export function OnboardingInventoryStep({
     status?.inventory_status === "skipped" ||
     (status?.stock_item_count ?? 0) > 0;
 
-  const zohoActive = Boolean(status?.zoho_connected);
   const csvImported = (status?.stock_item_count ?? 0) > 0;
 
   useEffect(() => {
@@ -117,43 +122,40 @@ export function OnboardingInventoryStep({
   }, [refresh]);
 
   useEffect(() => {
-    const onFocus = () => {
-      refresh().catch(() => {});
-    };
-    window.addEventListener("focus", onFocus);
-    return () => window.removeEventListener("focus", onFocus);
-  }, [refresh]);
-
-  useEffect(() => {
-    if (!zohoReturn) return;
-    refresh()
-      .then((s) => {
-        if (s.zoho_connected) {
-          setMessage(
-            "Zoho Inventory connected. Stock will sync from Zoho — you can continue to team setup.",
+    if (!file) {
+      setPreview(null);
+      return;
+    }
+    let cancelled = false;
+    setPreviewing(true);
+    setError(null);
+    previewOnboardingInventoryCsv(ctx.setupToken, file)
+      .then((result) => {
+        if (!cancelled) {
+          setPreview(result);
+        }
+      })
+      .catch((err) => {
+        if (!cancelled) {
+          setPreview(null);
+          setError(
+            err instanceof ApiError ? err.message : "Could not preview CSV.",
           );
         }
       })
-      .catch(() => {});
-  }, [zohoReturn, refresh]);
+      .finally(() => {
+        if (!cancelled) {
+          setPreviewing(false);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [file, ctx.setupToken]);
 
-  useEffect(() => {
-    if (!status?.zoho_connected || status.inventory_status !== "pending") {
-      return;
-    }
-    markOnboardingInventoryZoho(ctx.setupToken)
-      .then(() => refresh())
-      .then(() =>
-        setMessage(
-          "Zoho Inventory connected. Stock will sync from Zoho — you can continue to team setup.",
-        ),
-      )
-      .catch(() => {});
-  }, [status?.zoho_connected, status?.inventory_status, ctx.setupToken, refresh]);
-
-  async function handleUpload() {
-    if (!file) {
-      setError("Pehle CSV file chunein.");
+  async function handleConfirmImport() {
+    if (!file || !preview) {
+      setError("Pehle CSV file chunein aur preview dekhein.");
       return;
     }
     setBusy(true);
@@ -165,6 +167,7 @@ export function OnboardingInventoryStep({
         `Import complete — Added: ${res.summary.added}, Updated: ${res.summary.updated}, Failed: ${res.summary.failed}`,
       );
       setFile(null);
+      setPreview(null);
       await refresh();
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Upload failed.");
@@ -189,59 +192,38 @@ export function OnboardingInventoryStep({
 
   if (!status && !error) {
     return (
-      <StepShell step={2} total={4} title="Add your inventory">
+      <StepShell step={2} total={4} title="Add your inventory" wide>
         <LoadingState className="py-16" minHeight="min-h-[10rem]" />
       </StepShell>
     );
   }
 
   return (
-    <StepShell step={2} total={4} title="Add your inventory">
+    <StepShell step={2} total={4} title="Add your inventory" wide>
       <p className="text-sm leading-relaxed text-zinc-600">
-        Choose one way to get stock into Munshi for{" "}
-        <span className="font-medium text-zinc-800">{ctx.companyName}</span>.
-        You can skip and add items later on WhatsApp.
+        Upload a stock CSV for{" "}
+        <span className="font-medium text-zinc-800">{ctx.companyName}</span>, or
+        skip and add items later on WhatsApp.
       </p>
 
       {inventoryDone ? (
         <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-4 text-sm text-emerald-950">
           <p className="font-semibold">Inventory step complete</p>
           <p className="mt-1 text-emerald-900/90">
-            {zohoActive && !csvImported
-              ? "Zoho Inventory is connected — Munshi will sync your stock from Zoho."
-              : csvImported
-                ? `${status?.stock_item_count ?? 0} stock items in Munshi.`
-                : status?.inventory_status === "skipped"
-                  ? "Skipped for now — add stock on WhatsApp anytime."
-                  : "Ready to continue."}
+            {csvImported
+              ? `${status?.stock_item_count ?? 0} stock items in Munshi.`
+              : status?.inventory_status === "skipped"
+                ? "Skipped for now — add stock on WhatsApp anytime."
+                : "Ready to continue."}
           </p>
         </div>
-      ) : status ? (
-        <div className="rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm text-zinc-700">
-          <p>
-            Pick <strong>CSV upload</strong> or <strong>connect Zoho</strong>{" "}
-            below. Upload stays available even after Zoho is connected.
-          </p>
-          {zohoActive && (
-            <p className="mt-2 text-emerald-800">
-              Zoho is connected — tap <strong>Continue to team</strong> when
-              ready.
-            </p>
-          )}
-        </div>
-      ) : null}
-
-      {!inventoryDone && (
-        <>
+      ) : (
+        <div className="grid grid-cols-1 items-stretch gap-4 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
           <div className="flex flex-col gap-3 rounded-2xl border border-zinc-200 p-4">
-            <p className="text-sm font-medium text-zinc-800">
-              Option A — Upload CSV
-            </p>
+            <p className="text-sm font-medium text-zinc-800">Upload CSV</p>
             <p className="text-xs leading-relaxed text-zinc-500">
-              Download the template, fill in your items, then choose the file.
-              Your Excel export may use different column names (e.g. item_code,
-              qty, godown) — we map those automatically. The upload button
-              enables after you select a .csv file.
+              Download the template or use your own export — we accept column
+              names like item_code, qty, godown. Preview appears before import.
             </p>
             <a
               href={
@@ -252,7 +234,15 @@ export function OnboardingInventoryStep({
               target="_blank"
               rel="noopener noreferrer"
             >
-              Download inventory template
+              Download template
+            </a>
+            <a
+              href="/inventory-import/test-samples/05-quick-smoke-3-items.csv"
+              className="text-xs font-medium text-zinc-500 underline-offset-2 hover:text-zinc-800 hover:underline"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Try sample CSV (3 items)
             </a>
             <label className="flex cursor-pointer flex-col gap-2 rounded-xl border border-dashed border-zinc-300 bg-zinc-50/80 px-4 py-4 hover:border-emerald-400 hover:bg-emerald-50/40">
               <span className="text-sm font-medium text-zinc-800">
@@ -269,63 +259,68 @@ export function OnboardingInventoryStep({
                 onChange={(e) => {
                   setFile(e.target.files?.[0] ?? null);
                   setError(null);
+                  setMessage(null);
                 }}
                 className="sr-only"
               />
             </label>
+
+            {previewing && (
+              <LoadingState className="py-6" size="sm" label="Reading CSV…" />
+            )}
+
+            {preview && !previewing && (
+              <InventoryCsvPreview data={preview} />
+            )}
+
             <button
               type="button"
-              disabled={busy || !file}
-              onClick={handleUpload}
+              disabled={busy || !file || !preview || previewing}
+              onClick={handleConfirmImport}
               className="flex h-11 items-center justify-center rounded-xl bg-zinc-900 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40"
             >
               {busy ? (
-              <span className="inline-flex items-center gap-2">
-                <Spinner size="sm" className="border-white/20 border-t-white" />
-                Uploading…
-              </span>
-            ) : (
-              "Upload inventory CSV"
-            )}
+                <span className="inline-flex items-center gap-2">
+                  <Spinner
+                    size="sm"
+                    className="border-white/20 border-t-white"
+                  />
+                  Importing…
+                </span>
+              ) : (
+                "Confirm import"
+              )}
             </button>
-            {!file && (
-              <p className="text-xs text-zinc-500">
-                Select a file above to enable upload.
-              </p>
-            )}
           </div>
 
-          <div className="flex flex-col gap-3 rounded-2xl border border-zinc-200 p-4">
-            <p className="text-sm font-medium text-zinc-800">
-              Option B — Zoho Inventory
-            </p>
-            {zohoActive ? (
-              <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
-                <p className="font-semibold">Zoho Inventory connected</p>
-                <p className="mt-1 text-emerald-800/90">
-                  Munshi will pull stock from Zoho. No CSV needed unless you
-                  want extra local items.
-                </p>
-              </div>
-            ) : (
-              <>
-                <p className="text-xs leading-relaxed text-zinc-500">
-                  Already use Zoho Inventory? Connect once — we&apos;ll sync
-                  items automatically. You&apos;ll return here when done.
-                </p>
-                <a
-                  href={buildOnboardingZohoAuthorizeUrl(
-                    ctx.factoryId,
-                    ctx.userId,
-                  )}
-                  className="flex h-11 items-center justify-center rounded-xl border border-zinc-300 bg-white text-sm font-semibold text-zinc-800 hover:bg-zinc-50"
-                >
-                  Connect Zoho Inventory
-                </a>
-              </>
-            )}
+          <div className="flex items-center justify-center md:flex-col md:px-1">
+            <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-zinc-500">
+              or
+            </span>
           </div>
-        </>
+
+          <div className="flex flex-col gap-3 rounded-2xl border border-dashed border-zinc-200 bg-zinc-50/60 p-4">
+            <div className="flex flex-wrap items-center gap-2">
+              <p className="text-sm font-medium text-zinc-700">
+                Zoho Inventory
+              </p>
+              <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-semibold text-amber-900">
+                Coming soon
+              </span>
+            </div>
+            <p className="text-xs leading-relaxed text-zinc-500">
+              Sync stock directly from Zoho Inventory. We&apos;re finishing this
+              integration — use CSV upload for now.
+            </p>
+            <button
+              type="button"
+              disabled
+              className="flex h-11 cursor-not-allowed items-center justify-center rounded-xl border border-zinc-200 bg-white text-sm font-semibold text-zinc-400"
+            >
+              Connect Zoho
+            </button>
+          </div>
+        </div>
       )}
 
       {message && (
@@ -367,6 +362,68 @@ export function OnboardingInventoryStep({
         )}
       </div>
     </StepShell>
+  );
+}
+
+function InventoryCsvPreview({ data }: { data: OnboardingInventoryPreview }) {
+  const { review } = data;
+  const newItemCount = review.newItems.length;
+  const existingItemCount = review.existingItems.length;
+
+  return (
+    <div className="flex flex-col gap-3 rounded-xl border border-emerald-200 bg-emerald-50/50 p-3">
+      <div className="text-xs leading-relaxed text-emerald-950">
+        <p className="font-semibold">
+          Preview — {data.row_count} item{data.row_count === 1 ? "" : "s"}
+        </p>
+        <p className="mt-1 text-emerald-900/90">
+          {newItemCount} new · {existingItemCount} existing
+          {review.newCategories.length > 0
+            ? ` · ${review.newCategories.length} new categor${review.newCategories.length === 1 ? "y" : "ies"}`
+            : ""}
+          {review.newLocations.length > 0
+            ? ` · ${review.newLocations.length} new location${review.newLocations.length === 1 ? "" : "s"}`
+            : ""}
+        </p>
+      </div>
+      <div className="overflow-x-auto rounded-lg border border-emerald-100 bg-white">
+        <table className="w-full min-w-[420px] text-left text-xs">
+          <thead>
+            <tr className="border-b border-zinc-100 bg-zinc-50 text-zinc-500">
+              <th className="px-2 py-2 font-medium">SKU</th>
+              <th className="px-2 py-2 font-medium">Item</th>
+              <th className="px-2 py-2 font-medium">Category</th>
+              <th className="px-2 py-2 font-medium">Location</th>
+              <th className="px-2 py-2 font-medium text-right">Qty</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.preview_rows.map((row) => (
+              <tr key={row.line} className="border-b border-zinc-50 last:border-0">
+                <td className="px-2 py-2 font-mono text-zinc-700">{row.sku}</td>
+                <td className="max-w-[8rem] truncate px-2 py-2 text-zinc-800">
+                  {row.name}
+                </td>
+                <td className="max-w-[6rem] truncate px-2 py-2 text-zinc-600">
+                  {row.category}
+                </td>
+                <td className="max-w-[6rem] truncate px-2 py-2 text-zinc-600">
+                  {row.location}
+                </td>
+                <td className="px-2 py-2 text-right text-zinc-800">
+                  {row.quantity} {row.unit}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {data.has_more_rows && (
+        <p className="text-xs text-zinc-500">
+          Showing first {data.preview_rows.length} of {data.row_count} rows.
+        </p>
+      )}
+    </div>
   );
 }
 

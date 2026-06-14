@@ -9,6 +9,7 @@
 | POST | `/onboarding/otp/verify` | `{ "phone_number": "919876543210", "code": "482910" }` |
 | POST | `/onboarding/register` | `{ "phone_number": "919876543210", "name": "...", "factory_name": "..." }` → returns `setup_token` |
 | GET | `/onboarding/setup/status?setup_token=...` | Setup wizard progress |
+| POST | `/onboarding/setup/inventory/preview` | `multipart`: `file`, `setup_token` — parse + review before import |
 | POST | `/onboarding/setup/inventory/import` | `multipart`: `file`, `setup_token` |
 | POST | `/onboarding/setup/inventory/skip` | `{ "setup_token": "..." }` |
 | POST | `/onboarding/setup/inventory/zoho-complete` | `{ "setup_token": "..." }` (fallback if Zoho connected before auto-complete) |
@@ -29,11 +30,11 @@ Without MSG91, OTP is logged to the API console. In non-production, `dev_otp` is
 
 When `ONBOARDING_SKIP_OTP=true`, the web form registers directly and opens the setup wizard (inventory → team → WhatsApp).
 
-### Zoho from onboarding (step 2)
+### Inventory step (web)
 
-- Connect link: `GET /integrations/zoho/authorize?factory_id=&user_id=&return_to=onboarding`
-- After OAuth, user returns to `/onboarding?status=connected` and inventory step is marked complete automatically.
-- CSV upload remains available (select a file first — upload button enables after file pick). Zoho and CSV are independent options.
+- Upload CSV → **preview** (row table + new/existing counts) → **Confirm import**
+- Zoho connect is **coming soon** on web onboarding (disabled)
+- Test CSVs: `/inventory-import/test-samples/`
 
 ## CORS
 
