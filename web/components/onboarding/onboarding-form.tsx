@@ -24,11 +24,13 @@ type Step = "phone" | "otp" | "inventory" | "team" | "ready";
 type OnboardingFormProps = {
   whatsappConfigured?: boolean;
   whatsappConfigMissing?: boolean;
+  zohoReturn?: boolean;
 };
 
 export function OnboardingForm({
   whatsappConfigured = false,
   whatsappConfigMissing = false,
+  zohoReturn = false,
 }: OnboardingFormProps) {
   const [phone, setPhone] = useState("");
   const [name, setName] = useState("");
@@ -303,6 +305,7 @@ export function OnboardingForm({
         ctx={setupCtx}
         onBack={resetAll}
         onContinue={goToTeam}
+        zohoReturn={zohoReturn}
       />
     );
   }

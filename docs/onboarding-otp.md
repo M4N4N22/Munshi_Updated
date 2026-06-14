@@ -11,7 +11,7 @@
 | GET | `/onboarding/setup/status?setup_token=...` | Setup wizard progress |
 | POST | `/onboarding/setup/inventory/import` | `multipart`: `file`, `setup_token` |
 | POST | `/onboarding/setup/inventory/skip` | `{ "setup_token": "..." }` |
-| POST | `/onboarding/setup/inventory/zoho-complete` | `{ "setup_token": "..." }` (after Zoho OAuth) |
+| POST | `/onboarding/setup/inventory/zoho-complete` | `{ "setup_token": "..." }` (fallback if Zoho connected before auto-complete) |
 | POST | `/onboarding/setup/team/import` | `multipart`: `file`, `setup_token` |
 | POST | `/onboarding/setup/team/skip` | `{ "setup_token": "..." }` |
 | POST | `/onboarding/setup/complete` | `{ "setup_token": "...", "notify_employees": true }` — batch WhatsApp welcomes |
@@ -27,7 +27,13 @@
 
 Without MSG91, OTP is logged to the API console. In non-production, `dev_otp` is included in the send response for local testing.
 
-When `ONBOARDING_SKIP_OTP=true`, the web form registers directly and sends users to WhatsApp (no SMS step).
+When `ONBOARDING_SKIP_OTP=true`, the web form registers directly and opens the setup wizard (inventory → team → WhatsApp).
+
+### Zoho from onboarding (step 2)
+
+- Connect link: `GET /integrations/zoho/authorize?factory_id=&user_id=&return_to=onboarding`
+- After OAuth, user returns to `/onboarding?status=connected` and inventory step is marked complete automatically.
+- CSV upload remains available (select a file first — upload button enables after file pick). Zoho and CSV are independent options.
 
 ## CORS
 

@@ -32,6 +32,7 @@ export class ZohoOAuthController {
     const url = await this.zohoOAuthService.buildAuthorizeRedirectUrl(
       query.factory_id,
       query.user_id,
+      query.return_to,
     );
     return res.redirect(url);
   }

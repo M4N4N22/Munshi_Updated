@@ -81,10 +81,12 @@ export function OnboardingInventoryStep({
   ctx,
   onContinue,
   onBack,
+  zohoReturn = false,
 }: {
   ctx: SetupContext;
   onContinue: () => void;
   onBack: () => void;
+  zohoReturn?: boolean;
 }) {
   const [status, setStatus] = useState<OnboardingSetupStatus | null>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -98,16 +100,54 @@ export function OnboardingInventoryStep({
     return s;
   }, [ctx.setupToken]);
 
+  const inventoryDone =
+    status?.inventory_status === "completed" ||
+    status?.inventory_status === "skipped" ||
+    (status?.stock_item_count ?? 0) > 0;
+
+  const zohoActive = Boolean(status?.zoho_connected);
+  const csvImported = (status?.stock_item_count ?? 0) > 0;
+
   useEffect(() => {
     refresh().catch(() =>
       setError("Could not load setup status. Try refreshing."),
     );
   }, [refresh]);
 
-  const inventoryDone =
-    status?.inventory_status === "completed" ||
-    status?.inventory_status === "skipped" ||
-    (status?.stock_item_count ?? 0) > 0;
+  useEffect(() => {
+    const onFocus = () => {
+      refresh().catch(() => {});
+    };
+    window.addEventListener("focus", onFocus);
+    return () => window.removeEventListener("focus", onFocus);
+  }, [refresh]);
+
+  useEffect(() => {
+    if (!zohoReturn) return;
+    refresh()
+      .then((s) => {
+        if (s.zoho_connected) {
+          setMessage(
+            "Zoho Inventory connected. Stock will sync from Zoho — you can continue to team setup.",
+          );
+        }
+      })
+      .catch(() => {});
+  }, [zohoReturn, refresh]);
+
+  useEffect(() => {
+    if (!status?.zoho_connected || status.inventory_status !== "pending") {
+      return;
+    }
+    markOnboardingInventoryZoho(ctx.setupToken)
+      .then(() => refresh())
+      .then(() =>
+        setMessage(
+          "Zoho Inventory connected. Stock will sync from Zoho — you can continue to team setup.",
+        ),
+      )
+      .catch(() => {});
+  }, [status?.zoho_connected, status?.inventory_status, ctx.setupToken, refresh]);
 
   async function handleUpload() {
     if (!file) {
@@ -122,6 +162,7 @@ export function OnboardingInventoryStep({
       setMessage(
         `Import complete — Added: ${res.summary.added}, Updated: ${res.summary.updated}, Failed: ${res.summary.failed}`,
       );
+      setFile(null);
       await refresh();
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Upload failed.");
@@ -144,80 +185,129 @@ export function OnboardingInventoryStep({
     }
   }
 
-  async function handleZohoComplete() {
-    setBusy(true);
-    setError(null);
-    try {
-      await markOnboardingInventoryZoho(ctx.setupToken);
-      setMessage("Zoho connected — inventory step complete.");
-      await refresh();
-    } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Zoho not connected yet.");
-    } finally {
-      setBusy(false);
-    }
-  }
-
   return (
     <StepShell step={2} total={4} title="Add your inventory">
       <p className="text-sm leading-relaxed text-zinc-600">
-        Upload a CSV of your stock for{" "}
-        <span className="font-medium text-zinc-800">{ctx.companyName}</span>, connect
-        Zoho if you already use it, or skip and add items later on WhatsApp.
+        Choose one way to get stock into Munshi for{" "}
+        <span className="font-medium text-zinc-800">{ctx.companyName}</span>.
+        You can skip and add items later on WhatsApp.
       </p>
 
-      {status && (
-        <p className="rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm text-zinc-700">
-          Current stock items: <strong>{status.stock_item_count}</strong>
-          {status.zoho_connected ? " · Zoho connected" : ""}
-        </p>
+      {inventoryDone ? (
+        <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-4 text-sm text-emerald-950">
+          <p className="font-semibold">Inventory step complete</p>
+          <p className="mt-1 text-emerald-900/90">
+            {zohoActive && !csvImported
+              ? "Zoho Inventory is connected — Munshi will sync your stock from Zoho."
+              : csvImported
+                ? `${status?.stock_item_count ?? 0} stock items in Munshi.`
+                : status?.inventory_status === "skipped"
+                  ? "Skipped for now — add stock on WhatsApp anytime."
+                  : "Ready to continue."}
+          </p>
+        </div>
+      ) : status ? (
+        <div className="rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm text-zinc-700">
+          <p>
+            Pick <strong>CSV upload</strong> or <strong>connect Zoho</strong>{" "}
+            below. Upload stays available even after Zoho is connected.
+          </p>
+          {zohoActive && (
+            <p className="mt-2 text-emerald-800">
+              Zoho is connected — tap <strong>Continue to team</strong> when
+              ready.
+            </p>
+          )}
+        </div>
+      ) : null}
+
+      {!inventoryDone && (
+        <>
+          <div className="flex flex-col gap-3 rounded-2xl border border-zinc-200 p-4">
+            <p className="text-sm font-medium text-zinc-800">
+              Option A — Upload CSV
+            </p>
+            <p className="text-xs leading-relaxed text-zinc-500">
+              Download the template, fill in your items, then choose the file.
+              The upload button enables after you select a .csv file.
+            </p>
+            <a
+              href={
+                status?.inventory_template_url ??
+                "/inventory-import/munshi-inventory-template.csv"
+              }
+              className="text-sm font-medium text-emerald-700 underline-offset-2 hover:underline"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Download inventory template
+            </a>
+            <label className="flex cursor-pointer flex-col gap-2 rounded-xl border border-dashed border-zinc-300 bg-zinc-50/80 px-4 py-4 hover:border-emerald-400 hover:bg-emerald-50/40">
+              <span className="text-sm font-medium text-zinc-800">
+                {file ? file.name : "Choose CSV file"}
+              </span>
+              <span className="text-xs text-zinc-500">
+                {file
+                  ? `${(file.size / 1024).toFixed(1)} KB selected`
+                  : "Click to browse — .csv only"}
+              </span>
+              <input
+                type="file"
+                accept=".csv,text/csv"
+                onChange={(e) => {
+                  setFile(e.target.files?.[0] ?? null);
+                  setError(null);
+                }}
+                className="sr-only"
+              />
+            </label>
+            <button
+              type="button"
+              disabled={busy || !file}
+              onClick={handleUpload}
+              className="flex h-11 items-center justify-center rounded-xl bg-zinc-900 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              {busy ? "Uploading…" : "Upload inventory CSV"}
+            </button>
+            {!file && (
+              <p className="text-xs text-zinc-500">
+                Select a file above to enable upload.
+              </p>
+            )}
+          </div>
+
+          <div className="flex flex-col gap-3 rounded-2xl border border-zinc-200 p-4">
+            <p className="text-sm font-medium text-zinc-800">
+              Option B — Zoho Inventory
+            </p>
+            {zohoActive ? (
+              <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
+                <p className="font-semibold">Zoho Inventory connected</p>
+                <p className="mt-1 text-emerald-800/90">
+                  Munshi will pull stock from Zoho. No CSV needed unless you
+                  want extra local items.
+                </p>
+              </div>
+            ) : (
+              <>
+                <p className="text-xs leading-relaxed text-zinc-500">
+                  Already use Zoho Inventory? Connect once — we&apos;ll sync
+                  items automatically. You&apos;ll return here when done.
+                </p>
+                <a
+                  href={buildOnboardingZohoAuthorizeUrl(
+                    ctx.factoryId,
+                    ctx.userId,
+                  )}
+                  className="flex h-11 items-center justify-center rounded-xl border border-zinc-300 bg-white text-sm font-semibold text-zinc-800 hover:bg-zinc-50"
+                >
+                  Connect Zoho Inventory
+                </a>
+              </>
+            )}
+          </div>
+        </>
       )}
-
-      <div className="flex flex-col gap-3 rounded-2xl border border-zinc-200 p-4">
-        <p className="text-sm font-medium text-zinc-800">Option A — CSV upload</p>
-        <a
-          href={status?.inventory_template_url ?? "/inventory-import/munshi-inventory-template.csv"}
-          className="text-sm font-medium text-emerald-700 underline-offset-2 hover:underline"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Download inventory template
-        </a>
-        <input
-          type="file"
-          accept=".csv,text/csv"
-          onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-          className="text-sm text-zinc-700"
-        />
-        <button
-          type="button"
-          disabled={busy || !file}
-          onClick={handleUpload}
-          className="flex h-11 items-center justify-center rounded-xl bg-zinc-900 text-sm font-semibold text-white disabled:opacity-50"
-        >
-          {busy ? "Uploading…" : "Upload inventory CSV"}
-        </button>
-      </div>
-
-      <div className="flex flex-col gap-3 rounded-2xl border border-zinc-200 p-4">
-        <p className="text-sm font-medium text-zinc-800">Option B — Zoho Inventory</p>
-        <a
-          href={buildOnboardingZohoAuthorizeUrl(ctx.factoryId, ctx.userId)}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex h-11 items-center justify-center rounded-xl border border-zinc-300 bg-white text-sm font-semibold text-zinc-800 hover:bg-zinc-50"
-        >
-          Connect Zoho (opens new tab)
-        </a>
-        <button
-          type="button"
-          disabled={busy}
-          onClick={handleZohoComplete}
-          className="text-sm font-medium text-emerald-700 underline-offset-2 hover:underline disabled:opacity-50"
-        >
-          I connected Zoho — mark step done
-        </button>
-      </div>
 
       {message && (
         <p className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
@@ -246,14 +336,16 @@ export function OnboardingInventoryStep({
         >
           {inventoryDone ? "Continue to team" : "Continue anyway"}
         </button>
-        <button
-          type="button"
-          disabled={busy}
-          onClick={handleSkip}
-          className="text-sm font-medium text-zinc-500 underline-offset-2 hover:text-zinc-800"
-        >
-          Skip for now
-        </button>
+        {!inventoryDone && (
+          <button
+            type="button"
+            disabled={busy}
+            onClick={handleSkip}
+            className="text-sm font-medium text-zinc-500 underline-offset-2 hover:text-zinc-800"
+          >
+            Skip for now
+          </button>
+        )}
       </div>
     </StepShell>
   );

@@ -16,6 +16,7 @@ export interface ZohoOAuthStatePayload {
   userId: number;
   nonce: string;
   exp: number;
+  returnTo?: string;
 }
 
 interface StoredNonce {
@@ -27,10 +28,16 @@ interface StoredNonce {
 export class ZohoOAuthStateService {
   private readonly nonces = new Map<string, StoredNonce>();
 
-  createState(factoryId: number, userId: number): string {
+  createState(factoryId: number, userId: number, returnTo?: string): string {
     const nonce = randomBytes(16).toString('hex');
     const exp = Date.now() + ZOHO_OAUTH_STATE_TTL_MS;
-    const payload: ZohoOAuthStatePayload = { factoryId, userId, nonce, exp };
+    const payload: ZohoOAuthStatePayload = {
+      factoryId,
+      userId,
+      nonce,
+      exp,
+      ...(returnTo ? { returnTo } : {}),
+    };
     this.nonces.set(nonce, { exp, used: false });
     return this.sign(payload);
   }

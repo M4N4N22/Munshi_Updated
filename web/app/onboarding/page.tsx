@@ -11,12 +11,14 @@ export const metadata = {
 };
 
 type OnboardingPageProps = {
-  searchParams?: Promise<{ whatsapp?: string }>;
+  searchParams?: Promise<{ whatsapp?: string; zoho?: string; status?: string }>;
 };
 
 export default async function OnboardingPage({ searchParams }: OnboardingPageProps) {
   const params = searchParams ? await searchParams : {};
   const whatsappConfigured = isWhatsappConfigured();
+  const zohoReturn =
+    params.zoho === "connected" || params.status === "connected";
 
   return (
     <div className="flex flex-1 flex-col">
@@ -30,6 +32,7 @@ export default async function OnboardingPage({ searchParams }: OnboardingPagePro
         <OnboardingForm
           whatsappConfigured={whatsappConfigured}
           whatsappConfigMissing={params.whatsapp === "missing"}
+          zohoReturn={zohoReturn}
         />
       </main>
       <footer className="border-t border-zinc-200 py-6 text-center text-xs text-zinc-500">

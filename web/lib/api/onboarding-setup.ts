@@ -83,6 +83,7 @@ export function buildOnboardingZohoAuthorizeUrl(
   const params = new URLSearchParams({
     factory_id: String(factoryId),
     user_id: String(userId),
+    return_to: "onboarding",
   });
   return `${apiBaseUrl}/integrations/zoho/authorize?${params.toString()}`;
 }

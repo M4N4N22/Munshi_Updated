@@ -1,4 +1,5 @@
 import { Module, forwardRef } from '@nestjs/common';
+import { DbModule } from 'src/core/services/db-service/db.module';
 import { InventoryModule } from 'src/services/inventory/inventory.module';
 import { IntegrationRepository } from './integration.repository';
 import { IntegrationAuthValidationService } from './integration-auth.validation';
@@ -23,6 +24,7 @@ import { MessagingModule } from 'src/core/messaging/messaging.module';
 
 @Module({
   imports: [
+    DbModule,
     forwardRef(() => InventoryModule),
     forwardRef(() => DomainEventsModule),
     MessagingModule,

@@ -11,6 +11,11 @@ export class IntegrationFactoryUserQueryDto {
   @IsInt()
   @IsPositive()
   user_id!: number;
+
+  /** When `onboarding`, OAuth callback redirects back to web onboarding wizard. */
+  @IsOptional()
+  @IsString()
+  return_to?: string;
 }
 
 export class ZohoDisconnectDto extends IntegrationFactoryUserQueryDto {

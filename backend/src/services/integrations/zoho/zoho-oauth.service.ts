@@ -20,6 +20,8 @@ import {
   ZOHO_INVENTORY_OAUTH_SCOPES,
   ZOHO_TOKEN_REFRESH_BUFFER_MS,
 } from './zoho-oauth.constants';
+import { DbService } from 'src/core/services/db-service/db.service';
+import { ONBOARDING_SETUP_STATUS } from 'src/modules/onboarding/onboarding-setup.constants';
 
 export interface IntegrationConnectionSummary {
   id: number;
@@ -44,11 +46,13 @@ export class ZohoOAuthService {
     private readonly stateService: ZohoOAuthStateService,
     private readonly zohoClient: ZohoOAuthClient,
     private readonly authValidation: IntegrationAuthValidationService,
+    private readonly dbService: DbService,
   ) {}
 
   async buildAuthorizeRedirectUrl(
     factoryId: number,
     userId: number,
+    returnTo?: string,
   ): Promise<string> {
     await this.authValidation.assertCanManageIntegrations(factoryId, userId);
 
@@ -60,7 +64,7 @@ export class ZohoOAuthService {
       throw new InternalServerErrorException('Zoho OAuth environment is not configured');
     }
 
-    const state = this.stateService.createState(factoryId, userId);
+    const state = this.stateService.createState(factoryId, userId, returnTo);
     const params = new URLSearchParams({
       scope: ZOHO_INVENTORY_OAUTH_SCOPES,
       client_id: clientId,
@@ -120,11 +124,14 @@ export class ZohoOAuthService {
       },
     });
 
+    await this.completeOnboardingInventoryIfPending(payload.factoryId);
+
     return {
       redirectUrl: this.webRedirect({
         factory_id: payload.factoryId,
         user_id: payload.userId,
         status: 'connected',
+        return_to: payload.returnTo,
       }),
     };
   }
@@ -355,13 +362,37 @@ export class ZohoOAuthService {
     const base =
       process.env.MUNSHI_WEB_URL?.replace(/\/$/, '') ||
       'http://localhost:3000';
+    const returnTo = params.return_to;
+    const path =
+      returnTo === 'onboarding' ? '/onboarding' : '/integrations';
     const search = new URLSearchParams();
     for (const [key, value] of Object.entries(params)) {
-      if (value !== undefined && value !== null) {
-        search.set(key, String(value));
+      if (key === 'return_to' || value === undefined || value === null) {
+        continue;
       }
+      search.set(key, String(value));
     }
     const qs = search.toString();
-    return `${base}/integrations${qs ? `?${qs}` : ''}`;
+    return `${base}${path}${qs ? `?${qs}` : ''}`;
+  }
+
+  /** During web onboarding, connecting Zoho completes the inventory setup step. */
+  private async completeOnboardingInventoryIfPending(
+    factoryId: number,
+  ): Promise<void> {
+    const factory = await this.dbService.sqlService.Factory.findByPk(factoryId);
+    if (!factory || factory.onboarding_completed_at) {
+      return;
+    }
+    const status = factory.onboarding_inventory_status;
+    if (
+      status === ONBOARDING_SETUP_STATUS.COMPLETED ||
+      status === ONBOARDING_SETUP_STATUS.SKIPPED
+    ) {
+      return;
+    }
+    await factory.update({
+      onboarding_inventory_status: ONBOARDING_SETUP_STATUS.COMPLETED,
+    });
   }
 }
