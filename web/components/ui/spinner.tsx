@@ -1,16 +1,39 @@
-import { Loader2Icon } from 'lucide-react'
+import { cn } from "@/lib/utils";
 
-import { cn } from '@/lib/utils'
+const SPINNER_SIZES = {
+  sm: "h-4 w-4 border-2",
+  md: "h-6 w-6 border-2",
+  lg: "h-8 w-8 border-[2.5px]",
+} as const;
 
-function Spinner({ className, ...props }: React.ComponentProps<'svg'>) {
+export type SpinnerSize = keyof typeof SPINNER_SIZES;
+
+type SpinnerProps = {
+  size?: SpinnerSize;
+  className?: string;
+  /** Use on dark backgrounds (integrations, admin dark panels). */
+  variant?: "default" | "onDark";
+};
+
+function Spinner({
+  size = "md",
+  className,
+  variant = "default",
+}: SpinnerProps) {
   return (
-    <Loader2Icon
+    <div
       role="status"
       aria-label="Loading"
-      className={cn('size-4 animate-spin', className)}
-      {...props}
+      className={cn(
+        "box-border shrink-0 animate-spin rounded-full border-solid border-transparent",
+        SPINNER_SIZES[size],
+        variant === "onDark"
+          ? "border-t-emerald-400"
+          : "border-t-emerald-600",
+        className,
+      )}
     />
-  )
+  );
 }
 
-export { Spinner }
+export { Spinner };

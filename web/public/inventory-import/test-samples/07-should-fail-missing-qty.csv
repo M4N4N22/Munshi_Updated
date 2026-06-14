@@ -1,0 +1,3 @@
+sku,name,category,location,unit
+FAIL_NO_QTY_1,Item Missing Quantity Column,General,Main Store,pcs
+FAIL_NO_QTY_2,Another Row Without Qty,General,Main Store,pcs

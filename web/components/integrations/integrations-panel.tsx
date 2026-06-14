@@ -4,11 +4,11 @@ import { useCallback, useMemo, useState } from "react";
 import {
   Link2,
   Link2Off,
-  Loader2,
   Plug,
   AlertTriangle,
   RefreshCw,
 } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import {
   buildZohoAuthorizeUrl,
   disconnectZohoIntegration,
@@ -220,8 +220,8 @@ export function IntegrationsPanel({
           >
             {disconnecting ? (
               <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Disconnecting...
+                <Spinner size="sm" variant="onDark" />
+                Disconnecting…
               </>
             ) : (
               <>
@@ -240,8 +240,8 @@ export function IntegrationsPanel({
           >
             {connecting ? (
               <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Connecting...
+                <Spinner size="sm" className="border-white/20 border-t-white" />
+                Connecting…
               </>
             ) : (
               <>

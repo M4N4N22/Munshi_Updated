@@ -101,6 +101,10 @@ export class OnboardingService {
       | undefined;
 
     if (existing?.id && factoryLink?.factory_id) {
+      await this.departmentsService.ensureDefaultDepartment(
+        factoryLink.factory_id,
+        existing.id,
+      );
       await this.publishRegisteredEvent(
         factoryLink.factory_id,
         existing.id,

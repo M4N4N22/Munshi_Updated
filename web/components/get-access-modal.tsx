@@ -1,8 +1,9 @@
 "use client"
 
 import { useState } from "react"
-import { X, CheckCircle, Loader2 } from "lucide-react"
+import { X, CheckCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Spinner } from "@/components/ui/spinner"
 
 interface GetAccessModalProps {
   open: boolean
@@ -185,9 +186,9 @@ export function GetAccessModal({ open, onClose }: GetAccessModalProps) {
                 className="w-full bg-[#25D366] hover:bg-[#1fba5a] text-white rounded-full py-6 text-[15px] font-bold shadow-lg shadow-[#25D366]/20 transition-all duration-300 hover:scale-[1.02] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
               >
                 {loading ? (
-                  <span className="flex items-center gap-2">
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    Submitting...
+                  <span className="flex items-center justify-center gap-2">
+                    <Spinner size="sm" className="border-white/20 border-t-white" />
+                    Submitting…
                   </span>
                 ) : (
                   "Book Demo"

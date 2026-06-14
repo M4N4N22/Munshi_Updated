@@ -1,0 +1,4 @@
+product_code,product_name,product_category,warehouse,unit_of_measure,stock_on_hand,reorder_point
+WEB_DEV_PKG,Website Landing Page Package,Services,Remote Team,project,4,1
+STORE_SIGN,Shop Front Sign Board,Marketing,Vijay Nagar Outlet,pcs,2,1
+UNIFORM_L,Staff Uniform Size L,Apparel,Palasia Outlet,pcs,8,3

@@ -94,4 +94,32 @@ CEMENT_50KG,"Cement, 50kg bag",Building,Main,bag,10`;
       expect(result.rows[0].name).toBe('Cement, 50kg bag');
     }
   });
+
+  it('parses CSV with alternate column headers (aliases)', () => {
+    const csv = `item_code,product_name,category,godown,uom,qty,min_stock
+CEMENT_50KG,Cement 50kg,Building Materials,Main Warehouse,bag,100,10`;
+    const result = parseInventoryCsvText(csv);
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.rows[0]).toMatchObject({
+        sku: 'CEMENT_50KG',
+        name: 'Cement 50kg',
+        category: 'Building Materials',
+        location: 'Main Warehouse',
+        unit: 'bag',
+        quantity: '100.0000',
+        reorder_threshold: '10.0000',
+      });
+    }
+  });
+
+  it('ignores unknown extra columns', () => {
+    const csv = `sku,name,category,location,unit,quantity,supplier,notes
+CEMENT_50KG,Cement,Building,Main,bag,10,ABC,hello`;
+    const result = parseInventoryCsvText(csv);
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.rows).toHaveLength(1);
+    }
+  });
 });

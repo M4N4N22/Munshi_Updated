@@ -14,6 +14,7 @@ import {
 import { TeamCsvImportService } from 'src/services/team-import/team-csv-import.service';
 import { WorkerOnboardingService } from 'src/services/workflow/worker-onboarding.service';
 import { IntegrationRepository } from 'src/services/integrations/integration.repository';
+import { DepartmentsService } from 'src/services/departments/departments.service';
 import { INTEGRATION_PROVIDER } from 'src/services/integrations/integration.constants';
 import {
   ONBOARDING_SETUP_STATUS,
@@ -52,6 +53,7 @@ export class OnboardingSetupService {
     private readonly teamCsvImport: TeamCsvImportService,
     private readonly workerOnboarding: WorkerOnboardingService,
     private readonly integrationRepository: IntegrationRepository,
+    private readonly departmentsService: DepartmentsService,
   ) {}
 
   createSetupToken(payload: {
@@ -96,6 +98,34 @@ export class OnboardingSetupService {
       inventory_template_url: INVENTORY_CSV_PUBLIC_TEMPLATE_URL,
       team_template_url: TEAM_CSV_PUBLIC_TEMPLATE_URL,
       pending_welcome_count: pending.length,
+    };
+  }
+
+  async previewInventory(
+    setupToken: string,
+    file: InventoryCsvUploadFile | undefined,
+  ) {
+    const ctx = await this.resolveContext(setupToken);
+    const rows = this.inventoryImportUpload.parseCsvFile(file);
+    const review = await this.inventoryImportUpload.buildImportReview(
+      ctx.factory_id,
+      rows,
+    );
+    const previewLimit = 8;
+    return {
+      row_count: rows.length,
+      preview_rows: rows.slice(0, previewLimit).map((row) => ({
+        line: row.line,
+        sku: row.sku,
+        name: row.name,
+        category: row.category,
+        location: row.location,
+        unit: row.unit,
+        quantity: row.quantity,
+        reorder_threshold: row.reorder_threshold,
+      })),
+      has_more_rows: rows.length > previewLimit,
+      review,
     };
   }
 
@@ -160,6 +190,55 @@ export class OnboardingSetupService {
     return { inventory_status: ONBOARDING_SETUP_STATUS.COMPLETED };
   }
 
+  async previewTeam(
+    setupToken: string,
+    file: InventoryCsvUploadFile | undefined,
+  ) {
+    const ctx = await this.resolveContext(setupToken);
+    if (!file?.buffer?.length) {
+      throw new BadRequestException('CSV file is required.');
+    }
+    const parsed = this.teamCsvImport.parseBuffer(file.buffer);
+    if (!parsed.ok) {
+      throw new BadRequestException(parsed.error);
+    }
+
+    let workers = 0;
+    let managers = 0;
+    const departments = new Set<string>();
+    for (const row of parsed.rows) {
+      const role = String(row.role || '').toUpperCase();
+      if (role === 'MANAGER') {
+        managers += 1;
+      } else {
+        workers += 1;
+      }
+      const dept = row.department?.trim();
+      if (dept) {
+        departments.add(dept);
+      }
+    }
+
+    const previewLimit = 8;
+    return {
+      row_count: parsed.rows.length,
+      preview_rows: parsed.rows.slice(0, previewLimit).map((row) => ({
+        line: row.line,
+        name: row.name,
+        phone: row.phone,
+        role: row.role,
+        department: row.department,
+        doj: row.doj,
+      })),
+      has_more_rows: parsed.rows.length > previewLimit,
+      summary: {
+        workers,
+        managers,
+        departments: [...departments].sort(),
+      },
+    };
+  }
+
   async importTeam(setupToken: string, file: InventoryCsvUploadFile | undefined) {
     const ctx = await this.resolveContext(setupToken);
     if (!file?.buffer?.length) {
@@ -172,6 +251,11 @@ export class OnboardingSetupService {
 
     const factory = await this.getFactory(ctx.factory_id);
     const existingPending = this.readPendingWelcomes(factory);
+
+    await this.departmentsService.ensureDefaultDepartment(
+      ctx.factory_id,
+      ctx.user_id,
+    );
 
     const summary = await this.teamCsvImport.importRows(
       ctx.factory_id,

@@ -1,0 +1,4 @@
+sku,name,category,location,unit,quantity,reorder_threshold,supplier,hsn_code,last_purchase_date,notes
+BOLT_M10,M10 Hex Bolt,Fasteners,Assembly Line,pcs,500,100,Jain Brothers,73181500,2026-05-28,Bulk rack A
+NUT_M10,M10 Hex Nut,Fasteners,Assembly Line,pcs,480,100,Jain Brothers,73181600,2026-05-28,
+WASHER_M10,M10 Flat Washer,Fasteners,Assembly Line,pcs,600,120,Local Hardware,73182200,2026-06-01,Ignore extra cols
