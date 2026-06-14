@@ -58,6 +58,23 @@ export function buildOwnerHomeMainButtons(): WaReplyButton[] {
   ];
 }
 
+export function buildOwnerHomeSecondaryButtons(): WaReplyButton[] {
+  return [
+    {
+      id: WA_INTERACTIVE_ID.HOME_SHOW_HELP,
+      title: 'Saari commands',
+    },
+    {
+      id: WA_INTERACTIVE_ID.HOME_STOCK_STATUS,
+      title: 'Stock dikhao',
+    },
+    {
+      id: WA_INTERACTIVE_ID.HOME_SHOW_TEAM,
+      title: 'Team list',
+    },
+  ];
+}
+
 export function buildOwnerHomeWelcomeText(
   userName: string,
   readiness: BusinessReadinessSnapshot,
@@ -91,8 +108,17 @@ export function buildOwnerHomeMenuOutbound(
 
   return {
     type: 'interactive_buttons',
-    body: `${hint}Kya karna hai? 👇`,
+    body: `${hint}*Setup aur rozmarra* 👇`,
     buttons: buildOwnerHomeMainButtons(),
+  };
+}
+
+/** Second row — browse, status, full command guide (WhatsApp max 3 buttons per card). */
+export function buildOwnerHomeSecondaryMenuOutbound(): WaOutboundMessage {
+  return {
+    type: 'interactive_buttons',
+    body: '*Dekhein aur commands* — help mein poori list 👇',
+    buttons: buildOwnerHomeSecondaryButtons(),
   };
 }
 

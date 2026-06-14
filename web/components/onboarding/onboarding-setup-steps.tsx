@@ -457,10 +457,12 @@ export function OnboardingTeamStep({
     return s;
   }, [ctx.setupToken]);
 
+  const employeeCount = status?.employee_count ?? 0;
+  const pendingWelcomeCount = status?.pending_welcome_count ?? 0;
+  const hasTeamMembers = employeeCount > 0 || pendingWelcomeCount > 0;
   const teamDone =
-    status?.team_status === "completed" ||
     status?.team_status === "skipped" ||
-    (status?.employee_count ?? 0) > 0;
+    (status?.team_status === "completed" && hasTeamMembers);
 
   useEffect(() => {
     refresh().catch(() => setError("Could not load setup status."));
@@ -508,9 +510,15 @@ export function OnboardingTeamStep({
     setMessage(null);
     try {
       const res = await uploadOnboardingTeamCsv(ctx.setupToken, file);
+      const failHint =
+        res.failed_rows?.length > 0
+          ? ` Failed rows: ${res.failed_rows
+              .map((r) => `row ${r.line} (${r.detail})`)
+              .join("; ")}.`
+          : "";
       setMessage(
-        `Team import — Added: ${res.summary.added}, Skipped: ${res.summary.skipped}, Failed: ${res.summary.failed}. ` +
-          `${res.summary.pending_welcome_count} employees will get WhatsApp welcome when you finish.`,
+        `Team import — Added: ${res.summary.added}, Skipped: ${res.summary.skipped}, Failed: ${res.summary.failed}.` +
+          `${res.summary.pending_welcome_count} employees will get WhatsApp welcome when you finish.${failHint}`,
       );
       setFile(null);
       setPreview(null);
@@ -537,9 +545,18 @@ export function OnboardingTeamStep({
   }
 
   async function handleFinish() {
+    if (file && preview && !teamDone) {
+      setError(
+        "Preview ≠ import. Pehle Confirm import dabayein, phir Finish setup.",
+      );
+      return;
+    }
     setBusy(true);
     setError(null);
     try {
+      if (!teamDone) {
+        await skipOnboardingTeam(ctx.setupToken);
+      }
       const res = await completeOnboardingSetup(ctx.setupToken, notifyEmployees);
       setMessage(
         res.welcomes_sent > 0
@@ -577,9 +594,9 @@ export function OnboardingTeamStep({
           <p className="mt-1 text-emerald-900/90">
             {status?.team_status === "skipped"
               ? "Skipped for now — add employees on WhatsApp anytime."
-              : `${status?.employee_count ?? 0} employees in Munshi${
-                  (status?.pending_welcome_count ?? 0) > 0
-                    ? ` · ${status?.pending_welcome_count} pending welcome`
+              : `${employeeCount} employee${employeeCount === 1 ? "" : "s"} in Munshi${
+                  pendingWelcomeCount > 0
+                    ? ` · ${pendingWelcomeCount} pending welcome`
                     : ""
                 }.`}
           </p>
@@ -648,6 +665,13 @@ export function OnboardingTeamStep({
             )}
 
             {preview && !previewing && <TeamCsvPreview data={preview} />}
+
+            {preview && !previewing && !teamDone && (
+              <p className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-950">
+                Preview sirf check hai — employees tabhi judenge jab aap{" "}
+                <span className="font-semibold">Confirm import</span> dabayein.
+              </p>
+            )}
 
             <button
               type="button"

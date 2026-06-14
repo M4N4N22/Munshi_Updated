@@ -6,6 +6,7 @@ import {
   buildEmployeeAddMenuOutbound,
   buildOwnerHomeDemoText,
   buildOwnerHomeMenuOutbound,
+  buildOwnerHomeSecondaryMenuOutbound,
   buildOwnerHomeWelcomeText,
 } from 'src/core/messaging/owner-home-outbound';
 import {
@@ -78,6 +79,7 @@ export class OwnerHomeService {
     }
 
     await send(phone, buildOwnerHomeMenuOutbound(readiness));
+    await send(phone, buildOwnerHomeSecondaryMenuOutbound());
   }
 
   async handleHomeAction(
@@ -87,6 +89,11 @@ export class OwnerHomeService {
       sendOutbound: (to: string, o: WaOutboundMessage) => Promise<unknown>;
       sendText: (to: string, body: string) => Promise<unknown>;
       handleTeamSetup: (phone: string, teamActionId: string) => Promise<void>;
+      deliverHelp?: (phone: string) => Promise<unknown>;
+      runSlashCommand?: (
+        phone: string,
+        command: string,
+      ) => Promise<unknown>;
     },
   ): Promise<void> {
     const ctx = await this.resolveContext(phone);
@@ -126,6 +133,33 @@ export class OwnerHomeService {
           return;
         }
         await deps.sendOutbound(phone, buildAssignReadyOutbound());
+        return;
+
+      case WA_INTERACTIVE_ID.HOME_SHOW_HELP:
+        if (deps.deliverHelp) {
+          await deps.deliverHelp(phone);
+        } else {
+          await deps.sendText(
+            phone,
+            'Poori command list ke liye *help* likhein.',
+          );
+        }
+        return;
+
+      case WA_INTERACTIVE_ID.HOME_STOCK_STATUS:
+        if (deps.runSlashCommand) {
+          await deps.runSlashCommand(phone, '/inventory_status');
+        } else {
+          await deps.sendText(phone, 'Stock ke liye *low stock dikhao* likhein.');
+        }
+        return;
+
+      case WA_INTERACTIVE_ID.HOME_SHOW_TEAM:
+        if (deps.runSlashCommand) {
+          await deps.runSlashCommand(phone, '/members');
+        } else {
+          await deps.sendText(phone, 'Team ke liye *show team* likhein.');
+        }
         return;
 
       case WA_INTERACTIVE_ID.HOME_GO_HOME:
@@ -169,8 +203,15 @@ export class OwnerHomeService {
     if (!user?.id) {
       return null;
     }
-    const businessId = user.factory_links?.factory_id;
-    const role = user.factory_links?.role;
+    let businessId = user.factory_links?.factory_id;
+    let role = user.factory_links?.role;
+    if (!businessId) {
+      const members = await this.usersService.findOne(user.id);
+      const link = (members as { factory_links?: { factory_id?: number; role?: string } })
+        .factory_links;
+      businessId = link?.factory_id;
+      role = link?.role;
+    }
     if (!businessId) {
       return null;
     }

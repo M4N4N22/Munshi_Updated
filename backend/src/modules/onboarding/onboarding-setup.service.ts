@@ -80,6 +80,18 @@ export class OnboardingSetupService {
       return role === USER_ROLE.WORKER || role === USER_ROLE.MANAGER;
     }).length;
 
+    let teamStatus =
+      factory.onboarding_team_status ?? ONBOARDING_SETUP_STATUS.PENDING;
+    if (
+      teamStatus === ONBOARDING_SETUP_STATUS.COMPLETED &&
+      employeeCount === 0
+    ) {
+      teamStatus = ONBOARDING_SETUP_STATUS.PENDING;
+      await factory.update({
+        onboarding_team_status: ONBOARDING_SETUP_STATUS.PENDING,
+      });
+    }
+
     const zoho = await this.integrationRepository.findActiveConnectionByProvider(
       ctx.factory_id,
       INTEGRATION_PROVIDER.ZOHO_INVENTORY,
@@ -90,7 +102,7 @@ export class OnboardingSetupService {
       user_id: ctx.user_id,
       company_name: factory.name,
       inventory_status: factory.onboarding_inventory_status ?? ONBOARDING_SETUP_STATUS.PENDING,
-      team_status: factory.onboarding_team_status ?? ONBOARDING_SETUP_STATUS.PENDING,
+      team_status: teamStatus,
       completed: Boolean(factory.onboarding_completed_at),
       stock_item_count: stock,
       employee_count: employeeCount,
@@ -263,6 +275,19 @@ export class OnboardingSetupService {
       parsed.rows,
       { sendWelcome: false },
     );
+
+    if (summary.added === 0 && summary.skipped === 0) {
+      const hints = summary.results
+        .filter((r) => r.status === 'failed')
+        .slice(0, 3)
+        .map((r) => `Row ${r.line}: ${r.detail}`)
+        .join(' · ');
+      throw new BadRequestException(
+        hints
+          ? `Koi employee add nahi hua. ${hints}`
+          : 'Koi employee add nahi hua. CSV check karein — role WORKER ya MANAGER, sahi phone number.',
+      );
+    }
 
     const merged = this.mergePendingWelcomes(
       existingPending,

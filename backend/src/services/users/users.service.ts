@@ -24,6 +24,30 @@ import {
 import { CreateUserDto, UpdateUserDto } from './users.dto';
 import { Op, Transaction } from 'sequelize';
 
+/** Build canonical lookup keys for Indian mobiles stored as 91XXXXXXXXXX. */
+export function phoneLookupVariants(phone: string): string[] {
+  const trimmed = phone.trim();
+  const digits = trimmed.replace(/\D/g, '');
+  const variants = new Set<string>();
+  if (trimmed) {
+    variants.add(trimmed);
+  }
+  if (!digits) {
+    return [...variants];
+  }
+  variants.add(digits);
+  if (digits.length === 12 && digits.startsWith('91')) {
+    variants.add(`+${digits}`);
+  } else if (digits.length === 10) {
+    variants.add(`91${digits}`);
+    variants.add(`+91${digits}`);
+  } else if (digits.length === 13 && digits.startsWith('91')) {
+    variants.add(digits.slice(0, 12));
+    variants.add(`+${digits.slice(0, 12)}`);
+  }
+  return [...variants];
+}
+
 @Injectable()
 export class UserService {
   private readonly userModel: typeof User;
@@ -108,17 +132,29 @@ export class UserService {
   }
 
   async findByPhone(phone: string) {
+    const variants = phoneLookupVariants(phone);
     const user = await this.userModel.findOne({
-      where: { phone_number: phone },
+      where: { phone_number: { [Op.in]: variants } },
       include: [
         {
           model: this.factoryUserModel,
           as: 'factory_links',
           attributes: ['factory_id', 'role', 'doj'],
+          required: false,
         },
       ],
     });
-    return user?.toJSON() as User & { factory_links: FactoryUser };
+    if (!user) {
+      return null;
+    }
+    const json = user.toJSON() as User & {
+      factory_links?: FactoryUser | FactoryUser[] | null;
+    };
+    const link = json.factory_links;
+    if (Array.isArray(link)) {
+      json.factory_links = link[0] ?? null;
+    }
+    return json as User & { factory_links: FactoryUser };
   }
 
   async update(id: number, dto: UpdateUserDto): Promise<User> {

@@ -354,7 +354,10 @@ export class WhatsAppService {
             interactiveActionId === WA_INTERACTIVE_ID.HOME_ADD_STOCK ||
             interactiveActionId === WA_INTERACTIVE_ID.HOME_ASSIGN_TASK ||
             interactiveActionId === WA_INTERACTIVE_ID.HOME_GO_HOME ||
-            interactiveActionId === WA_INTERACTIVE_ID.HOME_BULK_CSV
+            interactiveActionId === WA_INTERACTIVE_ID.HOME_BULK_CSV ||
+            interactiveActionId === WA_INTERACTIVE_ID.HOME_SHOW_HELP ||
+            interactiveActionId === WA_INTERACTIVE_ID.HOME_STOCK_STATUS ||
+            interactiveActionId === WA_INTERACTIVE_ID.HOME_SHOW_TEAM
           ) {
             await this.ownerHomeService.handleHomeAction(
               body.from,
@@ -364,6 +367,18 @@ export class WhatsAppService {
                 sendText: (to, t) => this.sendTextMessage(to, t),
                 handleTeamSetup: (to, id) =>
                   this.handleTeamSetupInteractive(to, id),
+                deliverHelp: (to) => this.deliverHelpCommand(to),
+                runSlashCommand: async (to, command) => {
+                  const result = await this.processCommand({
+                    from: to,
+                    command,
+                    message: command,
+                  });
+                  const outbound = this.resolveOutboundFromHandlerResult(result);
+                  if (outbound) {
+                    await this.sendOutbound(to, outbound);
+                  }
+                },
               },
             );
           } else {

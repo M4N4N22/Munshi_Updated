@@ -6,6 +6,18 @@ import {
   parseContactsInbound,
 } from './whatsapp-contact.extract';
 
+/** Normalize Olli `data.from` to digits-only 91XXXXXXXXXX when possible. */
+export function normalizeInboundWhatsAppPhone(from: string): string {
+  const digits = from.trim().replace(/\D/g, '');
+  if (digits.length === 12 && digits.startsWith('91')) {
+    return digits;
+  }
+  if (digits.length === 10) {
+    return `91${digits}`;
+  }
+  return digits || from.trim();
+}
+
 export type WhatsAppTextInbound = {
   kind: 'text';
   from: string;
@@ -36,10 +48,11 @@ export function parseWhatsAppInbound(
     return null;
   }
 
-  const from = data.from;
-  if (typeof from !== 'string' || !from.trim()) {
+  const fromRaw = data.from;
+  if (typeof fromRaw !== 'string' || !fromRaw.trim()) {
     return null;
   }
+  const from = normalizeInboundWhatsAppPhone(fromRaw);
 
   const media = mediaExtractor.extractMediaFromWebhook(body);
   if (media) {

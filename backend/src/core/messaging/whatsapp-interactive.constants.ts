@@ -10,6 +10,9 @@ export const WA_INTERACTIVE_ID = {
   HOME_ADD_STOCK: 'home_add_stock',
   HOME_ASSIGN_TASK: 'home_assign_task',
   HOME_GO_HOME: 'home_go_home',
+  HOME_SHOW_HELP: 'home_show_help',
+  HOME_STOCK_STATUS: 'home_stock_status',
+  HOME_SHOW_TEAM: 'home_show_team',
 } as const;
 
 export type WaInteractiveId =
@@ -30,6 +33,9 @@ export const WA_OWNER_HOME_BUTTON_TITLES = {
   [WA_INTERACTIVE_ID.HOME_ADD_STOCK]: 'Maal / stock jodein',
   [WA_INTERACTIVE_ID.HOME_ASSIGN_TASK]: 'Kaam assign karein',
   [WA_INTERACTIVE_ID.HOME_GO_HOME]: 'Home par jayein',
+  [WA_INTERACTIVE_ID.HOME_SHOW_HELP]: 'Saari commands',
+  [WA_INTERACTIVE_ID.HOME_STOCK_STATUS]: 'Stock dikhao',
+  [WA_INTERACTIVE_ID.HOME_SHOW_TEAM]: 'Team list',
 } as const;
 
 /** Low-stock alert button label (Olli may echo title instead of reply id). */
@@ -127,7 +133,10 @@ export function resolveTeamSetupActionId(message: string): WaInteractiveId | nul
     id === WA_INTERACTIVE_ID.HOME_ADD_STOCK ||
     id === WA_INTERACTIVE_ID.HOME_ASSIGN_TASK ||
     id === WA_INTERACTIVE_ID.HOME_GO_HOME ||
-    id === WA_INTERACTIVE_ID.HOME_BULK_CSV
+    id === WA_INTERACTIVE_ID.HOME_BULK_CSV ||
+    id === WA_INTERACTIVE_ID.HOME_SHOW_HELP ||
+    id === WA_INTERACTIVE_ID.HOME_STOCK_STATUS ||
+    id === WA_INTERACTIVE_ID.HOME_SHOW_TEAM
   ) {
     return null;
   }
@@ -138,15 +147,20 @@ export function isTeamSetupInteractiveId(message: string): boolean {
   return resolveTeamSetupActionId(message) != null;
 }
 
+const OWNER_HOME_INTERACTIVE_IDS = new Set<string>([
+  WA_INTERACTIVE_ID.HOME_ADD_EMPLOYEE,
+  WA_INTERACTIVE_ID.HOME_ADD_STOCK,
+  WA_INTERACTIVE_ID.HOME_ASSIGN_TASK,
+  WA_INTERACTIVE_ID.HOME_GO_HOME,
+  WA_INTERACTIVE_ID.HOME_BULK_CSV,
+  WA_INTERACTIVE_ID.HOME_SHOW_HELP,
+  WA_INTERACTIVE_ID.HOME_STOCK_STATUS,
+  WA_INTERACTIVE_ID.HOME_SHOW_TEAM,
+]);
+
 export function isOwnerHomeInteractiveId(message: string): boolean {
   const id = resolveInteractiveActionId(message);
-  return (
-    id === WA_INTERACTIVE_ID.HOME_ADD_EMPLOYEE ||
-    id === WA_INTERACTIVE_ID.HOME_ADD_STOCK ||
-    id === WA_INTERACTIVE_ID.HOME_ASSIGN_TASK ||
-    id === WA_INTERACTIVE_ID.HOME_GO_HOME ||
-    id === WA_INTERACTIVE_ID.HOME_BULK_CSV
-  );
+  return id != null && OWNER_HOME_INTERACTIVE_IDS.has(id);
 }
 
 export function isOwnerHomeTrigger(message: string): boolean {

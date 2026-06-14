@@ -1,6 +1,7 @@
 import {
   buildOwnerHomeMainButtons,
   buildOwnerHomeMenuOutbound,
+  buildOwnerHomeSecondaryMenuOutbound,
 } from './owner-home-outbound';
 
 describe('owner-home-outbound', () => {
@@ -23,6 +24,19 @@ describe('owner-home-outbound', () => {
     if (outbound.type === 'interactive_buttons') {
       expect(outbound.body).toContain('2 employee');
       expect(outbound.buttons).toHaveLength(3);
+    }
+  });
+
+  it('builds secondary menu with help and browse actions', () => {
+    const outbound = buildOwnerHomeSecondaryMenuOutbound();
+    expect(outbound.type).toBe('interactive_buttons');
+    if (outbound.type === 'interactive_buttons') {
+      expect(outbound.buttons).toHaveLength(3);
+      expect(outbound.buttons.map((b) => b.id)).toEqual([
+        'home_show_help',
+        'home_stock_status',
+        'home_show_team',
+      ]);
     }
   });
 });

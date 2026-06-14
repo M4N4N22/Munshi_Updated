@@ -12,6 +12,14 @@ describe('parseWhatsAppInbound', () => {
     ).toEqual({ kind: 'text', from: '919999999999', message: 'hello' });
   });
 
+  it('normalizes +91 inbound phone to digits-only 91XXXXXXXXXX', () => {
+    expect(
+      parseWhatsAppInbound({
+        data: { type: 'text', from: '+918874369725', text: 'START' },
+      }),
+    ).toEqual({ kind: 'text', from: '918874369725', message: 'START' });
+  });
+
   it('does not replace plain text with webhook metadata timestamps', () => {
     expect(
       parseWhatsAppInbound({
