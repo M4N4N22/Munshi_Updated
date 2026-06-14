@@ -203,8 +203,8 @@ export class OwnerHomeService {
     if (!user?.id) {
       return null;
     }
-    let businessId = user.factory_links?.factory_id;
-    let role = user.factory_links?.role;
+    let businessId: number | undefined = user.factory_links?.factory_id;
+    let role: string | undefined = user.factory_links?.role;
     if (!businessId) {
       const members = await this.usersService.findOne(user.id);
       const link = (members as { factory_links?: { factory_id?: number; role?: string } })
