@@ -1,7 +1,8 @@
 "use client";
 
 import { formatPhoneDisplay } from "@/lib/phone";
-import { Landmark, Link2, Loader2, Package, Users, X } from "lucide-react";
+import { LoadingState } from "@/components/ui/loading-state";
+import { Landmark, Link2, Package, Users, X } from "lucide-react";
 
 export interface ClientEmployee {
   user_id: number;
@@ -87,10 +88,10 @@ export function ClientDetailPanel({
 }: ClientDetailPanelProps) {
   if (loading) {
     return (
-      <div className="flex h-full min-h-[320px] flex-col items-center justify-center gap-3 rounded-2xl border border-zinc-200 bg-white p-8">
-        <Loader2 className="h-6 w-6 animate-spin text-emerald-600" />
-        <p className="text-sm text-zinc-500">Loading client details…</p>
-      </div>
+      <LoadingState
+        className="min-h-[320px] rounded-2xl border border-zinc-200 bg-white p-8"
+        minHeight="min-h-[320px]"
+      />
     );
   }
 

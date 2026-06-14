@@ -6,6 +6,8 @@ import {
   Trash2, Inbox, AlertTriangle, Search, X,
   ChevronUp, ChevronDown, StickyNote, Check,
 } from "lucide-react"
+import { LoadingState } from "@/components/ui/loading-state"
+import { Spinner } from "@/components/ui/spinner"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -386,7 +388,14 @@ export default function AdminPage() {
                 disabled={loading}
                 className="w-full bg-[#25D366] hover:bg-[#1fba5a] text-white rounded-xl py-3 text-sm font-bold transition-colors disabled:opacity-50"
               >
-                {loading ? "Loading..." : "Access Dashboard"}
+                {loading ? (
+                  <span className="inline-flex items-center gap-2">
+                    <Spinner size="sm" variant="onDark" />
+                    Opening…
+                  </span>
+                ) : (
+                  "Access Dashboard"
+                )}
               </button>
             </div>
           </div>
@@ -497,7 +506,7 @@ export default function AdminPage() {
             )}
 
             {loading ? (
-              <div className="text-center py-20 text-gray-500">Loading...</div>
+              <LoadingState className="py-20" variant="onDark" size="lg" />
             ) : filtered.length === 0 ? (
               <div className="text-center py-20 text-gray-500">
                 {leads.length === 0

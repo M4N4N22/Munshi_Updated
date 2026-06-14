@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { Plug } from "lucide-react";
 import { IntegrationsPanel } from "@/components/integrations/integrations-panel";
+import { LoadingState } from "@/components/ui/loading-state";
 import {
   fetchIntegrationConnections,
   type IntegrationConnectionSummary,
@@ -80,8 +81,8 @@ export default function IntegrationsPage() {
   return (
     <Suspense
       fallback={
-        <div className="flex min-h-screen items-center justify-center bg-[#0f1a14] text-gray-500">
-          Loading...
+        <div className="flex min-h-screen items-center justify-center bg-[#0f1a14]">
+          <LoadingState variant="onDark" size="lg" />
         </div>
       }
     >

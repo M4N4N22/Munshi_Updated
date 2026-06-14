@@ -4,6 +4,8 @@ import {
   ClientDetail,
   ClientDetailPanel,
 } from "@/components/admin/client-detail-panel";
+import { LoadingState } from "@/components/ui/loading-state";
+import { Spinner } from "@/components/ui/spinner";
 import { formatPhoneDisplay } from "@/lib/phone";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ChevronRight, RefreshCw, Search, X } from "lucide-react";
@@ -160,7 +162,14 @@ export default function AdminClientsPage() {
             disabled={loading || !adminKey}
             className="flex h-12 items-center justify-center rounded-xl bg-zinc-900 px-6 text-base font-semibold text-white transition hover:bg-zinc-800 disabled:opacity-60"
           >
-            {loading ? "Loading…" : "Open dashboard"}
+            {loading ? (
+              <span className="inline-flex items-center gap-2">
+                <Spinner size="sm" className="border-white/20 border-t-white" />
+                Opening…
+              </span>
+            ) : (
+              "Open dashboard"
+            )}
           </button>
         </form>
       </div>
@@ -236,9 +245,7 @@ export default function AdminClientsPage() {
 
           <div className="max-h-[min(70vh,640px)] overflow-y-auto rounded-2xl border border-zinc-200 bg-white">
             {loading && !data ? (
-              <p className="px-4 py-12 text-center text-sm text-zinc-500">
-                Loading…
-              </p>
+              <LoadingState className="py-12" size="sm" />
             ) : filtered.length === 0 ? (
               <p className="px-4 py-12 text-center text-sm text-zinc-500">
                 No clients found.

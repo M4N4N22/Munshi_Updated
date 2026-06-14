@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { ApiError } from "@/lib/api/client";
+import { LoadingState } from "@/components/ui/loading-state";
+import { Spinner } from "@/components/ui/spinner";
 import type { OnboardingSetupStatus } from "@/lib/api/onboarding";
 import {
   buildOnboardingZohoAuthorizeUrl,
@@ -185,6 +187,14 @@ export function OnboardingInventoryStep({
     }
   }
 
+  if (!status && !error) {
+    return (
+      <StepShell step={2} total={4} title="Add your inventory">
+        <LoadingState className="py-16" minHeight="min-h-[10rem]" />
+      </StepShell>
+    );
+  }
+
   return (
     <StepShell step={2} total={4} title="Add your inventory">
       <p className="text-sm leading-relaxed text-zinc-600">
@@ -269,7 +279,14 @@ export function OnboardingInventoryStep({
               onClick={handleUpload}
               className="flex h-11 items-center justify-center rounded-xl bg-zinc-900 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40"
             >
-              {busy ? "Uploading…" : "Upload inventory CSV"}
+              {busy ? (
+              <span className="inline-flex items-center gap-2">
+                <Spinner size="sm" className="border-white/20 border-t-white" />
+                Uploading…
+              </span>
+            ) : (
+              "Upload inventory CSV"
+            )}
             </button>
             {!file && (
               <p className="text-xs text-zinc-500">
@@ -375,6 +392,14 @@ export function OnboardingTeamStep({
       .catch(() => setError("Could not load setup status."));
   }, [ctx.setupToken]);
 
+  if (!status && !error) {
+    return (
+      <StepShell step={3} total={4} title="Add your team">
+        <LoadingState className="py-16" minHeight="min-h-[10rem]" />
+      </StepShell>
+    );
+  }
+
   async function handleUpload() {
     if (!file) {
       setError("Pehle team CSV file chunein.");
@@ -469,7 +494,14 @@ export function OnboardingTeamStep({
           onClick={handleUpload}
           className="flex h-11 items-center justify-center rounded-xl bg-zinc-900 text-sm font-semibold text-white disabled:opacity-50"
         >
-          {busy ? "Uploading…" : "Upload team CSV"}
+          {busy ? (
+            <span className="inline-flex items-center gap-2">
+              <Spinner size="sm" className="border-white/20 border-t-white" />
+              Uploading…
+            </span>
+          ) : (
+            "Upload team CSV"
+          )}
         </button>
       </div>
 
@@ -511,7 +543,14 @@ export function OnboardingTeamStep({
           onClick={handleFinish}
           className="flex h-11 flex-1 items-center justify-center rounded-xl bg-emerald-600 text-sm font-semibold text-white disabled:opacity-50"
         >
-          {busy ? "Finishing…" : "Finish setup"}
+          {busy ? (
+            <span className="inline-flex items-center gap-2">
+              <Spinner size="sm" className="border-white/20 border-t-white" />
+              Finishing…
+            </span>
+          ) : (
+            "Finish setup"
+          )}
         </button>
         <button
           type="button"

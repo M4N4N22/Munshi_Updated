@@ -18,6 +18,8 @@ import {
   saveOnboardingSetupSession,
   clearOnboardingSetupSession,
 } from "@/components/onboarding/onboarding-setup-steps";
+import { LoadingState } from "@/components/ui/loading-state";
+import { Spinner } from "@/components/ui/spinner";
 
 type Step = "phone" | "otp" | "inventory" | "team" | "ready";
 
@@ -293,9 +295,7 @@ export function OnboardingForm({
 
   if (otpRequired === null) {
     return (
-      <div className="flex w-full max-w-md flex-col gap-4 py-8">
-        <p className="text-sm text-zinc-500">Loading…</p>
-      </div>
+      <LoadingState className="max-w-md py-16" minHeight="min-h-[12rem]" />
     );
   }
 
@@ -392,7 +392,14 @@ export function OnboardingForm({
             disabled={submitting || otp.length !== 6}
             className="flex h-12 items-center justify-center rounded-xl bg-zinc-900 px-6 text-base font-semibold text-white transition hover:bg-zinc-800 disabled:opacity-60"
           >
-            {submitting ? "Setting up account…" : "Verify & continue"}
+            {submitting ? (
+              <span className="inline-flex items-center gap-2">
+                <Spinner size="sm" className="border-white/20 border-t-white" />
+                Setting up account…
+              </span>
+            ) : (
+              "Verify & continue"
+            )}
           </button>
         </form>
 
@@ -505,11 +512,16 @@ export function OnboardingForm({
           }
           className="flex h-12 items-center justify-center rounded-xl bg-zinc-900 px-6 text-base font-semibold text-white transition hover:bg-zinc-800 disabled:opacity-60"
         >
-          {submitting
-            ? "Setting up…"
-            : skipOtp
-              ? "Continue"
-              : "Send verification code"}
+          {submitting ? (
+            <span className="inline-flex items-center gap-2">
+              <Spinner size="sm" className="border-white/20 border-t-white" />
+              Setting up…
+            </span>
+          ) : skipOtp ? (
+            "Continue"
+          ) : (
+            "Send verification code"
+          )}
         </button>
       </form>
 
