@@ -358,6 +358,15 @@ export class InventoryImportService {
     batchId: number,
     transaction: Transaction,
   ) {
+    const existing = await this.repository.findCsvImportTransaction(
+      inventoryItemId,
+      batchId,
+      transaction,
+    );
+    if (existing) {
+      return;
+    }
+
     await this.transactionService.recordStockIn(
       {
         factory_id: factoryId,

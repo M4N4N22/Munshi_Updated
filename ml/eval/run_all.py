@@ -6,12 +6,14 @@ from eval.document_eval import evaluate_document_extraction
 from eval.document_quality_eval import evaluate as evaluate_document_quality
 from eval.e2e_validation import evaluate as evaluate_e2e
 from eval.intent_eval import evaluate_intent_classification
+from eval.smoke_intent_eval import evaluate as evaluate_smoke_intents
 from eval.workflow_intent_eval import evaluate as evaluate_workflow_intents
 
 
 def run_all(use_llm: bool = False) -> dict:
     intent = evaluate_intent_classification()
     workflow_intent = evaluate_workflow_intents(use_llm=use_llm)
+    smoke_intent = evaluate_smoke_intents(use_llm=use_llm)
     extraction = evaluate_document_extraction()
     document_quality = evaluate_document_quality()
     contract = evaluate_contract_compliance()
@@ -26,6 +28,13 @@ def run_all(use_llm: bool = False) -> dict:
             "macro_recall": workflow_intent["macro_recall"],
             "failure_count": workflow_intent["failure_count"],
             "mode": workflow_intent["mode"],
+        },
+        "smoke_intent": {
+            "accuracy": smoke_intent.get("accuracy", 0),
+            "failure_count": smoke_intent.get("failure_count", 0),
+            "total_examples": smoke_intent.get("total_examples", 0),
+            "contract_gap_accuracy": smoke_intent.get("contract_gap_accuracy", 0),
+            "mode": smoke_intent.get("mode"),
         },
         "extraction": extraction,
         "document_quality": {
@@ -42,6 +51,7 @@ def run_all(use_llm: bool = False) -> dict:
         },
         "summary": {
             "workflow_intent_accuracy": workflow_intent["accuracy"],
+            "smoke_intent_accuracy": smoke_intent.get("accuracy", 0),
             "document_overall_pass_rate": document_quality["overall_pass_rate"],
             "contract_compliance_rate": contract["compliance_rate"],
             "contract_drift_passed": contract_drift["passed"],

@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SmokeIntentCase",
+  "type": "object",
+  "required": ["id", "message", "expected_intent", "slice", "contract_version"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^SMOKE-" },
+    "message": { "type": "string", "minLength": 1 },
+    "expected_intent": { "type": "string" },
+    "expected_slots": { "type": "object" },
+    "role": { "type": "string", "enum": ["OWNER", "MANAGER", "WORKER", "ALL"] },
+    "category": { "type": "string" },
+    "slice": { "type": "string" },
+    "boundary_pair": { "type": ["string", "null"] },
+    "language": { "type": "string" },
+    "tags": { "type": "array", "items": { "type": "string" } },
+    "contract_version": { "type": "string" },
+    "forbidden_intents": { "type": "array", "items": { "type": "string" } },
+    "notes": { "type": "string" }
+  },
+  "additionalProperties": true
+}

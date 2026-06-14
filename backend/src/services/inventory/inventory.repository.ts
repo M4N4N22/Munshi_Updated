@@ -7,7 +7,10 @@ import {
   InventoryLocation,
   InventoryTransaction,
 } from './inventory.schema';
-import { INVENTORY_PAGINATION } from './inventory.constants';
+import {
+  INVENTORY_PAGINATION,
+  INVENTORY_REFERENCE_TYPE,
+} from './inventory.constants';
 
 @Injectable()
 export class InventoryRepository {
@@ -250,6 +253,21 @@ export class InventoryRepository {
     transaction: Transaction,
   ) {
     return this.transactionModel.create(data as any, { transaction });
+  }
+
+  findCsvImportTransaction(
+    inventoryItemId: number,
+    batchId: number,
+    transaction?: Transaction,
+  ) {
+    return this.transactionModel.findOne({
+      where: {
+        inventory_item_id: inventoryItemId,
+        reference_type: INVENTORY_REFERENCE_TYPE.CSV_IMPORT,
+        reference_id: batchId,
+      },
+      transaction,
+    });
   }
 
   sumTransactionQuantities(itemId: number, factoryId: number) {

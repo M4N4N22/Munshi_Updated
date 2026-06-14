@@ -9,15 +9,13 @@ import type { InventoryCsvRow } from 'src/modules/whatsapp/inventory-csv.parse';
 import type { InventoryImportReview } from 'src/services/inventory/inventory-import.service';
 import { InventoryImportUploadService } from 'src/services/inventory/inventory-import-upload.service';
 import type { InventoryImportSummary } from 'src/services/inventory/inventory-import.service';
-import { USER_ROLE } from 'src/services/users/users.constants';
-import { UserService } from 'src/services/users/users.service';
 import {
   INVENTORY_CSV_MAX_BYTES,
   INVENTORY_CSV_PENDING_TTL_MS,
   INVENTORY_CSV_REVIEW_TTL_MS,
 } from './inventory-csv.constants';
 
-type PendingPhase = 'awaiting_upload' | 'awaiting_confirm';
+type PendingPhase = 'awaiting_upload' | 'awaiting_confirm' | 'importing';
 
 type PendingCsv = {
   phase: PendingPhase;
@@ -27,11 +25,6 @@ type PendingCsv = {
   rows?: InventoryCsvRow[];
   review?: InventoryImportReview;
   batchId?: number;
-};
-
-type ImportContext = {
-  factoryId: number;
-  userId: number;
 };
 
 const REJECTED_EXTENSIONS = new Set([
@@ -60,15 +53,21 @@ export const WA_INVENTORY_CSV_UNSUPPORTED =
 export const WA_INVENTORY_IMPORT_REVIEW_EXPIRED =
   'Import review session expired.\n\nPlease upload the CSV again.';
 
+export const WA_INVENTORY_IMPORT_IN_PROGRESS =
+  'Import already in progress.';
+
+export const WA_INVENTORY_CSV_NO_SESSION =
+  'I detected an inventory CSV.\n\n' +
+  'Please send:\n' +
+  '/inventory_import_csv\n\n' +
+  'before uploading inventory.';
+
 @Injectable()
 export class InventoryBulkImportService {
   private readonly logger = new Logger(InventoryBulkImportService.name);
   private readonly pendingByPhone = new Map<string, PendingCsv>();
 
-  constructor(
-    private readonly uploadService: InventoryImportUploadService,
-    private readonly usersService: UserService,
-  ) {}
+  constructor(private readonly uploadService: InventoryImportUploadService) {}
 
   startAwaitingCsv(phone: string, factoryId: number, ownerUserId: number): void {
     this.pendingByPhone.set(phone, {
@@ -136,11 +135,6 @@ export class InventoryBulkImportService {
     return mime === 'text/csv' || mime === 'application/csv' || mime === 'text/plain';
   }
 
-  async canAutoImport(phone: string): Promise<boolean> {
-    const ctx = await this.resolveOwnerManagerContext(phone);
-    return ctx != null;
-  }
-
   async importFromCsvBuffer(
     phone: string,
     buffer: Buffer,
@@ -149,6 +143,9 @@ export class InventoryBulkImportService {
     options?: { skipReview?: boolean },
   ): Promise<string> {
     const pending = this.getPending(phone);
+    if (pending?.phase === 'importing') {
+      return WA_INVENTORY_IMPORT_IN_PROGRESS;
+    }
     if (pending?.phase === 'awaiting_confirm') {
       return (
         'Pehle import review complete karein.\n\n' +
@@ -157,19 +154,14 @@ export class InventoryBulkImportService {
       );
     }
 
-    const ctx = pending
-      ? {
-          factoryId: pending.factoryId,
-          userId: pending.ownerUserId,
-        }
-      : (await this.resolveOwnerManagerContext(phone));
-
-    if (!ctx) {
-      return (
-        `${WA_INVENTORY_CSV_UNSUPPORTED}\n\n` +
-        'Inventory CSV import sirf owner/manager kar sakte hain.'
-      );
+    if (!pending) {
+      return WA_INVENTORY_CSV_NO_SESSION;
     }
+
+    const ctx = {
+      factoryId: pending.factoryId,
+      userId: pending.ownerUserId,
+    };
 
     const batchId = this.generateBatchId();
     const startedAt = new Date().toISOString();
@@ -279,6 +271,9 @@ export class InventoryBulkImportService {
 
   async handleReviewReply(phone: string, message: string): Promise<string | null> {
     const pending = this.getPending(phone);
+    if (pending?.phase === 'importing') {
+      return WA_INVENTORY_IMPORT_IN_PROGRESS;
+    }
     if (!pending || pending.phase !== 'awaiting_confirm') {
       return null;
     }
@@ -302,6 +297,9 @@ export class InventoryBulkImportService {
 
   async confirmImport(phone: string): Promise<string> {
     const pending = this.getPending(phone);
+    if (pending?.phase === 'importing') {
+      return WA_INVENTORY_IMPORT_IN_PROGRESS;
+    }
     if (!pending || pending.phase !== 'awaiting_confirm') {
       return WA_INVENTORY_IMPORT_REVIEW_EXPIRED;
     }
@@ -313,24 +311,31 @@ export class InventoryBulkImportService {
 
     const startedAt = new Date().toISOString();
     const batchId = pending.batchId;
+    const snapshot = { ...pending };
+
+    this.pendingByPhone.set(phone, {
+      ...pending,
+      phase: 'importing',
+      expiresAt: Date.now() + INVENTORY_CSV_REVIEW_TTL_MS,
+    });
 
     try {
       const summary = await this.uploadService.processImportWithProvisioning(
         {
-          factory_id: pending.factoryId,
-          created_by: pending.ownerUserId,
+          factory_id: snapshot.factoryId,
+          created_by: snapshot.ownerUserId,
           batch_id: batchId,
         },
-        pending.rows,
-        pending.review,
+        snapshot.rows!,
+        snapshot.review!,
       );
 
       this.pendingByPhone.delete(phone);
       this.logAudit({
         batchId,
         phone,
-        factoryId: pending.factoryId,
-        userId: pending.ownerUserId,
+        factoryId: snapshot.factoryId,
+        userId: snapshot.ownerUserId,
         startedAt,
         summary,
       });
@@ -340,6 +345,7 @@ export class InventoryBulkImportService {
         locationsCreated: summary.locationsCreatedCount ?? 0,
       });
     } catch (err: unknown) {
+      this.pendingByPhone.delete(phone);
       if (err instanceof BadRequestException) {
         return this.formatParserError(this.extractErrorMessage(err));
       }
@@ -404,24 +410,6 @@ export class InventoryBulkImportService {
     );
 
     return lines.join('\n');
-  }
-
-  private async resolveOwnerManagerContext(
-    phone: string,
-  ): Promise<ImportContext | null> {
-    const user = await this.usersService.findByPhone(phone);
-    if (!user?.id) {
-      return null;
-    }
-    const factoryId = user.factory_links?.factory_id;
-    const role = (user.factory_links?.role || '').toUpperCase();
-    if (!factoryId) {
-      return null;
-    }
-    if (role !== USER_ROLE.OWNER && role !== USER_ROLE.MANAGER) {
-      return null;
-    }
-    return { factoryId, userId: user.id };
   }
 
   private formatSummary(

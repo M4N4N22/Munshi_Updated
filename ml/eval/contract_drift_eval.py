@@ -27,16 +27,44 @@ def _check_intent_contract() -> dict[str, Any]:
     model_fields = set(ClassifyResponse.model_fields.keys())
     schema = _load_json("schemas/classify-response.json")
     required = set(schema.get("required", []))
+    intents = intent_file.get("intents", [])
+    slash_intents = [i for i in intents if str(i).startswith("/")]
     workflow_intents = {
         "/onboard_vendor",
         "/onboard_worker",
         "/inventory_create",
         "/inventory_status",
+        "/purchase_request_create",
+        "/business_discovery",
+        "/continue_discovery",
     }
-    missing_workflow = workflow_intents - set(intent_file.get("intents", []))
+    v1_1_gap_intents = {
+        "/assign_delivery",
+        "/task_inventory_nl",
+        "/inventory_import_csv",
+        "/suggestion_approve",
+        "/cancel",
+    }
+    missing_workflow = workflow_intents - set(intents)
+    missing_gap = v1_1_gap_intents - set(intents)
+    discovery_phrases = intent_file.get("discovery_phrases", [])
+    import_collision = "import inventory" in discovery_phrases
+    version_ok = intent_file.get("version") == "v1.1"
+    count_ok = len(slash_intents) == 30 and "general_chat" in intents
     return {
-        "passed": not missing_workflow and required.issubset(model_fields),
+        "passed": (
+            not missing_workflow
+            and not missing_gap
+            and not import_collision
+            and version_ok
+            and count_ok
+            and required.issubset(model_fields)
+        ),
+        "version": intent_file.get("version"),
+        "slash_intent_count": len(slash_intents),
         "missing_workflow_intents": sorted(missing_workflow),
+        "missing_v1_1_gap_intents": sorted(missing_gap),
+        "import_inventory_in_discovery_phrases": import_collision,
         "schema_required_fields": sorted(required),
         "model_fields": sorted(model_fields),
     }

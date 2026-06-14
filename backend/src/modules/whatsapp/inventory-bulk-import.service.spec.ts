@@ -1,16 +1,16 @@
 import { BadRequestException } from '@nestjs/common';
 import {
   InventoryBulkImportService,
+  WA_INVENTORY_CSV_NO_SESSION,
   WA_INVENTORY_CSV_UNSUPPORTED,
+  WA_INVENTORY_IMPORT_IN_PROGRESS,
   WA_INVENTORY_IMPORT_REVIEW_EXPIRED,
 } from './inventory-bulk-import.service';
 import type { InventoryImportUploadService } from 'src/services/inventory/inventory-import-upload.service';
-import type { UserService } from 'src/services/users/users.service';
 import {
   INVENTORY_CSV_MAX_BYTES,
   INVENTORY_CSV_REVIEW_TTL_MS,
 } from './inventory-csv.constants';
-import { USER_ROLE } from 'src/services/users/users.constants';
 
 describe('InventoryBulkImportService', () => {
   const uploadService = {
@@ -20,11 +20,7 @@ describe('InventoryBulkImportService', () => {
     processImportWithProvisioning: jest.fn(),
   } as unknown as InventoryImportUploadService;
 
-  const usersService = {
-    findByPhone: jest.fn(),
-  } as unknown as UserService;
-
-  const service = new InventoryBulkImportService(uploadService, usersService);
+  const service = new InventoryBulkImportService(uploadService);
 
   const templateCsv =
     'sku,name,category,location,unit,quantity\n' +
@@ -56,28 +52,15 @@ describe('InventoryBulkImportService', () => {
     (uploadService.buildImportReview as jest.Mock).mockResolvedValue(templateReview);
   });
 
-  it('imports valid CSV for owner via auto context without review', async () => {
-    (usersService.findByPhone as jest.Mock).mockResolvedValue({
-      id: 42,
-      factory_links: { factory_id: 1, role: USER_ROLE.OWNER },
-    });
-    (uploadService.uploadCsv as jest.Mock).mockResolvedValue({
-      addedCount: 2,
-      updatedCount: 0,
-      failedCount: 0,
-      skippedCount: 0,
-      rowResults: [],
-    });
-
+  it('rejects CSV upload without active import session', async () => {
     const msg = await service.importFromCsvBuffer(
       '+911111111111',
       Buffer.from(templateCsv, 'utf8'),
       'inventory.csv',
     );
 
-    expect(msg).toContain('✅ Inventory import complete');
-    expect(msg).toContain('Added: 2');
-    expect(uploadService.uploadCsv).toHaveBeenCalled();
+    expect(msg).toBe(WA_INVENTORY_CSV_NO_SESSION);
+    expect(uploadService.uploadCsv).not.toHaveBeenCalled();
     expect(uploadService.buildImportReview).not.toHaveBeenCalled();
   });
 
@@ -203,6 +186,41 @@ describe('InventoryBulkImportService', () => {
     const msg = await service.confirmImport('+911111111111');
     expect(msg).toContain('expired');
     jest.useRealTimers();
+  });
+
+  it('blocks double CONFIRM while import is in progress', async () => {
+    service.startAwaitingCsv('+911111111111', 1, 42);
+    await service.importFromCsvBuffer(
+      '+911111111111',
+      Buffer.from(templateCsv, 'utf8'),
+      'inventory.csv',
+    );
+
+    let resolveImport!: (value: unknown) => void;
+    const importPromise = new Promise((resolve) => {
+      resolveImport = resolve;
+    });
+    (uploadService.processImportWithProvisioning as jest.Mock).mockReturnValue(
+      importPromise,
+    );
+
+    const first = service.handleReviewReply('+911111111111', 'CONFIRM');
+    const second = service.handleReviewReply('+911111111111', 'CONFIRM');
+
+    const secondMsg = await second;
+    expect(secondMsg).toBe(WA_INVENTORY_IMPORT_IN_PROGRESS);
+    expect(uploadService.processImportWithProvisioning).toHaveBeenCalledTimes(1);
+
+    resolveImport({
+      addedCount: 1,
+      updatedCount: 0,
+      failedCount: 0,
+      skippedCount: 0,
+      rowResults: [],
+      categoriesCreatedCount: 0,
+      locationsCreatedCount: 0,
+    });
+    await first;
   });
 
   it('detects rejected document types', () => {
