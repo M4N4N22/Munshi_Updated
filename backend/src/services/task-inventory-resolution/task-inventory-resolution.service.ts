@@ -21,9 +21,19 @@ export class TaskInventoryResolutionService {
       this.workerResolver.resolve(factoryId, extraction.assignee_hint),
     ]);
 
+    let quantity = extraction.quantity;
+    if (
+      quantity == null &&
+      (extraction.task_kind === 'delivery' || extraction.task_kind === 'issue') &&
+      inventory.status === 'resolved' &&
+      worker.status === 'resolved'
+    ) {
+      quantity = 1;
+    }
+
     return {
       task_kind: extraction.task_kind,
-      quantity: extraction.quantity,
+      quantity,
       inventory,
       worker,
       disambiguation: collectDisambiguationPayloads(inventory, worker),

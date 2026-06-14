@@ -86,4 +86,11 @@ describe('WorkerResolverService', () => {
     mockMembers([shyam]);
     expect(await service.resolve(1, null)).toEqual({ status: 'not_found' });
   });
+
+  it('strips @ from mention-style hints', async () => {
+    mockMembers([{ user_id: 4, name: 'Vikram Shah' }]);
+    const result = await service.resolve(1, '@vikram');
+    expect(result.status).toBe('resolved');
+    expect(result.name).toBe('Vikram Shah');
+  });
 });

@@ -31,7 +31,7 @@ export class WorkerResolverService {
     factoryId: number,
     hint: string | null | undefined,
   ): Promise<WorkerMatchResult> {
-    const normalized = hint?.trim();
+    const normalized = hint?.trim().replace(/^@+/, '').trim();
     if (!normalized) {
       return { status: 'not_found' };
     }

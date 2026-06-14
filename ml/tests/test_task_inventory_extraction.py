@@ -79,6 +79,29 @@ def test_sku_inputs():
     assert result["task_kind"] == "delivery"
 
 
+def test_mention_assignee_with_sku():
+    result = _extract("@vikram TEST_ITEM_01 bhejo")
+    assert result["assignee_hint"] == "Vikram"
+    assert result["item_name_or_sku"] == "TEST_ITEM_01"
+    assert result["quantity"] is None
+    assert result["task_kind"] == "delivery"
+
+
+def test_name_before_sku_without_ko():
+    result = _extract("vikram shah TEST_ITEM_01 bhejo")
+    assert result["assignee_hint"] == "Vikram Shah"
+    assert result["item_name_or_sku"] == "TEST_ITEM_01"
+    assert result["task_kind"] == "delivery"
+
+
+def test_mention_assignee_with_item_name():
+    result = _extract("@vikram test item 1 bhejo")
+    assert result["assignee_hint"] == "Vikram"
+    assert result["item_name_or_sku"] == "test item 1"
+    assert result["quantity"] is None
+    assert result["task_kind"] == "delivery"
+
+
 def test_contract_always_has_four_keys():
     result = _extract("")
     assert set(result.keys()) == {

@@ -16,6 +16,15 @@ _ASSIGNEE_KO_RE = re.compile(
     re.IGNORECASE,
 )
 
+_MENTION_RE = re.compile(r"@([A-Za-z][A-Za-z0-9_]*)")
+
+_NAME_BEFORE_SKU_RE = re.compile(
+    r"^(?:@\s*)?(?P<name>[A-Za-z]+(?:\s+[A-Za-z]+){0,2})\s+(?=[A-Z][A-Z0-9_]*_[A-Z0-9_]+\b)",
+    re.IGNORECASE,
+)
+
+_ITEM_NUMBER_RE = re.compile(r"\bitem\s+(\d+)\b", re.IGNORECASE)
+
 _ASSIGNEE_EXCLUDE = frozenset(
     {
         "aaj",
@@ -73,7 +82,7 @@ def _title_name(raw: str) -> str:
     cleaned = raw.strip()
     if not cleaned:
         return cleaned
-    return cleaned[0].upper() + cleaned[1:].lower()
+    return " ".join(part.capitalize() for part in cleaned.split())
 
 
 def _normalize_item(raw: str) -> Optional[str]:
@@ -127,8 +136,8 @@ class TaskInventoryExtractor:
             return TaskInventoryExtraction(task_kind="inventory_count")
 
         task_kind = self._detect_task_kind(text)
-        assignee = self._extract_assignee(text)
         sku = self._extract_sku(text)
+        assignee = self._extract_assignee(text, sku)
         quantity = self._extract_quantity(text, sku)
         item = self._extract_item_name(text, sku, quantity, assignee)
 
@@ -150,7 +159,7 @@ class TaskInventoryExtractor:
             return False
         if _QTY_RE.search(text):
             return False
-        assignee = self._extract_assignee(text)
+        assignee = self._extract_assignee(text, self._extract_sku(text))
         if assignee and _ASSIGNEE_KO_RE.search(text):
             ko_match = _ASSIGNEE_KO_RE.search(text)
             after_ko = text[ko_match.end() :] if ko_match else ""
@@ -171,14 +180,27 @@ class TaskInventoryExtractor:
             return "inventory_count"
         return None
 
-    def _extract_assignee(self, text: str) -> Optional[str]:
-        match = _ASSIGNEE_KO_RE.search(text)
-        if not match:
-            return None
-        name = match.group(1).strip().lower()
-        if name in _ASSIGNEE_EXCLUDE:
-            return None
-        return _title_name(name)
+    def _extract_assignee(self, text: str, sku: Optional[str]) -> Optional[str]:
+        mention = _MENTION_RE.search(text)
+        if mention:
+            name = mention.group(1).strip().lower()
+            if name not in _ASSIGNEE_EXCLUDE:
+                return _title_name(name)
+
+        ko = _ASSIGNEE_KO_RE.search(text)
+        if ko:
+            name = ko.group(1).strip().lower()
+            if name not in _ASSIGNEE_EXCLUDE:
+                return _title_name(name)
+
+        if sku:
+            before = _NAME_BEFORE_SKU_RE.match(text.strip())
+            if before:
+                name = before.group("name").strip().lower()
+                if name not in _ASSIGNEE_EXCLUDE:
+                    return _title_name(name)
+
+        return None
 
     def _extract_sku(self, text: str) -> Optional[str]:
         match = _SKU_RE.search(text)
@@ -191,8 +213,13 @@ class TaskInventoryExtractor:
             if sku_match:
                 sku_span = (sku_match.start(), sku_match.end())
 
+        item_number = _ITEM_NUMBER_RE.search(text)
+        item_number_span = item_number.span() if item_number else None
+
         for match in _QTY_RE.finditer(text):
             if sku_span and sku_span[0] <= match.start() < sku_span[1]:
+                continue
+            if item_number_span and item_number_span[0] <= match.start() < item_number_span[1]:
                 continue
             raw = match.group(1)
             value = float(raw)
@@ -210,9 +237,7 @@ class TaskInventoryExtractor:
         if sku:
             return None
 
-        working = text
-        if assignee:
-            working = _ASSIGNEE_KO_RE.sub(" ", working, count=1)
+        working = self._strip_assignee_prefix(text, assignee)
 
         if quantity is not None:
             qty_pattern = re.compile(
@@ -233,7 +258,32 @@ class TaskInventoryExtractor:
                 if candidate:
                     return candidate
 
+        if assignee and quantity is None:
+            candidate = self._item_from_fragment(working)
+            if candidate:
+                return candidate
+
         return None
+
+    def _strip_assignee_prefix(self, text: str, assignee: Optional[str]) -> str:
+        working = _MENTION_RE.sub(" ", text)
+        if not assignee:
+            return working.strip()
+
+        parts = assignee.split()
+        if parts:
+            full_pattern = r"\b" + r"\s+".join(re.escape(part) for part in parts) + r"\b"
+            working = re.sub(full_pattern, " ", working, count=1, flags=re.IGNORECASE)
+        if len(parts) == 1:
+            working = re.sub(
+                rf"^{re.escape(parts[0])}\s+",
+                " ",
+                working,
+                count=1,
+                flags=re.IGNORECASE,
+            )
+        working = _ASSIGNEE_KO_RE.sub(" ", working, count=1)
+        return working.strip()
 
     def _item_from_fragment(self, fragment: str) -> Optional[str]:
         cleaned = fragment.strip(" ,.")

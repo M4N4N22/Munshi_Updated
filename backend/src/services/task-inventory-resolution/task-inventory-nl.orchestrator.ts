@@ -182,7 +182,7 @@ export class TaskInventoryNlOrchestratorService {
     ) {
       return this.confirmationService.buildRecoveryMessage(
         'Quantity required',
-        'Please include quantity in your message, e.g. *Ram ko 20 cement deliver kar do*.',
+        'Quantity likhein, jaise: *Vikram ko 1 TEST_ITEM_01 bhejo* ya *Ram ko 20 cement deliver kar do*.',
       );
     }
 
