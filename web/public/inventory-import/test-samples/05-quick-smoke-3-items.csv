@@ -1,0 +1,4 @@
+sku,name,category,location,unit,quantity
+TEST_ITEM_1,Test Product One,General,Main Store,pcs,10
+TEST_ITEM_2,Test Product Two,General,Main Store,pcs,5
+TEST_ITEM_3,Test Product Three,General,Main Store,pcs,1

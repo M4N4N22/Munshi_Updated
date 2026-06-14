@@ -14,6 +14,7 @@ import {
 import { TeamCsvImportService } from 'src/services/team-import/team-csv-import.service';
 import { WorkerOnboardingService } from 'src/services/workflow/worker-onboarding.service';
 import { IntegrationRepository } from 'src/services/integrations/integration.repository';
+import { DepartmentsService } from 'src/services/departments/departments.service';
 import { INTEGRATION_PROVIDER } from 'src/services/integrations/integration.constants';
 import {
   ONBOARDING_SETUP_STATUS,
@@ -52,6 +53,7 @@ export class OnboardingSetupService {
     private readonly teamCsvImport: TeamCsvImportService,
     private readonly workerOnboarding: WorkerOnboardingService,
     private readonly integrationRepository: IntegrationRepository,
+    private readonly departmentsService: DepartmentsService,
   ) {}
 
   createSetupToken(payload: {
@@ -249,6 +251,11 @@ export class OnboardingSetupService {
 
     const factory = await this.getFactory(ctx.factory_id);
     const existingPending = this.readPendingWelcomes(factory);
+
+    await this.departmentsService.ensureDefaultDepartment(
+      ctx.factory_id,
+      ctx.user_id,
+    );
 
     const summary = await this.teamCsvImport.importRows(
       ctx.factory_id,

@@ -9,6 +9,7 @@ import {
   normalizeWorkerName,
   normalizeWorkerPhone,
   resolveDepartmentSelection,
+  type DepartmentOption,
 } from 'src/services/workflow/worker-onboarding.validation';
 import { parseTeamCsvText, type TeamCsvRow } from 'src/modules/whatsapp/team-csv.parse';
 import {
@@ -69,7 +70,14 @@ export class TeamCsvImportService {
     options?: { sendWelcome?: boolean },
   ): Promise<TeamCsvImportSummary> {
     const sendWelcome = options?.sendWelcome ?? true;
-    const departments = await this.departmentsService.listByFactory(factoryId);
+    let departments = await this.departmentsService.listByFactory(factoryId);
+    if (!departments.length) {
+      await this.departmentsService.ensureDefaultDepartment(
+        factoryId,
+        ownerUserId,
+      );
+      departments = await this.departmentsService.listByFactory(factoryId);
+    }
     const deptOptions = departments.map((d) => ({
       id: d.id,
       name: d.name,
@@ -88,6 +96,7 @@ export class TeamCsvImportService {
     for (const row of rows) {
       const result = await this.importOneRow(
         factoryId,
+        ownerUserId,
         row,
         deptOptions,
         sendWelcome,
@@ -110,10 +119,35 @@ export class TeamCsvImportService {
     };
   }
 
+  private async resolveOrCreateDepartment(
+    factoryId: number,
+    ownerUserId: number,
+    rawDept: string,
+    deptOptions: DepartmentOption[],
+  ): Promise<DepartmentOption> {
+    try {
+      return resolveDepartmentSelection(rawDept, deptOptions);
+    } catch {
+      const created = await this.departmentsService.findOrCreateByName(
+        factoryId,
+        rawDept,
+        ownerUserId,
+      );
+      const option = {
+        id: created.id,
+        name: created.name,
+        slug: created.slug,
+      };
+      deptOptions.push(option);
+      return option;
+    }
+  }
+
   private async importOneRow(
     businessId: number,
+    ownerUserId: number,
     row: TeamCsvRow,
-    deptOptions: { id: number; name: string; slug: string }[],
+    deptOptions: DepartmentOption[],
     sendWelcome: boolean,
   ): Promise<TeamCsvImportRowResult> {
     const base = { line: row.line, name: row.name || `Row ${row.line}` };
@@ -130,7 +164,12 @@ export class TeamCsvImportService {
         };
       }
 
-      const dept = resolveDepartmentSelection(row.department, deptOptions);
+      const dept = await this.resolveOrCreateDepartment(
+        businessId,
+        ownerUserId,
+        row.department,
+        deptOptions,
+      );
       let doj: Date | null = null;
       if (row.doj.trim()) {
         doj = normalizeWorkerDoj(row.doj);

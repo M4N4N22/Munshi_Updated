@@ -1,0 +1,9 @@
+sku,name,category,location,unit,quantity,reorder_threshold
+KAJU_KATLI_1KG,Kaju Katli 1kg Box,Sweets,Vijay Nagar Outlet,box,48,12
+SOAN_PAPDI_500,Soan Papdi 500g Pack,Sweets,Vijay Nagar Outlet,pack,65,15
+PISTA_RAW_1KG,Raw Pista 1kg,Nuts,Vijay Nagar Outlet,kg,8,3
+CASHEW_W320,Cashew W320,Nuts,Vijay Nagar Outlet,kg,3.2,2
+KACHORI_OIL_5L,Kachori Frying Oil 5L,Kitchen Supplies,Palasia Outlet,litre,12,4
+GHEE_1L,Pure Ghee 1L,Dairy,Palasia Outlet,litre,24,6
+MILK_POWDER_1KG,Full Cream Milk Powder,Baking,Palasia Outlet,kg,15,5
+COUNTER_NAPKIN,Counter Tissue Roll,Housekeeping,Vijay Nagar Outlet,pack,30,10

@@ -1,0 +1,7 @@
+item_code,product_name,category,godown,uom,qty,min_stock
+CEMENT_50KG,UltraTech Cement 50kg Bag,Building Materials,Main Warehouse,bag,100,10
+STEEL_12MM,TMT Steel Rod 12mm,Building Materials,Main Warehouse,pcs,50,8
+SCREW_75MM,Wood Screw 75mm,Fasteners,Store Front,box,24,5
+PAINT_EMUL_20L,Asian Paints Emulsion 20L,Paint,Main Warehouse,litre,18,4
+PIPE_PVC_2IN,PVC Pipe 2 inch,Plumbing,Main Warehouse,pcs,85,15
+WIRE_2_5MM,Electrical Wire 2.5 sqmm,Electrical,Store Front,coil,12,3

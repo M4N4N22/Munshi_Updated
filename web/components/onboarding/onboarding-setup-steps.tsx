@@ -610,6 +610,14 @@ export function OnboardingTeamStep({
             >
               Try sample CSV (2 employees)
             </a>
+            <a
+              href="/team-import/test-samples/README.md"
+              className="text-xs font-medium text-zinc-500 underline-offset-2 hover:text-zinc-800 hover:underline"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              All test samples (8 files)
+            </a>
             <label className="flex cursor-pointer flex-col gap-2 rounded-xl border border-dashed border-zinc-300 bg-zinc-50/80 px-4 py-4 hover:border-emerald-400 hover:bg-emerald-50/40">
               <span className="text-sm font-medium text-zinc-800">
                 {file ? file.name : "Choose CSV file"}
