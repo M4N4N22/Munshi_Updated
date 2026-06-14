@@ -188,6 +188,55 @@ export class OnboardingSetupService {
     return { inventory_status: ONBOARDING_SETUP_STATUS.COMPLETED };
   }
 
+  async previewTeam(
+    setupToken: string,
+    file: InventoryCsvUploadFile | undefined,
+  ) {
+    const ctx = await this.resolveContext(setupToken);
+    if (!file?.buffer?.length) {
+      throw new BadRequestException('CSV file is required.');
+    }
+    const parsed = this.teamCsvImport.parseBuffer(file.buffer);
+    if (!parsed.ok) {
+      throw new BadRequestException(parsed.error);
+    }
+
+    let workers = 0;
+    let managers = 0;
+    const departments = new Set<string>();
+    for (const row of parsed.rows) {
+      const role = String(row.role || '').toUpperCase();
+      if (role === 'MANAGER') {
+        managers += 1;
+      } else {
+        workers += 1;
+      }
+      const dept = row.department?.trim();
+      if (dept) {
+        departments.add(dept);
+      }
+    }
+
+    const previewLimit = 8;
+    return {
+      row_count: parsed.rows.length,
+      preview_rows: parsed.rows.slice(0, previewLimit).map((row) => ({
+        line: row.line,
+        name: row.name,
+        phone: row.phone,
+        role: row.role,
+        department: row.department,
+        doj: row.doj,
+      })),
+      has_more_rows: parsed.rows.length > previewLimit,
+      summary: {
+        workers,
+        managers,
+        departments: [...departments].sort(),
+      },
+    };
+  }
+
   async importTeam(setupToken: string, file: InventoryCsvUploadFile | undefined) {
     const ctx = await this.resolveContext(setupToken);
     if (!file?.buffer?.length) {

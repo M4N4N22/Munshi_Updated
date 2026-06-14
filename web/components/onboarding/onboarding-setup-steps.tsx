@@ -9,11 +9,13 @@ import {
   completeOnboardingSetup,
   fetchOnboardingSetupStatus,
   previewOnboardingInventoryCsv,
+  previewOnboardingTeamCsv,
   skipOnboardingInventory,
   skipOnboardingTeam,
   uploadOnboardingInventoryCsv,
   uploadOnboardingTeamCsv,
   type OnboardingInventoryPreview,
+  type OnboardingTeamPreview,
 } from "@/lib/api/onboarding-setup";
 import { formatPhoneDisplay } from "@/lib/phone";
 
@@ -442,28 +444,63 @@ export function OnboardingTeamStep({
 }) {
   const [status, setStatus] = useState<OnboardingSetupStatus | null>(null);
   const [file, setFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<OnboardingTeamPreview | null>(null);
+  const [previewing, setPreviewing] = useState(false);
   const [notifyEmployees, setNotifyEmployees] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  useEffect(() => {
-    fetchOnboardingSetupStatus(ctx.setupToken)
-      .then(setStatus)
-      .catch(() => setError("Could not load setup status."));
+  const refresh = useCallback(async () => {
+    const s = await fetchOnboardingSetupStatus(ctx.setupToken);
+    setStatus(s);
+    return s;
   }, [ctx.setupToken]);
 
-  if (!status && !error) {
-    return (
-      <StepShell step={3} total={4} title="Add your team">
-        <LoadingState className="min-h-[24vh] w-full" />
-      </StepShell>
-    );
-  }
+  const teamDone =
+    status?.team_status === "completed" ||
+    status?.team_status === "skipped" ||
+    (status?.employee_count ?? 0) > 0;
 
-  async function handleUpload() {
+  useEffect(() => {
+    refresh().catch(() => setError("Could not load setup status."));
+  }, [refresh]);
+
+  useEffect(() => {
     if (!file) {
-      setError("Pehle team CSV file chunein.");
+      setPreview(null);
+      return;
+    }
+    let cancelled = false;
+    setPreviewing(true);
+    setError(null);
+    previewOnboardingTeamCsv(ctx.setupToken, file)
+      .then((result) => {
+        if (!cancelled) {
+          setPreview(result);
+        }
+      })
+      .catch((err) => {
+        if (!cancelled) {
+          setPreview(null);
+          setError(
+            err instanceof ApiError ? err.message : "Could not preview CSV.",
+          );
+        }
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setPreviewing(false);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [file, ctx.setupToken]);
+
+  async function handleConfirmImport() {
+    if (!file || !preview) {
+      setError("Pehle CSV file chunein aur preview dekhein.");
       return;
     }
     setBusy(true);
@@ -475,8 +512,9 @@ export function OnboardingTeamStep({
         `Team import — Added: ${res.summary.added}, Skipped: ${res.summary.skipped}, Failed: ${res.summary.failed}. ` +
           `${res.summary.pending_welcome_count} employees will get WhatsApp welcome when you finish.`,
       );
-      const s = await fetchOnboardingSetupStatus(ctx.setupToken);
-      setStatus(s);
+      setFile(null);
+      setPreview(null);
+      await refresh();
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Upload failed.");
     } finally {
@@ -516,57 +554,116 @@ export function OnboardingTeamStep({
     }
   }
 
+  if (!status && !error) {
+    return (
+      <StepShell step={3} total={4} title="Add your team">
+        <LoadingState className="min-h-[24vh] w-full" />
+      </StepShell>
+    );
+  }
+
   return (
     <StepShell step={3} total={4} title="Add your team">
       <p className="text-sm leading-relaxed text-zinc-600">
         Upload employees for{" "}
         <span className="font-medium text-zinc-800">{ctx.companyName}</span>{" "}
-        (name, phone, role, department). New members get a WhatsApp welcome when
-        you finish.
+        (name, phone, role, department). Preview before import — welcomes go out
+        when you finish setup.
       </p>
 
-      {status && (
-        <p className="rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm text-zinc-700">
-          Employees: <strong>{status.employee_count}</strong>
-          {status.pending_welcome_count > 0
-            ? ` · ${status.pending_welcome_count} pending welcome`
-            : ""}
-        </p>
+      {teamDone ? (
+        <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-4 text-sm text-emerald-950">
+          <p className="font-semibold">Team step complete</p>
+          <p className="mt-1 text-emerald-900/90">
+            {status?.team_status === "skipped"
+              ? "Skipped for now — add employees on WhatsApp anytime."
+              : `${status?.employee_count ?? 0} employees in Munshi${
+                  (status?.pending_welcome_count ?? 0) > 0
+                    ? ` · ${status?.pending_welcome_count} pending welcome`
+                    : ""
+                }.`}
+          </p>
+        </div>
+      ) : (
+        <div className="mx-auto w-full max-w-md">
+          <div className="flex flex-col gap-3 rounded-2xl border border-zinc-200 p-4">
+            <p className="text-sm font-medium text-zinc-800">Upload team CSV</p>
+            <p className="text-xs leading-relaxed text-zinc-500">
+              Download the template, add name, phone, role, and department. A
+              preview appears before you confirm.
+            </p>
+            <a
+              href={
+                status?.team_template_url ?? "/team-import/munshi-team-template.csv"
+              }
+              className="text-sm font-medium text-emerald-700 underline-offset-2 hover:underline"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Download team template
+            </a>
+            <a
+              href="/team-import/test-samples/01-quick-smoke-2-employees.csv"
+              className="text-xs font-medium text-zinc-500 underline-offset-2 hover:text-zinc-800 hover:underline"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Try sample CSV (2 employees)
+            </a>
+            <label className="flex cursor-pointer flex-col gap-2 rounded-xl border border-dashed border-zinc-300 bg-zinc-50/80 px-4 py-4 hover:border-emerald-400 hover:bg-emerald-50/40">
+              <span className="text-sm font-medium text-zinc-800">
+                {file ? file.name : "Choose CSV file"}
+              </span>
+              <span className="text-xs text-zinc-500">
+                {file
+                  ? `${(file.size / 1024).toFixed(1)} KB selected`
+                  : "Click to browse — .csv only"}
+              </span>
+              <input
+                type="file"
+                accept=".csv,text/csv"
+                onChange={(e) => {
+                  setFile(e.target.files?.[0] ?? null);
+                  setError(null);
+                  setMessage(null);
+                }}
+                className="sr-only"
+              />
+            </label>
+
+            {previewing && (
+              <LoadingState
+                className="min-h-[8rem] w-full rounded-xl border border-zinc-100 bg-zinc-50/80"
+                size="sm"
+                label="Reading CSV…"
+              />
+            )}
+
+            {preview && !previewing && <TeamCsvPreview data={preview} />}
+
+            <button
+              type="button"
+              disabled={busy || !file || !preview || previewing}
+              onClick={handleConfirmImport}
+              className="flex h-11 items-center justify-center rounded-xl bg-zinc-900 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              {busy ? (
+                <span className="inline-flex items-center gap-2">
+                  <Spinner
+                    size="sm"
+                    className="border-white/20 border-t-white"
+                  />
+                  Importing…
+                </span>
+              ) : (
+                "Confirm import"
+              )}
+            </button>
+          </div>
+        </div>
       )}
 
-      <div className="flex flex-col gap-3 rounded-2xl border border-zinc-200 p-4">
-        <a
-          href={status?.team_template_url ?? "/team-import/munshi-team-template.csv"}
-          className="text-sm font-medium text-emerald-700 underline-offset-2 hover:underline"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Download team template
-        </a>
-        <input
-          type="file"
-          accept=".csv,text/csv"
-          onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-          className="text-sm text-zinc-700"
-        />
-        <button
-          type="button"
-          disabled={busy || !file}
-          onClick={handleUpload}
-          className="flex h-11 items-center justify-center rounded-xl bg-zinc-900 text-sm font-semibold text-white disabled:opacity-50"
-        >
-          {busy ? (
-            <span className="inline-flex items-center gap-2">
-              <Spinner size="sm" className="border-white/20 border-t-white" />
-              Uploading…
-            </span>
-          ) : (
-            "Upload team CSV"
-          )}
-        </button>
-      </div>
-
-      <label className="flex items-start gap-3 rounded-xl border border-zinc-200 px-4 py-3 text-sm text-zinc-700">
+      <label className="mx-auto flex w-full max-w-md items-start gap-3 rounded-xl border border-zinc-200 px-4 py-3 text-sm text-zinc-700">
         <input
           type="checkbox"
           checked={notifyEmployees}
@@ -574,8 +671,8 @@ export function OnboardingTeamStep({
           className="mt-0.5"
         />
         <span>
-          Employees ko WhatsApp par welcome message bhejein jab main setup complete
-          karun
+          Employees ko WhatsApp par welcome message bhejein jab main setup
+          complete karun
         </span>
       </label>
 
@@ -613,16 +710,76 @@ export function OnboardingTeamStep({
             "Finish setup"
           )}
         </button>
-        <button
-          type="button"
-          disabled={busy}
-          onClick={handleSkip}
-          className="text-sm font-medium text-zinc-500 underline-offset-2 hover:text-zinc-800"
-        >
-          Skip team import
-        </button>
+        {!teamDone && (
+          <button
+            type="button"
+            disabled={busy}
+            onClick={handleSkip}
+            className="text-sm font-medium text-zinc-500 underline-offset-2 hover:text-zinc-800"
+          >
+            Skip team import
+          </button>
+        )}
       </div>
     </StepShell>
+  );
+}
+
+function TeamCsvPreview({ data }: { data: OnboardingTeamPreview }) {
+  const { summary } = data;
+  const deptLabel =
+    summary.departments.length > 0
+      ? summary.departments.slice(0, 3).join(", ") +
+        (summary.departments.length > 3
+          ? ` +${summary.departments.length - 3}`
+          : "")
+      : "—";
+
+  return (
+    <div className="flex flex-col gap-3 rounded-xl border border-emerald-200 bg-emerald-50/50 p-3">
+      <div className="text-xs leading-relaxed text-emerald-950">
+        <p className="font-semibold">
+          Preview — {data.row_count} employee
+          {data.row_count === 1 ? "" : "s"}
+        </p>
+        <p className="mt-1 text-emerald-900/90">
+          {summary.workers} worker{summary.workers === 1 ? "" : "s"} ·{" "}
+          {summary.managers} manager{summary.managers === 1 ? "" : "s"} ·{" "}
+          {deptLabel}
+        </p>
+      </div>
+      <div className="overflow-x-auto rounded-lg border border-emerald-100 bg-white">
+        <table className="w-full min-w-[360px] text-left text-xs">
+          <thead>
+            <tr className="border-b border-zinc-100 bg-zinc-50 text-zinc-500">
+              <th className="px-2 py-2 font-medium">Name</th>
+              <th className="px-2 py-2 font-medium">Phone</th>
+              <th className="px-2 py-2 font-medium">Role</th>
+              <th className="px-2 py-2 font-medium">Dept</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.preview_rows.map((row) => (
+              <tr key={row.line} className="border-b border-zinc-50 last:border-0">
+                <td className="max-w-[7rem] truncate px-2 py-2 text-zinc-800">
+                  {row.name}
+                </td>
+                <td className="px-2 py-2 font-mono text-zinc-600">{row.phone}</td>
+                <td className="px-2 py-2 text-zinc-600">{row.role}</td>
+                <td className="max-w-[5rem] truncate px-2 py-2 text-zinc-600">
+                  {row.department}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {data.has_more_rows && (
+        <p className="text-xs text-zinc-500">
+          Showing first {data.preview_rows.length} of {data.row_count} rows.
+        </p>
+      )}
+    </div>
   );
 }
 

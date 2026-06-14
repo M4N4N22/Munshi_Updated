@@ -95,6 +95,36 @@ export function uploadOnboardingInventoryCsv(setupToken: string, file: File) {
   }>("/onboarding/setup/inventory/import", form);
 }
 
+export function previewOnboardingTeamCsv(setupToken: string, file: File) {
+  const form = new FormData();
+  form.append("setup_token", setupToken);
+  form.append("file", file);
+  return apiPostForm<OnboardingTeamPreview>(
+    "/onboarding/setup/team/preview",
+    form,
+  );
+}
+
+export type OnboardingTeamPreviewRow = {
+  line: number;
+  name: string;
+  phone: string;
+  role: string;
+  department: string;
+  doj: string;
+};
+
+export type OnboardingTeamPreview = {
+  row_count: number;
+  preview_rows: OnboardingTeamPreviewRow[];
+  has_more_rows: boolean;
+  summary: {
+    workers: number;
+    managers: number;
+    departments: string[];
+  };
+};
+
 export function uploadOnboardingTeamCsv(setupToken: string, file: File) {
   const form = new FormData();
   form.append("setup_token", setupToken);

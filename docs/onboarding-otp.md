@@ -13,6 +13,7 @@
 | POST | `/onboarding/setup/inventory/import` | `multipart`: `file`, `setup_token` |
 | POST | `/onboarding/setup/inventory/skip` | `{ "setup_token": "..." }` |
 | POST | `/onboarding/setup/inventory/zoho-complete` | `{ "setup_token": "..." }` (fallback if Zoho connected before auto-complete) |
+| POST | `/onboarding/setup/team/preview` | `multipart`: `file`, `setup_token` — parse + preview before import |
 | POST | `/onboarding/setup/team/import` | `multipart`: `file`, `setup_token` |
 | POST | `/onboarding/setup/team/skip` | `{ "setup_token": "..." }` |
 | POST | `/onboarding/setup/complete` | `{ "setup_token": "...", "notify_employees": true }` — batch WhatsApp welcomes |
@@ -35,6 +36,12 @@ When `ONBOARDING_SKIP_OTP=true`, the web form registers directly and opens the s
 - Upload CSV → **preview** (row table + new/existing counts) → **Confirm import**
 - Zoho connect is **coming soon** on web onboarding (disabled)
 - Test CSVs: `/inventory-import/test-samples/`
+
+### Team step (web)
+
+- Upload CSV → **preview** (employee table + worker/manager counts) → **Confirm import**
+- Upload card is **centered** (single option — no Zoho side panel)
+- Test CSVs: `/team-import/test-samples/`
 
 ## CORS
 
