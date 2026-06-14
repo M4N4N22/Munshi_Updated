@@ -83,6 +83,20 @@ export class TaskInventoryConfirmationService {
     );
   }
 
+  buildIncompleteDeliveryMessage(taskKind: string | null): string {
+    const action = taskKind === 'issue' ? 'issue' : 'delivery';
+    return waSection(
+      'Thoda aur detail chahiye',
+      `*${action === 'issue' ? 'Issue' : 'Delivery'}* ke liye ye batayein:\n\n` +
+        '• *Kaun karega* — team member ka naam\n' +
+        '• *Kya* — item name ya SKU\n' +
+        '• *Kitni quantity* (optional — baad mein puchenge)\n\n' +
+        'Example:\n' +
+        '*vikram ko 5 test item 1 bhejo*\n' +
+        'ya *vikram test item 1 jana hai aaj*',
+    );
+  }
+
   buildInvalidSelectionMessage(max: number): string {
     return waSection(
       'Invalid selection',

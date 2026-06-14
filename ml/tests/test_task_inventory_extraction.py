@@ -118,6 +118,19 @@ def test_jana_hai_aaj_delivery():
     assert result["task_kind"] == "delivery"
 
 
+def test_vague_maal_jana_no_assignee():
+    result = _extract("Aaj maal Jana hai")
+    assert result["assignee_hint"] is None
+    assert result["item_name_or_sku"] is None
+    assert result["task_kind"] == "delivery"
+
+
+def test_maal_is_not_assignee():
+    result = _extract("maal jana hai aaj")
+    assert result["assignee_hint"] is None
+    assert result["task_kind"] == "delivery"
+
+
 def test_contract_always_has_four_keys():
     result = _extract("")
     assert set(result.keys()) == {

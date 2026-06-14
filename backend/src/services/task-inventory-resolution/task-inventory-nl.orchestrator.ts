@@ -171,25 +171,41 @@ export class TaskInventoryNlOrchestratorService {
   private buildBlockingMessage(
     resolved: ResolvedTaskInventoryIntent,
     extraction: { item_name_or_sku: string | null; assignee_hint: string | null },
-    context: WorkflowUserContext,
+    _context: WorkflowUserContext,
   ): string | null {
+    const needsInventory = taskKindRequiresInventory(resolved.task_kind);
+    const needsWorker =
+      taskKindRequiresWorker(resolved.task_kind) &&
+      resolved.task_kind !== 'inventory_count';
+    const inventoryMissing =
+      needsInventory && resolved.inventory.status === 'not_found';
+    const workerMissing = needsWorker && resolved.worker.status === 'not_found';
+    const itemHint = extraction.item_name_or_sku?.trim() || null;
+    const assigneeHint = extraction.assignee_hint?.trim() || null;
+
     if (
-      taskKindRequiresInventory(resolved.task_kind) &&
-      resolved.inventory.status === 'not_found'
+      inventoryMissing &&
+      workerMissing &&
+      !itemHint &&
+      !assigneeHint
     ) {
-      return this.confirmationService.buildUnresolvedInventoryMessage(
-        extraction.item_name_or_sku,
+      return this.confirmationService.buildIncompleteDeliveryMessage(
+        resolved.task_kind,
       );
     }
 
-    if (
-      taskKindRequiresWorker(resolved.task_kind) &&
-      resolved.worker.status === 'not_found' &&
-      resolved.task_kind !== 'inventory_count'
-    ) {
-      return this.confirmationService.buildUnresolvedWorkerMessage(
-        extraction.assignee_hint,
+    if (inventoryMissing && !itemHint) {
+      return this.confirmationService.buildIncompleteDeliveryMessage(
+        resolved.task_kind,
       );
+    }
+
+    if (inventoryMissing) {
+      return this.confirmationService.buildUnresolvedInventoryMessage(itemHint);
+    }
+
+    if (workerMissing) {
+      return this.confirmationService.buildUnresolvedWorkerMessage(assigneeHint);
     }
 
     return null;

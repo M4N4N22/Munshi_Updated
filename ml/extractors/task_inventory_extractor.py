@@ -48,6 +48,8 @@ _ASSIGNEE_EXCLUDE = frozenset(
         "supplier",
         "department",
         "team",
+        "maal",
+        "stock",
     }
 )
 

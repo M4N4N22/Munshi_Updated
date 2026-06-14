@@ -235,4 +235,29 @@ describe('TaskInventoryNlOrchestratorService', () => {
     );
     expect(bootstrap.prompt).toContain('Quantity');
   });
+
+  it('returns incomplete delivery prompt for vague maal jana message', async () => {
+    const resolutionService = service['resolutionService'] as jest.Mocked<TaskInventoryResolutionService>;
+    resolutionService.resolveIntent.mockResolvedValue({
+      task_kind: 'delivery',
+      quantity: null,
+      inventory: { status: 'not_found' },
+      worker: { status: 'not_found' },
+      disambiguation: [],
+    });
+    mlClient.extract.mockResolvedValue({
+      item_name_or_sku: null,
+      quantity: null,
+      assignee_hint: null,
+      task_kind: 'delivery',
+    });
+
+    const result = await service.tryHandleFreeText(
+      '919900000001',
+      'Aaj maal Jana hai',
+    );
+
+    expect(result).toContain('Thoda aur detail chahiye');
+    expect(result).toContain('vikram');
+  });
 });
