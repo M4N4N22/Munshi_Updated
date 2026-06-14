@@ -8,11 +8,10 @@ import {
   roundQuantity,
 } from 'src/services/inventory/inventory.validation';
 import {
-  INVENTORY_CSV_HEADERS,
   INVENTORY_CSV_MAX_BYTES,
   INVENTORY_CSV_MAX_ROWS,
-  INVENTORY_CSV_OPTIONAL_HEADERS,
 } from './inventory-csv.constants';
+import { resolveInventoryCsvHeaders } from './inventory-csv-header-aliases';
 
 export type InventoryCsvRow = {
   line: number;
@@ -53,10 +52,6 @@ function parseCsvLine(line: string): string[] {
   }
   out.push(cur.trim());
   return out;
-}
-
-function normalizeHeader(h: string): string {
-  return h.trim().toLowerCase().replace(/\s+/g, '_');
 }
 
 function validationErrorMessage(err: unknown): string {
@@ -181,23 +176,12 @@ export function parseInventoryCsvText(raw: string): InventoryCsvParseResult {
     };
   }
 
-  const headerCells = parseCsvLine(lines[0]).map(normalizeHeader);
-  const required = INVENTORY_CSV_HEADERS as readonly string[];
-  const missing = required.filter((h) => !headerCells.includes(h));
-  if (missing.length) {
-    return {
-      ok: false,
-      error:
-        `Galat CSV format. Ye columns chahiye: ${required.join(', ')}\n` +
-        `Missing: ${missing.join(', ')}`,
-    };
+  const headerCells = parseCsvLine(lines[0]);
+  const resolved = resolveInventoryCsvHeaders(headerCells);
+  if (!resolved.ok) {
+    return { ok: false, error: resolved.error };
   }
-
-  const optional = INVENTORY_CSV_OPTIONAL_HEADERS as readonly string[];
-  const allHeaders = [...required, ...optional];
-  const idx = Object.fromEntries(
-    allHeaders.map((h) => [h, headerCells.indexOf(h)]),
-  ) as Record<string, number>;
+  const idx = resolved.idx;
 
   const rawRows: {
     line: number;

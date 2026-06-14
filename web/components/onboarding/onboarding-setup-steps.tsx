@@ -229,7 +229,9 @@ export function OnboardingInventoryStep({
             </p>
             <p className="text-xs leading-relaxed text-zinc-500">
               Download the template, fill in your items, then choose the file.
-              The upload button enables after you select a .csv file.
+              Your Excel export may use different column names (e.g. item_code,
+              qty, godown) — we map those automatically. The upload button
+              enables after you select a .csv file.
             </p>
             <a
               href={
