@@ -14,6 +14,7 @@ import {
 } from '../workflow.interfaces';
 import { TaskInventoryConfirmationService } from 'src/services/task-inventory-resolution/task-inventory-confirmation.service';
 import { TaskInventoryCreationService } from 'src/services/task-inventory-resolution/task-inventory-creation.service';
+import { TaskInventoryStockAvailabilityService } from 'src/services/task-inventory-resolution/task-inventory-stock-availability.service';
 import {
   isCancelReply,
   isConfirmReply,
@@ -22,6 +23,7 @@ import {
   taskKindRequiresInventory,
 } from 'src/services/task-inventory-resolution/task-inventory-nl.helper';
 import { ResolvedTaskInventoryIntent } from 'src/services/task-inventory-resolution/task-inventory-resolution.interfaces';
+import type { TaskInventoryStockAvailability } from 'src/services/task-inventory-resolution/task-inventory-stock-availability.service';
 
 @Injectable()
 export class TaskInventoryCreationWorkflowHandler implements IWorkflowHandler {
@@ -32,6 +34,7 @@ export class TaskInventoryCreationWorkflowHandler implements IWorkflowHandler {
   constructor(
     private readonly confirmationService: TaskInventoryConfirmationService,
     private readonly creationService: TaskInventoryCreationService,
+    private readonly stockAvailability: TaskInventoryStockAvailabilityService,
   ) {}
 
   getInitialPrompt(): string {
@@ -134,29 +137,46 @@ export class TaskInventoryCreationWorkflowHandler implements IWorkflowHandler {
       };
     }
 
-    return this.promptAfterInventoryAndWorkerResolved(data);
+    return this.promptAfterInventoryAndWorkerResolved(data, context);
   }
 
-  private promptAfterInventoryAndWorkerResolved(
+  private async promptAfterInventoryAndWorkerResolved(
     data: ITaskInventoryCreationSessionData,
-  ): WorkflowStepResult {
+    context: WorkflowUserContext,
+  ): Promise<WorkflowStepResult> {
     if (
       taskKindRequiresInventory(data.task_kind ?? null) &&
-      data.quantity == null
+      data.quantity == null &&
+      data.inventory_item_id
     ) {
+      const stock = await this.stockAvailability.getAvailability(
+        context.factoryId,
+        data.inventory_item_id,
+      );
       return {
         message: this.confirmationService.buildQuantityPrompt({
           workerName: data.worker_name,
           itemName: data.inventory_name,
+          stock,
+          stockLabel: this.stockAvailability.formatAvailableLabel(stock),
         }),
         nextStep: TASK_INVENTORY_CREATION_STEP.WAITING_QUANTITY,
         sessionData: data as Record<string, unknown>,
       };
     }
 
+    let stock: TaskInventoryStockAvailability | null = null;
+    if (data.inventory_item_id) {
+      stock = await this.stockAvailability.getAvailability(
+        context.factoryId,
+        data.inventory_item_id,
+      );
+    }
+
     return {
       message: this.confirmationService.buildConfirmationMessage(
         this.toResolvedIntent(data),
+        stock,
       ),
       nextStep: TASK_INVENTORY_CREATION_STEP.WAITING_CONFIRMATION,
       sessionData: data as Record<string, unknown>,
@@ -167,7 +187,7 @@ export class TaskInventoryCreationWorkflowHandler implements IWorkflowHandler {
     session: IWorkflowSessionRecord,
     message: string,
     data: ITaskInventoryCreationSessionData,
-    _context: WorkflowUserContext,
+    context: WorkflowUserContext,
   ): Promise<WorkflowStepResult> {
     if (isCancelReply(message)) {
       return {
@@ -189,11 +209,36 @@ export class TaskInventoryCreationWorkflowHandler implements IWorkflowHandler {
       };
     }
 
+    if (!data.inventory_item_id) {
+      return {
+        message: this.confirmationService.buildUnresolvedInventoryMessage(null),
+        cancelled: true,
+        sessionData: data as Record<string, unknown>,
+      };
+    }
+
+    const stock = await this.stockAvailability.getAvailability(
+      context.factoryId,
+      data.inventory_item_id,
+    );
+    if (quantity > stock.available) {
+      return {
+        message: this.confirmationService.buildQuantityExceedsStockMessage({
+          requested: quantity,
+          stock,
+          stockLabel: this.stockAvailability.formatAvailableLabel(stock),
+        }),
+        nextStep: TASK_INVENTORY_CREATION_STEP.WAITING_QUANTITY,
+        sessionData: data as Record<string, unknown>,
+      };
+    }
+
     data.quantity = quantity;
 
     return {
       message: this.confirmationService.buildConfirmationMessage(
         this.toResolvedIntent(data),
+        stock,
       ),
       nextStep: TASK_INVENTORY_CREATION_STEP.WAITING_CONFIRMATION,
       sessionData: data as Record<string, unknown>,
@@ -247,7 +292,7 @@ export class TaskInventoryCreationWorkflowHandler implements IWorkflowHandler {
       };
     }
 
-    return this.promptAfterInventoryAndWorkerResolved(data);
+    return this.promptAfterInventoryAndWorkerResolved(data, context);
   }
 
   private async handleConfirmation(

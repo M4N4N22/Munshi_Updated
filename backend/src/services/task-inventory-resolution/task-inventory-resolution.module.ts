@@ -11,6 +11,7 @@ import { TaskInventoryResolutionService } from './task-inventory-resolution.serv
 import { WorkerResolverService } from './worker-resolver.service';
 import { TaskInventoryConfirmationService } from './task-inventory-confirmation.service';
 import { TaskInventoryCreationService } from './task-inventory-creation.service';
+import { TaskInventoryStockAvailabilityService } from './task-inventory-stock-availability.service';
 import { MlTaskInventoryClient } from './ml-task-inventory.client';
 import { TaskInventoryNlOrchestratorService } from './task-inventory-nl.orchestrator';
 
@@ -30,6 +31,7 @@ import { TaskInventoryNlOrchestratorService } from './task-inventory-nl.orchestr
     TaskInventoryResolutionService,
     TaskInventoryConfirmationService,
     TaskInventoryCreationService,
+    TaskInventoryStockAvailabilityService,
     MlTaskInventoryClient,
     TaskInventoryNlOrchestratorService,
   ],
@@ -39,6 +41,7 @@ import { TaskInventoryNlOrchestratorService } from './task-inventory-nl.orchestr
     TaskInventoryResolutionService,
     TaskInventoryConfirmationService,
     TaskInventoryCreationService,
+    TaskInventoryStockAvailabilityService,
     MlTaskInventoryClient,
     TaskInventoryNlOrchestratorService,
   ],

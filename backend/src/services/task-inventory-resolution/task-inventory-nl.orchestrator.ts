@@ -12,6 +12,7 @@ import { WorkflowRegistry } from '../workflow/workflow.registry';
 import { WorkflowUserContext } from '../workflow/workflow.interfaces';
 import { TaskInventoryConfirmationService } from './task-inventory-confirmation.service';
 import { TaskInventoryResolutionService } from './task-inventory-resolution.service';
+import { TaskInventoryStockAvailabilityService } from './task-inventory-stock-availability.service';
 import { MlTaskInventoryClient } from './ml-task-inventory.client';
 import {
   ResolvedTaskInventoryIntent,
@@ -23,6 +24,7 @@ import {
   taskKindRequiresWorker,
 } from './task-inventory-nl.helper';
 import { ITaskInventoryCreationSessionData } from '../workflow/workflow.interfaces';
+import type { TaskInventoryStockAvailability } from './task-inventory-stock-availability.service';
 
 export interface NlWorkflowBootstrap {
   step: string;
@@ -36,6 +38,7 @@ export class TaskInventoryNlOrchestratorService {
     private readonly mlClient: MlTaskInventoryClient,
     private readonly resolutionService: TaskInventoryResolutionService,
     private readonly confirmationService: TaskInventoryConfirmationService,
+    private readonly stockAvailability: TaskInventoryStockAvailabilityService,
     private readonly engine: WorkflowEngineService,
     private readonly registry: WorkflowRegistry,
     private readonly usersService: UserService,
@@ -62,7 +65,7 @@ export class TaskInventoryNlOrchestratorService {
       extraction,
     );
 
-    const blockingMessage = this.buildBlockingMessage(
+    const blockingMessage = await this.buildBlockingMessage(
       resolved,
       extraction,
       context,
@@ -71,7 +74,7 @@ export class TaskInventoryNlOrchestratorService {
       return blockingMessage;
     }
 
-    const bootstrap = this.buildBootstrap(resolved, message, context);
+    const bootstrap = await this.buildBootstrap(resolved, message, context);
     const handler = this.registry.getHandlerByType(
       WORKFLOW_TYPE.TASK_INVENTORY_CREATION,
     );
@@ -88,11 +91,11 @@ export class TaskInventoryNlOrchestratorService {
     return typeof result === 'string' ? result : bootstrap.prompt;
   }
 
-  buildBootstrap(
+  async buildBootstrap(
     resolved: ResolvedTaskInventoryIntent,
     rawMessage: string,
     context: WorkflowUserContext,
-  ): NlWorkflowBootstrap {
+  ): Promise<NlWorkflowBootstrap> {
     const sessionData: ITaskInventoryCreationSessionData = {
       task_kind: resolved.task_kind,
       quantity: resolved.quantity,
@@ -149,30 +152,48 @@ export class TaskInventoryNlOrchestratorService {
       taskKindRequiresInventory(resolved.task_kind) &&
       resolved.quantity == null &&
       resolved.inventory.status === 'resolved' &&
-      resolved.worker.status === 'resolved'
+      resolved.worker.status === 'resolved' &&
+      resolved.inventory.item_id
     ) {
+      const stock = await this.stockAvailability.getAvailability(
+        context.factoryId,
+        resolved.inventory.item_id,
+      );
       return {
         step: TASK_INVENTORY_CREATION_STEP.WAITING_QUANTITY,
         sessionData,
         prompt: this.confirmationService.buildQuantityPrompt({
           workerName: resolved.worker.name,
           itemName: resolved.inventory.name,
+          stock,
+          stockLabel: this.stockAvailability.formatAvailableLabel(stock),
         }),
       };
+    }
+
+    let stock: TaskInventoryStockAvailability | null = null;
+    if (
+      resolved.inventory.status === 'resolved' &&
+      resolved.inventory.item_id
+    ) {
+      stock = await this.stockAvailability.getAvailability(
+        context.factoryId,
+        resolved.inventory.item_id,
+      );
     }
 
     return {
       step: TASK_INVENTORY_CREATION_STEP.WAITING_CONFIRMATION,
       sessionData,
-      prompt: this.confirmationService.buildConfirmationMessage(resolved),
+      prompt: this.confirmationService.buildConfirmationMessage(resolved, stock),
     };
   }
 
-  private buildBlockingMessage(
+  private async buildBlockingMessage(
     resolved: ResolvedTaskInventoryIntent,
     extraction: { item_name_or_sku: string | null; assignee_hint: string | null },
     _context: WorkflowUserContext,
-  ): string | null {
+  ): Promise<string | null> {
     const needsInventory = taskKindRequiresInventory(resolved.task_kind);
     const needsWorker =
       taskKindRequiresWorker(resolved.task_kind) &&
@@ -206,6 +227,25 @@ export class TaskInventoryNlOrchestratorService {
 
     if (workerMissing) {
       return this.confirmationService.buildUnresolvedWorkerMessage(assigneeHint);
+    }
+
+    if (
+      taskKindRequiresInventory(resolved.task_kind) &&
+      resolved.inventory.status === 'resolved' &&
+      resolved.inventory.item_id &&
+      resolved.quantity != null
+    ) {
+      const stock = await this.stockAvailability.getAvailability(
+        _context.factoryId,
+        resolved.inventory.item_id,
+      );
+      if (resolved.quantity > stock.available) {
+        return this.confirmationService.buildQuantityExceedsStockMessage({
+          requested: resolved.quantity,
+          stock,
+          stockLabel: this.stockAvailability.formatAvailableLabel(stock),
+        });
+      }
     }
 
     return null;

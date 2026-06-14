@@ -2,11 +2,21 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { TaskInventoryCreationWorkflowHandler } from './task-inventory-creation.handler';
 import { TaskInventoryConfirmationService } from 'src/services/task-inventory-resolution/task-inventory-confirmation.service';
 import { TaskInventoryCreationService } from 'src/services/task-inventory-resolution/task-inventory-creation.service';
+import { TaskInventoryStockAvailabilityService } from 'src/services/task-inventory-resolution/task-inventory-stock-availability.service';
 import { TASK_INVENTORY_CREATION_STEP } from '../workflow.constants';
+
+const mockStock = {
+  onHand: 10,
+  pendingOut: 0,
+  available: 10,
+  unit: 'unit',
+  itemName: 'Test item 1',
+};
 
 describe('TaskInventoryCreationWorkflowHandler', () => {
   let handler: TaskInventoryCreationWorkflowHandler;
   let creationService: jest.Mocked<TaskInventoryCreationService>;
+  let stockAvailability: jest.Mocked<TaskInventoryStockAvailabilityService>;
 
   const context = {
     userId: 10,
@@ -20,12 +30,22 @@ describe('TaskInventoryCreationWorkflowHandler', () => {
     creationService = {
       createFromSession: jest.fn(),
     } as unknown as jest.Mocked<TaskInventoryCreationService>;
+    stockAvailability = {
+      getAvailability: jest.fn().mockResolvedValue(mockStock),
+      formatAvailableLabel: jest
+        .fn()
+        .mockReturnValue('📦 Stock abhi: *10* unit available'),
+    } as unknown as jest.Mocked<TaskInventoryStockAvailabilityService>;
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         TaskInventoryCreationWorkflowHandler,
         TaskInventoryConfirmationService,
         { provide: TaskInventoryCreationService, useValue: creationService },
+        {
+          provide: TaskInventoryStockAvailabilityService,
+          useValue: stockAvailability,
+        },
       ],
     }).compile();
 
@@ -221,6 +241,42 @@ describe('TaskInventoryCreationWorkflowHandler', () => {
     );
     expect(qtyStep.sessionData?.quantity).toBe(5);
     expect(qtyStep.message).toContain('Confirm task');
+    expect(qtyStep.message).toContain('Stock available');
+  });
+
+  it('rejects quantity above available stock', async () => {
+    stockAvailability.getAvailability.mockResolvedValue({
+      ...mockStock,
+      available: 3,
+    });
+    stockAvailability.formatAvailableLabel.mockReturnValue(
+      '📦 Stock abhi: *3* unit available',
+    );
+
+    const qtyStep = await handler.handleStep(
+      {
+        id: 1,
+        factory_id: 1,
+        phone_number: context.phone,
+        workflow_type: 'TASK_INVENTORY_CREATION',
+        current_step: TASK_INVENTORY_CREATION_STEP.WAITING_QUANTITY,
+        session_data: {
+          task_kind: 'delivery',
+          worker_user_id: 39,
+          worker_name: 'Vikram Shah',
+          inventory_item_id: 18,
+          inventory_name: 'Test item 1',
+        },
+        status: 'ACTIVE',
+      },
+      '10',
+      context,
+    );
+
+    expect(qtyStep.nextStep).toBe(
+      TASK_INVENTORY_CREATION_STEP.WAITING_QUANTITY,
+    );
+    expect(qtyStep.message).toContain('Stock se zyada');
   });
 
   it('creates delivery task on confirmation synonyms', async () => {

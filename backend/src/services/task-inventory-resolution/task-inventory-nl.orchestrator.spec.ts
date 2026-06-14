@@ -7,6 +7,15 @@ import { WorkflowEngineService } from '../workflow/workflow-engine.service';
 import { WorkflowRegistry } from '../workflow/workflow.registry';
 import { UserService } from 'src/services/users/users.service';
 import { TASK_INVENTORY_CREATION_STEP } from '../workflow/workflow.constants';
+import { TaskInventoryStockAvailabilityService } from './task-inventory-stock-availability.service';
+
+const mockStock = {
+  onHand: 100,
+  pendingOut: 0,
+  available: 100,
+  unit: 'unit',
+  itemName: 'Test item 1',
+};
 
 describe('TaskInventoryNlOrchestratorService', () => {
   let service: TaskInventoryNlOrchestratorService;
@@ -20,6 +29,15 @@ describe('TaskInventoryNlOrchestratorService', () => {
         TaskInventoryNlOrchestratorService,
         TaskInventoryConfirmationService,
         { provide: MlTaskInventoryClient, useValue: mlClient },
+        {
+          provide: TaskInventoryStockAvailabilityService,
+          useValue: {
+            getAvailability: jest.fn().mockResolvedValue(mockStock),
+            formatAvailableLabel: jest
+              .fn()
+              .mockReturnValue('📦 Stock abhi: *100* unit available'),
+          },
+        },
         {
           provide: TaskInventoryResolutionService,
           useValue: {
@@ -96,8 +114,8 @@ describe('TaskInventoryNlOrchestratorService', () => {
     expect(result).toBe('confirm prompt');
   });
 
-  it('builds inventory disambiguation bootstrap', () => {
-    const bootstrap = service.buildBootstrap(
+  it('builds inventory disambiguation bootstrap', async () => {
+    const bootstrap = await service.buildBootstrap(
       {
         task_kind: 'delivery',
         quantity: 20,
@@ -130,8 +148,8 @@ describe('TaskInventoryNlOrchestratorService', () => {
     expect(bootstrap.sessionData.worker_name).toBe('Ram Kumar');
   });
 
-  it('preserves worker candidates when inventory and worker are both ambiguous', () => {
-    const bootstrap = service.buildBootstrap(
+  it('preserves worker candidates when inventory and worker are both ambiguous', async () => {
+    const bootstrap = await service.buildBootstrap(
       {
         task_kind: 'delivery',
         quantity: 10,
@@ -167,8 +185,8 @@ describe('TaskInventoryNlOrchestratorService', () => {
     expect(bootstrap.sessionData.worker_candidates).toHaveLength(2);
   });
 
-  it('builds worker-only disambiguation bootstrap', () => {
-    const bootstrap = service.buildBootstrap(
+  it('builds worker-only disambiguation bootstrap', async () => {
+    const bootstrap = await service.buildBootstrap(
       {
         task_kind: 'delivery',
         quantity: 20,
@@ -203,8 +221,8 @@ describe('TaskInventoryNlOrchestratorService', () => {
     expect(bootstrap.sessionData.worker_candidates).toHaveLength(2);
   });
 
-  it('builds quantity prompt when worker and inventory resolve without quantity', () => {
-    const bootstrap = service.buildBootstrap(
+  it('builds quantity prompt when worker and inventory resolve without quantity', async () => {
+    const bootstrap = await service.buildBootstrap(
       {
         task_kind: 'delivery',
         quantity: null,
@@ -234,6 +252,55 @@ describe('TaskInventoryNlOrchestratorService', () => {
       TASK_INVENTORY_CREATION_STEP.WAITING_QUANTITY,
     );
     expect(bootstrap.prompt).toContain('Quantity');
+    expect(bootstrap.prompt).toContain('Stock abhi');
+  });
+
+  it('blocks delivery when requested quantity exceeds available stock', async () => {
+    const resolutionService = service[
+      'resolutionService'
+    ] as jest.Mocked<TaskInventoryResolutionService>;
+    const stockService = service[
+      'stockAvailability'
+    ] as jest.Mocked<TaskInventoryStockAvailabilityService>;
+    stockService.getAvailability.mockResolvedValueOnce({
+      onHand: 10,
+      pendingOut: 0,
+      available: 10,
+      unit: 'unit',
+      itemName: 'Test item 1',
+    });
+    stockService.formatAvailableLabel.mockReturnValueOnce(
+      '📦 Stock abhi: *10* unit available',
+    );
+    resolutionService.resolveIntent.mockResolvedValue({
+      task_kind: 'delivery',
+      quantity: 50,
+      inventory: {
+        status: 'resolved',
+        item_id: 18,
+        sku: 'TEST_ITEM_01',
+        name: 'Test item 1',
+      },
+      worker: {
+        status: 'resolved',
+        user_id: 39,
+        name: 'Vikram Shah',
+      },
+      disambiguation: [],
+    });
+    mlClient.extract.mockResolvedValue({
+      item_name_or_sku: 'TEST_ITEM_01',
+      quantity: 50,
+      assignee_hint: 'Vikram',
+      task_kind: 'delivery',
+    });
+
+    const result = await service.tryHandleFreeText(
+      '919900000001',
+      'vikram ko 50 TEST_ITEM_01 bhejo',
+    );
+
+    expect(result).toContain('Stock se zyada');
   });
 
   it('returns incomplete delivery prompt for vague maal jana message', async () => {

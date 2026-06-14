@@ -9,10 +9,15 @@ import {
   formatTaskKindLabel,
   taskKindRequiresInventory,
 } from './task-inventory-nl.helper';
+import type { TaskInventoryStockAvailability } from './task-inventory-stock-availability.service';
+import { formatQuantity } from 'src/services/inventory/inventory.validation';
 
 @Injectable()
 export class TaskInventoryConfirmationService {
-  buildConfirmationMessage(resolved: ResolvedTaskInventoryIntent): string {
+  buildConfirmationMessage(
+    resolved: ResolvedTaskInventoryIntent,
+    stock?: TaskInventoryStockAvailability | null,
+  ): string {
     const lines: string[] = ['I found:', ''];
 
     lines.push(`*Task Type:*\n${formatTaskKindLabel(resolved.task_kind)}`, '');
@@ -29,6 +34,14 @@ export class TaskInventoryConfirmationService {
         lines.push(`*Inventory:*\n${resolved.inventory.name}${sku}`, '');
       } else {
         lines.push('*Inventory:*\n—', '');
+      }
+
+      if (stock) {
+        const unit = stock.unit.trim() || 'unit';
+        lines.push(
+          `*Stock available:*\n${formatQuantity(stock.available)} ${unit}`,
+          '',
+        );
       }
 
       lines.push(
@@ -115,6 +128,8 @@ export class TaskInventoryConfirmationService {
   buildQuantityPrompt(params: {
     workerName?: string | null;
     itemName?: string | null;
+    stock?: TaskInventoryStockAvailability | null;
+    stockLabel?: string | null;
   }): string {
     const bits: string[] = [];
     if (params.workerName) {
@@ -125,10 +140,40 @@ export class TaskInventoryConfirmationService {
     }
     const summary = bits.length ? bits.join(' ') + ' ke liye' : 'Is task ke liye';
 
+    const stockLine = params.stockLabel
+      ? `\n\n${params.stockLabel}\n`
+      : params.stock
+        ? `\n\n📦 Stock abhi: *${formatQuantity(params.stock.available)}* ${params.stock.unit || 'unit'} available\n`
+        : '\n';
+
+    const maxHint =
+      params.stock && params.stock.available > 0
+        ? `\nMaximum *${formatQuantity(params.stock.available)}* tak bhej sakte hain.`
+        : params.stock && params.stock.available <= 0
+          ? '\n⚠️ Abhi stock available nahi hai — pehle stock update karein.'
+          : '';
+
     return waSection(
       'Quantity chahiye',
-      `${summary} kitni quantity bhejni hai?\n\n` +
-        'Number likhein — jaise *1*, *5*, ya *20*.\n' +
+      `${summary} kitni quantity bhejni hai?${stockLine}` +
+        'Number likhein — jaise *1*, *5*, ya *20*.' +
+        maxHint +
+        '\nCancel ke liye *CANCEL* likhein.',
+    );
+  }
+
+  buildQuantityExceedsStockMessage(params: {
+    requested: number;
+    stock: TaskInventoryStockAvailability;
+    stockLabel: string;
+  }): string {
+    const unit = params.stock.unit.trim() || 'unit';
+    return waSection(
+      'Stock se zyada',
+      `Aapne *${formatQuantity(params.requested)}* ${unit} likha — ` +
+        `available sirf *${formatQuantity(params.stock.available)}* ${unit} hai.\n\n` +
+        `${params.stockLabel}\n\n` +
+        'Kam quantity likhein ya pehle stock badhayein.\n' +
         'Cancel ke liye *CANCEL* likhein.',
     );
   }
