@@ -1,0 +1,22 @@
+{
+  "type": "CONSENT_STATUS_UPDATE",
+  "consentId": "a8a2e055-34c6-4fa0-9bd6-71f7496de31e",
+  "success": true,
+  "notificationId": "2784246",
+  "error": null,
+  "timestamp": "2026-06-19T09:16:26.950Z",
+  "data": {
+    "status": "ACTIVE",
+    "detail": {
+      "accounts": [
+        {
+          "linkRefNumber": "8e02accb-035b-4b91-aae7-02992a090aa8",
+          "fipId": "setu-fip",
+          "maskedAccNumber": "XXXXXXXX5866",
+          "accType": "SAVINGS",
+          "fiType": "DEPOSIT"
+        }
+      ]
+    }
+  }
+}

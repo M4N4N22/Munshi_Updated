@@ -5,6 +5,8 @@
 
 Official docs: [Setu AA Quickstart](https://docs.setu.co/data/account-aggregator/quickstart) · [Consent flow](https://docs.setu.co/data/account-aggregator/api-integration/consent-flow) · [Data APIs](https://docs.setu.co/data/account-aggregator/api-integration/data-apis) · [Notifications](https://docs.setu.co/data/account-aggregator/api-integration/notifications)
 
+**Sandbox reference (validated payloads + fixtures):** [setu-sandbox-fi-data.md](./setu-sandbox-fi-data.md)
+
 ---
 
 ## 1. Do you need your own FIU licence?

@@ -1,0 +1,69 @@
+{
+  "id": "26c158ab-5c15-4fc7-bb33-4387dd2b134c",
+  "format": "json",
+  "status": "COMPLETED",
+  "dataRange": {
+    "from": "2022-12-01T00:00:00.000Z",
+    "to": "2023-08-12T00:00:00.000Z"
+  },
+  "traceId": "1-6a350e2b-4e319c3c61792b5a16f606ee",
+  "fips": [
+    {
+      "fipID": "setu-fip",
+      "accounts": [
+        {
+          "linkRefNumber": "8e02accb-035b-4b91-aae7-02992a090aa8",
+          "maskedAccNumber": "XXXXXXXX5866",
+          "FIstatus": "READY",
+          "data": {
+            "account": {
+              "linkedAccRef": "8e02accb-035b-4b91-aae7-02992a090aa8",
+              "maskedAccNumber": "XXXXXXXX5866",
+              "type": "deposit",
+              "version": "2.0.0",
+              "transactions": {
+                "startDate": "2022-12-01",
+                "endDate": "2023-08-12",
+                "transaction": [
+                  {
+                    "txnId": "TNDM01106121333524",
+                    "reference": "248998436",
+                    "amount": "18196.31",
+                    "type": "DEBIT",
+                    "mode": "UPI",
+                    "narration": "UPI/DE/228850611770/Nitara Ahluwalia/XKJM/92139758",
+                    "transactionTimestamp": "2023-06-02T23:05:49+00:00",
+                    "valueDate": "2023-06-03",
+                    "currentBalance": "394490.98"
+                  },
+                  {
+                    "txnId": "NSNM16953221436922",
+                    "reference": "606361217",
+                    "amount": "24203.0",
+                    "type": "DEBIT",
+                    "mode": "CASH",
+                    "narration": "CASH/DE/831106002804/Ahana  Bains/UNUC/26334343",
+                    "transactionTimestamp": "2023-05-10T00:53:37+00:00",
+                    "valueDate": "2023-05-11",
+                    "currentBalance": "88546.17"
+                  },
+                  {
+                    "txnId": "LBJF73964416253820",
+                    "reference": "666008779",
+                    "amount": "17969.7",
+                    "type": "CREDIT",
+                    "mode": "ATM",
+                    "narration": "ATM/CR/879010585665/Anahi Shenoy/TMCZ/26822085",
+                    "transactionTimestamp": "2023-03-30T22:23:22+00:00",
+                    "valueDate": "2023-03-31",
+                    "currentBalance": "473099.14"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
