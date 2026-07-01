@@ -46,9 +46,9 @@ def test_workflow_pre_classify_continue_onboarding():
     assert result["intent"] == "/continue_discovery"
 
 
-def test_workflow_pre_classify_import_inventory_discovery():
+def test_workflow_pre_classify_import_inventory_csv():
     result = workflow_pre_classify("import inventory list")
-    assert result["intent"] == "/business_discovery"
+    assert result["intent"] == "/inventory_import_csv"
 
 
 def test_classify_hybrid_business_discovery():

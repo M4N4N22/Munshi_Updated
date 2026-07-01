@@ -673,6 +673,7 @@ import json
 import os
 import re
 from datetime import datetime, timedelta
+from pathlib import Path
 from typing import Optional, Dict, Any
 
 from dateutil.relativedelta import relativedelta
@@ -698,6 +699,29 @@ def get_openai_client() -> OpenAI:
     return _client
 
 CHAT_MODEL = "gpt-4.1-mini"
+
+# ============================================================
+# CONTRACT (intent-types.json is source of truth)
+# ============================================================
+
+_INTENT_CONTRACT: Dict[str, Any] | None = None
+_CONTRACTS_DIR = Path(__file__).resolve().parent / "contracts"
+
+
+def get_intent_contract() -> Dict[str, Any]:
+    global _INTENT_CONTRACT
+    if _INTENT_CONTRACT is None:
+        path = _CONTRACTS_DIR / "intent-types.json"
+        _INTENT_CONTRACT = json.loads(path.read_text(encoding="utf-8"))
+    return _INTENT_CONTRACT
+
+
+def load_valid_intents() -> set[str]:
+    return set(get_intent_contract()["intents"])
+
+
+VALID_INTENTS = load_valid_intents()
+VALID_DEPARTMENTS = set(get_intent_contract().get("departments", []))
 
 # ============================================================
 # DATE EXTRACTOR
@@ -939,6 +963,20 @@ class CommandParser:
             return build("/business_discovery")
         if ml.startswith("/continue_discovery"):
             return build("/continue_discovery")
+        if ml.startswith("/assign_delivery"):
+            worker_match = re.search(r"/assign_delivery\s+(@?\w+)", message, re.IGNORECASE)
+            return build(
+                "/assign_delivery",
+                worker_slug=worker_match.group(1) if worker_match else None,
+            )
+        if ml.startswith("/inventory_import_csv"):
+            return build("/inventory_import_csv")
+        if ml.startswith("/cancel"):
+            return build("/cancel")
+        if ml.startswith("/suggestion_approve"):
+            return build("/suggestion_approve")
+        if ml.startswith("/task_inventory_nl"):
+            return build("/task_inventory_nl")
 
         return None
 
@@ -967,12 +1005,13 @@ _UPDATE_PROGRESS_RE = re.compile(
     r"(task\s*\d+\s*update|update\s+task\s*\d+|status\s+update|progress\s+update|"
     r"task\s+update|update\s+task|task\s*\d+.{0,25}(percent|progress|update)|"
     r"task\s*\d+\s+par\s+kaam\s+chal\s+raha|almost\s+(complete|done)|"
-    r"\d+\s*percent\s+complete|percent\s+complete|half\s+complete|"
+    r"\d+\s*percent\s+(complete|done)|percent\s+complete|half\s+complete|"
     r"aadha\s+(ho\s+gaya|kaam|complete)|kaam\s+chal\s+raha|work\s+in\s+progress|"
     r"update\s+progress|kaam\s+almost|progress\s+update|"
     r"status\s+update\s+task|task\s*\d+\s+update\s+\d+\s*percent|"
     r"progress\s+batao\s+task\s*\d+|status\s+update\s+karo|"
-    r"partial\s+complete\s+task\s*\d+|80\s+percent\s+done\s+task\s*\d+)",
+    r"partial\s+complete\s+task\s*\d+|\d+\s*percent\s+done\s+task\s*\d+|"
+    r"half\s+complete\s+task\s*\d+|done\s+task\s*\d+|complete\s+task\s*\d+)",
     re.IGNORECASE,
 )
 
@@ -1011,10 +1050,13 @@ _DEPT_KEYWORDS = {
     "it":         ["server", "laptop", "computer", "software", "internet", "wifi", "printer"],
 }
 
-# Non-person objects — must not trigger /assign via "{name} ko"
-_ASSIGN_EXCLUDE_RE = re.compile(
-    r"\b(customer|client|vendor|supplier|department|team|section|factory|office)\b",
-    re.IGNORECASE,
+# Assignee names that must not trigger /assign (entity nouns, not worker slugs)
+_PERSON_ASSIGN_EXCLUDE_NAMES = frozenset(
+    {
+        "customer", "client", "vendor", "supplier", "department", "team",
+        "maintenance", "dispatch", "sales", "purchase", "operations", "it",
+        "section", "factory", "office",
+    }
 )
 
 _HAS_TASK_ID_RE = re.compile(
@@ -1148,8 +1190,9 @@ _MGR_CONTEXT_REPLY: Dict[str, str] = {
 }
 
 _MGR_SELF_SIGNAL_RE = re.compile(
-    r"(main\s+(?:khud\s+)?kar(?:unga|lung|lenge)|main\s+sambhal\s+lunga|"
+    r"(main\s+(?:khud\s+)?kar(?:unga|lung|lenge|leta\s+hoon)|main\s+sambhal\s+lunga|"
     r"main\s+handle\s+karunga|main\s+dekh\s+lunga|main\s+lunga|main\s+kar\s+lunga|"
+    r"main\s+task\s*\d+|"
     r"i(?:'ll|\s+will)\s+(?:do|handle)\s+task|i\s+do\s+task|assign\s+to\s+me|"
     r"i\s+will\s+handle\s+task|ye\s+main\s+(?:dekh|kar)|mujhe\s+de\s+do|"
     r"mujhe\s+khud|khud\s+karna|\b\d{1,4}\s+main\b)",
@@ -1183,6 +1226,8 @@ _MGR_WORKER_SKIP = frozenset(
         "galat", "wrong", "not", "our", "scope", "work", "hamara", "hamare",
         "transfer", "reject", "send", "assign", "pending", "handle", "next",
         "do", "de", "dedo", "kar", "karo", "bhejo", "bhej",
+        "done", "complete", "update", "status", "progress", "percent", "half",
+        "almost", "partial", "packing",
     }
 )
 
@@ -1192,8 +1237,72 @@ _ASSIGN_PERSON_RE = re.compile(
     re.IGNORECASE,
 )
 
+_ASSIGN_KO_INSTRUCT_RE = re.compile(
+    r"(\w+)\s+ko\s+"
+    r"(?:.{0,80})?"
+    r"\b(kaam|task|dispatch|loading|packaging|counting|assign|"
+    r"do\b|dedo|de\b|dena|call|kare|karo|karegi|karega|bol|"
+    r"bhejo|bhej|bhejdo|file|list|email|cleaning|audit|sample|"
+    r"training|meeting|report|karwao|banani|banega|banegi|"
+    r"packing|invoice|target|load|fix|audit)\b",
+    re.IGNORECASE,
+)
+
+_ASSIGN_KO_THIRD_PARTY_RE = re.compile(
+    r"(\w+)\s+(?:client|customer)\s+ko\s+",
+    re.IGNORECASE,
+)
+
+_ASSIGN_SE_RE = re.compile(
+    r"(\w+)\s+se\s+(?:.{0,60})?\b(karwao|karo|bhejo|setup|ready|packing)\b",
+    re.IGNORECASE,
+)
+
+_ASSIGN_SE_TRAILING_RE = re.compile(
+    r"\b(?:setup|ready|karo|karwao|bhejo)\b.{0,40}(\w+)\s+se\b",
+    re.IGNORECASE,
+)
+
+_ASSIGN_PASSIVE_KO_RE = re.compile(
+    r"(\w+)\s+ko\s+.{0,80}(banani|banega|banegi|karni|karna)\s+hai\b",
+    re.IGNORECASE,
+)
+
+_ASSIGN_BARE_KO_RE = re.compile(
+    r"(\w+)\s+ko\s+(training|meeting|packing|audit|sample)\b",
+    re.IGNORECASE,
+)
+
+_DEPT_SLUG_DIRECT_RE = re.compile(
+    r"\b(operations|sales|purchase|it)\s+(?:team\s+)?ko\b",
+    re.IGNORECASE,
+)
+
+_DEPT_TEAM_RE = re.compile(
+    r"\b(sales|operations|purchase|it)\s+team\b",
+    re.IGNORECASE,
+)
+
 _DEPT_ACTION_RE = re.compile(
-    r"\b(karo|bolo|bhejo|fix|check|arrange|follow\s*up|process|theek)\b",
+    r"\b(karo|bolo|bhejo|fix|check|arrange|follow\s*up|followup|process|theek|"
+    r"call|load|target|dena|do\b|dedo|karwao)\b",
+    re.IGNORECASE,
+)
+
+_PASSIVE_FUTURE_TASK_RE = re.compile(
+    r"\b(karna|karni|banegi|banani|banega)\s+hai\b",
+    re.IGNORECASE,
+)
+
+_DELEGATION_SIGNAL_RE = re.compile(
+    r"(\b\w+\s+ko\b|\b\w+\s+se\b|\bsabko\b|"
+    r"\b(sales|operations|purchase|it)\s+team\b|"
+    r"\b(operations|sales|purchase|it)\s+ko\b)",
+    re.IGNORECASE,
+)
+
+_DELEGATION_INSTRUCTION_RE = re.compile(
+    r"\b(karo|kare|do\b|dedo|bhejo|bol|call|karwao|dena|banani|banegi|target|load|fix|training)\b",
     re.IGNORECASE,
 )
 
@@ -1222,10 +1331,44 @@ _VENDOR_NOTIFICATION_RE = re.compile(
 
 def _detect_department(message: str) -> Optional[str]:
     ml = message.lower()
+    slug = _DEPT_SLUG_DIRECT_RE.search(message)
+    if slug:
+        return slug.group(1).lower()
+    team = _DEPT_TEAM_RE.search(message)
+    if team:
+        return team.group(1).lower()
     for dept, keywords in _DEPT_KEYWORDS.items():
         if any(kw in ml for kw in keywords):
             return dept
     return None
+
+
+_VENDOR_STATUS_NOTIFY_RE = re.compile(
+    r"(order\s+status\s+update|status\s+update\s+karo|payment\s+received|"
+    r"dispatch\s+ready|partial\s+shipment|delivery\s+delayed|sample\s+approve|"
+    r"LR\s+copy|GST\s+invoice|packing\s+list|goods\s+ready|courier\s+pick)",
+    re.IGNORECASE,
+)
+
+
+def _is_vendor_notification_barrier(message: str) -> bool:
+    """Vendor-notification regex blocks operational routing only when not dept instruction."""
+    if not _VENDOR_NOTIFICATION_RE.search(message):
+        return False
+    if _VENDOR_STATUS_NOTIFY_RE.search(message):
+        return True
+    depart = _detect_department(message)
+    if depart and _DEPT_ACTION_RE.search(message):
+        return False
+    return True
+
+
+def _is_person_directed_report(message: str) -> bool:
+    """Person + report instruction → /assign, not /report."""
+    return bool(
+        _extract_person_assignee(message)
+        and re.search(r"\breport\b", message, re.IGNORECASE)
+    )
 
 
 def _should_skip_purchase_for_depart(message: str) -> bool:
@@ -1233,6 +1376,8 @@ def _should_skip_purchase_for_depart(message: str) -> bool:
     ml = message.lower()
     if re.search(r"raw\s+material\s+order\s+karo", ml):
         return True
+    if re.search(r"\border\s+karo\b", ml) and _PROCUREMENT_INTENT_RE.search(message):
+        return False
     if _PROCUREMENT_INTENT_RE.search(message):
         if re.search(
             r"khatam\s+hone|shortage|mangwana|reorder|order\s+chahiye|"
@@ -1253,15 +1398,26 @@ def _should_skip_purchase_for_depart(message: str) -> bool:
 
 
 def _extract_person_assignee(message: str) -> Optional[str]:
-    match = _ASSIGN_PERSON_RE.search(message)
-    if not match:
-        return None
-    name = match.group(1).lower()
-    if name in {"customer", "client", "vendor", "supplier", "department", "team", "maintenance"}:
-        return None
-    if _ASSIGN_EXCLUDE_RE.search(message):
-        return None
-    return name
+    third_party = _ASSIGN_KO_THIRD_PARTY_RE.search(message)
+    if third_party:
+        name = third_party.group(1).lower()
+        if name not in _PERSON_ASSIGN_EXCLUDE_NAMES:
+            return name
+    for pattern in (
+        _ASSIGN_PASSIVE_KO_RE,
+        _ASSIGN_KO_INSTRUCT_RE,
+        _ASSIGN_SE_RE,
+        _ASSIGN_SE_TRAILING_RE,
+        _ASSIGN_BARE_KO_RE,
+        _ASSIGN_PERSON_RE,
+    ):
+        match = pattern.search(message)
+        if not match:
+            continue
+        name = match.group(1).lower()
+        if name not in _PERSON_ASSIGN_EXCLUDE_NAMES:
+            return name
+    return None
 
 
 def _extract_mgr_task_id(message: str) -> Optional[int]:
@@ -1394,6 +1550,39 @@ def _extract_mgr_worker(message: str) -> Optional[str]:
         name = match.group(1).lower()
         if name not in _MGR_WORKER_SKIP:
             return name
+    match = re.search(r"\b(?:bhejo|dispatch|delivery)\s+(\w+)\s+ko\b", message, re.IGNORECASE)
+    if match:
+        name = match.group(1).lower()
+        if name not in _MGR_WORKER_SKIP:
+            return name
+    match = re.search(r"\b(\w+)\s+ko\s*$", message.strip(), re.IGNORECASE)
+    if match:
+        name = match.group(1).lower()
+        if name not in _MGR_WORKER_SKIP:
+            return name
+    match = re.search(r"\bto\s+(\w+)\s*$", message.strip(), re.IGNORECASE)
+    if match:
+        name = match.group(1).lower()
+        if name not in _MGR_WORKER_SKIP:
+            return name
+    match = re.search(r"\bdelivery\s+\d+.*\s+(\w+)\s*$", message.strip(), re.IGNORECASE)
+    if match:
+        name = match.group(1).lower()
+        if name not in _MGR_WORKER_SKIP:
+            return name
+    match = re.search(r"\bdelivery\s+(\w+)\s*$", message.strip(), re.IGNORECASE)
+    if match:
+        name = match.group(1).lower()
+        if name not in _MGR_WORKER_SKIP:
+            return name
+    match = re.search(r"\b(\w+)\s+ko\s+\d", message, re.IGNORECASE)
+    if match:
+        name = match.group(1).lower()
+        if name not in _MGR_WORKER_SKIP:
+            return name
+    person = _extract_person_assignee(message)
+    if person:
+        return person
     return None
 
 
@@ -1440,12 +1629,26 @@ def _parse_mgr_typo_command(message: str) -> Optional[Dict[str, Any]]:
     return None
 
 
+def _is_cancel_intent(message: str) -> bool:
+    """Cancel phrases must not fire on issue/breakdown utterances."""
+    if not _CANCEL_RE.search(message):
+        return False
+    if _CANCEL_ISSUE_BARRIER_RE.search(message):
+        return False
+    if _UPDATE_PROGRESS_RE.search(message):
+        return False
+    return True
+
+
 def manager_pre_classify(message: str) -> Optional[Dict[str, Any]]:
     """
     Phase 5A — deterministic manager workflow intents before LLM fallback.
     Covers /mgrself, /mgrassign, /mgrtransfer, /mgrreject.
     """
     ml = message.lower().strip()
+
+    if _UPDATE_PROGRESS_RE.search(message):
+        return None
 
     typo = _parse_mgr_typo_command(message)
     if typo is not None:
@@ -1581,8 +1784,14 @@ def operational_pre_classify(message: str) -> Optional[Dict[str, Any]]:
             issue_id = int(id_match.group(1) or id_match.group(2))
         return _op_result("/resolve", id=issue_id)
 
+    # --- Person-directed report instructions → /assign, not /report ---
+    if not _HAS_TASK_ID_RE.search(message):
+        assignee = _extract_person_assignee(message)
+        if assignee and re.search(r"\breport\b", message, re.IGNORECASE):
+            return _op_result("/assign", worker_slug=assignee)
+
     # --- Reports before issues list ("issues report" → /report) ---
-    if _REPORT_RE.search(message):
+    if _REPORT_RE.search(message) and not _is_person_directed_report(message):
         return _op_result("/report")
 
     if _ISSUES_LIST_RE.search(message) and not _REPORT_RE.search(message):
@@ -1593,7 +1802,7 @@ def operational_pre_classify(message: str) -> Optional[Dict[str, Any]]:
         return _op_result("/issue")
 
     # --- Vendor notifications must not hit update/complete/depart ---
-    if _VENDOR_NOTIFICATION_RE.search(message):
+    if _is_vendor_notification_barrier(message):
         return None
 
     # --- Progress update before completion ("almost complete", "task 5 update") ---
@@ -1635,15 +1844,10 @@ def operational_pre_classify(message: str) -> Optional[Dict[str, Any]]:
             return _op_result("/assign", worker_slug=assignee)
 
     # --- Department routing (no named person assignee) ---
-    if not _extract_person_assignee(message):
+    if not _extract_person_assignee(message) and not _PASSIVE_FUTURE_TASK_RE.search(message):
         depart = _detect_department(message)
-        if depart:
-            if _DEPT_ACTION_RE.search(message):
-                return _op_result("/depart_assign", depart_slug=depart)
-            if re.search(r"\bfollow\s*up\b", message, re.IGNORECASE):
-                return _op_result("/depart_assign", depart_slug=depart)
-            if re.search(r"\bfix\b", message, re.IGNORECASE):
-                return _op_result("/depart_assign", depart_slug=depart)
+        if depart and _DEPT_ACTION_RE.search(message):
+            return _op_result("/depart_assign", depart_slug=depart)
 
     return None
 
@@ -1653,9 +1857,43 @@ _ASSIGN_DRAFT_RE = re.compile(
     r"(banegi|banani|banega|banayenge|banao|bana\s|karni|karna|karega|"
     r"ho\s+jayegi|ho\s+jayega|repair|website|dispatch|"
     r"kaam\b|task\b|machine|invoice|packaging|khana|bna|bnao|figure|"
-    r"material|order\s+chahiye|mangwana)",
+    r"material|order\s+chahiye|mangwana|inventory|training|delivery\s+plan)",
     re.IGNORECASE,
 )
+
+
+def delegation_anti_sink_pre_classify(message: str) -> Optional[Dict[str, Any]]:
+    """
+    V2B — last-resort routing for delegation-like phrases before general_chat.
+    Safest fallback: /assign_clarify (who should do this?).
+    """
+    if _HAS_TASK_ID_RE.search(message):
+        return None
+    if _MENTION_RE.search(message):
+        return None
+    if manager_pre_classify(message) is not None:
+        return None
+    if _PRESENT_RE.search(message) or _ABSENT_RE.search(message):
+        return None
+    if _TASKS_RE.search(message) or _ISSUES_LIST_RE.search(message):
+        return None
+    if _REPORT_RE.search(message) and not _is_person_directed_report(message):
+        return None
+    if _ISSUE_CREATE_RE.search(message) or _RESOLVE_RE.search(message):
+        return None
+    if not _DELEGATION_SIGNAL_RE.search(message):
+        if not re.search(r"\bsabko\b", message, re.IGNORECASE):
+            if not _ASSIGN_DRAFT_RE.search(message):
+                return None
+    if not (
+        _DELEGATION_INSTRUCTION_RE.search(message)
+        or _ASSIGN_DRAFT_RE.search(message)
+        or re.search(r"\bsabko\b", message, re.IGNORECASE)
+    ):
+        return None
+    if workflow_pre_classify(message) is not None:
+        return None
+    return _op_result("/assign_clarify", task_description=message.strip())
 
 
 def assign_clarify_pre_classify(message: str) -> Optional[Dict[str, Any]]:
@@ -1663,6 +1901,14 @@ def assign_clarify_pre_classify(message: str) -> Optional[Dict[str, Any]]:
     Passive / future task statements without @mention → /assign_clarify.
     Example: "aaj website banegi", "kal dispatch ho jayega".
     """
+    if _ONBOARD_VENDOR_RE.search(message) and not _should_block_vendor_onboard(message):
+        return None
+    if (
+        _INVENTORY_STATUS_RE.search(message)
+        and not _PASSIVE_FUTURE_TASK_RE.search(message)
+        and not _INVENTORY_CREATE_RE.search(message)
+    ):
+        return None
     if _MENTION_RE.search(message) or _extract_person_assignee(message):
         return None
     if _HAS_TASK_ID_RE.search(message):
@@ -1762,31 +2008,46 @@ _INVENTORY_CREATE_RE = re.compile(
     re.IGNORECASE,
 )
 
+_INVENTORY_CREATE_PRIORITY_RE = re.compile(
+    r"(item\s+inventory\s+mein\s+darj|inventory\s+mein\s+darj|"
+    r"naya\s+item\s+stock\s+mein|add\s+warehouse\s+stock\s+item)",
+    re.IGNORECASE,
+)
+
 _INVENTORY_STATUS_RE = re.compile(
     r"(inventory\s*status|stock\s*status|stock\s*level|stock\s*levels|low\s*stock|"
-    r"inventory\s*check|stock\s*check|inventory\s*level|stock\s*availability|"
+    r"inventory\s*check(?!\s+karna\s+hai)|stock\s*check|inventory\s*level|stock\s*availability|"
     r"inventory\s*summary|stock\s*register\s*status|inventory\s*lookup|"
     r"kitna\s*stock|stock\s*kitna|inventory\s*dekho|stock\s*dikhao|"
-    r"inventory\s*dikhao|stock\s*batao|"
-    r"check\s*inventory|check\s*stock|show\s*stock|show\s*inventory|"
-    r"current\s*inventory|current\s*stock|item\s*stock|sku\s*status|"
-    r"how\s*much.{0,25}stock|what\s*is.{0,25}stock|stock\s*for|"
-    r"item\s*availability|warehouse\s*stock|inventory\s*dekh|stock\s*dekh|"
+    r"inventory\s*dikhao|stock\s*batao|inventory\s+status\s+batao|"
+    r"check\s*inventory|check\s*stock|check\s+\w+\s+stock|check\s+product\s+stock|"
+    r"show\s*stock|show\s*inventory|view\s+item\s+inventory|"
+    r"current\s*inventory|current\s*stock|sku\s*status|"
+    r"how\s*much.{0,25}stock|how\s+many\s+.{0,25}\s+in\s+stock|what\s*is.{0,25}stock|stock\s*for|"
+    r"item\s*availability|inventory\s*dekh|stock\s*dekh|"
     r"inventory\s*report|stock\s*quantity|inventory\s*kitna|maal\s*kitna|"
+    r"maal\s+ka\s+status|maal\s+status\s+check|"
     r"inv\s*ntry|invntry|inventry|invntry\s+stt?us|stt?us\s+batao|"
-    r"stock\s+register\s+status|available\s+stock|warehouse\s+stock|"
+    r"stock\s+register\s+status|available\s+stock|stock\s+available\s+hai\s+kya|"
     r"quantity\s+kitni|maal\s+kitna\s+hai|raw\s+material\s+kitna\s+bacha|"
-    r"kitna\s+(hai|bacha|bacha\s+hai|bacha\s+hai)|"
-    r"\w+\s+\w+\s+kitna\s+hai|printing\s+ink\s+kitna)",
+    r"kitna\s+maal\s+pada\s+hai|kitna\s+\w+\s+pada\s+hai|"
+    r"kam\s+pada\s+hua\s+stock|kam\s+stock\s+wale\s+items?|"
+    r"kitna\s+(hai|bacha|bacha\s+hai)|"
+    r"\w+\s+\w+\s+kitna\s+hai|printing\s+ink\s+kitna|"
+    r"inventory\s+check\s+karo)",
     re.IGNORECASE,
 )
 
 _ONBOARD_VENDOR_RE = re.compile(
     r"((add|register|create|onboard|setup|new|naya|nayi|naye|jod|darj|entry|start)"
-    r".{0,30}(vendor|supplier|suppliers))"
-    r"|((vendor|supplier).{0,25}(add|register|create|onboard|jod|darj|registration|onboarding|setup|entry))"
+    r".{0,40}(vendor|supplier|suppliers))"
+    r"|((vendor|supplier).{0,30}(add|register|create|onboard|jod|darj|registration|onboarding|setup|entry|record|banao))"
     r"|(vendor\s*onboarding|supplier\s*onboarding|vendor\s*registration|supplier\s*registration|"
-    r"naya\s*vendor|nayi\s*supplier|naye\s*supplier|supplier\s*add|vendor\s*add)",
+    r"naya\s*vendor|nayi\s*supplier|naye\s*supplier|supplier\s*add|vendor\s*add|"
+    r"add\s+purchase\s+vendor|add\s+vendor\s+for\s+purchase|"
+    r"register\s+vendor\s+for\s+procurement|"
+    r"supplier\s+ka\s+record|supplier\s+record\s+banao|"
+    r"naya\s+supplier\s+register|supplier\s+add\s+karo)",
     re.IGNORECASE,
 )
 
@@ -1800,9 +2061,40 @@ _ONBOARD_WORKER_RE = re.compile(
 )
 
 _VENDOR_PROCUREMENT_ACTION_RE = re.compile(
-    r"\b(order|bhejo|bhej|invoice|procurement|maang|source|buy|purchase)\b",
+    r"\b(order|bhejo|bhej|invoice|maang|source|buy)\b",
     re.IGNORECASE,
 )
+
+
+def _should_block_vendor_onboard(message: str) -> bool:
+    """
+    Procurement/order verbs block onboard only when registration intent is absent.
+    'register vendor for procurement' and 'add purchase vendor' remain onboard.
+    """
+    if not _ONBOARD_VENDOR_RE.search(message):
+        return True
+    if re.search(
+        r"\b(add|register|create|onboard|naya|nayi|naye|jod|darj|record|banao)\b"
+        r".{0,45}\b(vendor|supplier)\b",
+        message,
+        re.IGNORECASE,
+    ):
+        return False
+    if re.search(
+        r"\b(vendor|supplier)\b.{0,30}\b(add|register|record|banao|darj|jod|for)\b",
+        message,
+        re.IGNORECASE,
+    ):
+        return False
+    if re.search(r"\b(vendor|supplier)\s+for\s+(purchase|procurement)\b", message, re.IGNORECASE):
+        return False
+    if re.search(r"\badd\s+purchase\s+vendor\b", message, re.IGNORECASE):
+        return False
+    if _VENDOR_PROCUREMENT_ACTION_RE.search(message):
+        return True
+    if re.search(r"\b(procurement|purchase)\b", message, re.IGNORECASE):
+        return True
+    return False
 
 _PROCUREMENT_INTENT_RE = re.compile(
     r"(/purchase_request_create|purchase\s*request|procurement\s*request|"
@@ -1823,6 +2115,56 @@ _PROCUREMENT_INTENT_RE = re.compile(
 
 _PURCHASE_REQUEST_CREATE_RE = _PROCUREMENT_INTENT_RE
 
+_INVENTORY_IMPORT_CSV_RE = re.compile(
+    r"(/inventory_import_csv\b|"
+    r"import\s+inventory(?:\s+(?:list|sheet|data|file|csv))?|"
+    r"inventory\s+(?:list|sheet|csv)\s+import|"
+    r"csv\s+(?:se\s+)?inventory\s+import|"
+    r"bulk\s+inventory\s+import|"
+    r"inventory\s+csv\s+import)",
+    re.IGNORECASE,
+)
+
+_CANCEL_RE = re.compile(
+    r"(^/cancel\b|"
+    r"^cancel\b|"
+    r"cancel\s+(?:workflow|import|setup|karo)|"
+    r"workflow\s+cancel|"
+    r"\b(band\s+karo|rok\s+do|stop\s+karo|mat\s+karo)\b)",
+    re.IGNORECASE,
+)
+
+_CANCEL_ISSUE_BARRIER_RE = re.compile(
+    r"(machine\s+band|printer\s+band|motor\s+band|conveyor\s+stuck|"
+    r"power\s+cut|breakdown|kharab|issue\s+hai)",
+    re.IGNORECASE,
+)
+
+_SUGGESTION_APPROVE_RE = re.compile(
+    r"(^/suggestion_approve\b|"
+    r"suggestion\s+approve|"
+    r"approve\s+suggestion|"
+    r"document\s+approve)",
+    re.IGNORECASE,
+)
+
+_STOCK_ITEM_RE = re.compile(
+    r"\b(bolt|bolts|nut|nuts|sku|stock|piece|pcs|unit|carton|cement|"
+    r"qty|quantity|\d+\s*(?:kg|pcs|piece|unit))\b",
+    re.IGNORECASE,
+)
+
+_DISPATCH_RE = re.compile(
+    r"\b(bhejo|bhej|dispatch|delivery|deliver)\b",
+    re.IGNORECASE,
+)
+
+_INVENTORY_COUNT_RE = re.compile(
+    r"\b(stock\s+count|inventory\s+count|ginati|count\s+stock|count\s+inventory|"
+    r"sku\s+\w+\s+count|count\s+karo)\b",
+    re.IGNORECASE,
+)
+
 _BUSINESS_DISCOVERY_RE = re.compile(
     r"(/business_discovery|"
     r"tell\s+(you|munshi)\s+about\s+(my\s+)?business|"
@@ -1834,7 +2176,6 @@ _BUSINESS_DISCOVERY_RE = re.compile(
     r"update\s+(company|business)\s+details|"
     r"company\s+details\s+update|business\s+details\s+badlo|"
     r"import\s+(vendor|supplier)s?(\s+list)?|vendor\s+list\s+import|"
-    r"import\s+inventory(\s+(list|sheet|data|file))?|inventory\s+(list|sheet)\s+import|"
     r"attendance\s+sheet|organization\s+setup|team\s+setup|"
     r"factory\s+introduce|packaging\s+company|manufacturing\s+unit|"
     r"organization\s+structure|unit\s+ka\s+introduction|factory\s+details|"
@@ -1856,8 +2197,56 @@ _CONTINUE_DISCOVERY_RE = re.compile(
 )
 
 
+def stock_linked_pre_classify(message: str) -> Optional[Dict[str, Any]]:
+    """Stock-linked delivery / inventory-count intents (v1.1)."""
+    if _INVENTORY_COUNT_RE.search(message):
+        return _op_result("/task_inventory_nl")
+
+    has_stock = bool(_STOCK_ITEM_RE.search(message))
+    has_dispatch = bool(_DISPATCH_RE.search(message))
+    worker = _extract_mgr_worker(message)
+    if not worker:
+        mention = _MENTION_RE.search(message)
+        if mention:
+            worker = mention.group(0)
+
+    if has_stock and has_dispatch and worker:
+        return _op_result("/assign_delivery", worker_slug=worker)
+    if has_stock and has_dispatch:
+        return _op_result("/task_inventory_nl")
+    return None
+
+
 def workflow_pre_classify(message: str) -> Optional[Dict[str, Any]]:
     ml = message.lower().strip()
+
+    if ml.startswith("/inventory_import_csv"):
+        return {"intent": "/inventory_import_csv", "worker_slug": None, "depart_slug": None, "reject_reason": None}
+    if ml.startswith("/cancel"):
+        return {"intent": "/cancel", "worker_slug": None, "depart_slug": None, "reject_reason": None}
+    if ml.startswith("/suggestion_approve"):
+        return {"intent": "/suggestion_approve", "worker_slug": None, "depart_slug": None, "reject_reason": None}
+    if ml.startswith("/assign_delivery"):
+        worker = _extract_mgr_worker(message)
+        if not worker:
+            mention = _MENTION_RE.search(message)
+            worker = mention.group(0) if mention else None
+        return {"intent": "/assign_delivery", "worker_slug": worker, "depart_slug": None, "reject_reason": None}
+    if ml.startswith("/task_inventory_nl"):
+        return {"intent": "/task_inventory_nl", "worker_slug": None, "depart_slug": None, "reject_reason": None}
+
+    if _INVENTORY_IMPORT_CSV_RE.search(message):
+        return {"intent": "/inventory_import_csv", "worker_slug": None, "depart_slug": None, "reject_reason": None}
+
+    if _is_cancel_intent(message) and not re.search(r"\breject\b", ml):
+        return {"intent": "/cancel", "worker_slug": None, "depart_slug": None, "reject_reason": None}
+
+    if _SUGGESTION_APPROVE_RE.search(message):
+        return {"intent": "/suggestion_approve", "worker_slug": None, "depart_slug": None, "reject_reason": None}
+
+    stock = stock_linked_pre_classify(message)
+    if stock is not None:
+        return stock
 
     if ml.startswith("/onboard_vendor"):
         return {"intent": "/onboard_vendor", "worker_slug": None, "depart_slug": None, "reject_reason": None}
@@ -1880,13 +2269,16 @@ def workflow_pre_classify(message: str) -> Optional[Dict[str, Any]]:
     if _BUSINESS_DISCOVERY_RE.search(message):
         return {"intent": "/business_discovery", "worker_slug": None, "depart_slug": None, "reject_reason": None}
 
-    if _ONBOARD_VENDOR_RE.search(message) and not _VENDOR_PROCUREMENT_ACTION_RE.search(message):
+    if _ONBOARD_VENDOR_RE.search(message) and not _should_block_vendor_onboard(message):
         return {"intent": "/onboard_vendor", "worker_slug": None, "depart_slug": None, "reject_reason": None}
 
     if _ONBOARD_WORKER_RE.search(message):
         return {"intent": "/onboard_worker", "worker_slug": None, "depart_slug": None, "reject_reason": None}
 
-    if _INVENTORY_STATUS_RE.search(message):
+    if _INVENTORY_CREATE_PRIORITY_RE.search(message):
+        return {"intent": "/inventory_create", "worker_slug": None, "depart_slug": None, "reject_reason": None}
+
+    if _INVENTORY_STATUS_RE.search(message) and not _PASSIVE_FUTURE_TASK_RE.search(message):
         return {"intent": "/inventory_status", "worker_slug": None, "depart_slug": None, "reject_reason": None}
 
     if _INVENTORY_CREATE_RE.search(message):
@@ -1902,18 +2294,6 @@ def workflow_pre_classify(message: str) -> Optional[Dict[str, Any]]:
         return {"intent": "/purchase_request_create", "worker_slug": None, "depart_slug": None, "reject_reason": None}
 
     return None
-
-VALID_INTENTS = {
-    "/tasks", "/assign", "/depart_assign", "/mgrassign", "/mgrself",
-    "/update", "/issue", "/issues", "/resolve", "/members", "/report",
-    "/help", "/present", "/absent", "/complete", "/mgrtransfer",
-    "/mgrreject", "/onboard_vendor", "/onboard_worker",
-    "/inventory_create", "/inventory_status",     "/purchase_request_create",
-    "/assign_clarify",
-    "/business_discovery", "/continue_discovery", "general_chat",
-}
-
-VALID_DEPARTMENTS = {"operations", "sales", "purchase", "it"}
 
 
 class IntentClassifier:
@@ -1991,6 +2371,8 @@ class IntentClassifier:
             pre = assign_clarify_pre_classify(message)
         if pre is None:
             pre = deterministic_pre_classify(message)
+        if pre is None and not use_llm:
+            pre = delegation_anti_sink_pre_classify(message)
 
         if pre is not None:
             intent       = pre["intent"]
@@ -2080,6 +2462,7 @@ INTENT DEFINITIONS
 
 /tasks          → user wants to view their own task list
 /assign         → instruct a NAMED person to do NEW work (no existing task id)
+/assign_delivery → delivery/dispatch with worker + SKU/stock quantity (stock-linked)
 /depart_assign  → instruct a DEPARTMENT to do work (no person named, no existing task id)
 /mgrassign      → reassign an EXISTING task (task id present) to a named person
 /mgrself        → manager takes an existing task themselves
@@ -2099,9 +2482,13 @@ INTENT DEFINITIONS
 /onboard_worker → start worker onboarding workflow (add/register employee)
 /inventory_create → start inventory item creation workflow
 /inventory_status → check stock levels, SKU status, or low-stock summary
+/inventory_import_csv → bulk import inventory from CSV file (NOT business onboarding)
 /purchase_request_create → start purchase request workflow (need → approval → vendor)
+/cancel → cancel active multi-step workflow or import session
+/suggestion_approve → approve/reject AI document suggestion (workflow)
 /assign_clarify → task described but NO person named; ask who to assign (e.g. "aaj website banegi")
-/business_discovery → start progressive business discovery (identity, org, inventory, vendors)
+/task_inventory_nl → NL stock-linked task (delivery, count, issue) with SKU/qty signals
+/business_discovery → start progressive business discovery (identity, org, vendors) — NOT CSV import
 /continue_discovery → resume paused business discovery workflow
 general_chat    → greetings, casual chat, off-topic questions, or "how to use" questions
 
@@ -2303,11 +2690,43 @@ Output: {"intent":"/business_discovery","worker_slug":null,"depart_slug":null,"r
 Input:  update company details
 Output: {"intent":"/business_discovery","worker_slug":null,"depart_slug":null,"reject_reason":null}
 
-Input:  import inventory list
-Output: {"intent":"/business_discovery","worker_slug":null,"depart_slug":null,"reject_reason":null}
+Input:  import inventory
+Output: {"intent":"/inventory_import_csv","worker_slug":null,"depart_slug":null,"reject_reason":null}
+
+Input:  import inventory csv file
+Output: {"intent":"/inventory_import_csv","worker_slug":null,"depart_slug":null,"reject_reason":null}
 
 Input:  import vendors
 Output: {"intent":"/business_discovery","worker_slug":null,"depart_slug":null,"reject_reason":null}
+
+--- /inventory_import_csv examples ---
+Input:  bulk inventory import
+Output: {"intent":"/inventory_import_csv","worker_slug":null,"depart_slug":null,"reject_reason":null}
+
+--- /assign_delivery examples ---
+Input:  ram ko 50 bolt bhejo
+Output: {"intent":"/assign_delivery","worker_slug":"ram","depart_slug":null,"reject_reason":null}
+
+Input:  dispatch 20 sku ABC to priya
+Output: {"intent":"/assign_delivery","worker_slug":"priya","depart_slug":null,"reject_reason":null}
+
+--- /task_inventory_nl examples ---
+Input:  stock count karo warehouse ka
+Output: {"intent":"/task_inventory_nl","worker_slug":null,"depart_slug":null,"reject_reason":null}
+
+Input:  inventory count for bolts
+Output: {"intent":"/task_inventory_nl","worker_slug":null,"depart_slug":null,"reject_reason":null}
+
+--- /cancel examples ---
+Input:  cancel
+Output: {"intent":"/cancel","worker_slug":null,"depart_slug":null,"reject_reason":null}
+
+Input:  cancel workflow
+Output: {"intent":"/cancel","worker_slug":null,"depart_slug":null,"reject_reason":null}
+
+--- /suggestion_approve examples ---
+Input:  /suggestion_approve
+Output: {"intent":"/suggestion_approve","worker_slug":null,"depart_slug":null,"reject_reason":null}
 
 Input:  mera business setup karna hai
 Output: {"intent":"/business_discovery","worker_slug":null,"depart_slug":null,"reject_reason":null}

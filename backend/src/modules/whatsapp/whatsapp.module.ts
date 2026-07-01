@@ -17,6 +17,8 @@ import { OwnerHomeService } from './owner-home.service';
 import { TeamBulkImportService } from './team-bulk-import.service';
 import { InventoryBulkImportService } from './inventory-bulk-import.service';
 import { OlliMediaService } from 'src/core/messaging/olli-media.service';
+import { WhatsAppWebhookDedupService } from './whatsapp-webhook-dedup.service';
+import { IntentObservabilityModule } from 'src/services/intent-observability/intent-observability.module';
 
 @Module({
   imports: [
@@ -31,6 +33,7 @@ import { OlliMediaService } from 'src/core/messaging/olli-media.service';
     WorkflowModule,
     InventoryModule,
     TaskInventoryResolutionModule,
+    IntentObservabilityModule,
   ],
   providers: [
     WhatsAppService,
@@ -40,6 +43,7 @@ import { OlliMediaService } from 'src/core/messaging/olli-media.service';
     TeamBulkImportService,
     InventoryBulkImportService,
     OlliMediaService,
+    WhatsAppWebhookDedupService,
   ],
   controllers: [WhatsAppController],
 })

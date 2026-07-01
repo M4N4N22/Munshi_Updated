@@ -1,0 +1,848 @@
+{
+  "validated_at": "2026-06-11T16:48:08.034Z",
+  "branch": "feature/shantanu-ml-hardening-v1",
+  "factory_id": 3,
+  "environment": {
+    "backend": {
+      "data": {
+        "status": "ok",
+        "info": {
+          "Postgres": {
+            "status": "up"
+          }
+        },
+        "error": {},
+        "details": {
+          "Postgres": {
+            "status": "up"
+          }
+        }
+      },
+      "meta": {
+        "success": true,
+        "message": "SUCCESS",
+        "statusCode": 200
+      }
+    },
+    "ml": {
+      "status": "ok"
+    }
+  },
+  "factory_discovery": {
+    "factory": {
+      "id": 3,
+      "name": "Munshi Dada"
+    },
+    "users": [
+      {
+        "id": 20,
+        "name": "Ayush Sharma",
+        "phone_number": "918447242034",
+        "role": "MANAGER"
+      },
+      {
+        "id": 25,
+        "name": "Debapratim",
+        "phone_number": "919958007208",
+        "role": "MANAGER"
+      },
+      {
+        "id": 34,
+        "name": "Rahul Verma",
+        "phone_number": "919456157007",
+        "role": "MANAGER"
+      },
+      {
+        "id": 23,
+        "name": "shakya",
+        "phone_number": "919992732261",
+        "role": "MANAGER"
+      },
+      {
+        "id": 24,
+        "name": "ajay",
+        "phone_number": "918295466423",
+        "role": "OWNER"
+      },
+      {
+        "id": 19,
+        "name": "Debjyoti",
+        "phone_number": "917060243009",
+        "role": "OWNER"
+      },
+      {
+        "id": 18,
+        "name": "Divyansh",
+        "phone_number": "918604856137",
+        "role": "OWNER"
+      },
+      {
+        "id": 21,
+        "name": "Shantanu Garg",
+        "phone_number": "917452897444",
+        "role": "OWNER"
+      },
+      {
+        "id": 22,
+        "name": "Anmol Paweriya",
+        "phone_number": "918950411406",
+        "role": "WORKER"
+      },
+      {
+        "id": 29,
+        "name": "Evidence Worker 1780391386041",
+        "phone_number": "919891386041",
+        "role": "WORKER"
+      },
+      {
+        "id": 30,
+        "name": "Evidence Worker 1780391483617",
+        "phone_number": "919891483617",
+        "role": "WORKER"
+      },
+      {
+        "id": 31,
+        "name": "Evidence Worker 1780391634843",
+        "phone_number": "919891634843",
+        "role": "WORKER"
+      },
+      {
+        "id": 32,
+        "name": "Evidence Worker 1780391857242",
+        "phone_number": "919891857242",
+        "role": "WORKER"
+      },
+      {
+        "id": 33,
+        "name": "Evidence Worker 1780392083787",
+        "phone_number": "919892083787",
+        "role": "WORKER"
+      },
+      {
+        "id": 28,
+        "name": "P0 Worker 1780390091685",
+        "phone_number": "919990091685",
+        "role": "WORKER"
+      },
+      {
+        "id": 26,
+        "name": "prateek",
+        "phone_number": "919566171444",
+        "role": "WORKER"
+      },
+      {
+        "id": 36,
+        "name": "Rahul",
+        "phone_number": "9835783477",
+        "role": "WORKER"
+      },
+      {
+        "id": 35,
+        "name": "Rahul Kumar",
+        "phone_number": "919876543211",
+        "role": "WORKER"
+      }
+    ],
+    "departments": [
+      {
+        "id": 4,
+        "name": "IT"
+      },
+      {
+        "id": 5,
+        "name": "Sales"
+      },
+      {
+        "id": 6,
+        "name": "Operations"
+      },
+      {
+        "id": 10,
+        "name": "Inventory"
+      }
+    ],
+    "vendors": [
+      {
+        "id": 15,
+        "name": "Shyam pooja store",
+        "phone_number": "9864723692"
+      },
+      {
+        "id": 14,
+        "name": "Rama Surgical",
+        "phone_number": "9826672574"
+      },
+      {
+        "id": 13,
+        "name": "Radhe hardwares",
+        "phone_number": "9874532016"
+      },
+      {
+        "id": 12,
+        "name": "Gupta Metals",
+        "phone_number": "9999999999"
+      },
+      {
+        "id": 11,
+        "name": "Conc Vendor Mgr 1780392158640",
+        "phone_number": "919592158640"
+      },
+      {
+        "id": 10,
+        "name": "Conc Vendor Owner 1780392158640",
+        "phone_number": "919492158640"
+      },
+      {
+        "id": 9,
+        "name": "Evidence Vendor 1780392072798",
+        "phone_number": "919692072798"
+      },
+      {
+        "id": 8,
+        "name": "Conc Vendor Mgr 1780391934376",
+        "phone_number": "919591934376"
+      },
+      {
+        "id": 7,
+        "name": "Conc Vendor Owner 1780391934376",
+        "phone_number": "919491934376"
+      },
+      {
+        "id": 6,
+        "name": "Evidence Vendor 1780391846376",
+        "phone_number": "919691846376"
+      },
+      {
+        "id": 5,
+        "name": "Conc Vendor Mgr 1780391540924",
+        "phone_number": "9876522222"
+      },
+      {
+        "id": 4,
+        "name": "Conc Vendor Owner 1780391540924",
+        "phone_number": "9876511111"
+      },
+      {
+        "id": 3,
+        "name": "Evidence Vendor 1780391375924",
+        "phone_number": "9876501234"
+      },
+      {
+        "id": 2,
+        "name": "P0 Vendor 1780390083238",
+        "phone_number": "9876543210"
+      },
+      {
+        "id": 1,
+        "name": "Runtime Test Vendor",
+        "phone_number": "919876543210"
+      }
+    ],
+    "inventory_items": [
+      {
+        "id": 17,
+        "sku": "MP_001",
+        "name": "Metal parts",
+        "current_quantity": "0.0000",
+        "reorder_threshold": "50.0000"
+      },
+      {
+        "id": 16,
+        "sku": "ST-001",
+        "name": "Steel sheets",
+        "current_quantity": "0.0000",
+        "reorder_threshold": "100.0000"
+      },
+      {
+        "id": 15,
+        "sku": "DEMO-STEEL-001",
+        "name": "Steel Sheets",
+        "current_quantity": "120.0000",
+        "reorder_threshold": "20.0000"
+      },
+      {
+        "id": 14,
+        "sku": "CO158640B",
+        "name": "Conc Item Mgr 1780392158640",
+        "current_quantity": "0.0000",
+        "reorder_threshold": "8.0000"
+      },
+      {
+        "id": 13,
+        "sku": "CO158640A",
+        "name": "Conc Item 1780392158640",
+        "current_quantity": "0.0000",
+        "reorder_threshold": "5.0000"
+      },
+      {
+        "id": 12,
+        "sku": "EVD2097099",
+        "name": "Evidence Item 1780392097099",
+        "current_quantity": "0.0000",
+        "reorder_threshold": "15.0000"
+      },
+      {
+        "id": 11,
+        "sku": "CO934376B",
+        "name": "Conc Item Mgr 1780391934376",
+        "current_quantity": "0.0000",
+        "reorder_threshold": "8.0000"
+      },
+      {
+        "id": 10,
+        "sku": "CO934376A",
+        "name": "Conc Item 1780391934376",
+        "current_quantity": "0.0000",
+        "reorder_threshold": "5.0000"
+      },
+      {
+        "id": 9,
+        "sku": "EVD1871595",
+        "name": "Evidence Item 1780391871595",
+        "current_quantity": "0.0000",
+        "reorder_threshold": "15.0000"
+      },
+      {
+        "id": 8,
+        "sku": "CO695490B",
+        "name": "Conc Item Mgr 1780391695490",
+        "current_quantity": "0.0000",
+        "reorder_threshold": "8.0000"
+      },
+      {
+        "id": 7,
+        "sku": "CO695490A",
+        "name": "Conc Item 1780391695490",
+        "current_quantity": "0.0000",
+        "reorder_threshold": "5.0000"
+      },
+      {
+        "id": 6,
+        "sku": "EVD1647714",
+        "name": "Evidence Item 1780391647714",
+        "current_quantity": "0.0000",
+        "reorder_threshold": "15.0000"
+      },
+      {
+        "id": 5,
+        "sku": "CO540924B",
+        "name": "Conc Item Mgr 1780391540924",
+        "current_quantity": "0.0000",
+        "reorder_threshold": "8.0000"
+      },
+      {
+        "id": 4,
+        "sku": "CO540924A",
+        "name": "Conc Item 1780391540924",
+        "current_quantity": "0.0000",
+        "reorder_threshold": "5.0000"
+      },
+      {
+        "id": 3,
+        "sku": "EVD1496568",
+        "name": "Evidence Item 1780391496568",
+        "current_quantity": "0.0000",
+        "reorder_threshold": "15.0000"
+      }
+    ],
+    "purchase_requests": [
+      {
+        "id": 25,
+        "title": "Restock Conc Item Mgr 1780391695490",
+        "status": "CLOSED"
+      },
+      {
+        "id": 24,
+        "title": "Restock Conc Item 1780391540924",
+        "status": "CLOSED"
+      },
+      {
+        "id": 23,
+        "title": "Steel Sheets",
+        "status": "CLOSED"
+      },
+      {
+        "id": 22,
+        "title": "Steel sheets ka order",
+        "status": "CLOSED"
+      },
+      {
+        "id": 21,
+        "title": "Steel sheets ka order",
+        "status": "CLOSED"
+      },
+      {
+        "id": 20,
+        "title": "Steel sheets ka order",
+        "status": "CLOSED"
+      },
+      {
+        "id": 19,
+        "title": "Steel sheets ka order",
+        "status": "CLOSED"
+      },
+      {
+        "id": 18,
+        "title": "Steel sheets ka order",
+        "status": "CLOSED"
+      },
+      {
+        "id": 17,
+        "title": "Cert PR 1780413530635",
+        "status": "CLOSED"
+      },
+      {
+        "id": 16,
+        "title": "Demo PR 1780412076699",
+        "status": "CLOSED"
+      }
+    ],
+    "active_workflows": [],
+    "task_counts": {
+      "total": 107,
+      "open": 89
+    },
+    "issue_counts": {
+      "total": 11,
+      "open": 7
+    },
+    "attendance_today": 1
+  },
+  "owner_journey": [
+    {
+      "name": "attendance_report",
+      "phrase": "aaj ka attendance report bhejo",
+      "phone_role": "Owner",
+      "expected_intent": "/report",
+      "predicted_intent": "/report",
+      "intent_ok": true,
+      "webhook_ok": true,
+      "webhook_status": 201,
+      "workflow_type": null,
+      "session_ok": true,
+      "db": null,
+      "db_ok": true,
+      "pass": true
+    },
+    {
+      "name": "task_assign",
+      "phrase": "prateek ko loading ka kaam do",
+      "phone_role": "Owner",
+      "expected_intent": "/assign",
+      "predicted_intent": "/assign",
+      "intent_ok": true,
+      "webhook_ok": true,
+      "webhook_status": 201,
+      "workflow_type": null,
+      "session_ok": true,
+      "db": {
+        "ok": true,
+        "task_id": 112
+      },
+      "db_ok": true,
+      "pass": true
+    },
+    {
+      "name": "inventory_status",
+      "phrase": "stock level dikhao",
+      "phone_role": "Owner",
+      "expected_intent": "/inventory_status",
+      "predicted_intent": "/inventory_status",
+      "intent_ok": true,
+      "webhook_ok": true,
+      "webhook_status": 201,
+      "workflow_type": null,
+      "session_ok": true,
+      "db": null,
+      "db_ok": true,
+      "pass": true
+    },
+    {
+      "name": "inventory_create_start",
+      "phrase": "SKU register karo",
+      "phone_role": "Owner",
+      "expected_intent": "/inventory_create",
+      "predicted_intent": "/inventory_create",
+      "intent_ok": true,
+      "webhook_ok": true,
+      "webhook_status": 201,
+      "workflow_type": "INVENTORY_CREATE",
+      "session_ok": true,
+      "db": null,
+      "db_ok": true,
+      "pass": true
+    },
+    {
+      "name": "purchase_request_start",
+      "phrase": "purchase request bana do",
+      "phone_role": "Owner",
+      "expected_intent": "/purchase_request_create",
+      "predicted_intent": "/purchase_request_create",
+      "intent_ok": true,
+      "webhook_ok": true,
+      "webhook_status": 201,
+      "workflow_type": "PURCHASE_REQUEST_CREATE",
+      "session_ok": true,
+      "db": null,
+      "db_ok": true,
+      "pass": true
+    },
+    {
+      "name": "vendor_onboard_start",
+      "phrase": "naya vendor add karo",
+      "phone_role": "Owner",
+      "expected_intent": "/onboard_vendor",
+      "predicted_intent": "/onboard_vendor",
+      "intent_ok": true,
+      "webhook_ok": true,
+      "webhook_status": 201,
+      "workflow_type": "ONBOARD_VENDOR",
+      "session_ok": true,
+      "db": null,
+      "db_ok": true,
+      "pass": true
+    },
+    {
+      "name": "members",
+      "phrase": "team members dikhao",
+      "phone_role": "Owner",
+      "expected_intent": "/members",
+      "predicted_intent": "/members",
+      "intent_ok": true,
+      "webhook_ok": true,
+      "webhook_status": 201,
+      "workflow_type": null,
+      "session_ok": true,
+      "db": null,
+      "db_ok": true,
+      "pass": true
+    }
+  ],
+  "manager_journey": {
+    "routing_task_id": 67,
+    "results": [
+      {
+        "name": "mgrassign",
+        "phrase": "task 67 prateek ko do",
+        "routing_task_id": 67,
+        "expected_intent": "/mgrassign",
+        "predicted_intent": "/mgrassign",
+        "intent_ok": true,
+        "webhook_ok": true,
+        "db": null,
+        "pass": true
+      },
+      {
+        "name": "mgrtransfer",
+        "phrase": "task 67 sales ko transfer karo",
+        "routing_task_id": 67,
+        "expected_intent": "/mgrtransfer",
+        "predicted_intent": "/mgrtransfer",
+        "intent_ok": true,
+        "webhook_ok": true,
+        "db": null,
+        "pass": true
+      },
+      {
+        "name": "mgrself",
+        "phrase": "task 67 main khud karunga",
+        "routing_task_id": 67,
+        "expected_intent": "/mgrself",
+        "predicted_intent": "/mgrself",
+        "intent_ok": true,
+        "webhook_ok": true,
+        "db": null,
+        "pass": true
+      },
+      {
+        "name": "mgrreject",
+        "phrase": "task 67 reject karo",
+        "routing_task_id": 67,
+        "expected_intent": "/mgrreject",
+        "predicted_intent": "/mgrreject",
+        "intent_ok": true,
+        "webhook_ok": true,
+        "db": null,
+        "pass": true
+      },
+      {
+        "name": "inventory_status_mgr",
+        "phrase": "inventory status batao",
+        "routing_task_id": 67,
+        "expected_intent": "/inventory_status",
+        "predicted_intent": "/inventory_status",
+        "intent_ok": true,
+        "webhook_ok": true,
+        "db": null,
+        "pass": true
+      },
+      {
+        "name": "depart_assign",
+        "phrase": "sales department ko audit ka kaam do",
+        "routing_task_id": 67,
+        "expected_intent": "/depart_assign",
+        "predicted_intent": "/assign_clarify",
+        "intent_ok": false,
+        "webhook_ok": true,
+        "db": {
+          "ok": true,
+          "task_id": 73
+        },
+        "pass": false
+      }
+    ]
+  },
+  "worker_journey": [
+    {
+      "name": "present",
+      "phrase": "aaj present hoon",
+      "phone_role": "Worker",
+      "expected_intent": "/present",
+      "predicted_intent": "/present",
+      "intent_ok": true,
+      "webhook_ok": true,
+      "webhook_status": 201,
+      "workflow_type": null,
+      "session_ok": true,
+      "db": {
+        "before": 22,
+        "after": {
+          "id": 22,
+          "is_present": true
+        }
+      },
+      "db_ok": true,
+      "pass": true
+    },
+    {
+      "name": "tasks",
+      "phrase": "mere tasks dikhao",
+      "phone_role": "Worker",
+      "expected_intent": "/tasks",
+      "predicted_intent": "/tasks",
+      "intent_ok": true,
+      "webhook_ok": true,
+      "webhook_status": 201,
+      "workflow_type": null,
+      "session_ok": true,
+      "db": null,
+      "db_ok": true,
+      "pass": true
+    },
+    {
+      "name": "update",
+      "phrase": "task update: kaam chal raha hai",
+      "phone_role": "Worker",
+      "expected_intent": "/update",
+      "predicted_intent": "/update",
+      "intent_ok": true,
+      "webhook_ok": true,
+      "webhook_status": 201,
+      "workflow_type": null,
+      "session_ok": true,
+      "db": null,
+      "db_ok": true,
+      "pass": true
+    },
+    {
+      "name": "issue",
+      "phrase": "machine kharab hai issue raise karo",
+      "phone_role": "Worker",
+      "expected_intent": "/issue",
+      "predicted_intent": "/issue",
+      "intent_ok": true,
+      "webhook_ok": true,
+      "webhook_status": 201,
+      "workflow_type": null,
+      "session_ok": true,
+      "db": {
+        "issue_id": 13
+      },
+      "db_ok": true,
+      "pass": true
+    },
+    {
+      "name": "issues_list",
+      "phrase": "open issues dikhao",
+      "phone_role": "Worker",
+      "expected_intent": "/issues",
+      "predicted_intent": "/issues",
+      "intent_ok": true,
+      "webhook_ok": true,
+      "webhook_status": 201,
+      "workflow_type": null,
+      "session_ok": true,
+      "db": null,
+      "db_ok": true,
+      "pass": true
+    }
+  ],
+  "ml_hardening_clusters": [
+    {
+      "cluster": "assign",
+      "phrase": "rahul ko packing ka kaam do",
+      "expected_intent": "/assign",
+      "predicted_intent": "/assign",
+      "intent_ok": true,
+      "webhook_ok": true,
+      "workflow_type": null,
+      "workflow_ok": true,
+      "pass": true
+    },
+    {
+      "cluster": "depart_assign",
+      "phrase": "loading department ko stock count do",
+      "expected_intent": "/depart_assign",
+      "predicted_intent": "/task_inventory_nl",
+      "intent_ok": false,
+      "webhook_ok": true,
+      "workflow_type": null,
+      "workflow_ok": true,
+      "pass": false
+    },
+    {
+      "cluster": "assign_clarify",
+      "phrase": "aaj website banegi",
+      "expected_intent": "/assign_clarify",
+      "predicted_intent": "/assign_clarify",
+      "intent_ok": true,
+      "webhook_ok": true,
+      "workflow_type": null,
+      "workflow_ok": true,
+      "pass": true
+    },
+    {
+      "cluster": "assign_delivery",
+      "phrase": "rahul ko 50 cement bags deliver karo",
+      "expected_intent": "/assign_delivery",
+      "predicted_intent": "/assign_delivery",
+      "intent_ok": true,
+      "webhook_ok": true,
+      "workflow_type": null,
+      "workflow_ok": true,
+      "pass": true
+    },
+    {
+      "cluster": "task_inventory_nl",
+      "phrase": "prateek se 20 glue bottles count karwao",
+      "expected_intent": "/task_inventory_nl",
+      "predicted_intent": "/assign",
+      "intent_ok": false,
+      "webhook_ok": true,
+      "workflow_type": null,
+      "workflow_ok": true,
+      "pass": false
+    },
+    {
+      "cluster": "inventory_status",
+      "phrase": "kitna stock hai",
+      "expected_intent": "/inventory_status",
+      "predicted_intent": "/inventory_status",
+      "intent_ok": true,
+      "webhook_ok": true,
+      "workflow_type": null,
+      "workflow_ok": true,
+      "pass": true
+    },
+    {
+      "cluster": "inventory_create",
+      "phrase": "naya item add karo",
+      "expected_intent": "/inventory_create",
+      "predicted_intent": "/inventory_create",
+      "intent_ok": true,
+      "webhook_ok": true,
+      "workflow_type": "INVENTORY_CREATE",
+      "workflow_ok": true,
+      "pass": true
+    },
+    {
+      "cluster": "inventory_import_csv",
+      "phrase": "inventory csv import karo",
+      "expected_intent": "/inventory_import_csv",
+      "predicted_intent": "/inventory_import_csv",
+      "intent_ok": true,
+      "webhook_ok": true,
+      "workflow_type": null,
+      "workflow_ok": false,
+      "pass": false
+    },
+    {
+      "cluster": "cancel",
+      "phrase": "/cancel",
+      "expected_intent": "/cancel",
+      "predicted_intent": "/cancel",
+      "intent_ok": true,
+      "webhook_ok": true,
+      "workflow_type": null,
+      "workflow_ok": true,
+      "pass": true
+    },
+    {
+      "cluster": "mgrself",
+      "phrase": "main khud karunga task",
+      "expected_intent": "/mgrself",
+      "predicted_intent": "/mgrself",
+      "intent_ok": true,
+      "webhook_ok": true,
+      "workflow_type": null,
+      "workflow_ok": true,
+      "pass": true
+    },
+    {
+      "cluster": "update",
+      "phrase": "update: half done",
+      "expected_intent": "/update",
+      "predicted_intent": "/complete",
+      "intent_ok": false,
+      "webhook_ok": true,
+      "workflow_type": null,
+      "workflow_ok": true,
+      "pass": false
+    }
+  ],
+  "failure_tests": [
+    {
+      "name": "worker_cannot_onboard_vendor",
+      "phrase": "naya vendor add karo",
+      "webhook_ok": true,
+      "graceful": true,
+      "pass": true
+    },
+    {
+      "name": "invalid_task_id_mgrassign",
+      "phrase": "task 999999 prateek ko do",
+      "webhook_ok": true,
+      "graceful": true,
+      "pass": true
+    },
+    {
+      "name": "cancel_abandons_workflow",
+      "graceful": true,
+      "pass": true
+    },
+    {
+      "name": "missing_worker_assign",
+      "phrase": "xyzunknown ko kaam do",
+      "webhook_ok": true,
+      "graceful": true,
+      "pass": true
+    }
+  ],
+  "db_consistency": {
+    "orphan_task_assignees": 0,
+    "duplicate_attendance_rows": 0,
+    "active_test_sessions": 0,
+    "broken_routing_tasks": 0,
+    "pass": true
+  },
+  "summary": {
+    "total_tests": 33,
+    "pass": 28,
+    "fail": 5,
+    "intent_pass": 25,
+    "intent_total": 29,
+    "intent_success_rate": "86.2%",
+    "workflow_success_rate": "84.8%",
+    "db_consistency_pass": true
+  }
+}

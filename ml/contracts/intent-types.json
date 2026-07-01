@@ -1,8 +1,9 @@
 {
-  "version": "v1",
+  "version": "v1.1",
   "intents": [
     "/tasks",
     "/assign",
+    "/assign_delivery",
     "/depart_assign",
     "/mgrassign",
     "/mgrself",
@@ -22,10 +23,14 @@
     "/onboard_worker",
     "/inventory_create",
     "/inventory_status",
+    "/inventory_import_csv",
     "/purchase_request_create",
+    "/cancel",
+    "/suggestion_approve",
     "/business_discovery",
     "/continue_discovery",
     "/assign_clarify",
+    "/task_inventory_nl",
     "general_chat"
   ],
   "departments": ["operations", "sales", "purchase", "it"],
@@ -36,7 +41,6 @@
     "continue setup",
     "continue onboarding",
     "update company details",
-    "import inventory",
     "import vendors"
   ]
 }

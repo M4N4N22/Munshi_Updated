@@ -35,6 +35,8 @@ import {
 import { User } from 'src/services/users/users.schema';
 import { Vendor } from 'src/services/vendors/vendors.schema';
 import { WorkflowSession } from 'src/services/workflow/workflow.schema';
+import { WhatsAppWebhookEvent } from 'src/modules/whatsapp/whatsapp-webhook-dedup.schema';
+import { IntentClassificationEvent } from 'src/services/intent-observability/intent-classification-event.schema';
 import {
   BankAccount,
   BankConsent,
@@ -99,4 +101,6 @@ export const SQL_MODELS = {
   User: User.setup,
   Vendor: Vendor.setup,
   WorkflowSession: WorkflowSession.setup,
+  WhatsAppWebhookEvent: WhatsAppWebhookEvent.setup,
+  IntentClassificationEvent: IntentClassificationEvent.setup,
 };
